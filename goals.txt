@@ -1,0 +1,4 @@
+create a custom voxel for slopes
+
+add player movement
+
