@@ -1,4 +1,15 @@
-create a custom voxel for slopes
+current goal - make movement linear (move 1 unit every 0.X seconds, linearly. transform.lerp)
+
 
 add player movement
+- need to move the existing camera to above the sprite, and add controls that cause the sprite to move
+- the existing camera must be used because it determines what voxels are loaded
+- need to be able to switch between hovering above the sprite and walking around in first-person
+-
 
+create a custom voxel for slopes
+- useful for allowing players to travel up or down a level. necessary for interesting levels
+
+try to create a custom voxel that encapsulates a 3d object.
+- use an existing prefab
+- this will make loading/unloading things easier.
