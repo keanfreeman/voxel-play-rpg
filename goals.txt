@@ -1,15 +1,34 @@
-current goal - make movement linear (move 1 unit every 0.X seconds, linearly. transform.lerp)
+CURRENT GOAL
 
 
+TODO
+hide the cursor when in top-down mode
+
+block player movement into spaces occupied by voxels
+
+create a custom voxel for slopes
+- useful for allowing players to travel up or down a level. necessary for interesting levels
+
+automatically move the player upwards/downwards on slopes
+
+try to create a custom voxel that encapsulates a 3d object.
+- use an existing prefab
+- this will make loading/unloading things easier.
+
+make it possible to see through walls when the player is behind it
+
+make the game playable with a controller
+- should learn about the new input system for this
+
+make it possible to move in any direction, with "snapping" to the grid, like fire emblem awakening and pokemon ORAS
+
+animate the player
+
+DONE
 add player movement
 - need to move the existing camera to above the sprite, and add controls that cause the sprite to move
 - the existing camera must be used because it determines what voxels are loaded
 - need to be able to switch between hovering above the sprite and walking around in first-person
 -
 
-create a custom voxel for slopes
-- useful for allowing players to travel up or down a level. necessary for interesting levels
-
-try to create a custom voxel that encapsulates a 3d object.
-- use an existing prefab
-- this will make loading/unloading things easier.
+make movement linear (move 1 unit every 0.X seconds, linearly. transform.lerp)

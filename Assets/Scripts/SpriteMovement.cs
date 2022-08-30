@@ -7,6 +7,7 @@ using VoxelPlay;
 public class SpriteMovement : MonoBehaviour
 {
     const float TIME_TO_MOVE_A_TILE = 0.2f;
+    const float SPRINT_SPEEDUP = 2f;
 
     VoxelPlayFirstPersonController scriptInstance;
     GameObject spriteObject;
@@ -15,6 +16,7 @@ public class SpriteMovement : MonoBehaviour
     bool isFollowingSprite = false;
     
     bool isMoving = false;
+    bool isSprinting = false;
     float moveStartTimestamp;
     Vector3 moveStartPoint;
     Vector3 moveEndPoint;
@@ -42,7 +44,11 @@ public class SpriteMovement : MonoBehaviour
             return;
         }
         isMoving = false;
+        isSprinting = false;
 
+        if (Input.GetKey(KeyCode.LeftShift)) {
+            isSprinting = true;
+        }
         Vector3 spriteCurrPosition = spriteObject.transform.position;
         if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) {
             moveEndPoint = spriteCurrPosition + Vector3.forward;
@@ -74,7 +80,8 @@ public class SpriteMovement : MonoBehaviour
     // returns true when the transition is done
     private bool IsMoveTransitionDone() {
         float timeSinceMoveBegan = Time.time - moveStartTimestamp;
-        float fractionOfMovementDone = timeSinceMoveBegan / TIME_TO_MOVE_A_TILE;
+        float sprintMultiplier = isSprinting ? SPRINT_SPEEDUP : 1;
+        float fractionOfMovementDone = timeSinceMoveBegan * sprintMultiplier / (TIME_TO_MOVE_A_TILE);
         float linearFriendlyFraction = Mathf.Min(fractionOfMovementDone, 1f);
         spriteObject.transform.position = Vector3.Lerp(moveStartPoint, moveEndPoint, linearFriendlyFraction);
         return linearFriendlyFraction >= 1f;
