@@ -1,11 +1,7 @@
 CURRENT GOAL
-create a custom voxel for slopes
-- useful for allowing players to travel up or down a level. necessary for interesting levels
-
-TODO
-
 block player movement into spaces occupied by voxels
 
+TODO
 automatically move the player upwards/downwards on slopes
 
 try to create a custom voxel that encapsulates a 3d object.
@@ -17,7 +13,7 @@ make it possible to see through walls when the player is behind it
 make the game playable with a controller
 - should learn about the new input system for this
 
-make it possible to move in any direction, with "snapping" to the grid, like fire emblem awakening and pokemon ORAS
+make it possible to move in any direction with "snapping" to the grid, like fire emblem awakening and pokemon ORAS
 
 animate the player
 
@@ -31,3 +27,8 @@ add player movement
 make movement linear (move 1 unit every 0.X seconds, linearly. transform.lerp)
 
 hide the cursor when in top-down mode
+
+create a custom voxel for slopes
+- useful for allowing players to travel up or down a level. necessary for interesting levels
+- required using unity probuilder to create the mesh
+
