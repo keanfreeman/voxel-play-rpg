@@ -91,6 +91,7 @@ public class SpriteMovement : MonoBehaviour
         Debug.Log("SWITCHING FREE CAMERA");
         if (isFollowingSprite) {
             transform.SetParent(null);
+            scriptInstance.crosshairScale = 0.1f;
         }
 
         scriptInstance.useThirdPartyController = !scriptInstance.useThirdPartyController;
@@ -98,11 +99,14 @@ public class SpriteMovement : MonoBehaviour
         scriptInstance.freeMode = !scriptInstance.freeMode;
         scriptInstance.startOnFlat = !scriptInstance.startOnFlat;
         scriptInstance.hasCharacterController = !scriptInstance.hasCharacterController;
+        scriptInstance.voxelHighlight = !scriptInstance.voxelHighlight;
 
         if (!isFollowingSprite) {
             transform.position = spriteObject.transform.position + (Vector3.up * 5f) + (Vector3.back * 5f);
             cameraObject.transform.rotation = spriteObject.transform.rotation;
             transform.SetParent(spriteObject.transform);
+
+            scriptInstance.crosshairScale = 0;
         }
         isFollowingSprite = !isFollowingSprite;
     }

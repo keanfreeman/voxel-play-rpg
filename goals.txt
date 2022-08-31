@@ -1,13 +1,10 @@
 CURRENT GOAL
-
-
-TODO
-hide the cursor when in top-down mode
-
-block player movement into spaces occupied by voxels
-
 create a custom voxel for slopes
 - useful for allowing players to travel up or down a level. necessary for interesting levels
+
+TODO
+
+block player movement into spaces occupied by voxels
 
 automatically move the player upwards/downwards on slopes
 
@@ -32,3 +29,5 @@ add player movement
 -
 
 make movement linear (move 1 unit every 0.X seconds, linearly. transform.lerp)
+
+hide the cursor when in top-down mode
