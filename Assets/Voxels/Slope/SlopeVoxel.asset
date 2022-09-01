@@ -24,7 +24,7 @@ MonoBehaviour:
   worldSpaceUVs: 0
   overrideMaterialNonGeo: {fileID: 0}
   hasContent: 1
-  opaque: 0
+  opaque: 15
   textureTop: {fileID: 0}
   textureTopEmission: {fileID: 0}
   textureTopNRM: {fileID: 0}
@@ -72,25 +72,25 @@ MonoBehaviour:
   dropItem: {fileID: 0}
   dropItemLifeTime: 10
   dropItemScale: 0.25
-  icon: {fileID: 0}
-  textureSample: {fileID: 0}
+  icon: {fileID: 2800000, guid: 4bd177ea686824d41a9d585fc91c2140, type: 3}
+  textureSample: {fileID: 2800000, guid: 4bd177ea686824d41a9d585fc91c2140, type: 3}
   overrideMainTexture: 0
   overrideMainTextureOffset: {x: 0, y: 0}
-  navigatable: 1
+  navigatable: 0
   denseLeaves: 1
   windAnimation: 1
-  supportsBevel: 1
-  model: {fileID: 0}
+  supportsBevel: 0
+  model: {fileID: 2369646697912167320, guid: 8554d49d142f7534694b859052b56be7, type: 3}
   prefabMaterial: 0
   gpuInstancing: 0
   castShadows: 1
   receiveShadows: 1
   createGameObject: 0
-  offset: {x: 0, y: 0, z: 0}
+  offset: {x: -0.5, y: -0.5, z: 0.5}
   offsetRandom: 0
   offsetRandomRange: {x: 0, y: 0, z: 0}
   scale: {x: 1, y: 1, z: 1}
-  rotation: {x: 0, y: 0, z: 0}
+  rotation: {x: 0, y: 90, z: 0}
   rotationRandomY: 0
   promotesTo: {fileID: 0}
   replacedBy: {fileID: 0}

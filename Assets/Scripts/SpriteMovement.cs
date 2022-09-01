@@ -38,6 +38,10 @@ public class SpriteMovement : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.K)) {
             ToggleFreeCamera();
         }
+
+        if (Input.GetKeyUp(KeyCode.J)) {
+            Debug.Log("Debug key pressed.");
+        }
     }
 
     private void HandleMovement() {
@@ -64,11 +68,11 @@ public class SpriteMovement : MonoBehaviour
             moveEndPoint = spriteCurrPosition + Vector3.back;
         }
         else if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) {
-            moveDirection = PlayerMoveDirection.EAST;
+            moveDirection = PlayerMoveDirection.WEST;
             moveEndPoint = spriteCurrPosition + Vector3.left;
         }
         else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
-            moveDirection = PlayerMoveDirection.WEST;
+            moveDirection = PlayerMoveDirection.EAST;
             moveEndPoint = spriteCurrPosition + Vector3.right;
         }
         else if (Input.GetKey(KeyCode.Q)) {
@@ -87,6 +91,7 @@ public class SpriteMovement : MonoBehaviour
             Debug.Log("Tried to move in an invalid way.");
             return;
         }
+
         spriteIndex = GetDestinationIndexFromDirection(moveDirection, spriteIndex);
         moveStartPoint = spriteCurrPosition;
         isMoving = true;
@@ -105,7 +110,32 @@ public class SpriteMovement : MonoBehaviour
 
     private bool IsValidMoveDirection(PlayerMoveDirection moveDirection, Vector3 spriteIndex) {
         Voxel voxel = environment.GetVoxel(GetDestinationIndexFromDirection(moveDirection, spriteIndex));
-        return voxel.isEmpty || !voxel.isSolid;
+        if (voxel.isEmpty || !voxel.isSolid) {
+            return true;
+        }
+
+        VoxelDefinition slopeVoxel = null;
+        foreach (VoxelDefinition vd in environment.voxelDefinitions) {
+            if (vd != null && vd.name == "SlopeVoxel") {
+                slopeVoxel = vd;
+            }
+        }
+        if (slopeVoxel == null) {
+            throw new System.SystemException("No expected voxel in world.");
+        }
+        int slopeRotation = voxel.GetTextureRotation();
+        if (voxel.type == slopeVoxel && playerMoveLinesUpWithSlope(moveDirection, slopeRotation)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool playerMoveLinesUpWithSlope(PlayerMoveDirection moveDirection, int slopeRotation) {
+        return moveDirection == PlayerMoveDirection.NORTH && slopeRotation == 0
+            || moveDirection == PlayerMoveDirection.EAST && slopeRotation == 1
+            || moveDirection == PlayerMoveDirection.SOUTH && slopeRotation == 2
+            || moveDirection == PlayerMoveDirection.WEST && slopeRotation == 3;
     }
 
     private Vector3 GetDestinationIndexFromDirection(PlayerMoveDirection moveDirection, Vector3 startIndex) {

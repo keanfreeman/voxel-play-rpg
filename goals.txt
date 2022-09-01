@@ -1,5 +1,6 @@
 CURRENT GOAL
 automatically move the player upwards/downwards on slopes
+- need to just move them up/down now
 
 TODO
 try to create a custom voxel that encapsulates a 3d object.
@@ -14,6 +15,8 @@ make the game playable with a controller
 make it possible to move in any direction with "snapping" to the grid, like fire emblem awakening and pokemon ORAS
 
 animate the player
+
+make slopes occlude their surroundings
 
 DONE
 add player movement
