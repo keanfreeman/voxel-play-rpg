@@ -1,9 +1,7 @@
 CURRENT GOAL
-block player movement into spaces occupied by voxels
-
-TODO
 automatically move the player upwards/downwards on slopes
 
+TODO
 try to create a custom voxel that encapsulates a 3d object.
 - use an existing prefab
 - this will make loading/unloading things easier.
@@ -32,3 +30,5 @@ create a custom voxel for slopes
 - useful for allowing players to travel up or down a level. necessary for interesting levels
 - required using unity probuilder to create the mesh
 
+block player movement into spaces occupied by voxels
+- need to answer questions: what cube is the sprite occupying? what cube is the sprite entering? is that cube occupied?

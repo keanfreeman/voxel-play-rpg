@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VoxelPlay;
+using PlayerMovement;
 
 public class SpriteMovement : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class SpriteMovement : MonoBehaviour
     VoxelPlayFirstPersonController scriptInstance;
     GameObject spriteObject;
     GameObject cameraObject;
+    VoxelPlayEnvironment environment;
 
     bool isFollowingSprite = false;
     
@@ -20,8 +22,10 @@ public class SpriteMovement : MonoBehaviour
     float moveStartTimestamp;
     Vector3 moveStartPoint;
     Vector3 moveEndPoint;
+    Vector3 spriteIndex = new Vector3(523, 50, 246);
 
     void Start() {
+        environment = VoxelPlayEnvironment.instance;
         moveStartTimestamp = Time.time;
         scriptInstance = GetComponent<VoxelPlayFirstPersonController>();
         spriteObject = GameObject.Find("PlayerSprite");
@@ -50,28 +54,40 @@ public class SpriteMovement : MonoBehaviour
             isSprinting = true;
         }
         Vector3 spriteCurrPosition = spriteObject.transform.position;
+        PlayerMoveDirection moveDirection;
         if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) {
+            moveDirection = PlayerMoveDirection.NORTH;
             moveEndPoint = spriteCurrPosition + Vector3.forward;
         }
         else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) {
+            moveDirection = PlayerMoveDirection.SOUTH;
             moveEndPoint = spriteCurrPosition + Vector3.back;
         }
         else if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) {
+            moveDirection = PlayerMoveDirection.EAST;
             moveEndPoint = spriteCurrPosition + Vector3.left;
         }
         else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
+            moveDirection = PlayerMoveDirection.WEST;
             moveEndPoint = spriteCurrPosition + Vector3.right;
         }
         else if (Input.GetKey(KeyCode.Q)) {
+            moveDirection = PlayerMoveDirection.UP;
             moveEndPoint = spriteCurrPosition + Vector3.up;
         }
         else if (Input.GetKey(KeyCode.E)) {
+            moveDirection = PlayerMoveDirection.DOWN;
             moveEndPoint = spriteCurrPosition + Vector3.down;
         }
         else {
             return;
         }
 
+        if (!IsValidMoveDirection(moveDirection, spriteIndex)) {
+            Debug.Log("Tried to move in an invalid way.");
+            return;
+        }
+        spriteIndex = GetDestinationIndexFromDirection(moveDirection, spriteIndex);
         moveStartPoint = spriteCurrPosition;
         isMoving = true;
         moveStartTimestamp = Time.time;
@@ -87,6 +103,33 @@ public class SpriteMovement : MonoBehaviour
         return linearFriendlyFraction >= 1f;
     }
 
+    private bool IsValidMoveDirection(PlayerMoveDirection moveDirection, Vector3 spriteIndex) {
+        Voxel voxel = environment.GetVoxel(GetDestinationIndexFromDirection(moveDirection, spriteIndex));
+        return voxel.isEmpty || !voxel.isSolid;
+    }
+
+    private Vector3 GetDestinationIndexFromDirection(PlayerMoveDirection moveDirection, Vector3 startIndex) {
+        if (moveDirection == PlayerMoveDirection.NORTH) {
+            return startIndex + Vector3.forward;
+        }
+        if (moveDirection == PlayerMoveDirection.SOUTH) {
+            return startIndex + Vector3.back;
+        }
+        if (moveDirection == PlayerMoveDirection.EAST) {
+            return startIndex + Vector3.right;
+        }
+        if (moveDirection == PlayerMoveDirection.WEST) {
+            return startIndex + Vector3.left;
+        }
+        if (moveDirection == PlayerMoveDirection.UP) {
+            return startIndex + Vector3.up;
+        }
+        if (moveDirection == PlayerMoveDirection.DOWN) {
+            return startIndex + Vector3.down;
+        }
+        throw new System.ArgumentException("Unexpected direction provided");
+    }
+
     private void ToggleFreeCamera() {
         Debug.Log("SWITCHING FREE CAMERA");
         if (isFollowingSprite) {
@@ -97,7 +140,6 @@ public class SpriteMovement : MonoBehaviour
         scriptInstance.useThirdPartyController = !scriptInstance.useThirdPartyController;
         scriptInstance.isFlying = !scriptInstance.isFlying;
         scriptInstance.freeMode = !scriptInstance.freeMode;
-        scriptInstance.startOnFlat = !scriptInstance.startOnFlat;
         scriptInstance.hasCharacterController = !scriptInstance.hasCharacterController;
         scriptInstance.voxelHighlight = !scriptInstance.voxelHighlight;
 
