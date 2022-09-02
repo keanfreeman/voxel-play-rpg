@@ -1,6 +1,4 @@
 CURRENT GOAL
-automatically move the player upwards/downwards on slopes
-- need to just move them up/down now
 
 TODO
 try to create a custom voxel that encapsulates a 3d object.
@@ -17,6 +15,9 @@ make it possible to move in any direction with "snapping" to the grid, like fire
 animate the player
 
 make slopes occlude their surroundings
+
+BUGS TO FIX
+
 
 DONE
 add player movement
@@ -35,3 +36,10 @@ create a custom voxel for slopes
 
 block player movement into spaces occupied by voxels
 - need to answer questions: what cube is the sprite occupying? what cube is the sprite entering? is that cube occupied?
+
+need to prevent slope voxel from telling the engine it can occlude the wall
+
+automatically move the player upwards/downwards on slopes
+- need to just move them up/down now
+
+restrict movement to grounded movement

@@ -5,8 +5,7 @@ using UnityEngine;
 using VoxelPlay;
 using PlayerMovement;
 
-public class SpriteMovement : MonoBehaviour
-{
+public class SpriteMovement : MonoBehaviour {
     const float TIME_TO_MOVE_A_TILE = 0.2f;
     const float SPRINT_SPEEDUP = 2f;
 
@@ -16,7 +15,7 @@ public class SpriteMovement : MonoBehaviour
     VoxelPlayEnvironment environment;
 
     bool isFollowingSprite = false;
-    
+
     bool isMoving = false;
     bool isSprinting = false;
     float moveStartTimestamp;
@@ -58,42 +57,38 @@ public class SpriteMovement : MonoBehaviour
             isSprinting = true;
         }
         Vector3 spriteCurrPosition = spriteObject.transform.position;
-        PlayerMoveDirection moveDirection;
+        PlayerMoveDirection requestedDirection;
         if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) {
-            moveDirection = PlayerMoveDirection.NORTH;
-            moveEndPoint = spriteCurrPosition + Vector3.forward;
+            requestedDirection = PlayerMoveDirection.NORTH;
         }
         else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) {
-            moveDirection = PlayerMoveDirection.SOUTH;
-            moveEndPoint = spriteCurrPosition + Vector3.back;
+            requestedDirection = PlayerMoveDirection.SOUTH;
         }
         else if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) {
-            moveDirection = PlayerMoveDirection.WEST;
-            moveEndPoint = spriteCurrPosition + Vector3.left;
+            requestedDirection = PlayerMoveDirection.WEST;
         }
         else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
-            moveDirection = PlayerMoveDirection.EAST;
-            moveEndPoint = spriteCurrPosition + Vector3.right;
+            requestedDirection = PlayerMoveDirection.EAST;
         }
         else if (Input.GetKey(KeyCode.Q)) {
-            moveDirection = PlayerMoveDirection.UP;
-            moveEndPoint = spriteCurrPosition + Vector3.up;
+            requestedDirection = PlayerMoveDirection.UP;
         }
         else if (Input.GetKey(KeyCode.E)) {
-            moveDirection = PlayerMoveDirection.DOWN;
-            moveEndPoint = spriteCurrPosition + Vector3.down;
+            requestedDirection = PlayerMoveDirection.DOWN;
         }
         else {
             return;
         }
 
-        if (!IsValidMoveDirection(moveDirection, spriteIndex)) {
+        PlayerMoveDirection actualDirection = GetRealMoveDirection(requestedDirection, spriteIndex);
+        if (actualDirection == PlayerMoveDirection.NONE) {
             Debug.Log("Tried to move in an invalid way.");
             return;
         }
 
-        spriteIndex = GetDestinationIndexFromDirection(moveDirection, spriteIndex);
+        spriteIndex = GetDestinationPositionFromDirection(actualDirection, spriteIndex);
         moveStartPoint = spriteCurrPosition;
+        moveEndPoint = GetDestinationPositionFromDirection(actualDirection, spriteCurrPosition);
         isMoving = true;
         moveStartTimestamp = Time.time;
     }
@@ -108,12 +103,33 @@ public class SpriteMovement : MonoBehaviour
         return linearFriendlyFraction >= 1f;
     }
 
-    private bool IsValidMoveDirection(PlayerMoveDirection moveDirection, Vector3 spriteIndex) {
-        Voxel voxel = environment.GetVoxel(GetDestinationIndexFromDirection(moveDirection, spriteIndex));
-        if (voxel.isEmpty || !voxel.isSolid) {
-            return true;
+    // returns the direction to move after accounting for slopes, other terrain
+    private PlayerMoveDirection GetRealMoveDirection(PlayerMoveDirection requestedDirection, Vector3 spriteIndex) {
+        Voxel aheadVoxel = environment.GetVoxel(GetDestinationPositionFromDirection(requestedDirection, spriteIndex));
+
+        if ((aheadVoxel.isEmpty)) {
+            Voxel belowAheadVoxel = environment.GetVoxel(GetDestinationPositionFromDirection(requestedDirection,
+                spriteIndex + Vector3.down));
+            if (!belowAheadVoxel.isEmpty) {
+                return requestedDirection;
+            }
+            // handle being on downward slope
+            Voxel underfootVoxel = environment.GetVoxel(GetDestinationPositionFromDirection(PlayerMoveDirection.DOWN,
+                spriteIndex));
+            if (IsSlope(underfootVoxel) && IsSlopeDownRelativeToPlayer(requestedDirection,
+                underfootVoxel.GetTextureRotation())) {
+                return requestedDirection - 1;
+            }
         }
 
+        if (IsSlope(aheadVoxel) && IsSlopeUpRelativeToPlayer(requestedDirection, aheadVoxel.GetTextureRotation())) {
+            return requestedDirection + 1;
+        }
+
+        return PlayerMoveDirection.NONE;
+    }
+
+    private bool IsSlope(Voxel voxel) {
         VoxelDefinition slopeVoxel = null;
         foreach (VoxelDefinition vd in environment.voxelDefinitions) {
             if (vd != null && vd.name == "SlopeVoxel") {
@@ -124,40 +140,58 @@ public class SpriteMovement : MonoBehaviour
             throw new System.SystemException("No expected voxel in world.");
         }
         int slopeRotation = voxel.GetTextureRotation();
-        if (voxel.type == slopeVoxel && playerMoveLinesUpWithSlope(moveDirection, slopeRotation)) {
-            return true;
-        }
-
-        return false;
+        return voxel.type == slopeVoxel;
     }
 
-    private bool playerMoveLinesUpWithSlope(PlayerMoveDirection moveDirection, int slopeRotation) {
+    private bool IsSlopeUpRelativeToPlayer(PlayerMoveDirection moveDirection, int slopeRotation) {
         return moveDirection == PlayerMoveDirection.NORTH && slopeRotation == 0
             || moveDirection == PlayerMoveDirection.EAST && slopeRotation == 1
             || moveDirection == PlayerMoveDirection.SOUTH && slopeRotation == 2
             || moveDirection == PlayerMoveDirection.WEST && slopeRotation == 3;
     }
 
-    private Vector3 GetDestinationIndexFromDirection(PlayerMoveDirection moveDirection, Vector3 startIndex) {
-        if (moveDirection == PlayerMoveDirection.NORTH) {
-            return startIndex + Vector3.forward;
+    private bool IsSlopeDownRelativeToPlayer(PlayerMoveDirection moveDirection, int slopeRotation) {
+        return moveDirection == PlayerMoveDirection.NORTH && slopeRotation == 2
+            || moveDirection == PlayerMoveDirection.EAST && slopeRotation == 3
+            || moveDirection == PlayerMoveDirection.SOUTH && slopeRotation == 0
+            || moveDirection == PlayerMoveDirection.WEST && slopeRotation == 1;
+    }
+
+    // assumes 1 unit of travel
+    private Vector3 GetDestinationPositionFromDirection(PlayerMoveDirection moveDirection, Vector3 startIndex) {
+        string enumName = moveDirection.ToString();
+        Vector3 destinationIndex;
+        if (enumName.StartsWith("NORTH")) {
+            destinationIndex = startIndex + Vector3.forward;
         }
-        if (moveDirection == PlayerMoveDirection.SOUTH) {
-            return startIndex + Vector3.back;
+        else if (enumName.StartsWith("SOUTH")) {
+            destinationIndex = startIndex + Vector3.back;
         }
-        if (moveDirection == PlayerMoveDirection.EAST) {
-            return startIndex + Vector3.right;
+        else if (enumName.StartsWith("EAST")) {
+            destinationIndex = startIndex + Vector3.right;
         }
-        if (moveDirection == PlayerMoveDirection.WEST) {
-            return startIndex + Vector3.left;
+        else if (enumName.StartsWith("WEST")) {
+            destinationIndex = startIndex + Vector3.left;
         }
-        if (moveDirection == PlayerMoveDirection.UP) {
-            return startIndex + Vector3.up;
+        else if (enumName.StartsWith("UP")) {
+            destinationIndex = startIndex + Vector3.up;
         }
-        if (moveDirection == PlayerMoveDirection.DOWN) {
-            return startIndex + Vector3.down;
+        else if (enumName.StartsWith("DOWN")) {
+            destinationIndex = startIndex + Vector3.down;
         }
-        throw new System.ArgumentException("Unexpected direction provided");
+        else {
+            throw new System.ArgumentException("No direction provided when expected.");
+        }
+
+        Vector3 verticalModifier = Vector3.zero;
+        if (enumName.EndsWith("_UP")) {
+            verticalModifier += Vector3.up;
+        }
+        else if (enumName.EndsWith("_DOWN")) {
+            verticalModifier += Vector3.down;
+        }
+
+        return destinationIndex + verticalModifier;
     }
 
     private void ToggleFreeCamera() {

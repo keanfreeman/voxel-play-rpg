@@ -24,7 +24,7 @@ MonoBehaviour:
   worldSpaceUVs: 0
   overrideMaterialNonGeo: {fileID: 0}
   hasContent: 1
-  opaque: 15
+  opaque: 0
   textureTop: {fileID: 0}
   textureTopEmission: {fileID: 0}
   textureTopNRM: {fileID: 0}
