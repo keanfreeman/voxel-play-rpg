@@ -1,4 +1,6 @@
 CURRENT GOAL
+add NPCs
+- have my own "move sprite" method that handles moving around the player and NPCs
 
 TODO
 try to create a custom voxel that encapsulates a 3d object.
@@ -9,12 +11,25 @@ make it possible to see through walls when the player is behind it
 
 make the game playable with a controller
 - should learn about the new input system for this
+can potentially use voxel play's input system for this
 
 make it possible to move in any direction with "snapping" to the grid, like fire emblem awakening and pokemon ORAS
 
 animate the player
 
 make slopes occlude their surroundings
+
+add combat
+
+
+add dialog
+
+add a "detatched mode" like advance wars/divinity, where the sprite stays put and a cursor appears that can move around.
+this can look around, build things, select things, etc.
+maybe shouldn't load things past the sprite's vision.
+
+allow the player to rotate the camera
+
 
 BUGS TO FIX
 
@@ -43,3 +58,5 @@ automatically move the player upwards/downwards on slopes
 - need to just move them up/down now
 
 restrict movement to grounded movement
+
+allow the camera to move through walls in sprite mode

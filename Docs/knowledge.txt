@@ -1,1 +1,6 @@
 the player exists on the square above the slope
+
+issue - the character controller is integral to the way the first-person movement works, but it causes collisions in the other mode
+can remedy this by destroying the controller and recreating it, then refreshing with checkcharactercontroller
+can also change the class to not be so dependent on the character controller
+

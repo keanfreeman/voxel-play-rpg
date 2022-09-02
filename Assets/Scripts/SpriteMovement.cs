@@ -206,6 +206,7 @@ public class SpriteMovement : MonoBehaviour {
         scriptInstance.freeMode = !scriptInstance.freeMode;
         scriptInstance.hasCharacterController = !scriptInstance.hasCharacterController;
         scriptInstance.voxelHighlight = !scriptInstance.voxelHighlight;
+        scriptInstance.unstuck = !scriptInstance.unstuck;
 
         if (!isFollowingSprite) {
             transform.position = spriteObject.transform.position + (Vector3.up * 5f) + (Vector3.back * 5f);
