@@ -6,14 +6,21 @@ using VoxelPlay;
 using PlayerMovement;
 
 public class SpriteMovement : MonoBehaviour {
+    // CONST
+    [SerializeField]
+    const float TIME_TO_ROTATE = 0.5f;
+    [SerializeField]
     const float TIME_TO_MOVE_A_TILE = 0.2f;
+    [SerializeField]
     const float SPRINT_SPEEDUP = 2f;
 
+    // IMPORT
     VoxelPlayFirstPersonController scriptInstance;
     GameObject spriteObject;
     GameObject cameraObject;
     VoxelPlayEnvironment environment;
 
+    // STATE
     bool isFollowingSprite = false;
 
     bool isMoving = false;
@@ -23,16 +30,22 @@ public class SpriteMovement : MonoBehaviour {
     Vector3 moveEndPoint;
     Vector3 spriteIndex = new Vector3(523, 50, 246);
 
+    bool isRotating;
+    float rotateStartTimestamp;
+    Quaternion startRotation;
+    Quaternion endRotation;
+
     void Start() {
         environment = VoxelPlayEnvironment.instance;
         moveStartTimestamp = Time.time;
         scriptInstance = GetComponent<VoxelPlayFirstPersonController>();
-        spriteObject = GameObject.Find("PlayerSprite");
+        spriteObject = GameObject.Find("PlayerSpriteContainer");
         cameraObject = GameObject.Find("FirstPersonCharacter");
     }
 
     void Update() {
         HandleMovement();
+        HandleCameraRotation();
 
         if (Input.GetKeyUp(KeyCode.K)) {
             ToggleFreeCamera();
@@ -47,7 +60,7 @@ public class SpriteMovement : MonoBehaviour {
         if (!isFollowingSprite) {
             return;
         }
-        if (isMoving && !IsMoveTransitionDone()) {
+        if (isRotating || (isMoving && !IsMoveTransitionDone())) {
             return;
         }
         isMoving = false;
@@ -58,16 +71,16 @@ public class SpriteMovement : MonoBehaviour {
         }
         Vector3 spriteCurrPosition = spriteObject.transform.position;
         PlayerMoveDirection requestedDirection;
-        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) {
+        if (Input.GetKey(KeyCode.W)) {
             requestedDirection = PlayerMoveDirection.NORTH;
         }
-        else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) {
+        else if (Input.GetKey(KeyCode.S)) {
             requestedDirection = PlayerMoveDirection.SOUTH;
         }
-        else if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) {
+        else if (Input.GetKey(KeyCode.A)) {
             requestedDirection = PlayerMoveDirection.WEST;
         }
-        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
+        else if (Input.GetKey(KeyCode.D)) {
             requestedDirection = PlayerMoveDirection.EAST;
         }
         else if (Input.GetKey(KeyCode.Q)) {
@@ -91,6 +104,35 @@ public class SpriteMovement : MonoBehaviour {
         moveEndPoint = GetDestinationPositionFromDirection(actualDirection, spriteCurrPosition);
         isMoving = true;
         moveStartTimestamp = Time.time;
+    }
+
+    private void HandleCameraRotation() {
+        if (isMoving || (isRotating && !IsRotationDone())) {
+            return;
+        }
+        isRotating = false;
+        startRotation = spriteObject.transform.rotation;
+
+        if (Input.GetKey(KeyCode.LeftArrow)) {
+            endRotation = Quaternion.Euler(startRotation.eulerAngles + (Vector3.up * 90f));
+        }
+        else if (Input.GetKey(KeyCode.RightArrow)) {
+            endRotation = Quaternion.Euler(startRotation.eulerAngles + (Vector3.up * -90f));
+        }
+        else {
+            return;
+        }
+
+        isRotating = true;
+        rotateStartTimestamp = Time.time;
+    }
+
+    private bool IsRotationDone() {
+        float timeSinceMoveBegan = Time.time - rotateStartTimestamp;
+        float fractionRotationComplete = Mathf.Min(timeSinceMoveBegan / TIME_TO_ROTATE, 1);
+        spriteObject.transform.rotation = Quaternion.Lerp(startRotation, endRotation, fractionRotationComplete);
+
+        return fractionRotationComplete == 1;
     }
 
     // returns true when the transition is done
@@ -210,11 +252,16 @@ public class SpriteMovement : MonoBehaviour {
 
         if (!isFollowingSprite) {
             transform.position = spriteObject.transform.position + (Vector3.up * 5f) + (Vector3.back * 5f);
-            cameraObject.transform.rotation = spriteObject.transform.rotation;
+            cameraObject.transform.rotation = GetSpriteRotation();
             transform.SetParent(spriteObject.transform);
 
             scriptInstance.crosshairScale = 0;
         }
         isFollowingSprite = !isFollowingSprite;
+    }
+
+    private Quaternion GetSpriteRotation() {
+        Transform sprite = spriteObject.transform.GetChild(0);
+        return sprite.transform.rotation;
     }
 }

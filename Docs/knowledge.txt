@@ -1,6 +1,8 @@
 the player exists on the square above the slope
 
 issue - the character controller is integral to the way the first-person movement works, but it causes collisions in the other mode
-can remedy this by destroying the controller and recreating it, then refreshing with checkcharactercontroller
-can also change the class to not be so dependent on the character controller
-
+- can remedy this by destroying the controller and recreating it, then refreshing with checkcharactercontroller
+- can also change the class to not be so dependent on the character controller
+- I think in the long-term, due to the need for 3 basic modes (1st person, 3rd person, and disembodied/edit mode) and voxel play's 
+	lack of controller support, I will need my own 1st person camera with many of voxel play's features. but I don't want to get bogged
+	down in that yet.

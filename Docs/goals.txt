@@ -1,4 +1,7 @@
-CURRENT GOAL
+CURRENT GOALS
+allow the player to rotate the camera
+- current system assumes always facing front
+
 add NPCs
 - have my own "move sprite" method that handles moving around the player and NPCs
 
@@ -21,14 +24,15 @@ make slopes occlude their surroundings
 
 add combat
 
-
 add dialog
 
 add a "detatched mode" like advance wars/divinity, where the sprite stays put and a cursor appears that can move around.
 this can look around, build things, select things, etc.
 maybe shouldn't load things past the sprite's vision.
 
-allow the player to rotate the camera
+guide the camera in scenarios where it would be nice to do so, like if the player was descending a spiral staircase against a wall
+
+break rotation and movement into its own classes
 
 
 BUGS TO FIX
