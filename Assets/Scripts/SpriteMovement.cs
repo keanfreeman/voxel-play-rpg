@@ -17,6 +17,7 @@ public class SpriteMovement : MonoBehaviour {
     // IMPORT
     VoxelPlayFirstPersonController scriptInstance;
     GameObject spriteObject;
+    Transform spriteChildTransform;
     GameObject cameraObject;
     VoxelPlayEnvironment environment;
 
@@ -41,6 +42,7 @@ public class SpriteMovement : MonoBehaviour {
         moveStartTimestamp = Time.time;
         scriptInstance = GetComponent<VoxelPlayFirstPersonController>();
         spriteObject = GameObject.Find("PlayerSpriteContainer");
+        spriteChildTransform = spriteObject.transform.GetChild(0);
         cameraObject = GameObject.Find("FirstPersonCharacter");
     }
 
@@ -113,7 +115,7 @@ public class SpriteMovement : MonoBehaviour {
             return;
         }
         isRotating = false;
-        startRotation = spriteObject.transform.rotation;
+        startRotation = spriteChildTransform.transform.rotation;
 
         if (Input.GetKey(KeyCode.LeftArrow)) {
             endRotation = Quaternion.Euler(startRotation.eulerAngles + (Vector3.up * 90f));
@@ -163,7 +165,7 @@ public class SpriteMovement : MonoBehaviour {
     private bool IsRotationDone() {
         float timeSinceMoveBegan = Time.time - rotateStartTimestamp;
         float fractionRotationComplete = Mathf.Min(timeSinceMoveBegan / TIME_TO_ROTATE, 1);
-        spriteObject.transform.rotation = Quaternion.Lerp(startRotation, endRotation, fractionRotationComplete);
+        spriteChildTransform.transform.rotation = Quaternion.Lerp(startRotation, endRotation, fractionRotationComplete);
 
         return fractionRotationComplete == 1;
     }
@@ -328,17 +330,13 @@ public class SpriteMovement : MonoBehaviour {
         scriptInstance.unstuck = !scriptInstance.unstuck;
 
         if (!isFollowingSprite) {
-            transform.position = spriteObject.transform.position + (Vector3.up * 5f) + (Vector3.back * 5f);
-            cameraObject.transform.rotation = GetSpriteRotation();
-            transform.SetParent(spriteObject.transform);
+            transform.position = spriteChildTransform.transform.position
+                + (Vector3.up * 5f) + (Vector3.back * 5f);
+            cameraObject.transform.rotation = spriteChildTransform.transform.rotation;
+            transform.SetParent(spriteChildTransform.transform);
 
             scriptInstance.crosshairScale = 0;
         }
         isFollowingSprite = !isFollowingSprite;
-    }
-
-    private Quaternion GetSpriteRotation() {
-        Transform sprite = spriteObject.transform.GetChild(0);
-        return sprite.transform.rotation;
     }
 }

@@ -1,7 +1,4 @@
 CURRENT GOALS
-allow the player to rotate the camera
-- current system assumes always facing front
-
 add NPCs
 - have my own "move sprite" method that handles moving around the player and NPCs
 
@@ -64,3 +61,6 @@ automatically move the player upwards/downwards on slopes
 restrict movement to grounded movement
 
 allow the camera to move through walls in sprite mode
+
+allow the player to rotate the camera
+- current system assumes always facing front
