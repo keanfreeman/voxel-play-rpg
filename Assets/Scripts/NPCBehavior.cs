@@ -8,16 +8,10 @@ public class NPCBehavior : MonoBehaviour
     private const float NPC_MIN_IDLE_TIME = 1;
     private const float NPC_MAX_IDLE_TIME = 5;
 
-    GameObject spriteObject;
     System.Random rng = new System.Random();
 
     public Vector3Int spritePosition = new Vector3Int(521, 50, 246);
     private float lastMoveTime = 0;
-
-    void Start()
-    {
-        spriteObject = GameObject.Find("NPCSpriteContainer");
-    }
 
     void Update()
     {
@@ -32,6 +26,6 @@ public class NPCBehavior : MonoBehaviour
 
     public void MoveSprite(Vector3Int position) {
         spritePosition = position;
-        spriteObject.transform.position = spritePosition;
+        transform.position = spritePosition;
     }
 }

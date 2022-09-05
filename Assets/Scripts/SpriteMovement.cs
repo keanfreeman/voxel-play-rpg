@@ -4,6 +4,7 @@ using UnityEngine;
 
 using VoxelPlay;
 using PlayerMovement;
+using UnityEngine.ProBuilder;
 
 public class SpriteMovement : MonoBehaviour {
     // CONST
@@ -16,7 +17,7 @@ public class SpriteMovement : MonoBehaviour {
 
     // IMPORT
     VoxelPlayFirstPersonController scriptInstance;
-    GameObject spriteObject;
+    public GameObject spriteContainer;
     Transform spriteChildTransform;
     GameObject cameraObject;
     VoxelPlayEnvironment environment;
@@ -41,9 +42,8 @@ public class SpriteMovement : MonoBehaviour {
         environment = VoxelPlayEnvironment.instance;
         moveStartTimestamp = Time.time;
         scriptInstance = GetComponent<VoxelPlayFirstPersonController>();
-        spriteObject = GameObject.Find("PlayerSpriteContainer");
-        spriteChildTransform = spriteObject.transform.GetChild(0);
         cameraObject = GameObject.Find("FirstPersonCharacter");
+        spriteChildTransform = spriteContainer.transform.GetChild(0);
     }
 
     void Update() {
@@ -72,7 +72,7 @@ public class SpriteMovement : MonoBehaviour {
         if (Input.GetKey(KeyCode.LeftShift)) {
             isSprinting = true;
         }
-        Vector3 spriteCurrPosition = spriteObject.transform.position;
+        Vector3 spriteCurrPosition = spriteContainer.transform.position;
         PlayerMoveDirection requestedDirection;
         if (Input.GetKey(KeyCode.W)) {
             requestedDirection = PlayerMoveDirection.FORWARD;
@@ -176,7 +176,7 @@ public class SpriteMovement : MonoBehaviour {
         float sprintMultiplier = isSprinting ? SPRINT_SPEEDUP : 1;
         float fractionOfMovementDone = timeSinceMoveBegan * sprintMultiplier / (TIME_TO_MOVE_A_TILE);
         float linearFriendlyFraction = Mathf.Min(fractionOfMovementDone, 1f);
-        spriteObject.transform.position = Vector3.Lerp(moveStartPoint, moveEndPoint, linearFriendlyFraction);
+        spriteContainer.transform.position = Vector3.Lerp(moveStartPoint, moveEndPoint, linearFriendlyFraction);
         return linearFriendlyFraction >= 1f;
     }
 
