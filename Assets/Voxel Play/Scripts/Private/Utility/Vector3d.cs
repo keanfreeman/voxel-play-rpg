@@ -100,6 +100,11 @@ namespace VoxelPlay
             this.z = (double)v3.z;
         }
 
+        // Addition to voxel play
+        public static implicit operator Vector3d (Vector3Int v3Int) {
+            return new Vector3d(v3Int.x, v3Int.y, v3Int.z);
+        }
+
         public Vector3d (double x, double y)
         {
             this.x = x;
