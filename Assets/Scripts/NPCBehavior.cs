@@ -1,3 +1,4 @@
+using NonVoxel;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,7 @@ public class NPCBehavior : MonoBehaviour
 
     System.Random rng = new System.Random();
 
-    public Vector3Int spritePosition = new Vector3Int(521, 50, 246);
+    public NonVoxelWorld nonVoxelWorld;
     private float lastMoveTime = 0;
 
     void Update()
@@ -20,12 +21,13 @@ public class NPCBehavior : MonoBehaviour
         }
         lastMoveTime = Time.time;
 
-        Vector3Int newPosition = spritePosition + new Vector3Int(rng.Next(-1, 2), 0, rng.Next(-1, 2));
+        Vector3Int newPosition = nonVoxelWorld.GetPosition(gameObject)
+            + new Vector3Int(rng.Next(-1, 2), 0, rng.Next(-1, 2));
         MoveSprite(newPosition);
     }
 
     public void MoveSprite(Vector3Int position) {
-        spritePosition = position;
-        transform.position = spritePosition;
+        nonVoxelWorld.SetPosition(gameObject, position);
+        transform.position = position;
     }
 }

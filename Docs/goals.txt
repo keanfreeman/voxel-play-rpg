@@ -1,6 +1,7 @@
 CURRENT GOALS
 add NPCs
 - have my own "move sprite" method that handles moving around the player and NPCs
+- make them not move into other creature-occupied tiles or voxel occupied tiles
 
 TODO
 try to create a custom voxel that encapsulates a 3d object.

@@ -5,6 +5,7 @@ using UnityEngine;
 using VoxelPlay;
 using PlayerMovement;
 using UnityEngine.ProBuilder;
+using NonVoxel;
 
 public class SpriteMovement : MonoBehaviour {
     // CONST
@@ -21,6 +22,7 @@ public class SpriteMovement : MonoBehaviour {
     Transform spriteChildTransform;
     GameObject cameraObject;
     VoxelPlayEnvironment environment;
+    public NonVoxelWorld nonVoxelWorld;
 
     // STATE
     bool isFollowingSprite = false;
@@ -30,7 +32,6 @@ public class SpriteMovement : MonoBehaviour {
     float moveStartTimestamp;
     Vector3 moveStartPoint;
     Vector3 moveEndPoint;
-    Vector3Int spriteIndex = new Vector3Int(523, 50, 246);
 
     bool isRotating;
     float rotateStartTimestamp;
@@ -97,13 +98,14 @@ public class SpriteMovement : MonoBehaviour {
         }
 
         PlayerMoveDirection actualDirection = GetTerrainAdjustedDirection(requestedDirection,
-            spriteIndex, playerCameraDirection);
+            nonVoxelWorld.GetPlayerPosition(), playerCameraDirection);
         if (actualDirection == PlayerMoveDirection.NONE) {
             Debug.Log("Tried to move in an invalid way.");
             return;
         }
 
-        spriteIndex += GetMoveVectorFromDirection(actualDirection, playerCameraDirection);
+        nonVoxelWorld.SetPlayerPosition(nonVoxelWorld.GetPlayerPosition()
+            + GetMoveVectorFromDirection(actualDirection, playerCameraDirection));
         moveStartPoint = spriteCurrPosition;
         moveEndPoint = moveStartPoint + GetMoveVectorFromDirection(actualDirection, playerCameraDirection);
         isMoving = true;

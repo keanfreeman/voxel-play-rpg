@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VoxelPlay;
+using NonVoxel;
 
 public class Orchestrator : MonoBehaviour
 {
@@ -13,15 +14,14 @@ public class Orchestrator : MonoBehaviour
 
     private GameObject playerInstance;
 
-    public Dictionary<GameObject, Vector3Int> creatures
-        = new Dictionary<GameObject, Vector3Int>();
+    NonVoxelWorld nonVoxelWorld;
 
-    // Start is called before the first frame update
     void Start()
     {
-        InitCreatures();
+        InitCreaturesAndWorld();
         SpriteMovement spriteMovement = vpController.GetComponent<SpriteMovement>();
         spriteMovement.spriteContainer = playerInstance;
+        spriteMovement.nonVoxelWorld = nonVoxelWorld;
         vpController.GetComponent<SpriteMovement>().enabled = true;
 
         vpController.GetComponent<VoxelPlayPlayer>().enabled = true;
@@ -29,14 +29,16 @@ public class Orchestrator : MonoBehaviour
         vpController.GetComponent<VoxelPlayFirstPersonController>().enabled = true;
     }
 
-    private void InitCreatures() {
+    private void InitCreaturesAndWorld() {
         Vector3Int playerStartPosition = new Vector3Int(523, 50, 246);
         GameObject playerInstance = Instantiate(playerPrefab, playerStartPosition, Quaternion.identity);
-        this.creatures[playerInstance] = playerStartPosition;
         this.playerInstance = playerInstance;
+        
+        nonVoxelWorld = new NonVoxelWorld(playerInstance, playerStartPosition);
 
         Vector3Int opossumStartPosition = new Vector3Int(521, 50, 246);
         GameObject opossumInstance = Instantiate(opossumPrefab, opossumStartPosition, Quaternion.identity);
-        this.creatures[opossumInstance] = opossumStartPosition;
+        opossumInstance.GetComponent<NPCBehavior>().nonVoxelWorld = nonVoxelWorld;
+        nonVoxelWorld.creatures[opossumInstance] = opossumStartPosition;
     }
 }
