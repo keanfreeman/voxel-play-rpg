@@ -3,30 +3,33 @@ using UnityEngine;
 
 namespace NonVoxel {
     public class NonVoxelWorld {
-        public Dictionary<GameObject, Vector3Int> creatures
+        private Dictionary<GameObject, Vector3Int> creatureToPosition
             = new Dictionary<GameObject, Vector3Int>();
+        private Dictionary<Vector3Int, GameObject> positionToCreature
+            = new Dictionary<Vector3Int, GameObject>();
 
-        private GameObject player;
-
-        public NonVoxelWorld(GameObject player, Vector3Int playerPosition) {
-            this.player = player;
-            creatures[player] = playerPosition;
-        }
-
-        public Vector3Int GetPlayerPosition() {
-            return creatures[player];
-        }
-
-        public void SetPlayerPosition(Vector3Int position) {
-            creatures[player] = position;
+        public NonVoxelWorld() {
         }
 
         public Vector3Int GetPosition(GameObject gameObject) {
-            return creatures[gameObject];
+            return creatureToPosition[gameObject];
         }
 
         public void SetPosition(GameObject gameObject, Vector3Int position) {
-            creatures[gameObject] = position;
+            if (creatureToPosition.ContainsKey(gameObject)) {
+                Vector3Int oldPosition = creatureToPosition[gameObject];
+                if (positionToCreature.ContainsKey(oldPosition)) {
+                    Debug.Log("removing " + oldPosition);
+                    positionToCreature.Remove(oldPosition);
+                }
+            }
+
+            creatureToPosition[gameObject] = position;
+            positionToCreature[position] = gameObject;
+        }
+
+        public bool IsPositionOccupied(Vector3Int position) {
+            return positionToCreature.ContainsKey(position);
         }
     }
 }

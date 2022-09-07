@@ -98,14 +98,19 @@ public class SpriteMovement : MonoBehaviour {
         }
 
         PlayerMoveDirection actualDirection = GetTerrainAdjustedDirection(requestedDirection,
-            nonVoxelWorld.GetPlayerPosition(), playerCameraDirection);
+            nonVoxelWorld.GetPosition(spriteContainer), playerCameraDirection);
         if (actualDirection == PlayerMoveDirection.NONE) {
             Debug.Log("Tried to move in an invalid way.");
             return;
         }
 
-        nonVoxelWorld.SetPlayerPosition(nonVoxelWorld.GetPlayerPosition()
-            + GetMoveVectorFromDirection(actualDirection, playerCameraDirection));
+        Vector3Int desiredPosition = nonVoxelWorld.GetPosition(spriteContainer)
+            + GetMoveVectorFromDirection(actualDirection, playerCameraDirection);
+        if (nonVoxelWorld.IsPositionOccupied(desiredPosition)) {
+            Debug.Log("Tried to move into a non-voxel-occupied space.");
+            return;
+        }
+        nonVoxelWorld.SetPosition(spriteContainer, desiredPosition);
         moveStartPoint = spriteCurrPosition;
         moveEndPoint = moveStartPoint + GetMoveVectorFromDirection(actualDirection, playerCameraDirection);
         isMoving = true;

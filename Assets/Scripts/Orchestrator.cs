@@ -14,7 +14,7 @@ public class Orchestrator : MonoBehaviour
 
     private GameObject playerInstance;
 
-    NonVoxelWorld nonVoxelWorld;
+    NonVoxelWorld nonVoxelWorld = new NonVoxelWorld();
 
     void Start()
     {
@@ -33,12 +33,11 @@ public class Orchestrator : MonoBehaviour
         Vector3Int playerStartPosition = new Vector3Int(523, 50, 246);
         GameObject playerInstance = Instantiate(playerPrefab, playerStartPosition, Quaternion.identity);
         this.playerInstance = playerInstance;
+        nonVoxelWorld.SetPosition(playerInstance, playerStartPosition);
         
-        nonVoxelWorld = new NonVoxelWorld(playerInstance, playerStartPosition);
-
         Vector3Int opossumStartPosition = new Vector3Int(521, 50, 246);
         GameObject opossumInstance = Instantiate(opossumPrefab, opossumStartPosition, Quaternion.identity);
         opossumInstance.GetComponent<NPCBehavior>().nonVoxelWorld = nonVoxelWorld;
-        nonVoxelWorld.creatures[opossumInstance] = opossumStartPosition;
+        nonVoxelWorld.SetPosition(opossumInstance, opossumStartPosition);
     }
 }
