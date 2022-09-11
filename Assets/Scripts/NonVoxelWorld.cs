@@ -19,7 +19,6 @@ namespace NonVoxel {
             if (creatureToPosition.ContainsKey(gameObject)) {
                 Vector3Int oldPosition = creatureToPosition[gameObject];
                 if (positionToCreature.ContainsKey(oldPosition)) {
-                    Debug.Log("removing " + oldPosition);
                     positionToCreature.Remove(oldPosition);
                 }
             }

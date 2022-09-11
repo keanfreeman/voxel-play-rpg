@@ -1,5 +1,5 @@
-namespace PlayerMovement {
-    public enum PlayerMoveDirection {
+namespace MovementDirection {
+    public enum SpriteMoveDirection {
         NONE,
         FORWARD_DOWN,
         FORWARD,

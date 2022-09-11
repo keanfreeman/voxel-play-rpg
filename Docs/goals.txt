@@ -1,7 +1,4 @@
 CURRENT GOALS
-add NPCs
-- have my own "move sprite" method that handles moving around the player and NPCs
-- make them not move into other creature-occupied tiles or voxel occupied tiles
 
 TODO
 try to create a custom voxel that encapsulates a 3d object.
@@ -32,9 +29,11 @@ guide the camera in scenarios where it would be nice to do so, like if the playe
 
 break rotation and movement into its own classes
 
+add shadows to sprites?
+
 
 BUGS TO FIX
-
+fix texture issues on slopes
 
 DONE
 add player movement
@@ -65,3 +64,8 @@ allow the camera to move through walls in sprite mode
 
 allow the player to rotate the camera
 - current system assumes always facing front
+
+add NPCs
+- have my own "move sprite" method that handles moving around the player and NPCs
+- make them not move into other creature-occupied tiles or voxel occupied tiles
+- have all sprites obey rules of movement, including NPCs (can go up/down slopes)

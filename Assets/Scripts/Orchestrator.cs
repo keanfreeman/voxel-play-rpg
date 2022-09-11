@@ -15,14 +15,20 @@ public class Orchestrator : MonoBehaviour
     private GameObject playerInstance;
 
     NonVoxelWorld nonVoxelWorld = new NonVoxelWorld();
+    SpriteMovement spriteMovement;
+    VoxelPlayEnvironment voxelPlayEnvironment;
 
     void Start()
     {
+        voxelPlayEnvironment = VoxelPlayEnvironment.instance;
+        spriteMovement = new SpriteMovement(voxelPlayEnvironment);
+
         InitCreaturesAndWorld();
-        SpriteMovement spriteMovement = vpController.GetComponent<SpriteMovement>();
-        spriteMovement.spriteContainer = playerInstance;
-        spriteMovement.nonVoxelWorld = nonVoxelWorld;
-        vpController.GetComponent<SpriteMovement>().enabled = true;
+        PlayerMovement playerMovement = vpController.GetComponent<PlayerMovement>();
+        playerMovement.spriteContainer = playerInstance;
+        playerMovement.nonVoxelWorld = nonVoxelWorld;
+        playerMovement.spriteMovement = spriteMovement;
+        vpController.GetComponent<PlayerMovement>().enabled = true;
 
         vpController.GetComponent<VoxelPlayPlayer>().enabled = true;
 
@@ -30,14 +36,22 @@ public class Orchestrator : MonoBehaviour
     }
 
     private void InitCreaturesAndWorld() {
+
         Vector3Int playerStartPosition = new Vector3Int(523, 50, 246);
         GameObject playerInstance = Instantiate(playerPrefab, playerStartPosition, Quaternion.identity);
         this.playerInstance = playerInstance;
         nonVoxelWorld.SetPosition(playerInstance, playerStartPosition);
-        
-        Vector3Int opossumStartPosition = new Vector3Int(521, 50, 246);
-        GameObject opossumInstance = Instantiate(opossumPrefab, opossumStartPosition, Quaternion.identity);
-        opossumInstance.GetComponent<NPCBehavior>().nonVoxelWorld = nonVoxelWorld;
-        nonVoxelWorld.SetPosition(opossumInstance, opossumStartPosition);
+
+        createNPC(new Vector3Int(527, 53, 247));
+        createNPC(new Vector3Int(521, 50, 246));
+    }
+
+    private void createNPC(Vector3Int startPosition) {
+        GameObject opossumInstance = Instantiate(opossumPrefab, startPosition, Quaternion.identity);
+        NPCBehavior npcBehavior = opossumInstance.GetComponent<NPCBehavior>();
+        npcBehavior.nonVoxelWorld = nonVoxelWorld;
+        npcBehavior.spriteMovement = spriteMovement;
+        npcBehavior.environment = voxelPlayEnvironment;
+        nonVoxelWorld.SetPosition(opossumInstance, startPosition);
     }
 }

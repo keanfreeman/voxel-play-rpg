@@ -1,4 +1,4 @@
-namespace PlayerMovement {
+namespace MovementDirection {
     public enum PlayerCameraDirection {
         NORTH,
         EAST,
