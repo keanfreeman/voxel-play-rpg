@@ -9,7 +9,7 @@ using VoxelPlay;
 public class NPCBehavior : MonoBehaviour
 {
     [SerializeField]
-    const float TIME_TO_ROTATE = 0.4f;
+    const float TIME_TO_ROTATE = 0.5f;
     private const float NPC_MIN_IDLE_TIME = 1;
     private const float NPC_MAX_IDLE_TIME = 5;
 
