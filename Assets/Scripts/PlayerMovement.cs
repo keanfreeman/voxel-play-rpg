@@ -181,18 +181,22 @@ public class PlayerMovement : MonoBehaviour {
         isRotating = false;
         startRotation = spriteChildTransform.transform.rotation;
 
+        KeyCode direction;
         if (Input.GetKey(KeyCode.LeftArrow)) {
             endRotation = Quaternion.Euler(startRotation.eulerAngles + (Vector3.up * 90f));
             playerCameraDirection = GetNewCameraDirection(playerCameraDirection, true);
+            direction = KeyCode.LeftArrow;
         }
         else if (Input.GetKey(KeyCode.RightArrow)) {
             endRotation = Quaternion.Euler(startRotation.eulerAngles + (Vector3.up * -90f));
             playerCameraDirection = GetNewCameraDirection(playerCameraDirection, false);
+            direction = KeyCode.RightArrow;
         }
         else {
             return;
         }
 
+        nonVoxelWorld.RotateNonPlayerCreatures(direction);
         isRotating = true;
         rotateStartTimestamp = Time.time;
     }

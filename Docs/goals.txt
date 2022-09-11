@@ -69,3 +69,4 @@ add NPCs
 - have my own "move sprite" method that handles moving around the player and NPCs
 - make them not move into other creature-occupied tiles or voxel occupied tiles
 - have all sprites obey rules of movement, including NPCs (can go up/down slopes)
+- fix rotation for NPCs

@@ -30,5 +30,14 @@ namespace NonVoxel {
         public bool IsPositionOccupied(Vector3Int position) {
             return positionToCreature.ContainsKey(position);
         }
+
+        public void RotateNonPlayerCreatures(KeyCode rotationDirection) {
+            foreach (GameObject gameObject in creatureToPosition.Keys) {
+                NPCBehavior npcBehavior = gameObject.GetComponent<NPCBehavior>();
+                if (npcBehavior != null) {
+                    npcBehavior.rotationDirection = rotationDirection;
+                }
+            }
+        }
     }
 }
