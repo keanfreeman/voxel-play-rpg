@@ -15,6 +15,7 @@ public class Orchestrator : MonoBehaviour
     private GameObject playerInstance;
 
     NonVoxelWorld nonVoxelWorld = new NonVoxelWorld();
+    System.Random rng = new System.Random();
     SpriteMovement spriteMovement;
     VoxelPlayEnvironment voxelPlayEnvironment;
 
@@ -52,6 +53,7 @@ public class Orchestrator : MonoBehaviour
         npcBehavior.nonVoxelWorld = nonVoxelWorld;
         npcBehavior.spriteMovement = spriteMovement;
         npcBehavior.environment = voxelPlayEnvironment;
+        npcBehavior.rng = rng;
         nonVoxelWorld.SetPosition(opossumInstance, startPosition);
     }
 }

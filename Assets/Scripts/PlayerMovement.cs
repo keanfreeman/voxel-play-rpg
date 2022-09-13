@@ -24,6 +24,7 @@ public class PlayerMovement : MonoBehaviour {
     VoxelPlayEnvironment environment;
     public NonVoxelWorld nonVoxelWorld;
     public SpriteMovement spriteMovement;
+    Animator animator;
 
     // STATE
     bool isFollowingSprite = false;
@@ -46,6 +47,7 @@ public class PlayerMovement : MonoBehaviour {
         scriptInstance = GetComponent<VoxelPlayFirstPersonController>();
         cameraObject = GameObject.Find("FirstPersonCharacter");
         spriteChildTransform = spriteContainer.transform.GetChild(0);
+        animator = spriteChildTransform.GetComponent<Animator>();
     }
 
     void Update() {
@@ -95,6 +97,7 @@ public class PlayerMovement : MonoBehaviour {
             requestedDirection = SpriteMoveDirection.DOWN;
         }
         else {
+            animator.SetBool("isMoving", isMoving);
             return;
         }
 
@@ -118,6 +121,7 @@ public class PlayerMovement : MonoBehaviour {
         moveStartPoint = spriteCurrPosition;
         moveEndPoint = destinationCoordinate;
         isMoving = true;
+        animator.SetBool("isMoving", isMoving);
         moveStartTimestamp = Time.time;
     }
 

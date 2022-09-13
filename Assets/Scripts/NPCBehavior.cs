@@ -13,7 +13,7 @@ public class NPCBehavior : MonoBehaviour
     private const float NPC_MIN_IDLE_TIME = 1;
     private const float NPC_MAX_IDLE_TIME = 5;
 
-    System.Random rng = new System.Random();
+    public System.Random rng;
     public VoxelPlayEnvironment environment;
     public NonVoxelWorld nonVoxelWorld;
     public SpriteMovement spriteMovement;

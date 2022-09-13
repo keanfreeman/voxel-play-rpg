@@ -1,4 +1,6 @@
 CURRENT GOALS
+make sprite with directionality (faces a direction)
+make sprite capable of interacting with objects with "A"
 
 TODO
 try to create a custom voxel that encapsulates a 3d object.
@@ -31,9 +33,27 @@ break rotation and movement into its own classes
 
 add shadows to sprites?
 
+think about design of sprites. can I afford to have 4 directions per sprite? Maybe
+a side profile + running + attacking is enough
+- player can be special. Can have 4 directions for the player classes + potential customizability (hair, armor, etc like fire emblem),
+  and NPCs/monsters just have 2 idle sprites and an attack sprite like rift wizard
+
 
 BUGS TO FIX
 fix texture issues on slopes
+
+MVP FOR FRIEND
+- needs to have some fun-looking environments (can use art from this creator - https://assetstore.unity.com/packages/3d/environments/fantasy/retro-dungeons-modular-house-interiors-170705)
+	I'm thinking at least a home, a village-y area, and "dungeon" area
+- needs to have at least two classes the player can choose from, one martial and one magic
+- needs at least two fights
+- need to demonstrate somehow that the player can modify the terrain to their liking
+- needs an NPC or a monster who joins the player
+- needs some dialog that showcases a little story
+
+- should really be playable with a controller
+- would be nice if a movement option became available for the player early on (like a bike that can ride around a generated area)
+- would be nice to have the player able to customize the look of their character
 
 DONE
 add player movement
