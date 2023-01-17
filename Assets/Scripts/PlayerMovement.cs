@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour {
     public SpriteMovement spriteMovement;
     Animator animator;
     SpriteRenderer spriteRenderer;
+    public Dialogue dialogue;
 
     // STATE
     bool isFollowingSprite = false;
@@ -93,6 +94,7 @@ public class PlayerMovement : MonoBehaviour {
         }
 
         Debug.Log("Object near player.");
+        dialogue.GetNextText();
     }
 
     private void HandleMovement() {

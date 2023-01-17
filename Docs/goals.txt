@@ -1,5 +1,7 @@
 CURRENT GOALS
-make it possible for character to interact with "enter" when within one tile in any direction of an interactable object.
+add a text box for the player to read when interacting with stuff. 
+- make it so all control is ceded to the text box when in that state.
+
 
 TODO
 make sprite with directionality (faces a direction)
@@ -39,6 +41,11 @@ think about design of sprites. can I afford to have 4 directions per sprite? May
 a side profile + running + attacking is enough
 - player can be special. Can have 4 directions for the player classes + potential customizability (hair, armor, etc like fire emblem),
   and NPCs/monsters just have 2 idle sprites and an attack sprite like rift wizard
+
+
+STYLE IMPROVEMENTS
+- dialog box
+- 
 
 DISCUSSION
 - the issue with this approach is it requires at least 4 sprites just for being able to stand in a direction.

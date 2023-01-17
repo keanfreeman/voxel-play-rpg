@@ -11,6 +11,7 @@ public class Orchestrator : MonoBehaviour
     public GameObject vpController;
     public GameObject playerPrefab;
     public GameObject opossumPrefab;
+    public GameObject dialogBox;
 
     private GameObject playerInstance;
 
@@ -29,6 +30,7 @@ public class Orchestrator : MonoBehaviour
         playerMovement.spriteContainer = playerInstance;
         playerMovement.nonVoxelWorld = nonVoxelWorld;
         playerMovement.spriteMovement = spriteMovement;
+        playerMovement.dialogue = dialogBox.GetComponent<Dialogue>();
         vpController.GetComponent<PlayerMovement>().enabled = true;
 
         vpController.GetComponent<VoxelPlayPlayer>().enabled = true;
