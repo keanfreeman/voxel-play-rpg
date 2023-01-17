@@ -25,11 +25,13 @@ public class PlayerMovement : MonoBehaviour {
     public NonVoxelWorld nonVoxelWorld;
     public SpriteMovement spriteMovement;
     Animator animator;
+    SpriteRenderer spriteRenderer;
 
     // STATE
     bool isFollowingSprite = false;
 
     bool isMoving = false;
+    bool isFacingRight = false;
     bool isSprinting = false;
     float moveStartTimestamp;
     Vector3 moveStartPoint;
@@ -48,9 +50,11 @@ public class PlayerMovement : MonoBehaviour {
         cameraObject = GameObject.Find("FirstPersonCharacter");
         spriteChildTransform = spriteContainer.transform.GetChild(0);
         animator = spriteChildTransform.GetComponent<Animator>();
+        spriteRenderer = spriteChildTransform.GetComponent<SpriteRenderer>();
     }
 
     void Update() {
+        HandlePlayerCommand();
         HandleMovement();
         HandleCameraRotation();
 
@@ -61,6 +65,34 @@ public class PlayerMovement : MonoBehaviour {
         if (Input.GetKeyUp(KeyCode.J)) {
             Debug.Log("Debug key pressed.");
         }
+    }
+
+    private void HandlePlayerCommand() {
+        if (!Input.GetKeyDown(KeyCode.Return)) {
+            return;
+        }
+
+        // check all adjacent positions
+        Vector3Int currPosition = nonVoxelWorld.GetPosition(spriteContainer);
+        List<Vector3Int> occupiedVoxels = new List<Vector3Int>();
+        for (int x = -1; x < 2; x++) {
+            for (int y = -1; y < 2; y++) {
+                for (int z = -1; z < 2; z++) {
+                    Vector3Int checkPosition = currPosition + new Vector3Int(x, y, z);
+                    if (checkPosition != currPosition
+                        && nonVoxelWorld.IsPositionOccupied(checkPosition)) {
+                        occupiedVoxels.Add(checkPosition);
+                    }
+                }
+            }
+        }
+
+        if (occupiedVoxels.Count == 0) {
+            Debug.Log("No interactable object near player.");
+            return;
+        }
+
+        Debug.Log("Object near player.");
     }
 
     private void HandleMovement() {
@@ -100,6 +132,16 @@ public class PlayerMovement : MonoBehaviour {
             animator.SetBool("isMoving", isMoving);
             return;
         }
+
+        // make player sprite face the direction they asked for
+        if (requestedDirection == SpriteMoveDirection.RIGHT) {
+            isFacingRight = true;
+        }
+        else if (requestedDirection == SpriteMoveDirection.LEFT) {
+            isFacingRight = false;
+        }
+        spriteRenderer.flipX = isFacingRight;
+        
 
         SpriteMoveDirection cameraAdjustedPlayerMove = CameraAdjustedPlayerMove(requestedDirection,
             playerCameraDirection);

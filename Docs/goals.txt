@@ -1,8 +1,10 @@
 CURRENT GOALS
+make it possible for character to interact with "enter" when within one tile in any direction of an interactable object.
+
+TODO
 make sprite with directionality (faces a direction)
 make sprite capable of interacting with objects with "A"
 
-TODO
 try to create a custom voxel that encapsulates a 3d object.
 - use an existing prefab
 - this will make loading/unloading things easier.
@@ -37,6 +39,19 @@ think about design of sprites. can I afford to have 4 directions per sprite? May
 a side profile + running + attacking is enough
 - player can be special. Can have 4 directions for the player classes + potential customizability (hair, armor, etc like fire emblem),
   and NPCs/monsters just have 2 idle sprites and an attack sprite like rift wizard
+
+DISCUSSION
+- the issue with this approach is it requires at least 4 sprites just for being able to stand in a direction.
+- it'd be weird if the player had all these animations but the NPCS/monsters did not
+- instead, a less resource intensive way might be to have the sprite glide above the terrain, and have an A button
+become available when they are close enough to talk. this would reduce the number of sprites needed to 2. One would
+be for standing, one would be for walking, and directionality can be achieved with flipping the sprite.
+- I think with this interaction system, a movement system that's less coupled to the grid would be ideal, although I could see
+a system where the player is still on the grid but must stand next to the NPC to talk working, kind of like early Pokemon.
+- a grid-based movement system appeals to my nostalgia and is actually convenient sometimes when navigating terrain, but
+a free movement system is more natural.
+- decided a left/right profile with a minimal walking animation is the least resource intensive way to do this that still stays
+true to the 2d/3d aesthetic and has directionality/movement.
 
 
 BUGS TO FIX
