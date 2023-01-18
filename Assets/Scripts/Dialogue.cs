@@ -4,49 +4,47 @@ using UnityEngine;
 
 using TMPro;
 
-public class Dialogue : MonoBehaviour
-{
+public class Dialogue : MonoBehaviour {
     public TextMeshProUGUI textComponent;
-    public string[] lines;
-    public float textSpeed;
+    private List<string> sentences;
+
+    private float TEXT_SPEED = 0.02f; 
 
     private int index;
 
-    void Start()
-    {
+    private void Start() {
         textComponent.text = string.Empty;
+        sentences = new List<string>();
         gameObject.SetActive(false);
     }
 
-    public void StartDialogue() {
+    public void StartDialogue(List<string> sentences) {
+        this.sentences = sentences;
         textComponent.text = string.Empty;
         gameObject.SetActive(true);
         index = 0;
         StartCoroutine(TypeLine());
     }
 
-    public void GetNextText() {
-        if (!gameObject.activeSelf) {
-            StartDialogue();
+    private IEnumerator TypeLine() {
+        foreach (char c in sentences[index].ToCharArray()) {
+            textComponent.text += c;
+            yield return new WaitForSeconds(TEXT_SPEED);
         }
-        else if (textComponent.text.Length == lines[index].Length) {
-            NextLine();
+    }
+
+    public void HandleReturn() {
+        if (textComponent.text.Length == sentences[index].Length) {
+            GetNextLine();
         }
         else {
             StopAllCoroutines();
-            textComponent.text = lines[index];
+            textComponent.text = sentences[index];
         }
     }
 
-    private IEnumerator TypeLine() {
-        foreach (char c in lines[index].ToCharArray()) {
-            textComponent.text += c;
-            yield return new WaitForSeconds(textSpeed);
-        }
-    }
-
-    private void NextLine() {
-        if (index < lines.Length - 1) {
+    private void GetNextLine() {
+        if (index < sentences.Count - 1) {
             index++;
             textComponent.text = string.Empty;
             StartCoroutine(TypeLine());

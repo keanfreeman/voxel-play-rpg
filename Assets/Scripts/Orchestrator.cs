@@ -19,9 +19,12 @@ public class Orchestrator : MonoBehaviour
     System.Random rng = new System.Random();
     SpriteMovement spriteMovement;
     VoxelPlayEnvironment voxelPlayEnvironment;
+    private PlayerInputContextHandler playerInputContextHandler;
+    private Dialogue dialogue;
 
     void Start()
     {
+        dialogue = dialogBox.GetComponent<Dialogue>();
         voxelPlayEnvironment = VoxelPlayEnvironment.instance;
         spriteMovement = new SpriteMovement(voxelPlayEnvironment);
 
@@ -30,12 +33,18 @@ public class Orchestrator : MonoBehaviour
         playerMovement.spriteContainer = playerInstance;
         playerMovement.nonVoxelWorld = nonVoxelWorld;
         playerMovement.spriteMovement = spriteMovement;
-        playerMovement.dialogue = dialogBox.GetComponent<Dialogue>();
+        playerMovement.dialogue = dialogue;
         vpController.GetComponent<PlayerMovement>().enabled = true;
 
         vpController.GetComponent<VoxelPlayPlayer>().enabled = true;
 
         vpController.GetComponent<VoxelPlayFirstPersonController>().enabled = true;
+
+        playerInputContextHandler = new PlayerInputContextHandler(playerMovement, nonVoxelWorld, dialogue);
+    }
+
+    void Update() {
+        playerInputContextHandler.HandlePlayerInput();
     }
 
     private void InitCreaturesAndWorld() {

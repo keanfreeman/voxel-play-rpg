@@ -648,10 +648,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textComponent: {fileID: 1327218106}
-  lines:
-  - This is the first line.
-  - This is a really long second sentence that continues for quite a long time.
-  textSpeed: 0.05
 --- !u!1 &211251953
 GameObject:
   m_ObjectHideFlags: 0

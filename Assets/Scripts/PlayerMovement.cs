@@ -54,53 +54,15 @@ public class PlayerMovement : MonoBehaviour {
         spriteRenderer = spriteChildTransform.GetComponent<SpriteRenderer>();
     }
 
-    void Update() {
-        HandlePlayerCommand();
+    // returns true if we need to freeze other controls while moving/rotating
+    public bool HandleMovementControls() {
         HandleMovement();
         HandleCameraRotation();
 
-        if (Input.GetKeyUp(KeyCode.K)) {
-            ToggleFreeCamera();
-        }
-
-        if (Input.GetKeyUp(KeyCode.J)) {
-            Debug.Log("Debug key pressed.");
-        }
+        return isRotating || isMoving;
     }
 
-    private void HandlePlayerCommand() {
-        if (!Input.GetKeyDown(KeyCode.Return)) {
-            return;
-        }
-
-        // check all adjacent positions
-        Vector3Int currPosition = nonVoxelWorld.GetPosition(spriteContainer);
-        List<Vector3Int> occupiedVoxels = new List<Vector3Int>();
-        for (int x = -1; x < 2; x++) {
-            for (int y = -1; y < 2; y++) {
-                for (int z = -1; z < 2; z++) {
-                    Vector3Int checkPosition = currPosition + new Vector3Int(x, y, z);
-                    if (checkPosition != currPosition
-                        && nonVoxelWorld.IsPositionOccupied(checkPosition)) {
-                        occupiedVoxels.Add(checkPosition);
-                    }
-                }
-            }
-        }
-
-        if (occupiedVoxels.Count == 0) {
-            Debug.Log("No interactable object near player.");
-            return;
-        }
-
-        Debug.Log("Object near player.");
-        dialogue.GetNextText();
-    }
-
-    private void HandleMovement() {
-        if (!isFollowingSprite) {
-            return;
-        }
+    public void HandleMovement() {
         if (isRotating || (isMoving && !IsMoveTransitionDone())) {
             return;
         }
@@ -296,7 +258,7 @@ public class PlayerMovement : MonoBehaviour {
         return linearFriendlyFraction >= 1f;
     }
     
-    private void ToggleFreeCamera() {
+    public void ToggleFreeCamera() {
         Debug.Log("SWITCHING FREE CAMERA");
         if (isFollowingSprite) {
             transform.SetParent(null);
