@@ -1,11 +1,22 @@
 CURRENT GOALS
-add a text box for the player to read when interacting with stuff. 
-- make it so all control is ceded to the text box when in that state.
+try to make objects (not just NPCs) that occupy voxels and are interactable, starting with the bed.
+- main issue is the desire to have voxels that are bigger than 1x1x1. The framework doesn't support this 
+and I can think of a few ways to get around it:
+1. Create my own logic above the framework that only allows creation if all valid spaces are open, and 
+creates invisible voxels associated with the primary one that act in unison with the primary one.
+The benefit here is the relative ease of implementation and the integration with the framework, so 
+objects are automatically created/destroyed. Important for efficiency with many objects. However, managing 
+the complexities myself will be hard.
+2. Read the framework and try to create a new voxel type that occupies multiple voxels.
+This is harder and is more prone to breakage if the framework needs to be updated. However it's likely 
+to be the least convoluted long term.
+3. Do everything in non-voxel space. This is simplest but does not take advantage of the framework at all,
+and I would probably need to manage creation/destruction myself.
 
+plan - use model definitions to place blocks (including invisible), then attach special behavior to those blocks
 
 TODO
 make sprite with directionality (faces a direction)
-make sprite capable of interacting with objects with "A"
 
 try to create a custom voxel that encapsulates a 3d object.
 - use an existing prefab
@@ -78,6 +89,11 @@ MVP FOR FRIEND
 - would be nice to have the player able to customize the look of their character
 
 DONE
+make sprite capable of interacting with objects with "A"
+
+add a text box for the player to read when interacting with stuff. 
+- make it so all control is ceded to the text box when in that state.
+
 add player movement
 - need to move the existing camera to above the sprite, and add controls that cause the sprite to move
 - the existing camera must be used because it determines what voxels are loaded

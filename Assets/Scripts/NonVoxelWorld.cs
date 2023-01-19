@@ -40,14 +40,17 @@ namespace NonVoxel {
             }
         }
 
-        public List<Vector3Int> GetAdjacentObjectPositions(Vector3Int currPosition) {
+        public List<Vector3Int> GetInteractableAdjacentObjects(Vector3Int currPosition) {
             List<Vector3Int> occupiedVoxels = new List<Vector3Int>();
             for (int x = -1; x < 2; x++) {
                 for (int y = -1; y < 2; y++) {
                     for (int z = -1; z < 2; z++) {
                         Vector3Int checkPosition = currPosition + new Vector3Int(x, y, z);
                         if (checkPosition != currPosition && IsPositionOccupied(checkPosition)) {
-                            occupiedVoxels.Add(checkPosition);
+                            NPCBehavior npcBehavior = positionToCreature[checkPosition].GetComponent<NPCBehavior>();
+                            if (npcBehavior != null && npcBehavior.IsInteractable()) {
+                                occupiedVoxels.Add(checkPosition);
+                            }
                         }
                     }
                 }

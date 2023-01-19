@@ -104,4 +104,8 @@ public class NPCBehavior : MonoBehaviour
 
         return fractionRotationComplete == 1;
     }
+
+    public bool IsInteractable() {
+        return true;
+    }
 }

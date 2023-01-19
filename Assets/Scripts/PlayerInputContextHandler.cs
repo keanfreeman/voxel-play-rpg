@@ -63,7 +63,7 @@ public class PlayerInputContextHandler : MonoBehaviour
 
         // check for interactable objects
         Vector3Int currPosition = nonVoxelWorld.GetPosition(playerMovement.spriteContainer);
-        List<Vector3Int> occupiedPositions = nonVoxelWorld.GetAdjacentObjectPositions(currPosition);
+        List<Vector3Int> occupiedPositions = nonVoxelWorld.GetInteractableAdjacentObjects(currPosition);
         if (occupiedPositions.Count == 0) {
             Debug.Log("No interactable object near player.");
             return;
