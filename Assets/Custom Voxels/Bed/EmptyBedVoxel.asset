@@ -80,16 +80,16 @@ MonoBehaviour:
   denseLeaves: 1
   windAnimation: 1
   supportsBevel: 0
-  model: {fileID: 100008, guid: e84daf3dd576c6140abfb363cd34bb15, type: 3}
+  model: {fileID: 1484963184370969973, guid: 60502b6979474c6418f9f3cc4c321f7e, type: 3}
   prefabMaterial: 0
   gpuInstancing: 0
   castShadows: 1
   receiveShadows: 1
   createGameObject: 0
-  offset: {x: 0.5, y: -0.49, z: -0.5}
+  offset: {x: 0, y: 0, z: 0}
   offsetRandom: 0
   offsetRandomRange: {x: 0, y: 0, z: 0}
-  scale: {x: 0.64586, y: 0.64586, z: 0.64586}
+  scale: {x: 1, y: 1, z: 1}
   rotation: {x: 0, y: 0, z: 0}
   rotationRandomY: 0
   promotesTo: {fileID: 0}

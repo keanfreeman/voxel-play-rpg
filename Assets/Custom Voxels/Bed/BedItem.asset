@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: BedItem
   m_EditorClassIdentifier: 
   title: Places Bed
-  category: 0
+  category: 2
   voxelType: {fileID: 0}
-  model: {fileID: 0}
+  model: {fileID: 11400000, guid: 743a3d871820c794d969a7b1015633d0, type: 2}
   icon: {fileID: 0}
   iconPrefab: {fileID: 0}
   color:
