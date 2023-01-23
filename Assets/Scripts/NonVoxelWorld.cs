@@ -3,36 +3,33 @@ using UnityEngine;
 
 namespace NonVoxel {
     public class NonVoxelWorld {
-        private Dictionary<GameObject, Vector3Int> creatureToPosition
+        private Dictionary<GameObject, Vector3Int> objectToPosition
             = new Dictionary<GameObject, Vector3Int>();
-        private Dictionary<Vector3Int, GameObject> positionToCreature
+        private Dictionary<Vector3Int, GameObject> positionToObject
             = new Dictionary<Vector3Int, GameObject>();
 
-        public NonVoxelWorld() {
-        }
-
         public Vector3Int GetPosition(GameObject gameObject) {
-            return creatureToPosition[gameObject];
+            return objectToPosition[gameObject];
         }
 
         public void SetPosition(GameObject gameObject, Vector3Int position) {
-            if (creatureToPosition.ContainsKey(gameObject)) {
-                Vector3Int oldPosition = creatureToPosition[gameObject];
-                if (positionToCreature.ContainsKey(oldPosition)) {
-                    positionToCreature.Remove(oldPosition);
+            if (objectToPosition.ContainsKey(gameObject)) {
+                Vector3Int oldPosition = objectToPosition[gameObject];
+                if (positionToObject.ContainsKey(oldPosition)) {
+                    positionToObject.Remove(oldPosition);
                 }
             }
 
-            creatureToPosition[gameObject] = position;
-            positionToCreature[position] = gameObject;
+            objectToPosition[gameObject] = position;
+            positionToObject[position] = gameObject;
         }
 
         public bool IsPositionOccupied(Vector3Int position) {
-            return positionToCreature.ContainsKey(position);
+            return positionToObject.ContainsKey(position);
         }
 
         public void RotateNonPlayerCreatures(KeyCode rotationDirection) {
-            foreach (GameObject gameObject in creatureToPosition.Keys) {
+            foreach (GameObject gameObject in objectToPosition.Keys) {
                 NPCBehavior npcBehavior = gameObject.GetComponent<NPCBehavior>();
                 if (npcBehavior != null) {
                     npcBehavior.rotationDirection = rotationDirection;
@@ -47,7 +44,7 @@ namespace NonVoxel {
                     for (int z = -1; z < 2; z++) {
                         Vector3Int checkPosition = currPosition + new Vector3Int(x, y, z);
                         if (checkPosition != currPosition && IsPositionOccupied(checkPosition)) {
-                            NPCBehavior npcBehavior = positionToCreature[checkPosition].GetComponent<NPCBehavior>();
+                            NPCBehavior npcBehavior = positionToObject[checkPosition].GetComponent<NPCBehavior>();
                             if (npcBehavior != null && npcBehavior.IsInteractable()) {
                                 occupiedVoxels.Add(checkPosition);
                             }

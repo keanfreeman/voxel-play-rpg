@@ -6,3 +6,25 @@ issue - the character controller is integral to the way the first-person movemen
 - I think in the long-term, due to the need for 3 basic modes (1st person, 3rd person, and disembodied/edit mode) and voxel play's 
 	lack of controller support, I will need my own 1st person camera with many of voxel play's features. but I don't want to get bogged
 	down in that yet.
+
+can add custom behavior to voxels by attaching a script that inherits from VoxelPlayInteractiveObject
+
+consider using Rider from jetbrains, money permitting
+
+can use ScriptableObject to create instances of a class in text form, which can be easily modified (HP, prefab, faction, etc)
+can use CreateAssetMenu to create an instance of a scriptableobject quickly
+
+can use singletons and donotdestroyonload to prevent key assets from getting destroyed on scene changes, like audio for example.
+
+can use Action/Func to create events
+- Events are useful when you need to decouple things, for example you can just emit a "wave" event and you don't need to 
+specify what happens afterward specifically, other code can hook into the event without the "wave" logic needing to be changed.
+
+delegates are just variables that hold methods.
+
+could create objects that need to persist between scenes under a "dontdestroyonload" object
+
+can use WaitWhile in a coroutine to listen for an event before continuing
+
+try using getawaiter.getresult on tasks (they're like promises) in a non async function if you want to block on the result
+

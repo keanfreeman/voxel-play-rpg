@@ -1,22 +1,8 @@
 CURRENT GOALS
-try to make objects (not just NPCs) that occupy voxels and are interactable, starting with the bed.
-- main issue is the desire to have voxels that are bigger than 1x1x1. The framework doesn't support this 
-and I can think of a few ways to get around it:
-1. Create my own logic above the framework that only allows creation if all valid spaces are open, and 
-creates invisible voxels associated with the primary one that act in unison with the primary one.
-The benefit here is the relative ease of implementation and the integration with the framework, so 
-objects are automatically created/destroyed. Important for efficiency with many objects. However, managing 
-the complexities myself will be hard.
-2. Read the framework and try to create a new voxel type that occupies multiple voxels.
-This is harder and is more prone to breakage if the framework needs to be updated. However it's likely 
-to be the least convoluted long term.
-3. Do everything in non-voxel space. This is simplest but does not take advantage of the framework at all,
-and I would probably need to manage creation/destruction myself.
 
-plan - use model definitions to place blocks (including invisible), then attach special behavior to those blocks
 
 TODO
-make sprite with directionality (faces a direction)
+add an icon above interactable objects
 
 try to create a custom voxel that encapsulates a 3d object.
 - use an existing prefab
@@ -59,6 +45,7 @@ STYLE IMPROVEMENTS
 - 
 
 DISCUSSION
+directionality
 - the issue with this approach is it requires at least 4 sprites just for being able to stand in a direction.
 - it'd be weird if the player had all these animations but the NPCS/monsters did not
 - instead, a less resource intensive way might be to have the sprite glide above the terrain, and have an A button
@@ -71,9 +58,25 @@ a free movement system is more natural.
 - decided a left/right profile with a minimal walking animation is the least resource intensive way to do this that still stays
 true to the 2d/3d aesthetic and has directionality/movement.
 
+interaction
+- interactions will be able to do many things, so it's best to design this generically. Need some way to string together various
+behaviors, like dialogue -> move NPC -> forced walk -> show image -> dialogue -> forced walk -> teleport -> show animation -> return control
+- I need to implement each capability individually.
+- To identify what to do when a player interacts with something, I could tag NPCs/objects with IDs that are associated with a chain
+of events.
+- I need a place to store the sequence of events. Maybe a tree of Event classes that encapsulates Dialogue, NPC movement, etc would work.
+We'd need a tree because events can theoretically branch on player choice, for example Buy vs Sell.
+- Eventually, I'll need something more dynamic, for example, choices can loop.
+- I could have a SEQUENCE control state to direct what the player's allowed to do
+
 
 BUGS TO FIX
 fix texture issues on slopes
+
+use ondestroy in the bed script to destroy all voxels (including invisible ones) when one is destroyed. Need to know
+the rotation and position of the destroyed voxel to properly destroy them all, or maybe the Model information + rotation for 
+destruction of generic multi-voxel objects. I also want to be able to place Models that are rotated (e.g. a bed facing east).
+
 
 MVP FOR FRIEND
 - needs to have some fun-looking environments (can use art from this creator - https://assetstore.unity.com/packages/3d/environments/fantasy/retro-dungeons-modular-house-interiors-170705)
@@ -89,6 +92,10 @@ MVP FOR FRIEND
 - would be nice to have the player able to customize the look of their character
 
 DONE
+get the bed to have its own dialogue
+
+make sprite with directionality (faces a direction)
+
 make sprite capable of interacting with objects with "A"
 
 add a text box for the player to read when interacting with stuff. 

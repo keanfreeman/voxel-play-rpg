@@ -6,11 +6,11 @@ using TMPro;
 
 public class Dialogue : MonoBehaviour {
     public TextMeshProUGUI textComponent;
+
     private List<string> sentences;
+    private int index;
 
     private float TEXT_SPEED = 0.02f; 
-
-    private int index;
 
     private void Start() {
         textComponent.text = string.Empty;

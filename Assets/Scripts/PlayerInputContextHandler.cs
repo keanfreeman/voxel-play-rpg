@@ -3,30 +3,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInputContextHandler : MonoBehaviour
+public class PlayerInputContextHandler
 {
     public enum ControlState {
         FIRST_PERSON,
         SPRITE_NEUTRAL,
-        DIALOGUE
+        DIALOGUE,
+        SEQUENCE
     }
 
     private ControlState controlState;
     private PlayerMovement playerMovement;
     private NonVoxelWorld nonVoxelWorld;
     private Dialogue dialogue;
+    private VoxelWorld voxelWorld;
 
     public PlayerInputContextHandler(PlayerMovement playerMovement, NonVoxelWorld nonVoxelWorld,
-            Dialogue dialogue) {
+            Dialogue dialogue, VoxelWorld voxelWorld) {
         this.playerMovement = playerMovement;
         this.nonVoxelWorld = nonVoxelWorld;
         this.dialogue = dialogue;
+        this.voxelWorld = voxelWorld;
         controlState = ControlState.FIRST_PERSON;
     }
 
     public void HandlePlayerInput() {
         if (Input.GetKeyUp(KeyCode.J)) {
             Debug.Log("Debug key pressed.");
+            
         }
         HandleSwapCameraState();
 
@@ -63,16 +67,28 @@ public class PlayerInputContextHandler : MonoBehaviour
 
         // check for interactable objects
         Vector3Int currPosition = nonVoxelWorld.GetPosition(playerMovement.spriteContainer);
-        List<Vector3Int> occupiedPositions = nonVoxelWorld.GetInteractableAdjacentObjects(currPosition);
-        if (occupiedPositions.Count == 0) {
+        List<Vector3Int> interactablePositions = nonVoxelWorld.GetInteractableAdjacentObjects(currPosition);
+        List<VoxelPlay.Vector3d> interactableVoxels = 
+            voxelWorld.GetInteractableAdjacentVoxels(new VoxelPlay.Vector3d(currPosition));
+        if (interactablePositions.Count == 0 && interactableVoxels.Count == 0) {
             Debug.Log("No interactable object near player.");
             return;
         }
 
-        Debug.Log("Object near player.");
+        Debug.Log("Interactable thing near player.");
         controlState = ControlState.DIALOGUE;
-        List<string> sentences = new List<string> { "This is the first sentence.",
-            "This is a slightly longer second sentence that probably takes up several lines." };
+
+
+        List<string> sentences = new List<string>();
+        if (interactablePositions.Count != 0) {
+            sentences = new List<string> { "This is the first sentence.",
+                "This is a slightly longer second sentence that probably takes up several lines." };
+        }
+        else {
+            sentences = new List<string> { "Hi! I'm a talking bed.",
+                "Here I am, talking." };
+        }
+
          dialogue.StartDialogue(sentences);
     }
 

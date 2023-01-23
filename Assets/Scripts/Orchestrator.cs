@@ -4,6 +4,7 @@ using UnityEngine;
 
 using VoxelPlay;
 using NonVoxel;
+using System;
 
 public class Orchestrator : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class Orchestrator : MonoBehaviour
     VoxelPlayEnvironment voxelPlayEnvironment;
     private PlayerInputContextHandler playerInputContextHandler;
     private Dialogue dialogue;
+    private VoxelWorld voxelWorld;
+    private InteractableVoxels interactableVoxels;
 
     void Start()
     {
@@ -40,7 +43,9 @@ public class Orchestrator : MonoBehaviour
 
         vpController.GetComponent<VoxelPlayFirstPersonController>().enabled = true;
 
-        playerInputContextHandler = new PlayerInputContextHandler(playerMovement, nonVoxelWorld, dialogue);
+        interactableVoxels = gameObject.GetComponent<InteractableVoxels>();
+        voxelWorld = new VoxelWorld(voxelPlayEnvironment, interactableVoxels);
+        playerInputContextHandler = new PlayerInputContextHandler(playerMovement, nonVoxelWorld, dialogue, voxelWorld);
     }
 
     void Update() {

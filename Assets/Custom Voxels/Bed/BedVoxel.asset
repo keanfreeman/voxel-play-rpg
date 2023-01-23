@@ -69,7 +69,7 @@ MonoBehaviour:
   showDamageCracks: 1
   hidden: 0
   canBeCollected: 1
-  dropItem: {fileID: 0}
+  dropItem: {fileID: 11400000, guid: 93f8c7f4af6c58b4084508580dfc2804, type: 2}
   dropItemLifeTime: 10
   dropItemScale: 0.25
   icon: {fileID: 2800000, guid: e985334e4a9d3ab448b77393b5c06265, type: 3}
@@ -89,7 +89,7 @@ MonoBehaviour:
   offset: {x: 0.5, y: -0.49, z: -0.5}
   offsetRandom: 0
   offsetRandomRange: {x: 0, y: 0, z: 0}
-  scale: {x: 0.64586, y: 0.64586, z: 0.64586}
+  scale: {x: 0.75, y: 0.75, z: 0.75}
   rotation: {x: 0, y: 0, z: 0}
   rotationRandomY: 0
   promotesTo: {fileID: 0}
