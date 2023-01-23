@@ -33,7 +33,6 @@ public class PlayerInputContextHandler
     public void HandlePlayerInput() {
         if (Input.GetKeyUp(KeyCode.J)) {
             Debug.Log("Debug key pressed.");
-            
         }
         HandleSwapCameraState();
 
@@ -64,7 +63,7 @@ public class PlayerInputContextHandler
     }
 
     private void HandlePlayerPrimaryInput() {
-        if (!Input.GetKeyDown(KeyCode.Return)) {
+        if (!playerInputActions.Player.Interact.triggered) {
             return;
         }
 
@@ -80,9 +79,10 @@ public class PlayerInputContextHandler
 
         Debug.Log("Interactable thing near player.");
         controlState = ControlState.DIALOGUE;
+        playerInputActions.Player.Disable();
+        playerInputActions.Dialogue.Enable();
 
-
-        List<string> sentences = new List<string>();
+        List<string> sentences;
         if (interactablePositions.Count != 0) {
             sentences = new List<string> { "This is the first sentence.",
                 "This is a slightly longer second sentence that probably takes up several lines." };
@@ -96,13 +96,15 @@ public class PlayerInputContextHandler
     }
 
     private void HandleReturnInDialogue() {
-        if (!Input.GetKeyDown(KeyCode.Return)) {
+        if (!playerInputActions.Dialogue.Continue.triggered) {
             return;
         }
 
-        dialogue.HandleReturn();
+        dialogue.HandleInput();
         if (!dialogue.gameObject.activeSelf) {
             controlState = ControlState.SPRITE_NEUTRAL;
+            playerInputActions.Player.Enable();
+            playerInputActions.Dialogue.Disable();
         }
     }
 }

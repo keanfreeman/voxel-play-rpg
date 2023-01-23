@@ -10,7 +10,7 @@ public class Dialogue : MonoBehaviour {
     private List<string> sentences;
     private int index;
 
-    private float TEXT_SPEED = 0.02f; 
+    private float TEXT_WAIT_SPEED = 0.01f; 
 
     private void Start() {
         textComponent.text = string.Empty;
@@ -29,11 +29,11 @@ public class Dialogue : MonoBehaviour {
     private IEnumerator TypeLine() {
         foreach (char c in sentences[index].ToCharArray()) {
             textComponent.text += c;
-            yield return new WaitForSeconds(TEXT_SPEED);
+            yield return new WaitForSeconds(TEXT_WAIT_SPEED);
         }
     }
 
-    public void HandleReturn() {
+    public void HandleInput() {
         if (textComponent.text.Length == sentences[index].Length) {
             GetNextLine();
         }
