@@ -2,6 +2,7 @@ using NonVoxel;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerInputContextHandler
 {
@@ -17,13 +18,15 @@ public class PlayerInputContextHandler
     private NonVoxelWorld nonVoxelWorld;
     private Dialogue dialogue;
     private VoxelWorld voxelWorld;
+    PlayerInputActions playerInputActions;
 
     public PlayerInputContextHandler(PlayerMovement playerMovement, NonVoxelWorld nonVoxelWorld,
-            Dialogue dialogue, VoxelWorld voxelWorld) {
+            Dialogue dialogue, VoxelWorld voxelWorld, PlayerInputActions playerInputActions) {
         this.playerMovement = playerMovement;
         this.nonVoxelWorld = nonVoxelWorld;
         this.dialogue = dialogue;
         this.voxelWorld = voxelWorld;
+        this.playerInputActions = playerInputActions;
         controlState = ControlState.FIRST_PERSON;
     }
 
@@ -53,7 +56,7 @@ public class PlayerInputContextHandler
     }
 
     private void HandleSwapCameraState() {
-        if (Input.GetKeyUp(KeyCode.K)) {
+        if (playerInputActions.Player.SwitchInputType.triggered) {
             playerMovement.ToggleFreeCamera();
             controlState = (controlState == ControlState.FIRST_PERSON) 
                 ? ControlState.SPRITE_NEUTRAL : ControlState.FIRST_PERSON;

@@ -6,6 +6,7 @@ using VoxelPlay;
 using MovementDirection;
 using UnityEngine.ProBuilder;
 using NonVoxel;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour {
     // CONST
@@ -27,6 +28,7 @@ public class PlayerMovement : MonoBehaviour {
     Animator animator;
     SpriteRenderer spriteRenderer;
     public Dialogue dialogue;
+    public PlayerInputActions playerInputActions;
 
     // STATE
     bool isFollowingSprite = false;
@@ -69,29 +71,29 @@ public class PlayerMovement : MonoBehaviour {
         isMoving = false;
         isSprinting = false;
 
-        if (Input.GetKey(KeyCode.LeftShift)) {
-            isSprinting = true;
-        }
+        //if (Input.GetKey(KeyCode.LeftShift)) {
+        //    isSprinting = true;
+        //}
         Vector3 spriteCurrPosition = spriteContainer.transform.position;
         SpriteMoveDirection requestedDirection;
-        if (Input.GetKey(KeyCode.W)) {
+        if (playerInputActions.Player.MoveUp.phase == InputActionPhase.Started) {
             requestedDirection = SpriteMoveDirection.FORWARD;
         }
-        else if (Input.GetKey(KeyCode.S)) {
+        else if (playerInputActions.Player.MoveDown.phase == InputActionPhase.Started) {
             requestedDirection = SpriteMoveDirection.BACK;
         }
-        else if (Input.GetKey(KeyCode.A)) {
+        else if (playerInputActions.Player.MoveLeft.phase == InputActionPhase.Started) {
             requestedDirection = SpriteMoveDirection.LEFT;
         }
-        else if (Input.GetKey(KeyCode.D)) {
+        else if (playerInputActions.Player.MoveRight.phase == InputActionPhase.Started) {
             requestedDirection = SpriteMoveDirection.RIGHT;
         }
-        else if (Input.GetKey(KeyCode.Q)) {
-            requestedDirection = SpriteMoveDirection.UP;
-        }
-        else if (Input.GetKey(KeyCode.E)) {
-            requestedDirection = SpriteMoveDirection.DOWN;
-        }
+        //else if (Input.GetKey(KeyCode.Q)) {
+        //    requestedDirection = SpriteMoveDirection.UP;
+        //}
+        //else if (Input.GetKey(KeyCode.E)) {
+        //    requestedDirection = SpriteMoveDirection.DOWN;
+        //}
         else {
             animator.SetBool("isMoving", isMoving);
             return;
