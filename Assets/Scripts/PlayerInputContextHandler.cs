@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using VoxelPlay;
 
 public class PlayerInputContextHandler
 {
@@ -18,15 +19,15 @@ public class PlayerInputContextHandler
     private NonVoxelWorld nonVoxelWorld;
     private Dialogue dialogue;
     private VoxelWorld voxelWorld;
-    PlayerInputActions playerInputActions;
+    private InputManager inputManager;
 
     public PlayerInputContextHandler(PlayerMovement playerMovement, NonVoxelWorld nonVoxelWorld,
-            Dialogue dialogue, VoxelWorld voxelWorld, PlayerInputActions playerInputActions) {
+            Dialogue dialogue, VoxelWorld voxelWorld, InputManager inputManager) {
         this.playerMovement = playerMovement;
         this.nonVoxelWorld = nonVoxelWorld;
         this.dialogue = dialogue;
         this.voxelWorld = voxelWorld;
-        this.playerInputActions = playerInputActions;
+        this.inputManager = inputManager;
         controlState = ControlState.FIRST_PERSON;
     }
 
@@ -55,7 +56,7 @@ public class PlayerInputContextHandler
     }
 
     private void HandleSwapCameraState() {
-        if (playerInputActions.Player.SwitchInputType.triggered) {
+        if (inputManager.WasSwitchInputTypeTriggered()) {
             playerMovement.ToggleFreeCamera();
             controlState = (controlState == ControlState.FIRST_PERSON) 
                 ? ControlState.SPRITE_NEUTRAL : ControlState.FIRST_PERSON;
@@ -63,7 +64,7 @@ public class PlayerInputContextHandler
     }
 
     private void HandlePlayerPrimaryInput() {
-        if (!playerInputActions.Player.Interact.triggered) {
+        if (!inputManager.WasInteractTriggered()) {
             return;
         }
 
@@ -79,8 +80,7 @@ public class PlayerInputContextHandler
 
         Debug.Log("Interactable thing near player.");
         controlState = ControlState.DIALOGUE;
-        playerInputActions.Player.Disable();
-        playerInputActions.Dialogue.Enable();
+        inputManager.SwitchPlayerControlStateToDialogue();
 
         List<string> sentences;
         if (interactablePositions.Count != 0) {
@@ -96,15 +96,14 @@ public class PlayerInputContextHandler
     }
 
     private void HandleReturnInDialogue() {
-        if (!playerInputActions.Dialogue.Continue.triggered) {
+        if (!inputManager.WasContinueTriggered()) {
             return;
         }
 
         dialogue.HandleInput();
         if (!dialogue.gameObject.activeSelf) {
             controlState = ControlState.SPRITE_NEUTRAL;
-            playerInputActions.Player.Enable();
-            playerInputActions.Dialogue.Disable();
+            inputManager.SwitchDialogueToPlayerControlState();
         }
     }
 }

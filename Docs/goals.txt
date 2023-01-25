@@ -1,13 +1,12 @@
 CURRENT GOALS
-switch to new input system
-- this will make differentiating between controls in the dialog context vs movement context easier.
-
 add options to some dialogue boxes
 - will need a place to store the dialogue options and the different responses
 - will need to be able to display the dialogue options dynamically, e.g. if there are 5 options, create 5 boxes and 
 fill them with text, and allow the user to highlight them and select them with enter.
 
 TODO
+pause NPC movement when player not free
+
 add back sprinting, or remove sprinting and add a speed vehicle
 
 add an icon above interactable objects
@@ -34,7 +33,7 @@ add dialog
 
 add a "detatched mode" like advance wars/divinity, where the sprite stays put and a cursor appears that can move around.
 this can look around, build things, select things, etc.
-maybe shouldn't load things past the sprite's vision.
+- maybe shouldn't load things past the sprite's vision.
 
 guide the camera in scenarios where it would be nice to do so, like if the player was descending a spiral staircase against a wall
 
@@ -100,6 +99,9 @@ MVP FOR FRIEND
 - would be nice to have the player able to customize the look of their character
 
 DONE
+switch to new input system
+- this will make differentiating between controls in the dialog context vs movement context easier.
+
 get the bed to have its own dialogue
 
 make sprite with directionality (faces a direction)

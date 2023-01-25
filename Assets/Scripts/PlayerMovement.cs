@@ -28,7 +28,7 @@ public class PlayerMovement : MonoBehaviour {
     Animator animator;
     SpriteRenderer spriteRenderer;
     public Dialogue dialogue;
-    public PlayerInputActions playerInputActions;
+    public InputManager inputManager;
 
     // STATE
     bool isFollowingSprite = false;
@@ -75,18 +75,10 @@ public class PlayerMovement : MonoBehaviour {
         //    isSprinting = true;
         //}
         Vector3 spriteCurrPosition = spriteContainer.transform.position;
-        SpriteMoveDirection requestedDirection;
-        if (playerInputActions.Player.MoveUp.phase == InputActionPhase.Started) {
-            requestedDirection = SpriteMoveDirection.FORWARD;
-        }
-        else if (playerInputActions.Player.MoveDown.phase == InputActionPhase.Started) {
-            requestedDirection = SpriteMoveDirection.BACK;
-        }
-        else if (playerInputActions.Player.MoveLeft.phase == InputActionPhase.Started) {
-            requestedDirection = SpriteMoveDirection.LEFT;
-        }
-        else if (playerInputActions.Player.MoveRight.phase == InputActionPhase.Started) {
-            requestedDirection = SpriteMoveDirection.RIGHT;
+        SpriteMoveDirection requestedDirection = inputManager.moveDirection;
+        if (requestedDirection == SpriteMoveDirection.NONE) {
+            animator.SetBool("isMoving", isMoving);
+            return;
         }
         //else if (Input.GetKey(KeyCode.Q)) {
         //    requestedDirection = SpriteMoveDirection.UP;
@@ -94,10 +86,6 @@ public class PlayerMovement : MonoBehaviour {
         //else if (Input.GetKey(KeyCode.E)) {
         //    requestedDirection = SpriteMoveDirection.DOWN;
         //}
-        else {
-            animator.SetBool("isMoving", isMoving);
-            return;
-        }
 
         // make player sprite face the direction they asked for
         if (requestedDirection == SpriteMoveDirection.RIGHT) {

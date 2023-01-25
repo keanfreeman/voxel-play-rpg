@@ -25,11 +25,14 @@ public class Orchestrator : MonoBehaviour
     private VoxelWorld voxelWorld;
     private InteractableVoxels interactableVoxels;
     private PlayerInputActions playerInputActions;
+    private InputManager inputManager;
 
     void Start()
     {
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
+
+        inputManager = new InputManager(playerInputActions);
 
         dialogue = dialogBox.GetComponent<Dialogue>();
         voxelPlayEnvironment = VoxelPlayEnvironment.instance;
@@ -41,7 +44,7 @@ public class Orchestrator : MonoBehaviour
         playerMovement.nonVoxelWorld = nonVoxelWorld;
         playerMovement.spriteMovement = spriteMovement;
         playerMovement.dialogue = dialogue;
-        playerMovement.playerInputActions = playerInputActions;
+        playerMovement.inputManager = inputManager;
         vpController.GetComponent<PlayerMovement>().enabled = true;
 
         vpController.GetComponent<VoxelPlayPlayer>().enabled = true;
@@ -51,7 +54,7 @@ public class Orchestrator : MonoBehaviour
         interactableVoxels = gameObject.GetComponent<InteractableVoxels>();
         voxelWorld = new VoxelWorld(voxelPlayEnvironment, interactableVoxels);
         playerInputContextHandler = new PlayerInputContextHandler(playerMovement, nonVoxelWorld, dialogue, voxelWorld,
-            playerInputActions);
+            inputManager);
     }
 
     void Update() {
