@@ -21,13 +21,16 @@ public class PlayerInputContextHandler
     private VoxelWorld voxelWorld;
     private InputManager inputManager;
 
+    private TextAsset textAsset;
+
     public PlayerInputContextHandler(PlayerMovement playerMovement, NonVoxelWorld nonVoxelWorld,
-            Dialogue dialogue, VoxelWorld voxelWorld, InputManager inputManager) {
+            Dialogue dialogue, VoxelWorld voxelWorld, InputManager inputManager, TextAsset textAsset) {
         this.playerMovement = playerMovement;
         this.nonVoxelWorld = nonVoxelWorld;
         this.dialogue = dialogue;
         this.voxelWorld = voxelWorld;
         this.inputManager = inputManager;
+        this.textAsset = textAsset;
         controlState = ControlState.FIRST_PERSON;
     }
 
@@ -92,7 +95,7 @@ public class PlayerInputContextHandler
                 "Here I am, talking." };
         }
 
-         dialogue.StartDialogue(sentences);
+         dialogue.StartDialogue(textAsset);
     }
 
     private void HandleReturnInDialogue() {

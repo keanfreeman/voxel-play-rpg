@@ -9,7 +9,7 @@ pause NPC movement when player not free
 
 add back sprinting, or remove sprinting and add a speed vehicle
 
-add an icon above interactable objects
+add an icon above interactable objects - https://www.youtube.com/watch?v=vY0Sk93YUhA
 
 try to create a custom voxel that encapsulates a 3d object.
 - use an existing prefab

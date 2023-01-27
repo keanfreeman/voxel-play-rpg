@@ -202,6 +202,14 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""43f9d06f-34ba-46b3-a260-6e9bc71c0107"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -226,6 +234,61 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""action"": ""Continue"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d2d0c62d-6096-44d1-b503-7f009a53892b"",
+                    ""path"": ""<Gamepad>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0e34d9ca-d6d1-4e0c-a8b9-3faff41978c8"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""3215b0a1-2cbe-40a1-865c-c7df580dc4eb"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""367729ee-feec-4515-84b0-dd1e64d439d9"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""44285edc-c8ef-46e9-a3d3-0e276abc3c94"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -243,6 +306,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         // Dialogue
         m_Dialogue = asset.FindActionMap("Dialogue", throwIfNotFound: true);
         m_Dialogue_Continue = m_Dialogue.FindAction("Continue", throwIfNotFound: true);
+        m_Dialogue_Move = m_Dialogue.FindAction("Move", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -366,11 +430,13 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
     private readonly InputActionMap m_Dialogue;
     private IDialogueActions m_DialogueActionsCallbackInterface;
     private readonly InputAction m_Dialogue_Continue;
+    private readonly InputAction m_Dialogue_Move;
     public struct DialogueActions
     {
         private @PlayerInputActions m_Wrapper;
         public DialogueActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Continue => m_Wrapper.m_Dialogue_Continue;
+        public InputAction @Move => m_Wrapper.m_Dialogue_Move;
         public InputActionMap Get() { return m_Wrapper.m_Dialogue; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -383,6 +449,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @Continue.started -= m_Wrapper.m_DialogueActionsCallbackInterface.OnContinue;
                 @Continue.performed -= m_Wrapper.m_DialogueActionsCallbackInterface.OnContinue;
                 @Continue.canceled -= m_Wrapper.m_DialogueActionsCallbackInterface.OnContinue;
+                @Move.started -= m_Wrapper.m_DialogueActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_DialogueActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_DialogueActionsCallbackInterface.OnMove;
             }
             m_Wrapper.m_DialogueActionsCallbackInterface = instance;
             if (instance != null)
@@ -390,6 +459,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @Continue.started += instance.OnContinue;
                 @Continue.performed += instance.OnContinue;
                 @Continue.canceled += instance.OnContinue;
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
             }
         }
     }
@@ -406,5 +478,6 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
     public interface IDialogueActions
     {
         void OnContinue(InputAction.CallbackContext context);
+        void OnMove(InputAction.CallbackContext context);
     }
 }

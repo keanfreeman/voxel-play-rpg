@@ -14,6 +14,10 @@ public class Orchestrator : MonoBehaviour
     public GameObject opossumPrefab;
     public GameObject dialogBox;
 
+    // todo more complexity
+    [Header("Ink JSON")]
+    [SerializeField] private TextAsset dialogueJSON;
+
     private GameObject playerInstance;
 
     NonVoxelWorld nonVoxelWorld = new NonVoxelWorld();
@@ -26,6 +30,7 @@ public class Orchestrator : MonoBehaviour
     private InteractableVoxels interactableVoxels;
     private PlayerInputActions playerInputActions;
     private InputManager inputManager;
+
 
     void Start()
     {
@@ -54,7 +59,7 @@ public class Orchestrator : MonoBehaviour
         interactableVoxels = gameObject.GetComponent<InteractableVoxels>();
         voxelWorld = new VoxelWorld(voxelPlayEnvironment, interactableVoxels);
         playerInputContextHandler = new PlayerInputContextHandler(playerMovement, nonVoxelWorld, dialogue, voxelWorld,
-            inputManager);
+            inputManager, dialogueJSON);
     }
 
     void Update() {
