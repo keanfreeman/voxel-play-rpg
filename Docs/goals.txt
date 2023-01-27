@@ -1,4 +1,8 @@
 CURRENT GOALS
+switch to UI toolkit for the UI
+
+use ink to add choices - https://www.youtube.com/watch?v=vY0Sk93YUhA
+
 add options to some dialogue boxes
 - will need a place to store the dialogue options and the different responses
 - will need to be able to display the dialogue options dynamically, e.g. if there are 5 options, create 5 boxes and 
