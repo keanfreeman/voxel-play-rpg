@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 using VoxelPlay;
 using NonVoxel;
@@ -12,7 +13,7 @@ public class Orchestrator : MonoBehaviour
     public GameObject vpController;
     public GameObject playerPrefab;
     public GameObject opossumPrefab;
-    public GameObject dialogBox;
+    [Header("UI Document")] public UIDocument uiDocument;
 
     // todo more complexity
     [Header("Ink JSON")]
@@ -34,12 +35,13 @@ public class Orchestrator : MonoBehaviour
 
     void Start()
     {
+        dialogue = uiDocument.GetComponent<Dialogue>();
+
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
 
         inputManager = new InputManager(playerInputActions);
 
-        dialogue = dialogBox.GetComponent<Dialogue>();
         voxelPlayEnvironment = VoxelPlayEnvironment.instance;
         spriteMovement = new SpriteMovement(voxelPlayEnvironment);
 

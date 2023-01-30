@@ -103,8 +103,8 @@ public class PlayerInputContextHandler
             return;
         }
 
-        dialogue.HandleInput();
-        if (!dialogue.gameObject.activeSelf) {
+        bool finished = dialogue.HandleInput();
+        if (finished) {
             controlState = ControlState.SPRITE_NEUTRAL;
             inputManager.SwitchDialogueToPlayerControlState();
         }
