@@ -51,7 +51,11 @@ public class PlayerInputContextHandler
                 HandlePlayerPrimaryInput();
                 break;
             case ControlState.DIALOGUE:
-                HandleReturnInDialogue();
+                HandleDialogueContinue();
+                if (!dialogue.isDialogueActive) {
+                    controlState = ControlState.SPRITE_NEUTRAL;
+                    inputManager.SwitchDialogueToPlayerControlState();
+                }
                 break;
             default:
                 break;
@@ -85,26 +89,16 @@ public class PlayerInputContextHandler
         controlState = ControlState.DIALOGUE;
         inputManager.SwitchPlayerControlStateToDialogue();
 
-        List<string> sentences;
-        if (interactablePositions.Count != 0) {
-            sentences = new List<string> { "This is the first sentence.",
-                "This is a slightly longer second sentence that probably takes up several lines." };
-        }
-        else {
-            sentences = new List<string> { "Hi! I'm a talking bed.",
-                "Here I am, talking." };
-        }
-
-         dialogue.StartDialogue(textAsset);
+        dialogue.StartDialogue(textAsset);
     }
 
-    private void HandleReturnInDialogue() {
+    private void HandleDialogueContinue() {
         if (!inputManager.WasContinueTriggered()) {
             return;
         }
 
-        bool finished = dialogue.HandleInput();
-        if (finished) {
+        dialogue.HandleInput();
+        if (!dialogue.isDialogueActive) {
             controlState = ControlState.SPRITE_NEUTRAL;
             inputManager.SwitchDialogueToPlayerControlState();
         }

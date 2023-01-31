@@ -1,0 +1,7 @@
+Button {
+    -unity-text-align: middle-left;
+}
+
+Button:focus {
+    background-color: rgba(212, 55, 55, 255);
+}

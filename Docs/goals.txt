@@ -1,12 +1,7 @@
 CURRENT GOALS
-switch to UI toolkit for the UI
+switch to a list view for the buttons.
 
-use ink to add choices - https://www.youtube.com/watch?v=vY0Sk93YUhA
-
-add options to some dialogue boxes
-- will need a place to store the dialogue options and the different responses
-- will need to be able to display the dialogue options dynamically, e.g. if there are 5 options, create 5 boxes and 
-fill them with text, and allow the user to highlight them and select them with enter.
+give the bed a different dialogue text than the NPCs.
 
 TODO
 pause NPC movement when player not free
@@ -103,6 +98,10 @@ MVP FOR FRIEND
 - would be nice to have the player able to customize the look of their character
 
 DONE
+switch to UI toolkit for the UI
+
+use ink to add choices - https://www.youtube.com/watch?v=vY0Sk93YUhA
+
 switch to new input system
 - this will make differentiating between controls in the dialog context vs movement context easier.
 

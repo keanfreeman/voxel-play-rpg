@@ -222,7 +222,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Move"",
                     ""type"": ""Value"",
-                    ""id"": ""43f9d06f-34ba-46b3-a260-6e9bc71c0107"",
+                    ""id"": ""31fa9576-fc93-4f2a-965d-1d2f029958a9"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -254,18 +254,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d2d0c62d-6096-44d1-b503-7f009a53892b"",
-                    ""path"": ""<Gamepad>/dpad"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0e34d9ca-d6d1-4e0c-a8b9-3faff41978c8"",
+                    ""id"": ""b86963ac-71d1-479c-90bf-66e0c50d202b"",
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -275,8 +264,19 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""2D Vector"",
-                    ""id"": ""3215b0a1-2cbe-40a1-865c-c7df580dc4eb"",
+                    ""name"": """",
+                    ""id"": ""aefa77b6-53d5-4f97-b5c8-f2e60cb45a25"",
+                    ""path"": ""<Gamepad>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Keyboard 2d vector"",
+                    ""id"": ""7a46d463-f557-4638-a388-dc1327963a63"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -287,7 +287,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""367729ee-feec-4515-84b0-dd1e64d439d9"",
+                    ""id"": ""649a1ca9-fcdc-494e-adc2-2ecb674fe5e0"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -298,8 +298,30 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""44285edc-c8ef-46e9-a3d3-0e276abc3c94"",
+                    ""id"": ""69309d86-08f5-415c-aed8-3a2ca558f2d1"",
                     ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""f8794132-de36-4124-aaa6-87a86a34ff05"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""027e35d1-e14e-4c2c-92ac-3ed58678c9b0"",
+                    ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
