@@ -1,7 +1,7 @@
 CURRENT GOALS
-give the bed a different dialogue text than the NPCs.
-- attach information to the bed voxel perhaps
-- store a mapping between objects that are interacted with and the ink file / path that needs to be opened
+make a new scene and allow the player to transition between the two by walking on a tile.
+- hook up player controls to new scene
+
 
 TODO
 make more than 3 dialogue options possible with a scrollview that automatically slides when the user's selection is off-screen
@@ -17,10 +17,6 @@ try to create a custom voxel that encapsulates a 3d object.
 - this will make loading/unloading things easier.
 
 make it possible to see through walls when the player is behind it
-
-make the game playable with a controller
-- should learn about the new input system for this
-can potentially use voxel play's input system for this
 
 make it possible to move in any direction with "snapping" to the grid, like fire emblem awakening and pokemon ORAS
 
@@ -100,6 +96,10 @@ MVP FOR FRIEND
 - would be nice to have the player able to customize the look of their character
 
 DONE
+give the bed a different dialogue text than the NPCs.
+- attach information to the bed voxel perhaps
+- store a mapping between objects that are interacted with and the ink file / path that needs to be opened
+
 switch to UI toolkit for the UI
 
 use ink to add choices - https://www.youtube.com/watch?v=vY0Sk93YUhA

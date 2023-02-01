@@ -52,7 +52,6 @@ public class Orchestrator : MonoBehaviour
         playerMovement.spriteContainer = playerInstance;
         playerMovement.nonVoxelWorld = nonVoxelWorld;
         playerMovement.spriteMovement = spriteMovement;
-        playerMovement.dialogue = dialogue;
         playerMovement.inputManager = inputManager;
         vpController.GetComponent<PlayerMovement>().enabled = true;
 

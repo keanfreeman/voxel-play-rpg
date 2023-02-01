@@ -33,7 +33,7 @@ public class PlayerInputContextHandler
         this.voxelWorld = voxelWorld;
         this.inputManager = inputManager;
         this.objectInkMapping = objectInkMapping;
-        controlState = ControlState.FIRST_PERSON;
+        controlState = ControlState.SPRITE_NEUTRAL;
     }
 
     public void HandlePlayerInput() {

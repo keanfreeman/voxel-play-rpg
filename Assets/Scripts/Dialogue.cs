@@ -12,8 +12,8 @@ public class Dialogue : MonoBehaviour {
     private string currentLine;
     private Story currentStory;
     
-    public bool isDialogueActive;
-    private bool handledButton = false;
+    public bool isDialogueActive = false;
+    private bool inChoice = false;
 
     // UIDocument
     private VisualElement root;
@@ -25,8 +25,6 @@ public class Dialogue : MonoBehaviour {
     private const string CHOICE_HOLDER = "ChoiceHolder";
 
     private void Start() {
-        isDialogueActive = false;
-
         root = gameObject.GetComponent<UIDocument>().rootVisualElement;
         dialogueText = root.Query<Label>(GIVEN_TEXT).First();
         choiceHolder = root.Query<VisualElement>(CHOICE_HOLDER).First();
@@ -63,8 +61,7 @@ public class Dialogue : MonoBehaviour {
 
     public void HandleInput() {
         // todo - remove this hack and only handle input through button presses
-        if (handledButton) {
-            handledButton = false;
+        if (inChoice) {
             return;
         }
 
@@ -95,6 +92,7 @@ public class Dialogue : MonoBehaviour {
                 choiceHolder.Add(CreateButton(choices[i].text, i));
             }
             choiceHolder.Children().First().Focus();
+            inChoice = true;
         }
     }
 
@@ -112,7 +110,6 @@ public class Dialogue : MonoBehaviour {
             return;
         }
 
-        handledButton = true;
         currentStory.ChooseChoiceIndex(choiceIndex);
         choiceHolder.Clear();
         if (currentStory.canContinue) {
@@ -123,5 +120,6 @@ public class Dialogue : MonoBehaviour {
         else {
             isDialogueActive = false;
         }
+        inChoice = false;
     }
 }

@@ -27,7 +27,6 @@ public class PlayerMovement : MonoBehaviour {
     public SpriteMovement spriteMovement;
     Animator animator;
     SpriteRenderer spriteRenderer;
-    public Dialogue dialogue;
     public InputManager inputManager;
 
     // STATE
