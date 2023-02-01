@@ -24,6 +24,10 @@ namespace NonVoxel {
             positionToObject[position] = gameObject;
         }
 
+        public GameObject GetObjectFromPosition(Vector3Int position) {
+            return positionToObject[position];
+        }
+
         public bool IsPositionOccupied(Vector3Int position) {
             return positionToObject.ContainsKey(position);
         }

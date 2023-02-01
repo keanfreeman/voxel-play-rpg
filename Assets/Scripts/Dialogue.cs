@@ -29,22 +29,23 @@ public class Dialogue : MonoBehaviour {
 
         root = gameObject.GetComponent<UIDocument>().rootVisualElement;
         dialogueText = root.Query<Label>(GIVEN_TEXT).First();
-        dialogueText.text = string.Empty;
         choiceHolder = root.Query<VisualElement>(CHOICE_HOLDER).First();
 
         SetUIVisibility(false);
+        dialogueText.text = string.Empty;
+        choiceHolder.Clear();
     }
 
     private void SetUIVisibility(bool isVisible) {
         root.style.visibility = isVisible ? Visibility.Visible : Visibility.Hidden;
     }
 
-    public void StartDialogue(TextAsset inkJSON) {
+    public void StartDialogue(Story story) {
         isDialogueActive = true;
         dialogueText.text = string.Empty;
         SetUIVisibility(true);
 
-        currentStory = new Story(inkJSON.text);
+        currentStory = story;
         currentLine = currentStory.Continue();
 
         StartCoroutine(TypeLine());
@@ -112,7 +113,6 @@ public class Dialogue : MonoBehaviour {
         }
 
         handledButton = true;
-
         currentStory.ChooseChoiceIndex(choiceIndex);
         choiceHolder.Clear();
         if (currentStory.canContinue) {

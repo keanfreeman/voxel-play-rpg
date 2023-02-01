@@ -1,6 +1,8 @@
+using Ink.Runtime;
 using NonVoxel;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VoxelPlay;
@@ -20,17 +22,17 @@ public class PlayerInputContextHandler
     private Dialogue dialogue;
     private VoxelWorld voxelWorld;
     private InputManager inputManager;
-
-    private TextAsset textAsset;
+    private ObjectInkMapping objectInkMapping;
 
     public PlayerInputContextHandler(PlayerMovement playerMovement, NonVoxelWorld nonVoxelWorld,
-            Dialogue dialogue, VoxelWorld voxelWorld, InputManager inputManager, TextAsset textAsset) {
+            Dialogue dialogue, VoxelWorld voxelWorld, InputManager inputManager,
+            ObjectInkMapping objectInkMapping) {
         this.playerMovement = playerMovement;
         this.nonVoxelWorld = nonVoxelWorld;
         this.dialogue = dialogue;
         this.voxelWorld = voxelWorld;
         this.inputManager = inputManager;
-        this.textAsset = textAsset;
+        this.objectInkMapping = objectInkMapping;
         controlState = ControlState.FIRST_PERSON;
     }
 
@@ -76,11 +78,24 @@ public class PlayerInputContextHandler
         }
 
         // check for interactable objects
+        Story story = null;
+
         Vector3Int currPosition = nonVoxelWorld.GetPosition(playerMovement.spriteContainer);
         List<Vector3Int> interactablePositions = nonVoxelWorld.GetInteractableAdjacentObjects(currPosition);
-        List<VoxelPlay.Vector3d> interactableVoxels = 
-            voxelWorld.GetInteractableAdjacentVoxels(new VoxelPlay.Vector3d(currPosition));
-        if (interactablePositions.Count == 0 && interactableVoxels.Count == 0) {
+        if (interactablePositions.Count > 0) {
+            Vector3Int firstItem = interactablePositions.First();
+            story = objectInkMapping.GetStoryFromObject(nonVoxelWorld.GetObjectFromPosition(firstItem));
+        }
+        else {
+            List<Vector3d> interactableVoxels = 
+                voxelWorld.GetInteractableAdjacentVoxels(new Vector3d(currPosition));
+            if (interactableVoxels.Count > 0) {
+                Vector3d firstItem = interactableVoxels.First();
+                story = objectInkMapping.GetStoryFromVoxel(voxelWorld.GetVoxelFromPosition(firstItem));
+            }
+        }
+
+        if (story == null) {
             Debug.Log("No interactable object near player.");
             return;
         }
@@ -89,7 +104,7 @@ public class PlayerInputContextHandler
         controlState = ControlState.DIALOGUE;
         inputManager.SwitchPlayerControlStateToDialogue();
 
-        dialogue.StartDialogue(textAsset);
+        dialogue.StartDialogue(story);
     }
 
     private void HandleDialogueContinue() {

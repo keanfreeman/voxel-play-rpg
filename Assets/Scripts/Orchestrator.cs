@@ -31,10 +31,12 @@ public class Orchestrator : MonoBehaviour
     private InteractableVoxels interactableVoxels;
     private PlayerInputActions playerInputActions;
     private InputManager inputManager;
-
+    private ObjectInkMapping objectInkMapping;
 
     void Start()
     {
+        objectInkMapping = GetComponent<ObjectInkMapping>();
+
         dialogue = uiDocument.GetComponent<Dialogue>();
 
         playerInputActions = new PlayerInputActions();
@@ -61,7 +63,7 @@ public class Orchestrator : MonoBehaviour
         interactableVoxels = gameObject.GetComponent<InteractableVoxels>();
         voxelWorld = new VoxelWorld(voxelPlayEnvironment, interactableVoxels);
         playerInputContextHandler = new PlayerInputContextHandler(playerMovement, nonVoxelWorld, dialogue, voxelWorld,
-            inputManager, dialogueJSON);
+            inputManager, objectInkMapping);
     }
 
     void Update() {
@@ -72,6 +74,7 @@ public class Orchestrator : MonoBehaviour
 
         Vector3Int playerStartPosition = new Vector3Int(523, 50, 246);
         GameObject playerInstance = Instantiate(playerPrefab, playerStartPosition, Quaternion.identity);
+        playerInstance.tag = "player";
         this.playerInstance = playerInstance;
         nonVoxelWorld.SetPosition(playerInstance, playerStartPosition);
 

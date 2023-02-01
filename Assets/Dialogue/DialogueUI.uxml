@@ -6,7 +6,7 @@
                 <ui:Label text="This is my sentence bla bla bla." display-tooltip-when-elided="true" name="GivenText" />
             </ui:VisualElement>
             <ui:VisualElement name="Response" style="flex-grow: 1; width: 100%; flex-direction: row; padding-top: 5px;">
-                <ui:VisualElement name="ChoiceHolder" style="width: 100%; align-items: stretch;">
+                <ui:VisualElement name="ChoiceHolder" style="flex-grow: 1;">
                     <ui:Button text="Button" display-tooltip-when-elided="true" name="Choice0" class="button" />
                 </ui:VisualElement>
                 <ui:VisualElement name="NextArrowHolder" style="flex-direction: column; align-items: flex-end; justify-content: flex-end;">

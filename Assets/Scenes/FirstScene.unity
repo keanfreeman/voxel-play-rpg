@@ -4359,6 +4359,7 @@ GameObject:
   - component: {fileID: 1891501886}
   - component: {fileID: 1891501885}
   - component: {fileID: 1891501888}
+  - component: {fileID: 1891501889}
   m_Layer: 0
   m_Name: Orchestrator
   m_TagString: Untagged
@@ -4428,7 +4429,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 4d171ccee374ecd4394ddbb9770666f5, type: 3}
   m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
+  m_UIInputModule: {fileID: 2066669304}
   m_DeviceLostEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -4469,13 +4470,27 @@ MonoBehaviour:
     m_ActionName: Dialogue/Continue[/Keyboard/enter]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: 43f9d06f-34ba-46b3-a260-6e9bc71c0107
-    m_ActionName: Dialogue/Move[/Keyboard/w,/Keyboard/s]
+    m_ActionId: 31fa9576-fc93-4f2a-965d-1d2f029958a9
+    m_ActionName: Dialogue/Move[/XInputControllerWindows/leftStick,/XInputControllerWindows/dpad,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1891501889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1891501884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79ecfc7c1d9c3e345ad012dbfc8e60e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NoResponseObjectInk: {fileID: 4900000, guid: 81791661c42cb764fb2b0cd93123d9f6, type: 3}
+  testInk: {fileID: 4900000, guid: 3fbd56f75b38391489c81164ff6ab45d, type: 3}
 --- !u!1 &1892281960
 GameObject:
   m_ObjectHideFlags: 0
@@ -4981,7 +4996,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteContainer: {fileID: 4050460054483818319, guid: 067a1b6078bd66249b5c9fdecf5d25bc, type: 3}
   dialogue: {fileID: 0}
-  inputManager: {fileID: 0}
 --- !u!1 &1928158337
 GameObject:
   m_ObjectHideFlags: 0

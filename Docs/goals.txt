@@ -1,9 +1,11 @@
 CURRENT GOALS
-switch to a list view for the buttons.
-
 give the bed a different dialogue text than the NPCs.
+- attach information to the bed voxel perhaps
+- store a mapping between objects that are interacted with and the ink file / path that needs to be opened
 
 TODO
+make more than 3 dialogue options possible with a scrollview that automatically slides when the user's selection is off-screen
+
 pause NPC movement when player not free
 
 add back sprinting, or remove sprinting and add a speed vehicle

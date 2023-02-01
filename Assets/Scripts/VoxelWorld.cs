@@ -14,6 +14,10 @@ public class VoxelWorld
         this.interactableVoxels = interactableVoxels;
     }
 
+    public Voxel GetVoxelFromPosition(Vector3d position) {
+        return environment.GetVoxel(position);
+    }
+
     public List<Vector3d> GetInteractableAdjacentVoxels(Vector3d currPosition) {
         List<Vector3d> interactableAdjacentVoxels = new List<Vector3d>();
         for (int x = -1; x < 2; x++) {
