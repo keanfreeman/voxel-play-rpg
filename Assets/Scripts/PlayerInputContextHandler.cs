@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using VoxelPlay;
 
 public class PlayerInputContextHandler
@@ -39,6 +40,12 @@ public class PlayerInputContextHandler
     public void HandlePlayerInput() {
         if (Input.GetKeyUp(KeyCode.J)) {
             Debug.Log("Debug key pressed.");
+            if (SceneManager.GetActiveScene().buildIndex == 1) {
+                SceneManager.LoadSceneAsync(2);
+            }
+            else {
+                SceneManager.LoadSceneAsync(1);
+            }
         }
         HandleSwapCameraState();
 

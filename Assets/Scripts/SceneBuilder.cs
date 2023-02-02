@@ -8,10 +8,12 @@ using VoxelPlay;
 
 public class SceneBuilder : MonoBehaviour
 {
+    [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject opossumPrefab;
-    [SerializeField] private GameObject playerInstance;
     [SerializeField] private UIDocument uiDocument;
+    [SerializeField] private Vector3Int playerStartPosition;
 
+    private GameObject playerInstance;
     private VoxelPlayEnvironment vpEnvironment;
     private NonVoxelWorld nonVoxelWorld = new NonVoxelWorld();
     private SpriteMovement spriteMovement;
@@ -27,8 +29,8 @@ public class SceneBuilder : MonoBehaviour
 
     public void Awake() {
         vpEnvironment = gameObject.GetComponent<VoxelPlayEnvironment>();
-        //vpEnvironment.enabled = true;
-
+        vpEnvironment.enabled = true;
+        
         spriteMovement = new SpriteMovement(vpEnvironment);
         InitCreaturesAndWorld();
 
@@ -58,8 +60,7 @@ public class SceneBuilder : MonoBehaviour
     }
 
     private void InitCreaturesAndWorld() {
-
-        Vector3Int playerStartPosition = new Vector3Int(523, 50, 246);
+        playerInstance = Instantiate(playerPrefab, playerStartPosition, Quaternion.identity);
         nonVoxelWorld.SetPosition(playerInstance, playerStartPosition);
 
         createNPC(new Vector3Int(527, 53, 247));

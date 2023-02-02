@@ -28,3 +28,11 @@ can use WaitWhile in a coroutine to listen for an event before continuing
 
 try using getawaiter.getresult on tasks (they're like promises) in a non async function if you want to block on the result
 
+can use FileManager.writetofile/loadfromfile to persist data to disk. can use jsonutility to serialize entire classes, like a 
+class that holds all saveable information about the game
+
+can store permanent files here - Path.Combine(Application.persistentDataPath, <file name>); File.WriteAllText(<path>, <string>);
+File.readalltext()
+
+can use JSON.Net if I have issues with jsonutility not serializing the types I want
+

@@ -1,7 +1,10 @@
 CURRENT GOALS
 make a new scene and allow the player to transition between the two by walking on a tile.
 - hook up player controls to new scene
-
+- create a third scene, switch between the two with a debug key
+- learn about how to efficiently load scenes (preserve voxel play environment?, look up scenemanager docs)
+- make a nonvoxelworld square which is a loading zone (enter a new state where we wait for the new zone to load)
+- preserve some objects / save data between scene loads
 
 TODO
 make more than 3 dialogue options possible with a scrollview that automatically slides when the user's selection is off-screen

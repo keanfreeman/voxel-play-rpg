@@ -394,7 +394,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 7062049782252913140, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
   opossumPrefab: {fileID: 6944743723035480207, guid: a806406e61d5e2146bba48accb192b09, type: 3}
   uiDocument: {fileID: 1150598841}
-  playerStartPosition: {x: 523, y: 50, z: 246}
+  playerStartPosition: {x: 523, y: 50, z: 240}
 --- !u!4 &2092821847
 Transform:
   m_ObjectHideFlags: 0
