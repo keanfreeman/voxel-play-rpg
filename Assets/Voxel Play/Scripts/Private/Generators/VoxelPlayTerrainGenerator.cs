@@ -66,7 +66,8 @@ namespace VoxelPlay {
 		/// Use this method to initialize the terrain generator
 		/// </summary>
 		public void Initialize () {
-			env = VoxelPlayEnvironment.instance;
+			// TODO fix if needed
+			env = null;
 			if (env == null)
 				return;
 			world = env.world;

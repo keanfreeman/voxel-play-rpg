@@ -17,7 +17,7 @@ namespace VoxelPlay {
 		/// </summary>
 		protected override void Init () {
 			if (terrainVoxel == null) {
-				terrainVoxel = VoxelPlayEnvironment.instance.defaultVoxel;
+				//terrainVoxel = VoxelPlayEnvironment.instance.defaultVoxel;
 			}
 			env.AddVoxelDefinition (terrainVoxel);
 		}

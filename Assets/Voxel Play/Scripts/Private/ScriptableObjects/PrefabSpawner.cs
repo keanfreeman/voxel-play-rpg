@@ -24,7 +24,7 @@ namespace VoxelPlay {
 		/// Initialization method. Called by Voxel Play at startup.
 		/// </summary>
 		public override void Init() {
-			env = VoxelPlayEnvironment.instance;
+			env = null;
 			vpShader = Shader.Find("Voxel Play/Models/Texture/Opaque");
 		}
 

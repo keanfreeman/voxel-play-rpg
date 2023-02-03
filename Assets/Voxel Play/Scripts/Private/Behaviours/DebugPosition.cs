@@ -41,7 +41,7 @@ namespace VoxelPlay {
             }
         }
         void Update() {
-            VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
+            VoxelPlayEnvironment env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
             if (env == null) return;
 
             VoxelChunk chunk;

@@ -230,6 +230,9 @@ namespace VoxelPlay
         [NonSerialized]
         public bool lightmapIsClear;
 
+        [NonSerialized]
+        public VoxelPlayEnvironment env;
+
 
         /// <summary>
         /// Forces a collider rebuild by resetting the voxelSignature field. This is used when changing a voxel type which affects only colliders (ie. SetDynamic).
@@ -334,7 +337,7 @@ namespace VoxelPlay
         /// </summary>
         public void ComputeNeighbours ()
         {
-            VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
+            VoxelPlayEnvironment env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
 
             Vector3d topPosition = position;
             topPosition.y += VoxelPlayEnvironment.CHUNK_SIZE;
@@ -456,7 +459,7 @@ namespace VoxelPlay
         {
             if (items != null) {
                 if (items.Remove (item)) {
-                    VoxelPlayEnvironment.instance.RegisterChunkChanges (this);
+                    GetSceneInstance().RegisterChunkChanges (this);
                 }
             }
         }
@@ -467,7 +470,14 @@ namespace VoxelPlay
                 items = new FastList<Item> ();
             }
             items.Add (item);
-            VoxelPlayEnvironment.instance.RegisterChunkChanges (this);
+            GetSceneInstance().RegisterChunkChanges (this);
+        }
+
+        private VoxelPlayEnvironment GetSceneInstance() {
+            if (env == null) {
+                env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+            }
+            return env;
         }
 
         public override string ToString ()
@@ -534,7 +544,7 @@ namespace VoxelPlay
             voxels[voxelIndex].Set(voxelDefinition);
             if (voxelDefinition.lightIntensity > 0) {
                 AddLightSource(voxelIndex, voxelDefinition.lightIntensity);
-                VoxelPlayEnvironment.instance.SetTorchLightmap(this, voxelIndex, voxelDefinition.lightIntensity);
+                GetSceneInstance().SetTorchLightmap(this, voxelIndex, voxelDefinition.lightIntensity);
             }
         }
 
@@ -546,7 +556,7 @@ namespace VoxelPlay
             voxels [voxelIndex].Set (voxelDefinition, tintColor);
             if (voxelDefinition.lightIntensity > 0) {
                 AddLightSource (voxelIndex, voxelDefinition.lightIntensity);
-                VoxelPlayEnvironment.instance.SetTorchLightmap (this, voxelIndex, voxelDefinition.lightIntensity);
+                GetSceneInstance().SetTorchLightmap (this, voxelIndex, voxelDefinition.lightIntensity);
             }
         }
     }

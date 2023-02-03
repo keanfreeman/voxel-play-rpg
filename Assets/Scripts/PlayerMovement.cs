@@ -18,15 +18,12 @@ public class PlayerMovement : MonoBehaviour {
     const float SPRINT_SPEEDUP = 2f;
 
     // IMPORT
-    VoxelPlayFirstPersonController scriptInstance;
     public GameObject spriteContainer;
-    Transform spriteChildTransform;
-    GameObject cameraObject;
-    VoxelPlayEnvironment environment;
+    public Transform spriteChildTransform;
     public NonVoxelWorld nonVoxelWorld;
     public SpriteMovement spriteMovement;
-    Animator animator;
-    SpriteRenderer spriteRenderer;
+    public Animator animator;
+    public SpriteRenderer spriteRenderer;
     public InputManager inputManager;
 
     // STATE
@@ -46,13 +43,7 @@ public class PlayerMovement : MonoBehaviour {
     PlayerCameraDirection playerCameraDirection = PlayerCameraDirection.NORTH;
 
     void Start() {
-        environment = VoxelPlayEnvironment.instance;
         moveStartTimestamp = Time.time;
-        scriptInstance = GetComponent<VoxelPlayFirstPersonController>();
-        cameraObject = GameObject.Find("FirstPersonCharacter");
-        spriteChildTransform = spriteContainer.transform.GetChild(0);
-        animator = spriteChildTransform.GetComponent<Animator>();
-        spriteRenderer = spriteChildTransform.GetComponent<SpriteRenderer>();
     }
 
     // returns true if we need to freeze other controls while moving/rotating
@@ -245,30 +236,5 @@ public class PlayerMovement : MonoBehaviour {
         float linearFriendlyFraction = Mathf.Min(fractionOfMovementDone, 1f);
         spriteContainer.transform.position = Vector3.Lerp(moveStartPoint, moveEndPoint, linearFriendlyFraction);
         return linearFriendlyFraction >= 1f;
-    }
-    
-    public void ToggleFreeCamera() {
-        Debug.Log("SWITCHING FREE CAMERA");
-        if (isFollowingSprite) {
-            transform.SetParent(null);
-            scriptInstance.crosshairScale = 0.1f;
-        }
-
-        scriptInstance.useThirdPartyController = !scriptInstance.useThirdPartyController;
-        scriptInstance.isFlying = !scriptInstance.isFlying;
-        scriptInstance.freeMode = !scriptInstance.freeMode;
-        scriptInstance.hasCharacterController = !scriptInstance.hasCharacterController;
-        scriptInstance.voxelHighlight = !scriptInstance.voxelHighlight;
-        scriptInstance.unstuck = !scriptInstance.unstuck;
-
-        if (!isFollowingSprite) {
-            transform.position = spriteChildTransform.transform.position
-                + (Vector3.up * 5f) + (Vector3.back * 5f);
-            cameraObject.transform.rotation = spriteChildTransform.transform.rotation;
-            transform.SetParent(spriteChildTransform.transform);
-
-            scriptInstance.crosshairScale = 0;
-        }
-        isFollowingSprite = !isFollowingSprite;
     }
 }

@@ -123,6 +123,301 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &582458976
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 582458983}
+  - component: {fileID: 582458982}
+  - component: {fileID: 582458981}
+  - component: {fileID: 582458980}
+  - component: {fileID: 582458979}
+  - component: {fileID: 582458978}
+  - component: {fileID: 582458977}
+  m_Layer: 0
+  m_Name: SceneBuilder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &582458977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582458976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cc2d8c584a2c2b44abf3b7f86bb0e42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactableVoxelsList:
+  - {fileID: 11400000, guid: 0336fcbf01695124bb8619a91042be65, type: 2}
+  - {fileID: 11400000, guid: ede27299da5e3014fa16220f24d1394b, type: 2}
+--- !u!114 &582458978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582458976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79ecfc7c1d9c3e345ad012dbfc8e60e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NoResponseObjectInk: {fileID: 4900000, guid: 81791661c42cb764fb2b0cd93123d9f6, type: 3}
+  testInk: {fileID: 4900000, guid: 3fbd56f75b38391489c81164ff6ab45d, type: 3}
+--- !u!114 &582458979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582458976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 4d171ccee374ecd4394ddbb9770666f5, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f87b036c-bdce-4b6a-9262-0f902f2f3e77
+    m_ActionName: Player/Switch Input Type[/Keyboard/k]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9627ebcf-8410-4f90-bdc4-43abb6d7d91f
+    m_ActionName: Player/Move Up[/Keyboard/w]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fffff88c-8b75-494d-bf19-4267b30a5fd7
+    m_ActionName: Player/Move Down[/Keyboard/s]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7315dfbc-ef8d-4a4d-8730-eb149f7a89ee
+    m_ActionName: Player/Move Left[/Keyboard/a]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: cacb10e0-2908-4fac-a068-62c0531ae84c
+    m_ActionName: Player/Move Right[/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 958e265a-cf5b-47ba-a6c6-3f8d3372a366
+    m_ActionName: Player/Interact[/Keyboard/enter]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9563a973-e10e-4431-97d8-58558e9cc73d
+    m_ActionName: Dialogue/Continue[/Keyboard/enter]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 31fa9576-fc93-4f2a-965d-1d2f029958a9
+    m_ActionName: Dialogue/Move[/XInputControllerWindows/leftStick,/XInputControllerWindows/dpad,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
+--- !u!114 &582458980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582458976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eabec125adc06c54492729f7895dcefd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteContainer: {fileID: 7062049782252913140, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
+  spriteChildTransform: {fileID: 0}
+  animator: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+--- !u!114 &582458981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582458976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb3935ca6053e4334983d3f7b819d537, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useOriginShift: 0
+  originShiftDistanceThreshold: 1000
+  fxRoot: {fileID: 0}
+  particlePoolSize: 1000
+  voxelDefinitionsCount: 11
+  enableURP: 0
+  debugLevel: 0
+  world: {fileID: 11400000, guid: 08d688119f29478418727f8166f3db94, type: 2}
+  enableBuildMode: 1
+  enableGeneration: 1
+  constructorMode: 0
+  buildMode: 0
+  renderInEditor: 0
+  renderInEditorLowPriority: 1
+  renderInEditorDetail: 0
+  renderInEditorAreaCenter: {x: 0, y: 0, z: 0}
+  renderInEditorAreaSize: {x: 512, y: 64, z: 512}
+  enableConsole: 1
+  showConsole: 0
+  enableInventory: 1
+  enableDebugWindow: 1
+  showFPS: 0
+  welcomeMessage: <color=green>Welcome to <color=white>Voxel Play</color>! Press<color=yellow>
+    F1 </color>for console commands.</color>
+  welcomeMessageDuration: 5
+  UICanvasPrefab: {fileID: 1782543277755836, guid: f5884e63f0cf44e8a84d1d67f71bf285, type: 3}
+  inputControllerPCPrefab: {fileID: 1585764102534242, guid: 182bd21a31be8466ab9869959ee9d6bd, type: 3}
+  inputControllerMobilePrefab: {fileID: 1556361563542052, guid: a1bdf34a432584a31ba71b6d3335e0f4, type: 3}
+  crosshairPrefab: {fileID: 1788417017974548, guid: 2671eb0d93c054491b765a9afa1c247b, type: 3}
+  crosshairTexture: {fileID: 2800000, guid: 51075cdab4f044cae8efbec32eca28b1, type: 3}
+  consoleBackgroundColor: {r: 0, g: 0, b: 0, a: 0.32156864}
+  enableStatusBar: 1
+  statusBarBackgroundColor: {r: 0, g: 0, b: 0, a: 0.7529412}
+  layerParticles: 2
+  layerVoxels: 1
+  layerClouds: 1
+  enableLoadingPanel: 1
+  loadingText: Initializing...
+  initialWaitTime: 0
+  initialWaitText: Loading World...
+  loadSavedGame: 1
+  saveFilename: worldwithbed
+  globalIllumination: 1
+  ambientLight: 0.2
+  daylightShadowAtten: 0.65
+  enableSmoothLighting: 1
+  obscuranceMode: 0
+  obscuranceIntensity: 0.5
+  enableReliefMapping: 0
+  reliefStrength: 0.05
+  reliefIterations: 10
+  reliefIterationsBinarySearch: 5
+  reliefMaxDistance: 25
+  enableNormalMap: 0
+  enableFogSkyBlending: 1
+  textureSize: 64
+  maxChunks: 16000
+  hqFiltering: 1
+  mipMapBias: 1
+  filterMode: 0
+  doubleSidedGlass: 1
+  transparentBling: 1
+  useComputeBuffers: 0
+  previewTouchUIinEditor: 0
+  prewarmChunksInEditor: 5000
+  enableTinting: 0
+  enableFresnel: 0
+  fresnelExponent: 8
+  fresnelIntensity: 0.2
+  fresnelColor: {r: 0.9098039, g: 0.9019608, b: 0.99215686, a: 1}
+  enableBevel: 0
+  enableOutline: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 0.5}
+  outlineThreshold: 0.49
+  enableCurvature: 0
+  seeThrough: 0
+  seeThroughTarget: {fileID: 0}
+  seeThroughRadius: 3
+  seeThroughAlpha: 0
+  _seeThroughHeightOffset: 1
+  enableBrightPointLights: 0
+  brightPointsMaxDistance: 10000
+  enableURPNativeLights: 0
+  _visibleChunksDistance: 10
+  forceChunkDistance: 3
+  unloadFarChunks: 0
+  unloadFarNavMesh: 0
+  distanceAnchor: {fileID: 0}
+  adjustCameraFarClip: 1
+  usePixelLights: 1
+  enableShadows: 1
+  shadowsOnWater: 0
+  realisticWater: 0
+  maxCPUTimePerFrame: 30
+  maxChunksPerFrame: 50
+  maxTreesPerFrame: 10
+  maxBushesPerFrame: 10
+  multiThreadGeneration: 1
+  lowMemoryMode: 0
+  onlyRenderInFrustum: 1
+  serverMode: 0
+  enableColliders: 1
+  enableNavMesh: 0
+  hideChunksInHierarchy: 1
+  enableTrees: 1
+  denseTrees: 1
+  enableVegetation: 1
+  sun: {fileID: 0}
+  fogAmount: 0.5
+  fogDistanceAuto: 1
+  fogDistance: 300
+  fogFallOff: 0.8
+  enableClouds: 1
+  defaultBuildSound: {fileID: 0}
+  defaultPickupSound: {fileID: 0}
+  defaultDestructionSound: {fileID: 0}
+  defaultImpactSound: {fileID: 0}
+  defaultVoxel: {fileID: 11400000, guid: 764590ab8f7e04785a8ac184f4ff675a, type: 2}
+  defaultWaterVoxel: {fileID: 11400000, guid: f196cfea1816a4cb6b8e24bea23c4d60, type: 2}
+  enableDetailGenerators: 1
+--- !u!114 &582458982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582458976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3cd911642bb8f24bb1da8b5dd623f9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 7062049782252913140, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
+  opossumPrefab: {fileID: 6944743723035480207, guid: a806406e61d5e2146bba48accb192b09, type: 3}
+  uiDocument: {fileID: 1150598841}
+  playerStartPosition: {x: 523, y: 50, z: 246}
+  vpEnvironment: {fileID: 0}
+  parentSceneChanger: {fileID: 0}
+  controlsEnabled: 0
+--- !u!4 &582458983
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582458976}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 520.112, y: 50.481716, z: 249.81}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,7 +599,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2066669303}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
@@ -334,7 +629,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2066669303}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
@@ -357,292 +652,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2092821845
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2092821847}
-  - component: {fileID: 2092821846}
-  - component: {fileID: 2092821848}
-  - component: {fileID: 2092821849}
-  - component: {fileID: 2092821852}
-  - component: {fileID: 2092821851}
-  - component: {fileID: 2092821850}
-  m_Layer: 0
-  m_Name: SceneManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2092821846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092821845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3cd911642bb8f24bb1da8b5dd623f9c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 7062049782252913140, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
-  opossumPrefab: {fileID: 6944743723035480207, guid: a806406e61d5e2146bba48accb192b09, type: 3}
-  uiDocument: {fileID: 1150598841}
-  playerStartPosition: {x: 523, y: 50, z: 246}
---- !u!4 &2092821847
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092821845}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 520.112, y: 50.481716, z: 249.81}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2092821848
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092821845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb3935ca6053e4334983d3f7b819d537, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  useOriginShift: 0
-  originShiftDistanceThreshold: 1000
-  fxRoot: {fileID: 0}
-  particlePoolSize: 1000
-  voxelDefinitionsCount: 11
-  enableURP: 0
-  debugLevel: 0
-  world: {fileID: 11400000, guid: 08d688119f29478418727f8166f3db94, type: 2}
-  enableBuildMode: 1
-  enableGeneration: 1
-  constructorMode: 0
-  buildMode: 0
-  renderInEditor: 0
-  renderInEditorLowPriority: 1
-  renderInEditorDetail: 0
-  renderInEditorAreaCenter: {x: 0, y: 0, z: 0}
-  renderInEditorAreaSize: {x: 512, y: 64, z: 512}
-  enableConsole: 1
-  showConsole: 0
-  enableInventory: 1
-  enableDebugWindow: 1
-  showFPS: 0
-  welcomeMessage: <color=green>Welcome to <color=white>Voxel Play</color>! Press<color=yellow>
-    F1 </color>for console commands.</color>
-  welcomeMessageDuration: 5
-  UICanvasPrefab: {fileID: 1782543277755836, guid: f5884e63f0cf44e8a84d1d67f71bf285, type: 3}
-  inputControllerPCPrefab: {fileID: 1585764102534242, guid: 182bd21a31be8466ab9869959ee9d6bd, type: 3}
-  inputControllerMobilePrefab: {fileID: 1556361563542052, guid: a1bdf34a432584a31ba71b6d3335e0f4, type: 3}
-  crosshairPrefab: {fileID: 1788417017974548, guid: 2671eb0d93c054491b765a9afa1c247b, type: 3}
-  crosshairTexture: {fileID: 2800000, guid: 51075cdab4f044cae8efbec32eca28b1, type: 3}
-  consoleBackgroundColor: {r: 0, g: 0, b: 0, a: 0.32156864}
-  enableStatusBar: 1
-  statusBarBackgroundColor: {r: 0, g: 0, b: 0, a: 0.7529412}
-  layerParticles: 2
-  layerVoxels: 1
-  layerClouds: 1
-  enableLoadingPanel: 1
-  loadingText: Initializing...
-  initialWaitTime: 0
-  initialWaitText: Loading World...
-  loadSavedGame: 1
-  saveFilename: worldwithbed
-  globalIllumination: 1
-  ambientLight: 0.2
-  daylightShadowAtten: 0.65
-  enableSmoothLighting: 1
-  obscuranceMode: 0
-  obscuranceIntensity: 0.5
-  enableReliefMapping: 0
-  reliefStrength: 0.05
-  reliefIterations: 10
-  reliefIterationsBinarySearch: 5
-  reliefMaxDistance: 25
-  enableNormalMap: 0
-  enableFogSkyBlending: 1
-  textureSize: 64
-  maxChunks: 16000
-  hqFiltering: 1
-  mipMapBias: 1
-  filterMode: 0
-  doubleSidedGlass: 1
-  transparentBling: 1
-  useComputeBuffers: 0
-  previewTouchUIinEditor: 0
-  prewarmChunksInEditor: 5000
-  enableTinting: 0
-  enableFresnel: 0
-  fresnelExponent: 8
-  fresnelIntensity: 0.2
-  fresnelColor: {r: 0.9098039, g: 0.9019608, b: 0.99215686, a: 1}
-  enableBevel: 0
-  enableOutline: 0
-  outlineColor: {r: 1, g: 1, b: 1, a: 0.5}
-  outlineThreshold: 0.49
-  enableCurvature: 0
-  seeThrough: 0
-  seeThroughTarget: {fileID: 0}
-  seeThroughRadius: 3
-  seeThroughAlpha: 0
-  _seeThroughHeightOffset: 1
-  enableBrightPointLights: 0
-  brightPointsMaxDistance: 10000
-  enableURPNativeLights: 0
-  _visibleChunksDistance: 10
-  forceChunkDistance: 3
-  unloadFarChunks: 0
-  unloadFarNavMesh: 0
-  distanceAnchor: {fileID: 0}
-  adjustCameraFarClip: 1
-  usePixelLights: 1
-  enableShadows: 1
-  shadowsOnWater: 0
-  realisticWater: 0
-  maxCPUTimePerFrame: 30
-  maxChunksPerFrame: 50
-  maxTreesPerFrame: 10
-  maxBushesPerFrame: 10
-  multiThreadGeneration: 1
-  lowMemoryMode: 0
-  onlyRenderInFrustum: 1
-  serverMode: 0
-  enableColliders: 1
-  enableNavMesh: 0
-  hideChunksInHierarchy: 1
-  enableTrees: 1
-  denseTrees: 1
-  enableVegetation: 1
-  sun: {fileID: 0}
-  fogAmount: 0.5
-  fogDistanceAuto: 1
-  fogDistance: 300
-  fogFallOff: 0.8
-  enableClouds: 1
-  defaultBuildSound: {fileID: 0}
-  defaultPickupSound: {fileID: 0}
-  defaultDestructionSound: {fileID: 0}
-  defaultImpactSound: {fileID: 0}
-  defaultVoxel: {fileID: 11400000, guid: 764590ab8f7e04785a8ac184f4ff675a, type: 2}
-  defaultWaterVoxel: {fileID: 11400000, guid: f196cfea1816a4cb6b8e24bea23c4d60, type: 2}
-  enableDetailGenerators: 1
---- !u!114 &2092821849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092821845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eabec125adc06c54492729f7895dcefd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spriteContainer: {fileID: 0}
---- !u!114 &2092821850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092821845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cc2d8c584a2c2b44abf3b7f86bb0e42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactableVoxelsList:
-  - {fileID: 11400000, guid: 0336fcbf01695124bb8619a91042be65, type: 2}
-  - {fileID: 11400000, guid: ede27299da5e3014fa16220f24d1394b, type: 2}
---- !u!114 &2092821851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092821845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79ecfc7c1d9c3e345ad012dbfc8e60e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NoResponseObjectInk: {fileID: 4900000, guid: 81791661c42cb764fb2b0cd93123d9f6, type: 3}
-  testInk: {fileID: 4900000, guid: 3fbd56f75b38391489c81164ff6ab45d, type: 3}
---- !u!114 &2092821852
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092821845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 4d171ccee374ecd4394ddbb9770666f5, type: 3}
-  m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 2066669304}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: f87b036c-bdce-4b6a-9262-0f902f2f3e77
-    m_ActionName: Player/Switch Input Type[/Keyboard/k]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 9627ebcf-8410-4f90-bdc4-43abb6d7d91f
-    m_ActionName: Player/Move Up[/Keyboard/w]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: fffff88c-8b75-494d-bf19-4267b30a5fd7
-    m_ActionName: Player/Move Down[/Keyboard/s]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 7315dfbc-ef8d-4a4d-8730-eb149f7a89ee
-    m_ActionName: Player/Move Left[/Keyboard/a]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: cacb10e0-2908-4fac-a068-62c0531ae84c
-    m_ActionName: Player/Move Right[/Keyboard/d]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 958e265a-cf5b-47ba-a6c6-3f8d3372a366
-    m_ActionName: Player/Interact[/Keyboard/enter]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 9563a973-e10e-4431-97d8-58558e9cc73d
-    m_ActionName: Dialogue/Continue[/Keyboard/enter]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 31fa9576-fc93-4f2a-965d-1d2f029958a9
-    m_ActionName: Dialogue/Move[/XInputControllerWindows/leftStick,/XInputControllerWindows/dpad,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}

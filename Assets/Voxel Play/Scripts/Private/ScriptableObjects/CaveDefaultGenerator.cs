@@ -46,7 +46,7 @@ namespace VoxelPlay {
         /// Initialization method. Called by Voxel Play at startup.
         /// </summary>
         public override void Init() {
-            env = VoxelPlayEnvironment.instance;
+            env = null;
             wormBorn = new Dictionary<Vector3d, bool>(100);
 
             GenerateNoise(ref noiseValuesX, 0);

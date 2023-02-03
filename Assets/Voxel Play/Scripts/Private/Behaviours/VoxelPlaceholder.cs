@@ -138,7 +138,7 @@ namespace VoxelPlay
         }
 
         public void CancelDynamicNow() {
-            VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
+            VoxelPlayEnvironment env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
             if (env == null || gameObject.Equals(null))
                 return;
             env.VoxelCancelDynamic(this);
@@ -147,7 +147,7 @@ namespace VoxelPlay
         IEnumerator Consolidate ()
         {
             WaitForSeconds w = new WaitForSeconds (1f);
-            VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
+            VoxelPlayEnvironment env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
             if (env == null || gameObject.Equals (null))
                 yield break;
             if (env.GetChunk (transform.position, out VoxelChunk targetChunk, false)) {

@@ -190,7 +190,7 @@ namespace VoxelPlay {
             m_StepCycle = 0f;
             m_NextStep = m_StepCycle / 2f;
 
-            env = VoxelPlayEnvironment.instance;
+            env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
             if (env == null) {
                 Debug.LogError("Voxel Play Environment must be added first.");
             } else {

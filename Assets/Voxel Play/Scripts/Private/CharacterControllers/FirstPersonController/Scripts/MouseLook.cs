@@ -18,6 +18,8 @@ namespace VoxelPlay {
 		bool m_cursorIsLocked = true;
 		VoxelPlayInputController m_Input;
 
+		VoxelPlayEnvironment env = null;
+
 		public void Init (Transform character, Transform camera, VoxelPlayInputController input) {
 			m_CharacterTargetRot = character.localRotation;
 			m_CameraTargetRot = camera.localRotation;
@@ -86,10 +88,10 @@ namespace VoxelPlay {
 		}
 
 		private void InternalLockUpdate () {
-			if (!VoxelPlayEnvironment.instance.input.enabled) return;
+			if (!env.input.enabled) return;
 
 			if (m_cursorIsLocked) {
-				VoxelPlayCharacterControllerBase cc = (VoxelPlayCharacterControllerBase)VoxelPlayEnvironment.instance.characterController;
+				VoxelPlayCharacterControllerBase cc = (VoxelPlayCharacterControllerBase)env.characterController;
 				if ((UnityEngine.Object)cc != null) {
 					Cursor.lockState = cc.freeMode ? CursorLockMode.None : CursorLockMode.Locked;
 				}

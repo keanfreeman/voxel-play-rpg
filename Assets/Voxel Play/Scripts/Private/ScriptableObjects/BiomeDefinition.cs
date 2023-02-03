@@ -131,7 +131,7 @@ namespace VoxelPlay
                 underwaterVegetation = new BiomeVegetation [0];
             }
 
-            VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
+            VoxelPlayEnvironment env = null;
             if (env == null) return;
 
             float maxAltitude = 255;

@@ -91,10 +91,10 @@ namespace VoxelPlay {
 
 		public static VoxelPlayThirdPersonController instance {
 			get {
-				if (_thirdPersonController == null) {
-					_thirdPersonController = VoxelPlayEnvironment.instance.characterController as VoxelPlayThirdPersonController;
-				}
-				return _thirdPersonController;
+				//if (_thirdPersonController == null) {
+				//	_thirdPersonController = VoxelPlayEnvironment.instance.characterController as VoxelPlayThirdPersonController;
+				//}
+				return null;
 			}
 		}
 
@@ -113,7 +113,7 @@ namespace VoxelPlay {
 
 
 		void OnEnable () {
-			env = VoxelPlayEnvironment.instance;
+			env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
 			if (env == null) {
 				Debug.LogError ("Voxel Play Environment must be added first.");
 			} else {

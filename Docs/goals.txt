@@ -6,6 +6,8 @@ make a new scene and allow the player to transition between the two by walking o
 - make a nonvoxelworld square which is a loading zone (enter a new state where we wait for the new zone to load)
 - preserve some objects / save data between scene loads
 
+have two scenes loaded and quickly switch between them by making them active.
+
 TODO
 make more than 3 dialogue options possible with a scrollview that automatically slides when the user's selection is off-screen
 

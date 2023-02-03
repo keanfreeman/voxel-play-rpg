@@ -49,7 +49,7 @@ namespace VoxelPlay.GPULighting {
         }
 
         private void Start() {
-            env = VoxelPlayEnvironment.instance;
+            env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
             if (!VoxelPlayEnvironment.supportsBrightPointLights || VoxelPlayEnvironment.supportsURPNativeLights) {
                 DestroyImmediate(this);
                 return;

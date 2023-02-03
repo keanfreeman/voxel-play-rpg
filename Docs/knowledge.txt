@@ -36,3 +36,8 @@ File.readalltext()
 
 can use JSON.Net if I have issues with jsonutility not serializing the types I want
 
+vp environments are singletons by default. if I want to be able to switch between scenes quickly (without loading a vp environment)
+I'll need to modify the source.
+
+use CaveDefaultGenerator and other generators to create interesting details.
+

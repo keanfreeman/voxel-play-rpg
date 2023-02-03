@@ -613,7 +613,7 @@ namespace VoxelPlay {
         VoxelPlayEnvironment env {
             get {
                 if (_env == null) {
-                    _env = VoxelPlayEnvironment.instance;
+                    _env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
                 }
                 return _env;
             }

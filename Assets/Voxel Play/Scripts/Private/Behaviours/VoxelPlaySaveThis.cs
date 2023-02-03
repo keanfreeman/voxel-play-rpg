@@ -23,7 +23,7 @@ namespace VoxelPlay
             if (rb == null || rb.isKinematic) return;
 
             // If chunk is not rendered and have a rigidbody, wait until ready
-            env = VoxelPlayEnvironment.instance;
+            env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
             if (env == null) return;
 
             VoxelChunk chunk;

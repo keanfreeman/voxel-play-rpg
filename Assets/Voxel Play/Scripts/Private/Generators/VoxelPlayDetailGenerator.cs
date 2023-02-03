@@ -51,7 +51,7 @@ namespace VoxelPlay {
 		public void SetChunkIsDirty(VoxelChunk chunk) {
 			if (chunk.isPopulated) {
 				// if this detail generator has modified a fully generated chunk, we need to refresh it completely
-				VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
+				VoxelPlayEnvironment env = null;
 				env.ChunkRedraw (chunk, includeNeighbours: true, refreshLightmap: true, refreshMesh: true);
 			} else {
 				// otherwise, just inform that this chunk has changes so the rest of pipeline (during CreateChunk) ensures the lightmap and mesh is rebuilt

@@ -38,16 +38,6 @@ public class PlayerInputContextHandler
     }
 
     public void HandlePlayerInput() {
-        if (Input.GetKeyUp(KeyCode.J)) {
-            Debug.Log("Debug key pressed.");
-            if (SceneManager.GetActiveScene().buildIndex == 1) {
-                SceneManager.LoadSceneAsync(2);
-            }
-            else {
-                SceneManager.LoadSceneAsync(1);
-            }
-        }
-        HandleSwapCameraState();
 
         switch (controlState) {
             case ControlState.FIRST_PERSON:
@@ -71,13 +61,13 @@ public class PlayerInputContextHandler
         }
     }
 
-    private void HandleSwapCameraState() {
-        if (inputManager.WasSwitchInputTypeTriggered()) {
-            playerMovement.ToggleFreeCamera();
-            controlState = (controlState == ControlState.FIRST_PERSON) 
-                ? ControlState.SPRITE_NEUTRAL : ControlState.FIRST_PERSON;
-        }
-    }
+    //private void HandleSwapCameraState() {
+    //    if (inputManager.WasSwitchInputTypeTriggered()) {
+    //        playerMovement.ToggleFreeCamera();
+    //        controlState = (controlState == ControlState.FIRST_PERSON) 
+    //            ? ControlState.SPRITE_NEUTRAL : ControlState.FIRST_PERSON;
+    //    }
+    //}
 
     private void HandlePlayerPrimaryInput() {
         if (!inputManager.WasInteractTriggered()) {

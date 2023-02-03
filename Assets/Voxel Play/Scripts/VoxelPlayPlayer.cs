@@ -206,7 +206,7 @@ namespace VoxelPlay
         /// <value>The current items.</value>
         public virtual  List<InventoryItem> items {
             get {
-                VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
+                VoxelPlayEnvironment env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
                 if (env != null && env.buildMode) {
                     return env.allItems;
                 }
@@ -253,7 +253,7 @@ namespace VoxelPlay
         public static IVoxelPlayPlayer instance {
             get {
                 if (_player == null || _player.Equals(null)) {
-                    VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
+                    VoxelPlayEnvironment env = null;
                     if (env != null && env.playerGameObject != null) {
                         _player = env.playerGameObject.GetComponentInChildren<IVoxelPlayPlayer> ();
                         if (_player == null) {
@@ -327,11 +327,13 @@ namespace VoxelPlay
         {
             if (newItem == null || quantity <= 0) return;
 
+            VoxelPlayEnvironment env = null;
+
             if (audioSource != null) {
                 if (newItem.pickupSound != null) {
                     audioSource.PlayOneShot (newItem.pickupSound);
-                } else if (VoxelPlayEnvironment.instance.defaultPickupSound != null) {
-                    audioSource.PlayOneShot (VoxelPlayEnvironment.instance.defaultPickupSound);
+                } else if (env.defaultPickupSound != null) {
+                    audioSource.PlayOneShot (env.defaultPickupSound);
                 }
             }
             AddInventoryItem (newItem, quantity);

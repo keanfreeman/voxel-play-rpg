@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using VoxelPlay;
 
@@ -13,8 +14,10 @@ public class SceneBuilder : MonoBehaviour
     [SerializeField] private UIDocument uiDocument;
     [SerializeField] private Vector3Int playerStartPosition;
 
+    public VoxelPlayEnvironment vpEnvironment;
+    public SceneChanger parentSceneChanger;
+
     private GameObject playerInstance;
-    private VoxelPlayEnvironment vpEnvironment;
     private NonVoxelWorld nonVoxelWorld = new NonVoxelWorld();
     private SpriteMovement spriteMovement;
     private System.Random rng = new System.Random();
@@ -27,8 +30,10 @@ public class SceneBuilder : MonoBehaviour
     private InputManager inputManager;
     private ObjectInkMapping objectInkMapping;
 
-    public void Awake() {
+    public void Start() {
+        Debug.Log(gameObject.scene.buildIndex);
         vpEnvironment = gameObject.GetComponent<VoxelPlayEnvironment>();
+        VoxelPlayEnvironment.RegisterEnvironment(gameObject.scene.buildIndex, vpEnvironment);
         vpEnvironment.enabled = true;
         
         spriteMovement = new SpriteMovement(vpEnvironment);
@@ -47,6 +52,15 @@ public class SceneBuilder : MonoBehaviour
     }
 
     public void Update() {
+        if (vpEnvironment == null || !vpEnvironment.initialized
+            || SceneManager.GetActiveScene() != gameObject.scene) {
+            return;
+        }
+
+        if (Input.GetKeyUp(KeyCode.J)) {
+            parentSceneChanger.SetActiveScene();
+        }
+
         playerInputContextHandler.HandlePlayerInput();
     }
 
@@ -56,6 +70,9 @@ public class SceneBuilder : MonoBehaviour
         temp.nonVoxelWorld = nonVoxelWorld;
         temp.spriteMovement = spriteMovement;
         temp.inputManager = inputManager;
+        temp.spriteRenderer = playerInstance.GetComponentInChildren<SpriteRenderer>();
+        temp.animator = playerInstance.GetComponentInChildren<Animator>();
+        temp.spriteChildTransform = playerInstance.GetComponentInChildren<Transform>();
         return temp;
     }
 

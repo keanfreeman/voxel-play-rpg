@@ -112,10 +112,10 @@ namespace VoxelPlay {
 
         public static VoxelPlayFirstPersonController instance {
             get {
-                if (_firstPersonController == null) {
-                    _firstPersonController = VoxelPlayEnvironment.instance.characterController as VoxelPlayFirstPersonController;
-                }
-                return _firstPersonController;
+                //if (_firstPersonController == null) {
+                //    _firstPersonController = VoxelPlayEnvironment.instance.characterController as VoxelPlayFirstPersonController;
+                //}
+                return null;
             }
         }
 
@@ -131,7 +131,7 @@ namespace VoxelPlay {
             if (hasCharacterController) {
                 m_CharacterController.stepOffset = 0.4f;
             }
-            env = VoxelPlayEnvironment.instance;
+            env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
             if (env != null) {
                 env.characterController = this;
                 env.OnOriginPreShift -= OnOriginPreShift;

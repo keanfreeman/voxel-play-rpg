@@ -62,7 +62,7 @@ namespace VoxelPlay
 
         void Start ()
         {
-            env = VoxelPlayEnvironment.instance;
+            env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
             if (env == null) {
                 DestroyImmediate (this);
                 return;

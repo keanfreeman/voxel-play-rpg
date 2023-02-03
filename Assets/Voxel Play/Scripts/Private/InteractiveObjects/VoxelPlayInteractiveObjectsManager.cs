@@ -16,7 +16,7 @@ namespace VoxelPlay {
 		public static VoxelPlayInteractiveObjectsManager instance {
 			get {
 				if (_instance == null) {
-					VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
+					VoxelPlayEnvironment env = null;
 					if (env != null) {
 						_instance = env.GetComponent<VoxelPlayInteractiveObjectsManager> ();
 						if (_instance == null) {
@@ -52,7 +52,7 @@ namespace VoxelPlay {
 		}
 
 		void Start () {
-			env = VoxelPlayEnvironment.instance;
+			env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
 		}
 
 		void LateUpdate () {

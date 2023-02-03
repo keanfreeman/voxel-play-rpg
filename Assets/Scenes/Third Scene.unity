@@ -373,7 +373,7 @@ GameObject:
   - component: {fileID: 2092821851}
   - component: {fileID: 2092821850}
   m_Layer: 0
-  m_Name: SceneManager
+  m_Name: SceneBuilder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -394,7 +394,10 @@ MonoBehaviour:
   playerPrefab: {fileID: 7062049782252913140, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
   opossumPrefab: {fileID: 6944743723035480207, guid: a806406e61d5e2146bba48accb192b09, type: 3}
   uiDocument: {fileID: 1150598841}
-  playerStartPosition: {x: 523, y: 50, z: 240}
+  playerStartPosition: {x: 523, y: 50, z: 199}
+  vpEnvironment: {fileID: 0}
+  parentSceneChanger: {fileID: 0}
+  controlsEnabled: 0
 --- !u!4 &2092821847
 Transform:
   m_ObjectHideFlags: 0
@@ -402,7 +405,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2092821845}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 520.112, y: 50.481716, z: 249.81}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -555,6 +558,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteContainer: {fileID: 0}
+  spriteChildTransform: {fileID: 0}
+  animator: {fileID: 0}
+  spriteRenderer: {fileID: 0}
 --- !u!114 &2092821850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -598,7 +604,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 4d171ccee374ecd4394ddbb9770666f5, type: 3}
   m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 2066669304}
+  m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
       m_Calls: []

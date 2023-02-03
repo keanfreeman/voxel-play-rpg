@@ -74,7 +74,7 @@ namespace VoxelPlay
             if (rb == null) {
                 rb = GetComponent<Rigidbody> ();
             }
-            env = VoxelPlayEnvironment.instance;
+            env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
             if (persistentItem) {
                 // Clone material to support voxel lighting
                 Renderer renderer = GetComponent<Renderer> ();

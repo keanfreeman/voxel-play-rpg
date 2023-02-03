@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Runtime.CompilerServices;
+using UnityEditor.SearchService;
+using UnityEngine;
 
-namespace VoxelPlay
-{
+namespace VoxelPlay {
 
     public delegate float SDF (Vector3d position);
 
@@ -517,33 +516,26 @@ namespace VoxelPlay
 
         #region Public API
 
-        static VoxelPlayEnvironment _instance;
+        private static Dictionary<int, VoxelPlayEnvironment> sceneToEnv = new Dictionary<int, VoxelPlayEnvironment>();
 
         /// <summary>
         /// Enables detail generators
         /// </summary>
         public bool enableDetailGenerators = true;
 
+        public static void RegisterEnvironment(int sceneNum, VoxelPlayEnvironment env) {
+            sceneToEnv[sceneNum] = env;
+        }
+
         /// <summary>
-        /// Returns the singleton instance of Voxel Play API.
+        /// CUSTOM. Returns the instance in the current scene.
         /// </summary>
         /// <value>The instance.</value>
-        public static VoxelPlayEnvironment instance {
-            get {
-                if (_instance == null) {
-                    _instance = FindObjectOfType<VoxelPlayEnvironment> ();
-                    if (_instance == null) {
-                        VoxelPlayEnvironment [] vv = Resources.FindObjectsOfTypeAll<VoxelPlayEnvironment> ();
-                        for (int k = 0; k < vv.Length; k++) {
-                            if (vv [k].hideFlags != HideFlags.HideInHierarchy) {
-                                _instance = vv [k];
-                                break;
-                            }
-                        }
-                    }
-                }
-                return _instance;
+        public static VoxelPlayEnvironment GetSceneInstance(int sceneNum) {
+            if (sceneToEnv.ContainsKey(sceneNum)) {
+                return sceneToEnv[sceneNum];
             }
+            return null;
         }
 
         /// <summary>

@@ -17,7 +17,7 @@ namespace VoxelPlayDemos
             if (hasExploded) return;
             hasExploded = true;
 
-            VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
+            VoxelPlayEnvironment env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
             if (env == null) return;
             env.VoxelDamage (transform.position, damage, damageRadius, attenuateDamageWithDistance: true, addParticles: false, playSound: false, canAddRecoverableVoxel: false);
             if (explosionSound != null) {
