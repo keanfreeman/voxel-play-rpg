@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using System;
 using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
 
 //#define DEBUG_RAYCAST
 
@@ -208,7 +209,8 @@ namespace VoxelPlay
                         hitInfo.voxel = placeholder.chunk.voxels [placeholder.voxelIndex];
                         hitInfo.voxelCenter = placeholder.transform.position;
                         hitInfo.placeholder = placeholder;
-                        if (hitInfo.voxel.type.ignoresRayCast) return false;
+
+                        if (voxelDefinitions[hitInfo.voxel.type()].ignoresRayCast) return false;
                     }
                     return true;
                 }
@@ -891,7 +893,7 @@ namespace VoxelPlay
                     damage = 0;
                 } else if (voxelTypeResistancePoints == (byte)255) {
                     if (playSound) {
-                        PlayImpactSound (hitInfo.voxel.type.impactSound, hitInfo.voxelCenter);
+                        PlayImpactSound (voxelDefinitions[hitInfo.voxel.type()].impactSound, hitInfo.voxelCenter);
                     }
                     damage = 0;
                 }
@@ -1112,7 +1114,7 @@ namespace VoxelPlay
         {
             if (materialVoxelDefinition == null) {
                 Voxel voxel = GetVoxel (position, false);
-                materialVoxelDefinition = voxel.type;
+                materialVoxelDefinition = voxelDefinitions[voxel.type()];
             }
 
             // Add random particles

@@ -33,6 +33,10 @@ public class NPCBehavior : MonoBehaviour
 
     void Update()
     {
+        if (!environment.initialized) {
+            return;
+        }
+
         HandleCameraRotation();
         HandleMovement();
     }

@@ -382,11 +382,12 @@ namespace VoxelPlay {
                     }
                 }
 
+                VoxelDefinition _crosshairHitInfoVD = env.voxelDefinitions[_crosshairHitInfo.voxel.type()];
                 if (crosshairOnBlock && input.GetButtonDown(InputButtonNames.MiddleButton)) {
-                    if (_crosshairHitInfo.voxel.type.allowUpsideDownVoxel && _crosshairHitInfo.voxel.type.upsideDownVoxel != null) {
-                        player.SetSelectedItem(_crosshairHitInfo.voxel.type.hidden ? _crosshairHitInfo.voxel.type.upsideDownVoxel : _crosshairHitInfo.voxel.type);
+                    if (_crosshairHitInfoVD.allowUpsideDownVoxel && _crosshairHitInfoVD.upsideDownVoxel != null) {
+                        player.SetSelectedItem(_crosshairHitInfoVD.hidden ? _crosshairHitInfoVD.upsideDownVoxel : _crosshairHitInfoVD);
                     } else {
-                        player.SetSelectedItem(_crosshairHitInfo.voxel.type);
+                        player.SetSelectedItem(_crosshairHitInfoVD);
                     }
                 }
 
@@ -399,7 +400,7 @@ namespace VoxelPlay {
                             env.ShowMessage("<color=green>Back to <color=yellow>Normal Mode</color>.</color>");
                         }
                     } else if (manageVoxelRotation && input.GetButtonDown(InputButtonNames.Rotate)) {
-                        if (_crosshairHitInfo.voxel.type.allowsTextureRotation) {
+                        if (_crosshairHitInfoVD.allowsTextureRotation) {
                             int rotation = env.GetVoxelTexturesRotation(_crosshairHitInfo.chunk, _crosshairHitInfo.voxelIndex);
                             rotation = (rotation + 1) % 4;
                             env.VoxelSetTexturesRotation(_crosshairHitInfo.chunk, _crosshairHitInfo.voxelIndex, rotation);

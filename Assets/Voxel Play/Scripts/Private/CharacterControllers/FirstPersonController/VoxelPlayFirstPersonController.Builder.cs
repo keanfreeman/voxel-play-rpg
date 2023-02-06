@@ -242,11 +242,12 @@ namespace VoxelPlay {
                         Vector3d pos = buildingPosition + new Vector3 (x - size.x / 2, y, z - size.z / 2);
                         if (!env.GetVoxelIndex (pos, out VoxelChunk chunk, out int voxelIndex, false)) continue;
                         Voxel voxel = chunk.voxels [voxelIndex];
-                        if (voxel.hasContent == 1 && !voxel.type.isDynamic) {
+                        VoxelDefinition voxelDefinition = env.voxelDefinitions[voxel.type()];
+                        if (voxel.hasContent == 1 && !voxelDefinition.isDynamic) {
                             int k = y * sz * sx + z * sx + x;
                             ModelBit bit = new ModelBit();
                             bit.voxelIndex = k;
-                            bit.voxelDefinition = voxel.type;
+                            bit.voxelDefinition = voxelDefinition;
                             bit.color = voxel.color;
                             bit.rotation = voxel.GetTextureRotationDegrees ();
                             bits.Add(bit);

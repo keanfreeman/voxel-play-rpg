@@ -34,8 +34,7 @@ public class SceneBuilder : MonoBehaviour
         Debug.Log(gameObject.scene.buildIndex);
         vpEnvironment = gameObject.GetComponent<VoxelPlayEnvironment>();
         VoxelPlayEnvironment.RegisterEnvironment(gameObject.scene.buildIndex, vpEnvironment);
-        vpEnvironment.enabled = true;
-        
+
         spriteMovement = new SpriteMovement(vpEnvironment);
         InitCreaturesAndWorld();
 
@@ -49,6 +48,9 @@ public class SceneBuilder : MonoBehaviour
         objectInkMapping = GetComponent<ObjectInkMapping>();
         playerInputContextHandler = new PlayerInputContextHandler(playerMovement, nonVoxelWorld, dialogue, voxelWorld,
             inputManager, objectInkMapping);
+        if (SceneManager.GetActiveScene().buildIndex == 1) {
+            vpEnvironment.enabled = true;
+        }
     }
 
     public void Update() {

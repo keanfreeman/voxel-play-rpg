@@ -41,15 +41,16 @@ public class SceneChanger : MonoBehaviour
         loadedScenes[SceneIndex.SECOND_SCENE] = new SceneInfo(SceneIndex.SECOND_SCENE,
             secondScene, null);
 
-        int thirdSceneIndex = (int)SceneIndex.THIRD_SCENE;
-        Scene thirdScene = LoadSceneAsInactive(thirdSceneIndex);
-        loadedScenes[SceneIndex.THIRD_SCENE] = new SceneInfo(SceneIndex.THIRD_SCENE,
-            thirdScene, null);
+        //int thirdSceneIndex = (int)SceneIndex.THIRD_SCENE;
+        //Scene thirdScene = LoadSceneAsInactive(thirdSceneIndex);
+        //loadedScenes[SceneIndex.THIRD_SCENE] = new SceneInfo(SceneIndex.THIRD_SCENE,
+        //    thirdScene, null);
     }
 
     private void Update() {
         if (!loadedScenes[SceneIndex.SECOND_SCENE].scene.isLoaded
-            || !loadedScenes[SceneIndex.THIRD_SCENE].scene.isLoaded) {
+            //|| !loadedScenes[SceneIndex.THIRD_SCENE].scene.isLoaded
+            ) {
             return;
         }
 
@@ -57,10 +58,10 @@ public class SceneChanger : MonoBehaviour
             loadedScenes[SceneIndex.SECOND_SCENE].sceneBuilder =
                 GetSceneBuilderForScene(loadedScenes[SceneIndex.SECOND_SCENE].scene);
         }
-        if (loadedScenes[SceneIndex.THIRD_SCENE].sceneBuilder == null) {
-            loadedScenes[SceneIndex.THIRD_SCENE].sceneBuilder =
-                GetSceneBuilderForScene(loadedScenes[SceneIndex.THIRD_SCENE].scene);
-        }
+        //if (loadedScenes[SceneIndex.THIRD_SCENE].sceneBuilder == null) {
+        //    loadedScenes[SceneIndex.THIRD_SCENE].sceneBuilder =
+        //        GetSceneBuilderForScene(loadedScenes[SceneIndex.THIRD_SCENE].scene);
+        //}
 
         SceneManager.SetActiveScene(loadedScenes[SceneIndex.SECOND_SCENE].scene);
         gameObject.SetActive(false);

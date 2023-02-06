@@ -699,7 +699,7 @@ namespace VoxelPlay {
 			// Check water on character controller position (which is at base of character)
 			Vector3 aboveCurPos = curPos + new Vector3 (0, 0.3f, 0);
 			Voxel voxelCh = env.GetVoxel (aboveCurPos);
-			CheckDamage (voxelCh.type);
+			CheckDamage (env.voxelDefinitions[voxelCh.type()]);
 
 			// Safety check to avoid character go under terrain
 			if (voxelCh.isSolid) {

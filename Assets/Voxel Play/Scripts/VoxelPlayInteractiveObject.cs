@@ -6,6 +6,7 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace VoxelPlay {
 				
@@ -55,14 +56,21 @@ namespace VoxelPlay {
 		public void Start() {
 			env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
 			if (env != null) {
-				VoxelPlayInteractiveObjectsManager.instance.InteractiveObjectRegister (this);
+                VoxelPlayInteractiveObjectsManager mgr = VoxelPlayInteractiveObjectsManager.AddInteractiveObjectsManagerComponent(env);
+				VoxelPlayInteractiveObjectsManager.RegisterManager(env, mgr);
+				mgr.InteractiveObjectRegister(this);
 			}
 			OnStart ();
 		}
 
 		public void OnDestroy() {
 			if (env != null) {
-				VoxelPlayInteractiveObjectsManager.instance.InteractiveObjectUnRegister (this);
+				Dictionary<VoxelPlayEnvironment, VoxelPlayInteractiveObjectsManager> dict = VoxelPlayInteractiveObjectsManager.envToManager;
+                if (dict.ContainsKey(env)) {
+                    VoxelPlayInteractiveObjectsManager mgr = dict[env];
+					mgr.InteractiveObjectUnRegister(this);
+					dict.Remove(env);
+                }
 			}
 			
 		}

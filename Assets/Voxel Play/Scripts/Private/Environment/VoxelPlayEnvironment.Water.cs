@@ -208,7 +208,8 @@ namespace VoxelPlay
                 if (canFillWithWater) {
                     int otherWaterLevel = otherChunk.voxels [vIndex].GetWaterLevel ();
                     if (otherWaterLevel < FULL_WATER) {
-                        if (OnVoxelBeforeSpread != null && !OnVoxelBeforeSpread (chunk.voxels [voxelIndex].type, down, otherChunk.voxels [vIndex].type)) {
+                        if (OnVoxelBeforeSpread != null && !OnVoxelBeforeSpread (voxelDefinitions[chunk.voxels[voxelIndex].type()],
+                            down, voxelDefinitions[otherChunk.voxels[vIndex].type()])) {
                             return;
                         }
                         otherWaterLevel++;
@@ -221,7 +222,7 @@ namespace VoxelPlay
                         }
                         AddWaterFloodInt (ref down, waterVoxel);
                         if (OnVoxelAfterSpread != null) {
-                            OnVoxelAfterSpread (chunk.voxels [voxelIndex].type, down);
+                            OnVoxelAfterSpread (voxelDefinitions[chunk.voxels[voxelIndex].type()], down);
                         }
                         return;
                     }
@@ -247,14 +248,15 @@ namespace VoxelPlay
                                 waterLevel--;
                             }
                             if (waterLevel > 1) {
-                                if (OnVoxelBeforeSpread != null && !OnVoxelBeforeSpread (chunk.voxels [voxelIndex].type, otherPos, otherChunk.voxels [vIndex].type)) {
+                                if (OnVoxelBeforeSpread != null && !OnVoxelBeforeSpread (voxelDefinitions[chunk.voxels[voxelIndex].type()],
+                                        otherPos, voxelDefinitions[otherChunk.voxels[vIndex].type()])) {
                                     continue;
                                 }
                                 otherWaterLevel++;
                                 AddWaterFloodInt (ref otherPos, waterVoxel, waterFloodSources.nodes [index].lifeTime - 1);
                                 WaterUpdateLevelFast (otherChunk, vIndex, otherWaterLevel, waterVoxel);
                                 if (OnVoxelAfterSpread != null) {
-                                    OnVoxelAfterSpread (chunk.voxels [voxelIndex].type, otherPos);
+                                    OnVoxelAfterSpread (voxelDefinitions[chunk.voxels[voxelIndex].type()], otherPos);
                                 }
                             }
                         }
@@ -275,12 +277,13 @@ namespace VoxelPlay
                         }
                         AddWaterFloodInt (ref otherPos, vdOther, waterFloodSources.nodes [index].lifeTime - 1);
                         if (otherWaterLevel > waterLevel + leveling) {
-                            if (OnVoxelBeforeSpread != null && !OnVoxelBeforeSpread (otherChunk.voxels [voxelIndex].type, otherPos, chunk.voxels [voxelIndex].type)) {
+                            if (OnVoxelBeforeSpread != null && !OnVoxelBeforeSpread (voxelDefinitions[otherChunk.voxels[voxelIndex].type()],
+                                    otherPos, voxelDefinitions[chunk.voxels[voxelIndex].type()])) {
                                 continue;
                             }
                             waterLevel++;
                             if (OnVoxelAfterSpread != null) {
-                                OnVoxelAfterSpread (otherChunk.voxels [voxelIndex].type, otherPos);
+                                OnVoxelAfterSpread (voxelDefinitions[otherChunk.voxels[voxelIndex].type()], otherPos);
                             }
                         }
                     }

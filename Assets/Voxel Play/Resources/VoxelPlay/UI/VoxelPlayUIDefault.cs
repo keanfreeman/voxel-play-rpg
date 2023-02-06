@@ -1133,7 +1133,7 @@ namespace VoxelPlay {
 				if (env.lastHitInfo.voxel.typeIndex != 0) {
 					sbDebug.AppendLine ();
 					sbDebug.Append ("     Voxel Type=");
-					AppendValueDebug (env.lastHitInfo.voxel.type.name);
+					AppendValueDebug (env.voxelDefinitions[env.lastHitInfo.voxel.type()]);
 
 					sbDebug.Append (", Pos: X=");
 					Vector3d v = env.GetVoxelPosition (hitChunk.position, px, py, pz);

@@ -141,7 +141,7 @@ namespace VoxelPlayDemos
             if (fpsController.crosshairOnBlock) {
                 VoxelChunk chunk = fpsController.crosshairHitInfo.chunk;
                 int voxelIndex = fpsController.crosshairHitInfo.voxelIndex;
-                VoxelDefinition type = chunk.voxels[voxelIndex].type;
+                VoxelDefinition type = env.voxelDefinitions[chunk.voxels[voxelIndex].type()];
                 if (!type.renderType.supportsDynamic()) {
                     env.ShowError ("The voxel type " + type.name + " can't be levitated.");
                     return;

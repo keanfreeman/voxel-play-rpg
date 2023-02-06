@@ -1,3 +1,9 @@
+issues - I want to have a vp environment per-scene so I can load one while the other's being played, but 
+I have to make the environment non-singleton to do that, and even then, objects created in one of the scenes are
+placed in the active scene.
+
+Can use VoxelPlay events defined in environment to efficiently/clearly wait for things to finish
+
 the player exists on the square above the slope
 
 issue - the character controller is integral to the way the first-person movement works, but it causes collisions in the other mode

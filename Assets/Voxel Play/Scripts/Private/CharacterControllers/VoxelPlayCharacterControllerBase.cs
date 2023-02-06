@@ -262,7 +262,7 @@ namespace VoxelPlay {
                     if (index.typeIndex != lastVoxelTypeIndex || voxelUnder == null) {
                         lastVoxelTypeIndex = index.typeIndex;
                         if (lastVoxelTypeIndex != 0) {
-                            voxelUnder = index.type;
+                            voxelUnder = env.voxelDefinitions[index.type];
                             SetFootstepSounds(voxelUnder.footfalls, voxelUnder.landingSound, voxelUnder.jumpSound);
                             if (voxelUnder.triggerWalkEvent && OnVoxelWalk != null) {
                                 OnVoxelWalk(index.chunk, index.voxelIndex);
@@ -467,7 +467,7 @@ namespace VoxelPlay {
                     // Basic placement rules
                     bool canPlace = crosshairOnBlock;
                     Voxel existingVoxel = _crosshairHitInfo.voxel;
-                    VoxelDefinition existingVoxelType = existingVoxel.type;
+                    VoxelDefinition existingVoxelType = env.voxelDefinitions[existingVoxel.type()];
                     Vector3d placePos;
 
                     VoxelDefinition placeVoxelType = currentItem.voxelType;
@@ -487,7 +487,7 @@ namespace VoxelPlay {
                         }
                     }
 
-                    VoxelDefinition existingVoxelOnPlacePos = env.GetVoxel(placePos).type;
+                    VoxelDefinition existingVoxelOnPlacePos = env.voxelDefinitions[env.GetVoxel(placePos).type()];
                     float distanceFromCenter = (float)(_crosshairHitInfo.point.y - env.GetVoxelPosition(_crosshairHitInfo.voxelCenter).y);
                     bool isOverCenter = false;
 

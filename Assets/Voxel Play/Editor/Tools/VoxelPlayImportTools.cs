@@ -167,12 +167,12 @@ namespace VoxelPlay {
 
 		string GetPathForNewAsset () {
 			string path;
-			if (VoxelPlayEnvironment.instance != null) {
-				path = AssetDatabase.GetAssetPath (VoxelPlayEnvironment.instance.world);
-				path = System.IO.Path.GetDirectoryName (path) + "/Models";
-			} else {
-				path = "Assets/ImportedModels";
-			}
+			//if (VoxelPlayEnvironment.instance != null) {
+			//	path = AssetDatabase.GetAssetPath (VoxelPlayEnvironment.instance.world);
+			//	path = System.IO.Path.GetDirectoryName (path) + "/Models";
+			//} else {
+			path = "Assets/ImportedModels";
+			//}
 			System.IO.Directory.CreateDirectory (path);
 			return path;
 		}

@@ -22,7 +22,7 @@ namespace VoxelPlay {
         }
 
         void OnGUI() {
-            VoxelPlayEnvironment env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+            VoxelPlayEnvironment env = null;
             if (env == null) {
                 EditorGUILayout.HelpBox("Constructor tools require Voxel Play Environment in the scene..", MessageType.Info);
                 return;

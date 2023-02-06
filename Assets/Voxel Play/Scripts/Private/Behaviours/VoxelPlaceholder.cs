@@ -116,7 +116,8 @@ namespace VoxelPlay
             float time = Time.time;
             if (time >= recoveryTime) {
                 if (chunk != null && chunk.voxels [voxelIndex].typeIndex != 0) {
-                    resistancePointsLeft = chunk.voxels [voxelIndex].type.resistancePoints;
+                    VoxelPlayEnvironment env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+                    resistancePointsLeft = env.voxelDefinitions[chunk.voxels [voxelIndex].type()].resistancePoints;
                 }
                 if (damageIndicator != null) {
                     damageIndicator.enabled = false;

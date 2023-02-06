@@ -60,7 +60,7 @@ namespace VoxelPlay {
             titleColor = EditorGUIUtility.isProSkin ? new Color(0.52f, 0.66f, 0.9f) : new Color(0.12f, 0.16f, 0.4f);
             waterColor = new Color(0, 0.1f, 1f, 0.8f);
             if (env == null) {
-                env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+                env = null;
             }
             if (env != null) {
                 env.NotifyTerrainGeneratorConfigurationChanged ();
@@ -78,7 +78,7 @@ namespace VoxelPlay {
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
             if (env == null) {
-                env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+                env = null;
                 if (env == null) {
                     world = null;
                 }

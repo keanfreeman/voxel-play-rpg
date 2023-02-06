@@ -55,7 +55,7 @@ namespace VoxelPlay {
             }
             chunkPosition = chunk.position;
             env.GetVoxelChunkCoordinates(voxelIndex, out px, out py, out pz);
-            type = chunk.voxels[voxelIndex].type;
+            type = env.voxelDefinitions[chunk.voxels[voxelIndex].type()];
             opaque = chunk.voxels[voxelIndex].opaque;
             hasContent = chunk.voxels[voxelIndex].hasContent;
             voxelLight = chunk.voxels[voxelIndex].light;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace VoxelPlay {
 
@@ -532,10 +533,7 @@ namespace VoxelPlay {
         /// </summary>
         /// <value>The instance.</value>
         public static VoxelPlayEnvironment GetSceneInstance(int sceneNum) {
-            if (sceneToEnv.ContainsKey(sceneNum)) {
-                return sceneToEnv[sceneNum];
-            }
-            return null;
+            return sceneToEnv.GetValueOrDefault(sceneNum, null);
         }
 
         /// <summary>
@@ -2690,8 +2688,8 @@ namespace VoxelPlay {
                     }
                 }
             }
-            if (hitInfo.voxel.type != null) {
-                ht.localPosition += hitInfo.voxel.type.highlightOffset;
+            if (voxelDefinitions[hitInfo.voxel.type()] != null) {
+                ht.localPosition += voxelDefinitions[hitInfo.voxel.type()].highlightOffset;
             }
             voxelHighlight.SetActive (true);
             return true;
@@ -2942,7 +2940,7 @@ namespace VoxelPlay {
             if (voxelIndex < 0 || chunk.voxels [voxelIndex].hasContent != 1)
                 return false;
 
-            VoxelDefinition voxelType = chunk.voxels [voxelIndex].type.staticDefinition;
+            VoxelDefinition voxelType = voxelDefinitions[chunk.voxels [voxelIndex].type()].staticDefinition;
             if (voxelType != null) {
                 Color voxelColor = chunk.voxels [voxelIndex].color;
                 Vector3d targetPosition = placeholder.transform.position;
@@ -3326,7 +3324,7 @@ namespace VoxelPlay {
             if (placeholder != null) {
                 return placeholder.resistancePointsLeft;
             } else {
-                return chunk.voxels [voxelIndex].hasContent == 1 ? chunk.voxels [voxelIndex].type.resistancePoints : 0;
+                return chunk.voxels [voxelIndex].hasContent == 1 ? voxelDefinitions[chunk.voxels [voxelIndex].type()].resistancePoints : 0;
             }
         }
 

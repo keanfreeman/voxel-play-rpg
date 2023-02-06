@@ -82,10 +82,8 @@ namespace VoxelPlay
         /// <summary>
         /// Returns the voxel definition object of this voxel
         /// </summary>
-        public VoxelDefinition type {
-            get {
-                return VoxelPlayEnvironment.instance.voxelDefinitions [typeIndex];
-            }
+        public ushort type() {
+            return typeIndex;
         }
 
         /// <summary>
@@ -468,7 +466,7 @@ namespace VoxelPlay
 
         public override string ToString ()
         {
-            return "Voxel type: " + type;
+            return "Voxel type: " + type();
         }
 
         public static int memorySize {

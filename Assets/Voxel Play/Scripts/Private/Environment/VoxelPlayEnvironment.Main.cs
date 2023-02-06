@@ -468,8 +468,10 @@ namespace VoxelPlay
             if (input != null) {
                 input.enabled = true;
             }
-            VoxelPlayUI.instance.ToggleInitializationPanel (false);
-            ShowMessage (welcomeMessage, welcomeMessageDuration, true);
+
+            // TODO add back if needed
+            //VoxelPlayUI.instance.ToggleInitializationPanel (false);
+            //ShowMessage (welcomeMessage, welcomeMessageDuration, true);
         }
 
         /// <summary>

@@ -215,7 +215,7 @@ namespace VoxelPlay
                     if (chunk.voxels != null) {
                         VoxelDefinition last = null;
                         for (int k = 0; k < chunk.voxels.Length; k++) {
-                            VoxelDefinition vd = chunk.voxels [k].type;
+                            VoxelDefinition vd = voxelDefinitions[chunk.voxels[k].type()];
                             if (vd == null || vd == last || vd.isDynamic || vd.doNotSave)
                                 continue;
                             last = vd;
@@ -355,7 +355,7 @@ namespace VoxelPlay
             int numWords = 0;
             while (k < chunk.voxels.Length) {
                 if (chunk.voxels [k].hasContent == 1) {
-                    VoxelDefinition voxelDefinition = chunk.voxels [k].type;
+                    VoxelDefinition voxelDefinition = voxelDefinitions[chunk.voxels [k].type()];
                     if (voxelDefinition.isDynamic || voxelDefinition.doNotSave) {
                         k++;
                         continue;
@@ -370,7 +370,7 @@ namespace VoxelPlay
                     Color32 tintColor = chunk.voxels [k].color;
                     int flags = chunk.voxels [k].GetFlags ();
                     k++;
-                    while (k < chunk.voxels.Length && chunk.voxels [k].type == voxelDefinition && chunk.voxels [k].color.r == tintColor.r && chunk.voxels [k].color.g == tintColor.g && chunk.voxels [k].color.b == tintColor.b && voxelDefinition.renderType != RenderType.Custom && chunk.voxels [k].GetFlags () == flags) {
+                    while (k < chunk.voxels.Length && voxelDefinitions[chunk.voxels[k].type()] == voxelDefinition && chunk.voxels [k].color.r == tintColor.r && chunk.voxels [k].color.g == tintColor.g && chunk.voxels [k].color.b == tintColor.b && voxelDefinition.renderType != RenderType.Custom && chunk.voxels [k].GetFlags () == flags) {
                         k++;
                     }
                     numWords++;
@@ -385,7 +385,7 @@ namespace VoxelPlay
             while (k < chunk.voxels.Length) {
                 if (chunk.voxels [k].hasContent == 1) {
                     int voxelIndex = k;
-                    VoxelDefinition voxelDefinition = chunk.voxels [k].type;
+                    VoxelDefinition voxelDefinition = voxelDefinitions[chunk.voxels[k].type()];
                     if (voxelDefinition.isDynamic || voxelDefinition.doNotSave) {
                         k++;
                         continue;
@@ -401,7 +401,7 @@ namespace VoxelPlay
                     byte flags = chunk.voxels [k].GetFlags ();
                     int repetitions = 1;
                     k++;
-                    while (k < chunk.voxels.Length && chunk.voxels [k].type == voxelDefinition && chunk.voxels [k].color.r == tintColor.r && chunk.voxels [k].color.g == tintColor.g && chunk.voxels [k].color.b == tintColor.b && voxelDefinition.renderType != RenderType.Custom && chunk.voxels [k].GetFlags () == flags) {
+                    while (k < chunk.voxels.Length && voxelDefinitions[chunk.voxels [k].type()] == voxelDefinition && chunk.voxels [k].color.r == tintColor.r && chunk.voxels [k].color.g == tintColor.g && chunk.voxels [k].color.b == tintColor.b && voxelDefinition.renderType != RenderType.Custom && chunk.voxels [k].GetFlags () == flags) {
                         repetitions++;
                         k++;
                     }

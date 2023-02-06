@@ -57,10 +57,13 @@ public class SpriteMovement
             }
         }
         if (slopeVoxel == null) {
-            throw new System.SystemException("No expected voxel in world.");
+            // TODO change back
+            return false;
+            // throw new System.SystemException("No expected voxel in world.");
         }
         int slopeRotation = voxel.GetTextureRotation();
-        return voxel.type == slopeVoxel;
+
+        return voxel.type() == slopeVoxel.index;
     }
 
     public bool IsSlopeUpRelativeToSprite(Vector3Int requestedCoordinate,

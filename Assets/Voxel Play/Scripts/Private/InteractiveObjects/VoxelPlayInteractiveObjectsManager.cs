@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace VoxelPlay {
@@ -6,29 +7,31 @@ namespace VoxelPlay {
 	[HelpURL("https://kronnect.freshdesk.com/support/solutions/articles/42000049602-interactive-objects")]
 	public partial class VoxelPlayInteractiveObjectsManager : MonoBehaviour {
 
-		static VoxelPlayInteractiveObjectsManager _instance;
-		VoxelPlayInteractiveObject[] objs, nearObjs;
+        public static Dictionary<VoxelPlayEnvironment, VoxelPlayInteractiveObjectsManager> envToManager 
+			= new Dictionary<VoxelPlayEnvironment, VoxelPlayInteractiveObjectsManager>();
+        VoxelPlayInteractiveObject[] objs, nearObjs;
 		int count, nearCount;
 		VoxelPlayEnvironment env;
 		int lastPlayerPosX, lastPlayerPosY, lastPlayerPosZ;
 		Collider lastCollider;
 
-		public static VoxelPlayInteractiveObjectsManager instance {
-			get {
-				if (_instance == null) {
-					VoxelPlayEnvironment env = null;
-					if (env != null) {
-						_instance = env.GetComponent<VoxelPlayInteractiveObjectsManager> ();
-						if (_instance == null) {
-							_instance = env.gameObject.AddComponent<VoxelPlayInteractiveObjectsManager> ();
-						}
-					}
+        public static void RegisterManager(VoxelPlayEnvironment env, VoxelPlayInteractiveObjectsManager mgr) {
+            envToManager[env] = mgr;
+        }
 
-				}
-				return _instance;
+		public static VoxelPlayInteractiveObjectsManager AddInteractiveObjectsManagerComponent(VoxelPlayEnvironment env) {
+            return env.gameObject.AddComponent<VoxelPlayInteractiveObjectsManager>();
+        }
+
+        public static VoxelPlayInteractiveObjectsManager RemoveInteractiveObjectsManagerComponent(VoxelPlayEnvironment env) {
+			if (envToManager.ContainsKey(env)) {
+
 			}
-		}
-
+            VoxelPlayInteractiveObjectsManager mgr = envToManager[env];
+            envToManager.Remove(env);
+			Destroy(env.gameObject.GetComponent<VoxelPlayInteractiveObjectsManager>());
+            return mgr;
+        }
 
 		public void InteractiveObjectRegister (VoxelPlayInteractiveObject o) {
 			o.registrationIndex = AddToDynamicList (o, ref objs, ref count);

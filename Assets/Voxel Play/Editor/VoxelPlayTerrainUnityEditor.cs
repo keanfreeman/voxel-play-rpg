@@ -302,7 +302,8 @@ namespace VoxelPlay {
 
 
 		string GetPath () {
-			WorldDefinition wd = VoxelPlayEnvironment.instance.world;
+			// supplying null due to no singleton
+			WorldDefinition wd = null;
 			return System.IO.Path.GetDirectoryName (AssetDatabase.GetAssetPath (wd)) + "/Resources/" + wd.name;
 		}
 

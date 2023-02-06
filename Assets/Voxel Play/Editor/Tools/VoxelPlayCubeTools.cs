@@ -337,13 +337,13 @@ namespace VoxelPlay {
 				}
 			}
 			if (path == null) {
-				if (VoxelPlayEnvironment.instance != null) {
-					path = AssetDatabase.GetAssetPath (VoxelPlayEnvironment.instance.world);
-					path = Path.GetDirectoryName (path) + "/Models";
-				} else {
-					path = "Assets/ImportedModels";
-                    Directory.CreateDirectory (path);
-				}
+				//if (VoxelPlayEnvironment.instance != null) {
+				//	path = AssetDatabase.GetAssetPath (VoxelPlayEnvironment.instance.world);
+				//	path = Path.GetDirectoryName (path) + "/Models";
+				//} else {
+				path = "Assets/ImportedModels";
+                Directory.CreateDirectory (path);
+				//}
 			}
 
 			return path;

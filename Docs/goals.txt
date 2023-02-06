@@ -9,6 +9,9 @@ make a new scene and allow the player to transition between the two by walking o
 have two scenes loaded and quickly switch between them by making them active.
 
 TODO
+create a unified list of voxeldefinitions that all environments must use, so I don't have environments
+missing voxels from other environments (except maybe player-added ones)
+
 make more than 3 dialogue options possible with a scrollview that automatically slides when the user's selection is off-screen
 
 pause NPC movement when player not free
