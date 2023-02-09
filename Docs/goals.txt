@@ -7,8 +7,17 @@ make a new scene and allow the player to transition between the two by walking o
 - preserve some objects / save data between scene loads
 
 have two scenes loaded and quickly switch between them by making them active.
+- need to make sure all relevant assets are only created when needed, and are moved when changing scenes
+- some things are being created in the scene prematurely, like the player. also, NPCs are active before they should be
+- some kind of shared buffer is still being used and rendered to by each environment, I think. some voxels are both a brick and a 
+grass.
+- need to set all VP objects beneath the scenebuilder as active when I want to display them, otherwise they should be inactive by default.
+- still having an issue where if both environments are loading/active at the same time, there is an issue with the background threads. 
+need to figure out why that is so they can both initialize.
 
 TODO
+Use an Init method (called by Start/Awake) to initialize monobehaviors, like a constructor
+
 create a unified list of voxeldefinitions that all environments must use, so I don't have environments
 missing voxels from other environments (except maybe player-added ones)
 

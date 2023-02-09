@@ -7,30 +7,14 @@ namespace VoxelPlay {
 	[HelpURL("https://kronnect.freshdesk.com/support/solutions/articles/42000049602-interactive-objects")]
 	public partial class VoxelPlayInteractiveObjectsManager : MonoBehaviour {
 
-        public static Dictionary<VoxelPlayEnvironment, VoxelPlayInteractiveObjectsManager> envToManager 
-			= new Dictionary<VoxelPlayEnvironment, VoxelPlayInteractiveObjectsManager>();
         VoxelPlayInteractiveObject[] objs, nearObjs;
 		int count, nearCount;
 		VoxelPlayEnvironment env;
 		int lastPlayerPosX, lastPlayerPosY, lastPlayerPosZ;
 		Collider lastCollider;
 
-        public static void RegisterManager(VoxelPlayEnvironment env, VoxelPlayInteractiveObjectsManager mgr) {
-            envToManager[env] = mgr;
-        }
-
 		public static VoxelPlayInteractiveObjectsManager AddInteractiveObjectsManagerComponent(VoxelPlayEnvironment env) {
             return env.gameObject.AddComponent<VoxelPlayInteractiveObjectsManager>();
-        }
-
-        public static VoxelPlayInteractiveObjectsManager RemoveInteractiveObjectsManagerComponent(VoxelPlayEnvironment env) {
-			if (envToManager.ContainsKey(env)) {
-
-			}
-            VoxelPlayInteractiveObjectsManager mgr = envToManager[env];
-            envToManager.Remove(env);
-			Destroy(env.gameObject.GetComponent<VoxelPlayInteractiveObjectsManager>());
-            return mgr;
         }
 
 		public void InteractiveObjectRegister (VoxelPlayInteractiveObject o) {

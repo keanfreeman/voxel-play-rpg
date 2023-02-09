@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa02a9c2d5ccc4e208c47ba645563e95, type: 3}
-  m_Name: WorldDefinition
+  m_Name: WorldDefinition2
   m_EditorClassIdentifier: 
   seed: 0
   biomes: []
   defaultBiome: {fileID: 11400000, guid: 3fed2c3d2b01d4ea5af2d3bee7ceccf7, type: 2}
-  infinite: 1
-  extents: {x: 1024, y: 1024, z: 1024}
+  infinite: 0
+  extents: {x: 100, y: 100, z: 100}
   grassWindSpeed: 1
   treeWindSpeed: 1
   terrainGenerator: {fileID: 11400000, guid: 3d912ece69fa8b247b8ef2cdf10590c3, type: 2}

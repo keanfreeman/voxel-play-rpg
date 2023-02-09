@@ -33,17 +33,11 @@ namespace VoxelPlay
 
         void InitParticles ()
         {
-
-            Transform t = transform.Find (VM_FX_ROOT);
-            if (t != null) {
-                DestroyImmediate (t.gameObject);
-            }
-
-            GameObject fx = new GameObject (VM_FX_ROOT);
+            // todo change if needed
+            GameObject fx = transform.GetChild(2).gameObject;
             fx.hideFlags = HideFlags.DontSave;
             fxRoot = fx.transform;
             fxRoot.hierarchyCapacity = 100;
-            fxRoot.SetParent (worldRoot, false);
 
             if (damageParticlePrefab == null) {
                 damageParticlePrefab = Resources.Load<GameObject> ("VoxelPlay/Prefabs/DamageParticle");
@@ -65,10 +59,10 @@ namespace VoxelPlay
 
         void DestroyParticles ()
         {
-            if (fxRoot != null) {
-                DestroyImmediate (fxRoot.gameObject);
-                fxRoot = null;
-            }
+            //if (fxRoot != null) {
+            //    DestroyImmediate (fxRoot.gameObject);
+            //    fxRoot = null;
+            //}
         }
 
 

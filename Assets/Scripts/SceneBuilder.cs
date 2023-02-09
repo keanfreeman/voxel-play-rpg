@@ -1,6 +1,7 @@
 using NonVoxel;
 using System.Collections;
 using System.Collections.Generic;
+using System.Resources;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.SceneManagement;
@@ -18,6 +19,7 @@ public class SceneBuilder : MonoBehaviour
     public SceneChanger parentSceneChanger;
 
     private GameObject playerInstance;
+    private Camera dummyCamera;
     private NonVoxelWorld nonVoxelWorld = new NonVoxelWorld();
     private SpriteMovement spriteMovement;
     private System.Random rng = new System.Random();
@@ -30,10 +32,74 @@ public class SceneBuilder : MonoBehaviour
     private InputManager inputManager;
     private ObjectInkMapping objectInkMapping;
 
-    public void Start() {
-        Debug.Log(gameObject.scene.buildIndex);
+    public void Awake() {
         vpEnvironment = gameObject.GetComponent<VoxelPlayEnvironment>();
         VoxelPlayEnvironment.RegisterEnvironment(gameObject.scene.buildIndex, vpEnvironment);
+
+        dummyCamera = gameObject.AddComponent<Camera>();
+        dummyCamera.enabled = false;
+        if (gameObject.scene.buildIndex == 1) {
+            playerInstance = Instantiate(playerPrefab, playerStartPosition, Quaternion.identity);
+            OnMadeActive(playerInstance);
+        }
+        else {
+            vpEnvironment.cameraMain = dummyCamera;
+        }
+    }
+
+    public void Update() {
+        if (Input.GetKeyUp(KeyCode.G)) {
+            Debug.Log("Debug key pressed.");
+        }
+        if (Input.GetKeyUp(KeyCode.H)) {
+            Debug.Log("Second debug key pressed.");
+            if (gameObject.scene.buildIndex == 2) {
+                vpEnvironment.enabled = true;
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.J) && gameObject.scene.buildIndex == 1) {
+            Debug.Log(vpEnvironment.world);
+            vpEnvironment.world = Resources.Load<WorldDefinition>("WorldDefinition2");
+            Debug.Log(vpEnvironment.world);
+            vpEnvironment.loadSavedGame = false;
+            vpEnvironment.ReloadWorld();
+            //Debug.Log($"script scene: {gameObject.scene.buildIndex}");
+            //vpEnvironment.enabled = false;
+            //vpEnvironment.cameraMain = dummyCamera;
+            //for (int i = 0; i < transform.childCount; i++) {
+            //    transform.GetChild(i).gameObject.SetActive(false);
+            //}
+            //parentSceneChanger.SetActiveScene(playerInstance);
+        }
+
+        if (Input.GetKeyUp(KeyCode.K) && gameObject.scene.buildIndex == 2) {
+            Debug.Log($"script scene: {gameObject.scene.buildIndex}");
+            vpEnvironment.enabled = false;
+            vpEnvironment.cameraMain = dummyCamera;
+            for (int i = 0; i < transform.childCount; i++) {
+                transform.GetChild(i).gameObject.SetActive(false);
+            }
+            parentSceneChanger.SetActiveScene(playerInstance);
+        }
+
+        if (vpEnvironment == null || !vpEnvironment.initialized || !vpEnvironment.enabled
+            || SceneManager.GetActiveScene() != gameObject.scene) {
+            return;
+        }
+
+        playerInputContextHandler.HandlePlayerInput();
+    }
+
+    // can create resources now that it's the active scene
+    public void OnMadeActive(GameObject playerObject) {
+        if (dummyCamera != null) {
+            Destroy(dummyCamera);
+        }
+
+        playerInstance = playerObject;
+        vpEnvironment.cameraMain = playerInstance.GetComponentInChildren<Camera>();
+        vpEnvironment.enabled = true;
 
         spriteMovement = new SpriteMovement(vpEnvironment);
         InitCreaturesAndWorld();
@@ -48,22 +114,10 @@ public class SceneBuilder : MonoBehaviour
         objectInkMapping = GetComponent<ObjectInkMapping>();
         playerInputContextHandler = new PlayerInputContextHandler(playerMovement, nonVoxelWorld, dialogue, voxelWorld,
             inputManager, objectInkMapping);
-        if (SceneManager.GetActiveScene().buildIndex == 1) {
-            vpEnvironment.enabled = true;
-        }
-    }
 
-    public void Update() {
-        if (vpEnvironment == null || !vpEnvironment.initialized
-            || SceneManager.GetActiveScene() != gameObject.scene) {
-            return;
+        for (int i = 0; i < transform.childCount; i++) {
+            transform.GetChild(i).gameObject.SetActive(true);
         }
-
-        if (Input.GetKeyUp(KeyCode.J)) {
-            parentSceneChanger.SetActiveScene();
-        }
-
-        playerInputContextHandler.HandlePlayerInput();
     }
 
     private PlayerMovement InitPlayerMovement() {
@@ -79,11 +133,13 @@ public class SceneBuilder : MonoBehaviour
     }
 
     private void InitCreaturesAndWorld() {
-        playerInstance = Instantiate(playerPrefab, playerStartPosition, Quaternion.identity);
+        playerInstance.transform.position = playerStartPosition;
         nonVoxelWorld.SetPosition(playerInstance, playerStartPosition);
 
-        createNPC(new Vector3Int(527, 53, 247));
-        createNPC(new Vector3Int(521, 50, 246));
+        if (gameObject.scene.buildIndex == 1) {
+            //createNPC(new Vector3Int(527, 53, 247));
+            //createNPC(new Vector3Int(521, 50, 246));
+        }
     }
 
     private void createNPC(Vector3Int startPosition) {

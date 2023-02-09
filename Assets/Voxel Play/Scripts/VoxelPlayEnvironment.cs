@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -4210,16 +4209,18 @@ namespace VoxelPlay {
         /// <param name="txt">Text.</param>
         public void ShowMessage (string txt, float displayDuration = 4, bool flashEffect = false, bool openConsole = false, bool allowDuplicatedMessage = false, string colorName = null)
         {
-            if (!allowDuplicatedMessage && lastMessage == txt)
-                return;
-            lastMessage = txt;
-
-            ExecuteInMainThread (delegate () {
-                if (!string.IsNullOrEmpty(colorName)) {
-                     txt = "<color=" + colorName + ">" + txt + "</color>";
-                }
-                VoxelPlayUI.instance.AddMessage (txt, displayDuration, flashEffect, openConsole);
-            });
+            // todo restore later if needed
+            //return;
+            //if (!allowDuplicatedMessage && lastMessage == txt)
+            //    return;
+            //lastMessage = txt;
+            //
+            //ExecuteInMainThread (delegate () {
+            //    if (!string.IsNullOrEmpty(colorName)) {
+            //         txt = "<color=" + colorName + ">" + txt + "</color>";
+            //    }
+            //    VoxelPlayUI.instance.AddMessage (txt, displayDuration, flashEffect, openConsole);
+            //});
         }
 
         /// <summary>

@@ -1,3 +1,24 @@
+I couldn't figure out what was causing the error that would occur when two environments ran simultaneously (threading, maybe?).
+My temporary fix for this is to disable the script for the old environment when switching to a new one, and only enable the 
+new one once the old one is done. However, that's not great because I won't get the speed benefit of having a loaded Environment
+ready to go.
+
+
+in order to fix ugly visibility issues with VP camera inside the terrain, can maybe use collision detection with 
+the camera (and an invisible object between the camera and the player) to activate custom logic that makes voxels 
+visible (even if they are normally not rendered) and changes their opacity.
+- https://kronnect.freshdesk.com/support/solutions/articles/42000058885-see-through-occluding-voxels
+
+unfortunately, objects in different scenes are still visible to any camera in any scene. if I want multiple Environments loaded
+without overlapping, I need to somehow hide one of them.
+
+there are several objects that voxel play expected only one to exist, including the environment (singleton), 
+the chunk manager, the FX particle manager, and the voxel play world object.
+
+in order to take advantage of scenes fully, I need objects that should be in the scene to not be created dynamically.
+This is because objects created at runtime are added to the active scene, so I'd either need to wait until the scene 
+is set to active before creating them (which may cause a load time or pop-in), or have them be a part of the scene ahead of time.
+
 issues - I want to have a vp environment per-scene so I can load one while the other's being played, but 
 I have to make the environment non-singleton to do that, and even then, objects created in one of the scenes are
 placed in the active scene.

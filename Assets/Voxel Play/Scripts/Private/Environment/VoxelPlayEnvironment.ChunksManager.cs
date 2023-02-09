@@ -205,19 +205,13 @@ namespace VoxelPlay {
                 chunkPlaceholderPrefab = Resources.Load<GameObject>("VoxelPlay/Prefabs/ChunkGEO");
             }
             if (chunksRoot == null) {
-                chunksRoot = transform.Find(CHUNKS_ROOT);
-                if (chunksRoot != null) {
-                    DestroyImmediate(chunksRoot.gameObject);
-                }
-            }
-            if (chunksRoot == null) {
-                GameObject cr = new GameObject(CHUNKS_ROOT);
+                // todo change if needed
+                GameObject cr = transform.GetChild(1).gameObject;
                 cr.hideFlags = HideFlags.DontSave;
                 chunksRoot = cr.transform;
                 chunksRoot.hierarchyCapacity = 20000;
-                chunksRoot.SetParent(worldRoot, false);
             }
-            chunksRoot.gameObject.SetActive(true);
+            //chunksRoot.gameObject.SetActive(true);
         }
 
         /// <summary>

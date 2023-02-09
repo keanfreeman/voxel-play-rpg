@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,10 +8,9 @@ public class SceneChanger : MonoBehaviour
 {
     enum SceneIndex {
         NONE = -1,
-        FIRST_SCENE = 0,
+        INIT_SCENE = 0,
         SECOND_SCENE = 1,
         THIRD_SCENE = 2,
-        INIT_SCENE = 3,
     }
 
     private class SceneInfo {
@@ -85,9 +83,14 @@ public class SceneChanger : MonoBehaviour
         return scene;
     }
 
-    public void SetActiveScene() {
+    public void SetActiveScene(GameObject playerObject) {
         int newSceneIndex = SceneManager.GetActiveScene().buildIndex == 2 ? 1 : 2;
-        SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(newSceneIndex));
+        Debug.Log("Making " + newSceneIndex + " active");
+
+        Scene nextScene = SceneManager.GetSceneByBuildIndex(newSceneIndex);
+        SceneManager.MoveGameObjectToScene(playerObject, nextScene);
+        SceneManager.SetActiveScene(nextScene);
+        loadedScenes[(SceneIndex)newSceneIndex].sceneBuilder.OnMadeActive(playerObject);
     }
 
     // not blocking

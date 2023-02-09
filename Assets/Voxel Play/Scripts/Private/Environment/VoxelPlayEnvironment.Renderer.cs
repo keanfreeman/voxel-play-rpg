@@ -715,7 +715,6 @@ namespace VoxelPlay {
 
 
         void GenerateChunkMeshDataInMainThread(long endTime) {
-
             long elapsed;
             MeshingThread thread = meshingThreads[0];
             do {

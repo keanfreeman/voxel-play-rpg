@@ -56,25 +56,21 @@ namespace VoxelPlay {
 		public void Start() {
 			env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
 			if (env != null) {
-                VoxelPlayInteractiveObjectsManager mgr = VoxelPlayInteractiveObjectsManager.AddInteractiveObjectsManagerComponent(env);
-				VoxelPlayInteractiveObjectsManager.RegisterManager(env, mgr);
-				mgr.InteractiveObjectRegister(this);
+				if (env.GetComponent<VoxelPlayInteractiveObjectsManager>() == null) {
+					VoxelPlayInteractiveObjectsManager mgr = VoxelPlayInteractiveObjectsManager.AddInteractiveObjectsManagerComponent(env);
+					mgr.InteractiveObjectRegister(this);
+				}
 			}
 			OnStart ();
 		}
 
 		public void OnDestroy() {
 			if (env != null) {
-				Dictionary<VoxelPlayEnvironment, VoxelPlayInteractiveObjectsManager> dict = VoxelPlayInteractiveObjectsManager.envToManager;
-                if (dict.ContainsKey(env)) {
-                    VoxelPlayInteractiveObjectsManager mgr = dict[env];
-					mgr.InteractiveObjectUnRegister(this);
-					dict.Remove(env);
+				VoxelPlayInteractiveObjectsManager mgr = env.GetComponent<VoxelPlayInteractiveObjectsManager>();
+                if (mgr != null) {
+                    mgr.InteractiveObjectUnRegister(this);
                 }
 			}
-			
 		}
-
-
 	}
 }

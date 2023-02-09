@@ -5,6 +5,7 @@ using System.Threading;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -186,7 +187,7 @@ namespace VoxelPlay
             StartCoroutine(InitBackground(callback));
         }
 
-        IEnumerator InitBackground(AfterInitCallback callback = null) { 
+        IEnumerator InitBackground(AfterInitCallback callback = null) {
             LogMessage ("Init started...", true);
 
             initialized = false;
@@ -253,15 +254,15 @@ namespace VoxelPlay
                 }
             }
 
-#if UNITY_EDITOR
-            if (cameraMain.actualRenderingPath != RenderingPath.Forward) {
-                Debug.LogWarning ("Voxel Play works better with Forward Rendering path.");
-            }
+//#if UNITY_EDITOR
+//            if (cameraMain.actualRenderingPath != RenderingPath.Forward) {
+//                Debug.LogWarning ("Voxel Play works better with Forward Rendering path.");
+//            }
+//#endif
 #if !UNITY_2019_1_OR_NEWER
             if (!isMobilePlatform && QualitySettings.antiAliasing < 2) {
                 Debug.LogWarning ("Voxel Play looks better with MSAA enabled (x2 minimum to enable crosshair).");
             }
-#endif
 #endif
 
             if (isMobilePlatform && applicationIsPlaying && adjustCameraFarClip) {
@@ -309,7 +310,8 @@ namespace VoxelPlay
                     inputPrefab = inputControllerPCPrefab;
                 }
 #endif
-
+                // todo remove if needed
+                inputPrefab = null;
                 if (inputPrefab != null) {
                     GameObject inputGO = Instantiate(inputPrefab);
                     inputGO.name = inputPrefab.name;
@@ -493,7 +495,9 @@ namespace VoxelPlay
 
             // Create world root
             if (worldRoot == null) {
-                GameObject wr = GameObject.Find (VOXELPLAY_WORLD_ROOT);
+                // todo revert if needed
+                GameObject wr = transform.GetChild(0).gameObject;
+                //GameObject wr = GameObject.Find (VOXELPLAY_WORLD_ROOT);
                 if (wr == null) {
                     wr = new GameObject (VOXELPLAY_WORLD_ROOT);
                     wr.transform.position = Misc.vector3zero;
