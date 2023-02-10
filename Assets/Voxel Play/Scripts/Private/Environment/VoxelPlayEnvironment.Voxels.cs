@@ -250,7 +250,6 @@ namespace VoxelPlay
                 vdDyn.name = vd.name + " (Dynamic)";
                 vdDyn.isDynamic = true;
                 vdDyn.doNotSave = true;
-                vdDyn.staticDefinition = vd;
                 vdDyn.renderType = RenderType.Custom;
                 vdDyn.textureIndexBottom = vd.textureIndexBottom;
                 vdDyn.textureIndexSide = vd.textureIndexSide;

@@ -13,10 +13,6 @@ namespace VoxelPlay {
 		int lastPlayerPosX, lastPlayerPosY, lastPlayerPosZ;
 		Collider lastCollider;
 
-		public static VoxelPlayInteractiveObjectsManager AddInteractiveObjectsManagerComponent(VoxelPlayEnvironment env) {
-            return env.gameObject.AddComponent<VoxelPlayInteractiveObjectsManager>();
-        }
-
 		public void InteractiveObjectRegister (VoxelPlayInteractiveObject o) {
 			o.registrationIndex = AddToDynamicList (o, ref objs, ref count);
 		}

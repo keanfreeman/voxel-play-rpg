@@ -94,7 +94,7 @@ namespace VoxelPlay
 
         float recoveryTime;
         Material _damageIndicatorMaterial;
-        static bool[] prevEnableState;
+        bool[] prevEnableState;
 
         private void OnDestroy ()
         {

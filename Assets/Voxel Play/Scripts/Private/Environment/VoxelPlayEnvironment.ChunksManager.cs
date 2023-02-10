@@ -905,7 +905,7 @@ namespace VoxelPlay {
             FastMath.FloorToInt(chunk.position.x / CHUNK_SIZE, chunk.position.y / CHUNK_SIZE, chunk.position.z / CHUNK_SIZE, out chunkX, out chunkY, out chunkZ);
 
             VoxelChunk neighbour;
-            List<VoxelChunk> tempChunks = BufferPool<VoxelChunk>.Get();
+            List<VoxelChunk> tempChunks = chunkPool.Get();
 
             for (int y = -1; y <= 1; y++) {
                 for (int z = -1; z <= 1; z++) {
@@ -929,7 +929,7 @@ namespace VoxelPlay {
                 ComputeLightmap(tempChunks[k]);
                 updatedChunks.Add(tempChunks[k]);
             }
-            BufferPool<VoxelChunk>.Release(tempChunks);
+            chunkPool.Release(tempChunks);
             ProcessLightmapUpdates();
         }
 

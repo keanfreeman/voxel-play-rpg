@@ -7,8 +7,8 @@ namespace VoxelPlay.GPULighting {
     public class VoxelPlayLightManager : MonoBehaviour {
 
 
-        static List<VoxelPlayLight> lights = new List<VoxelPlayLight>();
-        static bool shouldSortLights;
+        List<VoxelPlayLight> lights = new List<VoxelPlayLight>();
+        bool shouldSortLights;
 
         const int MAX_LIGHTS = 32; // also given by shader buffer length
         int lastX, lastY, lastZ;
@@ -24,14 +24,14 @@ namespace VoxelPlay.GPULighting {
             public static int GlobalLightMaxDistSqr = Shader.PropertyToID("_VPPointMaxDistanceSqr");
         }
 
-        public static void RegisterLight(VoxelPlayLight light) {
+        public void RegisterLight(VoxelPlayLight light) {
             if (light != null && light.pointLight.type == LightType.Point && !lights.Contains(light)) {
                 lights.Add(light);
                 shouldSortLights = true;
             }
         }
 
-        public static void UnregisterLight(VoxelPlayLight light) {
+        public void UnregisterLight(VoxelPlayLight light) {
             if (light != null && lights.Contains(light)) {
                 lights.Remove(light);
                 shouldSortLights = true;

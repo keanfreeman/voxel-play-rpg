@@ -10,17 +10,20 @@ namespace VoxelPlay {
 
         [NonSerialized] public Light pointLight;
 
+        [NonSerialized] private VoxelPlayLightManager voxelPlayLightManager;
+
+        [SerializeField] public VoxelPlayEnvironment voxelPlayEnvironment;
+
         public void OnEnable() {
+            if (voxelPlayLightManager == null) {
+                voxelPlayLightManager = voxelPlayEnvironment.voxelPlayLightManager;
+            }
             pointLight = GetComponent<Light>();
-            VoxelPlayLightManager.RegisterLight(this);
+            voxelPlayLightManager.RegisterLight(this);
         }
 
         public void OnDisable() {
-            VoxelPlayLightManager.UnregisterLight(this);
+            voxelPlayLightManager.UnregisterLight(this);
         }
-
-
-
-
     }
 }

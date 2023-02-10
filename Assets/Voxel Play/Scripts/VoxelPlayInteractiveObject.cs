@@ -57,7 +57,7 @@ namespace VoxelPlay {
 			env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
 			if (env != null) {
 				if (env.GetComponent<VoxelPlayInteractiveObjectsManager>() == null) {
-					VoxelPlayInteractiveObjectsManager mgr = VoxelPlayInteractiveObjectsManager.AddInteractiveObjectsManagerComponent(env);
+                    VoxelPlayInteractiveObjectsManager mgr = env.gameObject.AddComponent<VoxelPlayInteractiveObjectsManager>();
 					mgr.InteractiveObjectRegister(this);
 				}
 			}

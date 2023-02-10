@@ -99,7 +99,7 @@ namespace VoxelPlay
             Vector3d min = bounds.min;
             Vector3d max = bounds.max;
 
-            List<VoxelChunk> updatedChunks = BufferPool<VoxelChunk>.Get();
+            List<VoxelChunk> updatedChunks = chunkPool.Get();
             modificationTag++;
 
             Vector3d pos;
@@ -258,7 +258,7 @@ namespace VoxelPlay
                 }
             }
             RegisterChunkChanges(updatedChunks);
-            BufferPool<VoxelChunk>.Release(updatedChunks);
+            chunkPool.Release(updatedChunks);
 
             FastVector.Floor(ref min);
             FastVector.Ceiling(ref max);

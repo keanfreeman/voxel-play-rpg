@@ -457,8 +457,11 @@ namespace VoxelPlay
 
             // Save custom voxel properties
             if (chunk.voxelsProperties != null) {
-                List<KeyValuePair<int, FastHashSet<VoxelProperty>>> voxelsProperties = BufferPool<KeyValuePair<int, FastHashSet<VoxelProperty>>>.Get ();
-                List<KeyValuePair<int, VoxelProperty>> voxelProperties = BufferPool<KeyValuePair<int, VoxelProperty>>.Get ();
+                BufferPool<KeyValuePair<int, FastHashSet<VoxelProperty>>> bufferPool1 = new BufferPool<KeyValuePair<int, FastHashSet<VoxelProperty>>>();
+                BufferPool<KeyValuePair<int, VoxelProperty>> bufferPool2 = new BufferPool<KeyValuePair<int, VoxelProperty>>();
+
+                List<KeyValuePair<int, FastHashSet<VoxelProperty>>> voxelsProperties = bufferPool1.Get ();
+                List<KeyValuePair<int, VoxelProperty>> voxelProperties = bufferPool2.Get ();
                 chunk.voxelsProperties.GetValues (voxelsProperties);
                 int voxelsPropertiesCount = chunk.voxelsProperties.Count;
                 bw.Write ((Int16)voxelsPropertiesCount);
@@ -481,8 +484,8 @@ namespace VoxelPlay
                         }
                     }
                 }
-                BufferPool<KeyValuePair<int, VoxelProperty>>.Release (voxelProperties);
-                BufferPool<KeyValuePair<int, FastHashSet<VoxelProperty>>>.Release (voxelsProperties);
+                bufferPool2.Release (voxelProperties);
+                bufferPool1.Release (voxelsProperties);
             } else {
                 bw.Write ((Int16)0);
             }

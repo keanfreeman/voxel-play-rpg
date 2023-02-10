@@ -390,10 +390,6 @@ namespace VoxelPlay
         [NonSerialized]
         public VoxelDefinition dynamicDefinition;
 
-        // The related static voxel definition. Thsi field is set so when a dynamic voxel is converted back to static, it can know which static type belongs to
-        [NonSerialized]
-        public VoxelDefinition staticDefinition;
-
         // if this voxel definition is dynamic
         [NonSerialized]
         public bool isDynamic;
@@ -577,7 +573,6 @@ namespace VoxelPlay
             textureIndexBottom = textureIndexSide = textureIndexTop = 0;
             isDynamic = false;
             dynamicDefinition = null;
-            staticDefinition = null;
             seeThroughVoxelTempTransp = 0;
             materialBufferIndex = 0;
             if (dynamicMeshes != null) {

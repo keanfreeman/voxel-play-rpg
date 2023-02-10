@@ -120,7 +120,7 @@ namespace VoxelPlay {
 
 			VoxelIndex index = new VoxelIndex ();
 			bool informIndices = false;
-			List<VoxelIndex> tempVoxelIndices = BufferPool<VoxelIndex>.Get ();
+			List<VoxelIndex> tempVoxelIndices = indexPool.Get ();
 			if (OnTreeAfterCreate != null) {
 				informIndices = true;
 			}
@@ -247,7 +247,7 @@ namespace VoxelPlay {
 				OnTreeAfterCreate (tempVoxelIndices);
 			}
 
-			BufferPool<VoxelIndex>.Release (tempVoxelIndices);
+			indexPool.Release (tempVoxelIndices);
 
 			int refreshChunksCount = treeChunkRefreshRequests.Count;
 			for (int k = 0; k < refreshChunksCount; k++) {

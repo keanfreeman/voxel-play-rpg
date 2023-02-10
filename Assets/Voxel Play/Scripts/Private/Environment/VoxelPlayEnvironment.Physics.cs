@@ -823,7 +823,7 @@ namespace VoxelPlay
             }
 
             int damagedCount = 0;
-            List<VoxelIndex> tempVoxelIndicesDamageArea = BufferPool<VoxelIndex>.Get ();
+            List<VoxelIndex> tempVoxelIndicesDamageArea = indexPool.Get ();
             VoxelHitInfo hitInfo = new VoxelHitInfo ();
             GetVoxelIndices (origin, damageRadius, tempVoxelIndicesDamageArea);
             if (captureEvents && OnVoxelBeforeAreaDamage != null) {
@@ -862,7 +862,7 @@ namespace VoxelPlay
                 }
             }
 
-            BufferPool<VoxelIndex>.Release (tempVoxelIndicesDamageArea);
+            indexPool.Release (tempVoxelIndicesDamageArea);
             if (captureEvents && OnVoxelAfterAreaDamage != null) {
                 OnVoxelAfterAreaDamage (results);
             }

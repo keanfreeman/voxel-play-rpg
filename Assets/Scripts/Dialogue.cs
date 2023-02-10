@@ -25,6 +25,8 @@ public class Dialogue : MonoBehaviour {
     private const string CHOICE_HOLDER = "ChoiceHolder";
 
     private void Start() {
+        DontDestroyOnLoad(gameObject);
+
         root = gameObject.GetComponent<UIDocument>().rootVisualElement;
         dialogueText = root.Query<Label>(GIVEN_TEXT).First();
         choiceHolder = root.Query<VisualElement>(CHOICE_HOLDER).First();

@@ -12,7 +12,6 @@ public class SceneBuilder : MonoBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject opossumPrefab;
-    [SerializeField] private UIDocument uiDocument;
     [SerializeField] private Vector3Int playerStartPosition;
 
     public VoxelPlayEnvironment vpEnvironment;
@@ -32,9 +31,18 @@ public class SceneBuilder : MonoBehaviour
     private InputManager inputManager;
     private ObjectInkMapping objectInkMapping;
 
-    public void Awake() {
+    private GameObject uiDocument;
+    private bool initialized = false;
+
+    public void Init(GameObject uiDocument) {
+        this.uiDocument = uiDocument;
+        initialized = true;
+    }
+
+    public void Start() {
         vpEnvironment = gameObject.GetComponent<VoxelPlayEnvironment>();
         VoxelPlayEnvironment.RegisterEnvironment(gameObject.scene.buildIndex, vpEnvironment);
+        vpEnvironment.enabled = true;
 
         dummyCamera = gameObject.AddComponent<Camera>();
         dummyCamera.enabled = false;
@@ -48,34 +56,17 @@ public class SceneBuilder : MonoBehaviour
     }
 
     public void Update() {
-        if (Input.GetKeyUp(KeyCode.G)) {
-            Debug.Log("Debug key pressed.");
-        }
-        if (Input.GetKeyUp(KeyCode.H)) {
-            Debug.Log("Second debug key pressed.");
-            if (gameObject.scene.buildIndex == 2) {
-                vpEnvironment.enabled = true;
-            }
-        }
-
         if (Input.GetKeyUp(KeyCode.J) && gameObject.scene.buildIndex == 1) {
-            Debug.Log(vpEnvironment.world);
-            vpEnvironment.world = Resources.Load<WorldDefinition>("WorldDefinition2");
-            Debug.Log(vpEnvironment.world);
-            vpEnvironment.loadSavedGame = false;
-            vpEnvironment.ReloadWorld();
-            //Debug.Log($"script scene: {gameObject.scene.buildIndex}");
-            //vpEnvironment.enabled = false;
-            //vpEnvironment.cameraMain = dummyCamera;
-            //for (int i = 0; i < transform.childCount; i++) {
-            //    transform.GetChild(i).gameObject.SetActive(false);
-            //}
-            //parentSceneChanger.SetActiveScene(playerInstance);
+            Debug.Log($"script scene: {gameObject.scene.buildIndex}");
+            vpEnvironment.cameraMain = dummyCamera;
+            for (int i = 0; i < transform.childCount; i++) {
+                transform.GetChild(i).gameObject.SetActive(false);
+            }
+            parentSceneChanger.SetActiveScene(playerInstance);
         }
 
         if (Input.GetKeyUp(KeyCode.K) && gameObject.scene.buildIndex == 2) {
             Debug.Log($"script scene: {gameObject.scene.buildIndex}");
-            vpEnvironment.enabled = false;
             vpEnvironment.cameraMain = dummyCamera;
             for (int i = 0; i < transform.childCount; i++) {
                 transform.GetChild(i).gameObject.SetActive(false);
@@ -88,7 +79,9 @@ public class SceneBuilder : MonoBehaviour
             return;
         }
 
-        playerInputContextHandler.HandlePlayerInput();
+        if (initialized) {
+            playerInputContextHandler.HandlePlayerInput();
+        }
     }
 
     // can create resources now that it's the active scene

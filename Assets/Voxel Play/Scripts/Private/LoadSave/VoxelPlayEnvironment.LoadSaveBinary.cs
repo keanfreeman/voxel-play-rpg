@@ -253,7 +253,7 @@ namespace VoxelPlay {
                 DestroyAllVoxels();
             } else {
                 // Remove all modified chunks to ensure only loaded chunks are the modified ones
-                List<VoxelChunk> tempChunks = BufferPool<VoxelChunk>.Get();
+                List<VoxelChunk> tempChunks = chunkPool.Get();
                 GetChunks(tempChunks, ChunkModifiedFilter.OnlyModified);
                 int count = tempChunks.Count;
                 for (int k = 0; k < count; k++) {
@@ -265,7 +265,7 @@ namespace VoxelPlay {
                         chunk.modified = false;
                     }
                 }
-                BufferPool<VoxelChunk>.Release(tempChunks);
+                chunkPool.Release(tempChunks);
             }
 
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using VoxelPlay.GPULighting;
 
 namespace VoxelPlay {
 
@@ -517,6 +518,9 @@ namespace VoxelPlay {
         #region Public API
 
         private static Dictionary<int, VoxelPlayEnvironment> sceneToEnv = new Dictionary<int, VoxelPlayEnvironment>();
+        public VoxelPlayLightManager voxelPlayLightManager;
+        public BufferPool<VoxelChunk> chunkPool = new BufferPool<VoxelChunk>();
+        public BufferPool<VoxelIndex> indexPool = new BufferPool<VoxelIndex>();
 
         /// <summary>
         /// Enables detail generators
@@ -2420,7 +2424,7 @@ namespace VoxelPlay {
             int voxelIndex;
             int count = positions.Count;
 
-            List<VoxelChunk> updatedChunks = BufferPool<VoxelChunk>.Get ();
+            List<VoxelChunk> updatedChunks = chunkPool.Get ();
             modificationTag++;
 
             if (voxelType == null) {
@@ -2464,7 +2468,7 @@ namespace VoxelPlay {
                 modifiedChunks.AddRange (updatedChunks);
             }
 
-            BufferPool<VoxelChunk>.Release (updatedChunks);
+            chunkPool.Release (updatedChunks);
         }
 
 
@@ -2480,7 +2484,7 @@ namespace VoxelPlay {
         {
             int count = indices.Count;
 
-            List<VoxelChunk> updatedChunks = BufferPool<VoxelChunk>.Get ();
+            List<VoxelChunk> updatedChunks = chunkPool.Get ();
             modificationTag++;
 
             if (voxelType == null) {
@@ -2510,7 +2514,7 @@ namespace VoxelPlay {
                 modifiedChunks.AddRange (updatedChunks);
             }
 
-            BufferPool<VoxelChunk>.Release (updatedChunks);
+            chunkPool.Release (updatedChunks);
         }
 
 
@@ -2537,10 +2541,10 @@ namespace VoxelPlay {
         /// <param name="modifiedChunks">Optionally return the list of modified chunks</param>
         public void VoxelPlace (Vector3d boxMin, Vector3d boxMax, VoxelDefinition voxelType, Color tintColor, List<VoxelChunk> modifiedChunks = null)
         {
-            List<VoxelIndex> tempVoxelIndices = BufferPool<VoxelIndex>.Get ();
+            List<VoxelIndex> tempVoxelIndices = indexPool.Get ();
             GetVoxelIndices (boxMin, boxMax, tempVoxelIndices, 0, -1);
             VoxelPlace (tempVoxelIndices, voxelType, tintColor, modifiedChunks);
-            BufferPool<VoxelIndex>.Release (tempVoxelIndices);
+            indexPool.Release (tempVoxelIndices);
         }
 
 
@@ -2855,7 +2859,7 @@ namespace VoxelPlay {
         /// <param name="consolidateDelay">If consolidateDelay is greater than 0, collapsed voxels will be either destroyed or converted back to normal voxels after 'duration' in seconds.</param>
         public void VoxelCollapse (Vector3d position, int amount, List<VoxelIndex> voxelIndices = null, float consolidateDelay = 0)
         {
-            List<VoxelIndex> tempVoxelIndices = BufferPool<VoxelIndex>.Get ();
+            List<VoxelIndex> tempVoxelIndices = indexPool.Get ();
             int count = GetCrumblyVoxelIndices (position, amount, tempVoxelIndices);
 
             if (voxelIndices != null) {
@@ -2868,7 +2872,7 @@ namespace VoxelPlay {
             if (captureEvents && OnVoxelCollapse != null) {
                 OnVoxelCollapse (tempVoxelIndices);
             }
-            BufferPool<VoxelIndex>.Release (tempVoxelIndices);
+            indexPool.Release (tempVoxelIndices);
         }
 
         /// <summary>
@@ -2939,7 +2943,8 @@ namespace VoxelPlay {
             if (voxelIndex < 0 || chunk.voxels [voxelIndex].hasContent != 1)
                 return false;
 
-            VoxelDefinition voxelType = voxelDefinitions[chunk.voxels [voxelIndex].type()].staticDefinition;
+            // TODO switched to non-static, may cause issues
+            VoxelDefinition voxelType = voxelDefinitions[chunk.voxels [voxelIndex].type()].dynamicDefinition;
             if (voxelType != null) {
                 Color voxelColor = chunk.voxels [voxelIndex].color;
                 Vector3d targetPosition = placeholder.transform.position;
@@ -2991,7 +2996,7 @@ namespace VoxelPlay {
         public void VoxelGetDynamic (List<VoxelIndex> voxelIndices, bool addRigidbody = false, float duration = 0)
         {
 
-            List<VoxelChunk> tempChunks = BufferPool<VoxelChunk>.Get ();
+            List<VoxelChunk> tempChunks = chunkPool.Get ();
             modificationTag++;
 
             int count = voxelIndices.Count;
@@ -3010,7 +3015,7 @@ namespace VoxelPlay {
             ChunkRequestRefresh (tempChunks, false, true);
             RegisterChunkChanges (tempChunks);
 
-            BufferPool<VoxelChunk>.Release (tempChunks);
+            chunkPool.Release (tempChunks);
         }
 
 
@@ -3802,7 +3807,7 @@ namespace VoxelPlay {
             CheckEditorTintColor ();
 #endif
 
-            List<VoxelChunk> updatedChunks = BufferPool<VoxelChunk>.Get ();
+            List<VoxelChunk> updatedChunks = chunkPool.Get ();
             modificationTag++;
 
             Vector3d pos;
@@ -3834,7 +3839,7 @@ namespace VoxelPlay {
             }
 
             RegisterChunkChanges (updatedChunks);
-            BufferPool<VoxelChunk>.Release (updatedChunks);
+            chunkPool.Release (updatedChunks);
 
             Boundsd bounds = new Boundsd (new Vector3d (position.x, position.y + maxY / 2, position.z), new Vector3 (maxX + 2, maxY + 2, maxZ + 2));
             ChunkRequestRefresh (bounds, true, true);
@@ -3866,7 +3871,7 @@ namespace VoxelPlay {
                 }
             }
 
-            List<VoxelChunk> updatedChunks = BufferPool<VoxelChunk>.Get ();
+            List<VoxelChunk> updatedChunks = chunkPool.Get ();
             modificationTag++;
 
             for (int y = 0; y < maxY; y++) {
@@ -3919,7 +3924,7 @@ namespace VoxelPlay {
             }
 
             RegisterChunkChanges (updatedChunks);
-            BufferPool<VoxelChunk>.Release (updatedChunks);
+            chunkPool.Release (updatedChunks);
 
             Boundsd bounds = new Boundsd (new Vector3d (position.x, position.y + maxY / 2, position.z), new Vector3 (maxX + 2, maxY + 2, maxZ + 2));
             ChunkRequestRefresh (bounds, true, true);
@@ -3941,7 +3946,7 @@ namespace VoxelPlay {
             int halfZ = maxZ / 2;
             int halfX = maxX / 2;
 
-            List<VoxelChunk> updatedChunks = BufferPool<VoxelChunk>.Get ();
+            List<VoxelChunk> updatedChunks = chunkPool.Get ();
             modificationTag++;
 
             for (int y = 0; y < maxY; y++) {
@@ -3966,7 +3971,7 @@ namespace VoxelPlay {
             }
 
             RegisterChunkChanges (updatedChunks);
-            BufferPool<VoxelChunk>.Release (updatedChunks);
+            chunkPool.Release (updatedChunks);
 
             Boundsd bounds = new Boundsd (new Vector3d (position.x, position.y + maxY / 2, position.z), new Vector3 (maxX + 2, maxY + 2, maxZ + 2));
             ChunkRequestRefresh (bounds, true, true);
