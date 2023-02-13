@@ -176,7 +176,8 @@ namespace VoxelPlay {
         /// <param name="moisture">Moisture in 0-1 range.</param>
         public override void GetHeightAndMoisture(double x, double z, out float altitude, out float moisture) {
             if (!isInitialized) {
-                Initialize();
+                Debug.LogError("Environment not initialized for TerrainDefaultGenerator");
+                Initialize(env);
             }
 
             bool allowBeach = true;

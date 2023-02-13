@@ -65,14 +65,14 @@ namespace VoxelPlay {
 		/// <summary>
 		/// Use this method to initialize the terrain generator
 		/// </summary>
-		public void Initialize () {
-			// TODO fix if needed
-			env = null;
+		public void Initialize (VoxelPlayEnvironment environment) {
 			if (env == null)
-				return;
+				env = environment;
 			world = env.world;
-			if (world == null)
+			if (world == null) {
+				Debug.LogError("No world provided for environment.");
 				return;
+			}
 
 			env.waterLevel = waterLevel;
 			Init ();

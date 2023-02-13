@@ -1,8 +1,24 @@
+I tried adding another scene with a different environment/world definition. For some reason, the world will not render and 
+it seems to load twice. I think for now I may give up on the idea of having multiple environments. The only thing I think it would 
+provide would be quicker load times, and I'm too early on in this project to worry about saving a few seconds between environments.
+It has also created a ton of headaches as I have lost functionality that Voxel Play is supposed to provide, like the first-person character controller.
+
+sometimes when switching scenes my vp-needed objects under scenebuilder do not get disabled and both are displayed. Need to be careful about this.
+
+need to be careful not to modify one Environment while another is active. this will trigger rendering logic that currently 
+combines things from both environments, unfortunately.
+
+did not figure out the problem with the greedy mesher, but found a workaround using a different renderer
+- nope, when I try destroying a voxel in one scene, suddenly the stuff rendered in that scene is shared with the other scene somehow. 
+Still need to figure this out
+- for some reason, if I modify the contents of one environment while the other is rendering, it merges the two.
+- I turned on compute buffers. for some reason, this seems to have helped with the rendering issue. also, another issue - sometimes when 
+switching scenes my vp-needed objects under scenebuilder do not get disabled and both are displayed. Need to be careful about this.
+
 I couldn't figure out what was causing the error that would occur when two environments ran simultaneously (threading, maybe?).
 My temporary fix for this is to disable the script for the old environment when switching to a new one, and only enable the 
 new one once the old one is done. However, that's not great because I won't get the speed benefit of having a loaded Environment
 ready to go.
-
 
 in order to fix ugly visibility issues with VP camera inside the terrain, can maybe use collision detection with 
 the camera (and an invisible object between the camera and the player) to activate custom logic that makes voxels 

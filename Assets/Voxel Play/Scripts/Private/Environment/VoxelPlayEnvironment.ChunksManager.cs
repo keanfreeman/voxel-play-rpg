@@ -142,7 +142,7 @@ namespace VoxelPlay {
             InitHeightMap();
             InitBiomes();
             if (world != null && world.terrainGenerator != null) {
-                world.terrainGenerator.Initialize();
+                world.terrainGenerator.Initialize(this);
             }
         }
 
@@ -181,7 +181,7 @@ namespace VoxelPlay {
                 if (world.terrainGenerator == null) {
                     world.terrainGenerator = Resources.Load<NullTerrainGenerator>("VoxelPlay/Defaults/NullTerrainGenerator");
                 }
-                world.terrainGenerator.Initialize();
+                world.terrainGenerator.Initialize(this);
 
                 worldHasDetailGenerators = world.detailGenerators != null && world.detailGenerators.Length > 0;
                 if (worldHasDetailGenerators) {

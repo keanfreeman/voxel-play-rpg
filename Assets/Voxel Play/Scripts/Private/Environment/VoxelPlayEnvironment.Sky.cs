@@ -103,10 +103,9 @@ namespace VoxelPlay {
 
             Vector3 initialPosition = cameraMain != null ? cameraMain.transform.position : Misc.vector3zero;
             if (cloudsRoot == null) {
-				cloudsRoot = new GameObject (CLOUDS_ROOT_NAME);
+				cloudsRoot = transform.GetChild(3).gameObject;
 				cloudsRoot.hideFlags = HideFlags.DontSave;
 				cloudsRoot.transform.hierarchyCapacity = 1000;
-				cloudsRoot.transform.SetParent (worldRoot, false);
 				cloudsRoot.transform.position = initialPosition;
 				cloudsRoot.AddComponent<VoxelCloudsAnimator> ().cloudChunks = cloudsChunks;
 			}

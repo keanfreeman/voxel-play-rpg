@@ -205,8 +205,8 @@ namespace VoxelPlay {
             }
 
             // Triangle opaque and cutout are always loaded because dynamic voxels requires them
-            matDynamicOpaque = Instantiate(Resources.Load<Material>("VoxelPlay/Materials/VP Voxel Dynamic Opaque"));
-            matDynamicCutout = Instantiate(Resources.Load<Material>("VoxelPlay/Materials/VP Voxel Dynamic Cutout"));
+            matDynamicOpaque = Instantiate(Resources.Load<Material>("VoxelPlay/Materials/VP Voxel Dynamic Opaque"), this.transform);
+            matDynamicCutout = Instantiate(Resources.Load<Material>("VoxelPlay/Materials/VP Voxel Dynamic Cutout"), this.transform);
             matDynamicOpaqueNonArray = Resources.Load<Material>("VoxelPlay/Materials/VP Model Texture");
             matDynamicCutoutNonArray = Resources.Load<Material>("VoxelPlay/Materials/VP Model Texture Cutout");
 
@@ -269,7 +269,7 @@ namespace VoxelPlay {
 
             if (lastRenderingMaterialIndex < renderingMaterials.Length - 1) {
                 lastRenderingMaterialIndex++;
-                Material mat = Instantiate(templateMat);
+                Material mat = Instantiate(templateMat, this.transform);
 
                 VoxelPlayGreedyMesherLitAO greedyMesherLitAO = null;
                 VoxelPlayGreedyMesherLit greedyMesherLit = null;
@@ -308,7 +308,7 @@ namespace VoxelPlay {
 
             if (lastRenderingMaterialIndex < renderingMaterials.Length - 1) {
                 lastRenderingMaterialIndex++;
-                Material mat = Instantiate(templateMat);
+                Material mat = Instantiate(templateMat, this.transform);
                 renderingMaterials[lastRenderingMaterialIndex] = new RenderingMaterial { templateMaterial = templateMat, renderType = rt, material = mat, textureProvider = null };
                 materialIndices[templateMat] = lastRenderingMaterialIndex;
             } else {
@@ -958,7 +958,7 @@ namespace VoxelPlay {
                 return mesh;
             }
 
-            Mesh meshWithColors = Instantiate(bm.mesh);
+            Mesh meshWithColors = Instantiate(bm.mesh, this.transform);
             meshWithColors.hideFlags = HideFlags.DontSave;
 
             Color32[] originalColors32 = voxelDefinition.meshColors32;
@@ -1061,7 +1061,7 @@ namespace VoxelPlay {
                 return mesh;
             }
 
-            Mesh meshWithColors = Instantiate(bm.mesh);
+            Mesh meshWithColors = Instantiate(bm.mesh, this.transform);
             meshWithColors.hideFlags = HideFlags.DontSave;
             meshWithColors.SetColors(modelMeshColors);
 
@@ -1128,7 +1128,7 @@ namespace VoxelPlay {
                         if (prefab == null) continue;
 
                         placeholder.modelTemplate = prefab;
-                        placeholder.modelInstance = Instantiate(prefab);
+                        placeholder.modelInstance = Instantiate(prefab, this.transform);
                         placeholder.modelInstance.name = "DynamicVoxelInstance";
                         // Note: placeHolder.modelInstance layer must be different from layerVoxels to allow dynamic voxels collide with terrain. So don't set its layer to layer voxels
                         placeholder.modelMeshRenderers = placeholder.modelInstance.GetComponentsInChildren<MeshRenderer>();

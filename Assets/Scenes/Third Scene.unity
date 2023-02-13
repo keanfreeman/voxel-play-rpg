@@ -270,7 +270,7 @@ MonoBehaviour:
   particlePoolSize: 1000
   voxelDefinitionsCount: 11
   enableURP: 0
-  debugLevel: 1
+  debugLevel: 0
   world: {fileID: 11400000, guid: 08d688119f29478418727f8166f3db94, type: 2}
   enableBuildMode: 0
   enableGeneration: 1
@@ -328,7 +328,7 @@ MonoBehaviour:
   transparentBling: 1
   useComputeBuffers: 0
   previewTouchUIinEditor: 0
-  prewarmChunksInEditor: 5000
+  prewarmChunksInEditor: 1000
   enableTinting: 0
   enableFresnel: 0
   fresnelExponent: 8
@@ -399,6 +399,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 7062049782252913140, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
   opossumPrefab: {fileID: 6944743723035480207, guid: a806406e61d5e2146bba48accb192b09, type: 3}
+  sceneExitPrefab: {fileID: 440023488360116698, guid: 4242af01c09d0984f9c6587337ba132b, type: 3}
   playerStartPosition: {x: 523, y: 50, z: 230}
   vpEnvironment: {fileID: 0}
   parentSceneChanger: {fileID: 0}

@@ -473,7 +473,7 @@ namespace VoxelPlay
         Material GetDynamicVoxelMaterialFromCustom (Material refMat, bool useCutout)
         {
             Material instancingMat = useCutout ? matDynamicCutoutNonArray : matDynamicOpaqueNonArray;
-            instancingMat = Instantiate (instancingMat);
+            instancingMat = Instantiate (instancingMat, this.transform);
             instancingMat.DisableKeyword (SKW_VOXELPLAY_GPU_INSTANCING);
             if (refMat != null) {
                 if (refMat.HasProperty (ShaderParams.Color) && instancingMat.HasProperty (ShaderParams.Color)) {

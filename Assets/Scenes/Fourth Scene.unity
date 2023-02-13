@@ -270,8 +270,8 @@ MonoBehaviour:
   particlePoolSize: 1000
   voxelDefinitionsCount: 11
   enableURP: 0
-  debugLevel: 0
-  world: {fileID: 11400000, guid: 08d688119f29478418727f8166f3db94, type: 2}
+  debugLevel: 1
+  world: {fileID: 11400000, guid: e8a87dfb9bf9c574abef1d46b120001c, type: 2}
   enableBuildMode: 0
   enableGeneration: 1
   constructorMode: 0
@@ -304,8 +304,8 @@ MonoBehaviour:
   loadingText: Initializing...
   initialWaitTime: 0
   initialWaitText: Loading World...
-  loadSavedGame: 1
-  saveFilename: worldwithbed
+  loadSavedGame: 0
+  saveFilename: beach
   globalIllumination: 1
   ambientLight: 0.2
   daylightShadowAtten: 0.65
@@ -400,7 +400,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 7062049782252913140, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
   opossumPrefab: {fileID: 6944743723035480207, guid: a806406e61d5e2146bba48accb192b09, type: 3}
   sceneExitPrefab: {fileID: 440023488360116698, guid: 4242af01c09d0984f9c6587337ba132b, type: 3}
-  playerStartPosition: {x: 523, y: 50, z: 246}
+  playerStartPosition: {x: 523, y: 100, z: 246}
   vpEnvironment: {fileID: 0}
   parentSceneChanger: {fileID: 0}
   playerInstance: {fileID: 0}
@@ -419,7 +419,7 @@ Transform:
   - {fileID: 1533824114}
   - {fileID: 1877951559}
   - {fileID: 1032382142}
-  - {fileID: 1422222295}
+  - {fileID: 1312955173}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -454,7 +454,7 @@ Transform:
   m_Father: {fileID: 582458983}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1422222294
+--- !u!1 &1312955172
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -462,21 +462,21 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1422222295}
+  - component: {fileID: 1312955173}
   m_Layer: 0
   m_Name: Clouds Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1422222295
+  m_IsActive: 1
+--- !u!4 &1312955173
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1422222294}
+  m_GameObject: {fileID: 1312955172}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}

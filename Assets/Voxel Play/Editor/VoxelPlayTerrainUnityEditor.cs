@@ -67,7 +67,8 @@ namespace VoxelPlay {
 				return;
 
 			if (tg.splatSettings == null || tg.splatSettings.Length == 0) {
-				tg.Initialize ();
+				Debug.LogError("No environment available in UnityEditor");
+				//tg.Initialize ();
 			}
 
 			serializedObject.Update ();

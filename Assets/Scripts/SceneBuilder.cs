@@ -12,12 +12,13 @@ public class SceneBuilder : MonoBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject opossumPrefab;
+    [SerializeField] private GameObject sceneExitPrefab;
     [SerializeField] private Vector3Int playerStartPosition;
 
     public VoxelPlayEnvironment vpEnvironment;
     public SceneChanger parentSceneChanger;
+    public GameObject playerInstance;
 
-    private GameObject playerInstance;
     private Camera dummyCamera;
     private NonVoxelWorld nonVoxelWorld = new NonVoxelWorld();
     private SpriteMovement spriteMovement;
@@ -53,25 +54,20 @@ public class SceneBuilder : MonoBehaviour
         else {
             vpEnvironment.cameraMain = dummyCamera;
         }
+
+        GameObject sceneExitCube = Instantiate(sceneExitPrefab, this.transform);
+        sceneExitCube.transform.SetPositionAndRotation(playerStartPosition + Vector3Int.forward * 3, Quaternion.identity);
+        SceneExitCube script = sceneExitCube.GetComponent<SceneExitCube>();
+        script.Init(parentSceneChanger);
     }
 
     public void Update() {
-        if (Input.GetKeyUp(KeyCode.J) && gameObject.scene.buildIndex == 1) {
-            Debug.Log($"script scene: {gameObject.scene.buildIndex}");
-            vpEnvironment.cameraMain = dummyCamera;
-            for (int i = 0; i < transform.childCount; i++) {
-                transform.GetChild(i).gameObject.SetActive(false);
-            }
-            parentSceneChanger.SetActiveScene(playerInstance);
+        if (Input.GetKeyUp(KeyCode.G) && SceneManager.GetActiveScene().buildIndex == gameObject.scene.buildIndex) {
+            vpEnvironment.Redraw();
         }
 
-        if (Input.GetKeyUp(KeyCode.K) && gameObject.scene.buildIndex == 2) {
-            Debug.Log($"script scene: {gameObject.scene.buildIndex}");
-            vpEnvironment.cameraMain = dummyCamera;
-            for (int i = 0; i < transform.childCount; i++) {
-                transform.GetChild(i).gameObject.SetActive(false);
-            }
-            parentSceneChanger.SetActiveScene(playerInstance);
+        if (Input.GetKeyUp(KeyCode.H) && SceneManager.GetActiveScene().buildIndex == gameObject.scene.buildIndex) {
+            vpEnvironment.cameraMain = transform.Find("PlayerSpriteContainer").GetComponentInChildren<Camera>();
         }
 
         if (vpEnvironment == null || !vpEnvironment.initialized || !vpEnvironment.enabled
@@ -84,6 +80,13 @@ public class SceneBuilder : MonoBehaviour
         }
     }
 
+    public void PrepareForSceneInactive() {
+        vpEnvironment.cameraMain = dummyCamera;
+        for (int i = 0; i < transform.childCount; i++) {
+            transform.GetChild(i).gameObject.SetActive(false);
+        }
+    }
+
     // can create resources now that it's the active scene
     public void OnMadeActive(GameObject playerObject) {
         if (dummyCamera != null) {
@@ -92,7 +95,6 @@ public class SceneBuilder : MonoBehaviour
 
         playerInstance = playerObject;
         vpEnvironment.cameraMain = playerInstance.GetComponentInChildren<Camera>();
-        vpEnvironment.enabled = true;
 
         spriteMovement = new SpriteMovement(vpEnvironment);
         InitCreaturesAndWorld();
@@ -126,8 +128,14 @@ public class SceneBuilder : MonoBehaviour
     }
 
     private void InitCreaturesAndWorld() {
-        playerInstance.transform.position = playerStartPosition;
-        nonVoxelWorld.SetPosition(playerInstance, playerStartPosition);
+        if (!nonVoxelWorld.IsInWorld(playerInstance)) {
+            playerInstance.transform.position = playerStartPosition;
+            nonVoxelWorld.SetPosition(playerInstance, playerStartPosition);
+        }
+        else {
+            playerInstance.transform.position = new Vector3Int(527, 50, 242);
+            nonVoxelWorld.SetPosition(playerInstance, new Vector3Int(527, 50, 242));
+        }
 
         if (gameObject.scene.buildIndex == 1) {
             //createNPC(new Vector3Int(527, 53, 247));

@@ -174,9 +174,9 @@ namespace VoxelPlay {
                         case CustomVoxelMaterial.TextureCutout: instancingMat = Resources.Load<Material>("VoxelPlay/Materials/VP Model Texture Cutout"); break;
                     }
                     if (instancingMat != null) {
-                        instancingMat = Instantiate(instancingMat);
+                        instancingMat = Instantiate(instancingMat, this.transform);
                         if (!vd.gpuInstancing) instancingMat.DisableKeyword(SKW_VOXELPLAY_GPU_INSTANCING);
-                        vd.prefab = Instantiate(vd.model);
+                        vd.prefab = Instantiate(vd.model, this.transform);
                         vd.prefab.SetActive(false);
                         vd.prefab.transform.SetParent(transform, false);
                         Renderer[] rr = vd.prefab.GetComponentsInChildren<Renderer>();
@@ -209,7 +209,7 @@ namespace VoxelPlay {
                 // Override main texture?
                 if (vd.overrideMainTexture && vd.textureSample != null) {
                     if (vd.prefab == vd.model) {
-                        vd.prefab = Instantiate(vd.model);
+                        vd.prefab = Instantiate(vd.model, this.transform);
                         vd.prefab.SetActive(false);
                         vd.prefab.transform.SetParent(transform, false);
                     }
@@ -217,7 +217,7 @@ namespace VoxelPlay {
                     for (int k = 0; k < rr.Length; k++) {
                         Material refMat = rr[k].sharedMaterial;
                         if (refMat != null && refMat.HasProperty(ShaderParams.MainTex)) {
-                            Material mat = Instantiate(refMat);
+                            Material mat = Instantiate(refMat, this.transform);
                             mat.mainTexture = vd.textureSample;
                             if (vd.overrideMainTextureOffset != Vector2.zero) {
                                 mat.SetTextureOffset(ShaderParams.MainTex, vd.overrideMainTextureOffset);
@@ -256,27 +256,27 @@ namespace VoxelPlay {
                 }
                 if (useComputeBuffers) {
                     if (prefabMat.shader.name.Contains("Models/Texture/Opaque")) {
-                        prefabMat = Instantiate(prefabMat);
+                        prefabMat = Instantiate(prefabMat, this.transform);
                         prefabMat.shader = Shader.Find("Voxel Play/Models/GPU Instanced Indirect/Texture/Opaque");
                         vd.material = prefabMat;
                     } else
                     if (prefabMat.shader.name.Contains("Models/Texture/Alpha")) {
-                        prefabMat = Instantiate(prefabMat);
+                        prefabMat = Instantiate(prefabMat, this.transform);
                         prefabMat.shader = Shader.Find("Voxel Play/Models/GPU Instanced Indirect/Texture/Alpha");
                         vd.material = prefabMat;
                     } else
                     if (prefabMat.shader.name.Contains("Models/Texture/Cutout")) {
-                        prefabMat = Instantiate(prefabMat);
+                        prefabMat = Instantiate(prefabMat, this.transform);
                         prefabMat.shader = Shader.Find("Voxel Play/Models/GPU Instanced Indirect/Texture/Cutout");
                         vd.material = prefabMat;
                     } else
                     if (prefabMat.shader.name.Contains("Models/Texture/Triplanar")) {
-                        prefabMat = Instantiate(prefabMat);
+                        prefabMat = Instantiate(prefabMat, this.transform);
                         prefabMat.shader = Shader.Find("Voxel Play/Models/GPU Instanced Indirect/Texture/Triplanar");
                         vd.material = prefabMat;
                     } else
                     if (prefabMat.shader.name.Contains("Models/VertexLit")) {
-                        prefabMat = Instantiate(prefabMat);
+                        prefabMat = Instantiate(prefabMat, this.transform);
                         prefabMat.shader = Shader.Find("Voxel Play/Models/GPU Instanced Indirect/VertexLit");
                         vd.material = prefabMat;
                     }
@@ -573,7 +573,7 @@ namespace VoxelPlay {
 
             if (top != null) {
                 if (res != 0 && (top.width != res || top.height != res)) {
-                    vd.textureThumbnailTop = Instantiate(top);
+                    vd.textureThumbnailTop = Instantiate(top, this.transform);
                     vd.textureThumbnailTopInstanced = true;
                     vd.textureThumbnailTop.hideFlags = HideFlags.DontSave;
                     TextureTools.ScaleTexture(vd.textureThumbnailTop, res, res, FilterMode.Point);
@@ -583,7 +583,7 @@ namespace VoxelPlay {
             }
             if (side != null) {
                 if (res != 0 && (side.width != res || side.height != res)) {
-                    vd.textureThumbnailSide = Instantiate(side);
+                    vd.textureThumbnailSide = Instantiate(side, this.transform);
                     vd.textureThumbnailSideInstanced = true;
                     vd.textureThumbnailSide.hideFlags = HideFlags.DontSave;
                     TextureTools.ScaleTexture(vd.textureThumbnailSide, res, res, FilterMode.Point);
@@ -593,7 +593,7 @@ namespace VoxelPlay {
             }
             if (bottom != null) {
                 if (res != 0 && (bottom.width != res || bottom.height != res)) {
-                    vd.textureThumbnailBottom = Instantiate(bottom);
+                    vd.textureThumbnailBottom = Instantiate(bottom, this.transform);
                     vd.textureThumbnailBottomInstanced = true;
                     vd.textureThumbnailBottom.hideFlags = HideFlags.DontSave;
                     TextureTools.ScaleTexture(vd.textureThumbnailBottom, res, res, FilterMode.Point);
@@ -824,7 +824,7 @@ namespace VoxelPlay {
             matDynamicCutout.SetTexture(ShaderParams.MainTex, mainTextureProvider.textureArray);
 
             if (modelHighlightMat == null) {
-                modelHighlightMat = Instantiate(Resources.Load<Material>("VoxelPlay/Materials/VP Highlight Model")) as Material;
+                modelHighlightMat = Instantiate(Resources.Load<Material>("VoxelPlay/Materials/VP Highlight Model"), this.transform) as Material;
             }
             modelHighlightMat.SetTexture(ShaderParams.MainTex, mainTextureProvider.textureArray);
 

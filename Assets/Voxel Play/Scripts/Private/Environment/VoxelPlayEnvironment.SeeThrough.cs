@@ -35,7 +35,7 @@ namespace VoxelPlay
 
         int CreateSeeThroughVoxelDefinition (VoxelDefinition original)
         {
-            VoxelDefinition clone = Instantiate(original);
+            VoxelDefinition clone = Instantiate(original, this.transform);
             clone.name = original.name + " SeeThrough";
             clone.renderType = RenderType.Transp6tex;
             clone.index = 0;

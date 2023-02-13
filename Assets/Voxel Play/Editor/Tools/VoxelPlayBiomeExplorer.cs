@@ -414,7 +414,7 @@ namespace VoxelPlay {
                     return;
             }
             if (!tg.isInitialized) {
-                tg.Initialize();
+                tg.Initialize(env);
             }
 
             RefreshBiomeColors();
