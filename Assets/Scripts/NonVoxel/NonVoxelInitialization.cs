@@ -32,7 +32,7 @@ public class NonVoxelInitialization {
                     new NonVoxelEntity(opossumPrefab, new Vector3Int(468, 26, -46)),
                     new SceneExitCube(
                         sceneExitPrefab,
-                        new Vector3Int(466, 26, -43),
+                        new Vector3Int(466, 26, -44),
                         new Destination(SceneIndex.SECOND_SCENE, new Vector3Int(523, 50, 246)))
                 }
             }
