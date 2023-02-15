@@ -45,6 +45,7 @@ public class SceneBuilder : MonoBehaviour
         vpEnvironment = gameObject.GetComponent<VoxelPlayEnvironment>();
         vpEnvironment.cameraMain = playerInstance.transform.GetChild(0).GetChild(0).GetComponent<Camera>();
         vpEnvironment.enabled = true;
+        vpEnvironment.seeThroughTarget = playerInstance.transform.GetChild(0).gameObject;
 
         spriteMovement = new SpriteMovement(vpEnvironment);
         InitCreaturesAndWorld();

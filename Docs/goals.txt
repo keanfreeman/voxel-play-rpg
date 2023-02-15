@@ -1,9 +1,8 @@
 CURRENT GOALS
-prevent movement onto water tiles
+change the hiding logic to hide all voxels in between the camera and the 
 
 TODO
-make it possible to use the first-person perspective in my current setup so I can easily modify/save changes to an environment
-for quick map building
+break out some logic into higher level managers, like the player movement script
 
 Use an Init method (called by Start/Awake) to initialize monobehaviors, like a constructor
 
@@ -102,6 +101,9 @@ MVP FOR FRIEND
 - would be nice to have the player able to customize the look of their character
 
 DONE
+make it possible to use the first-person perspective in my current setup so I can easily modify/save changes to an environment
+for quick map building
+
 make a new scene and allow the player to transition between the two by walking on a tile.
 
 give the bed a different dialogue text than the NPCs.

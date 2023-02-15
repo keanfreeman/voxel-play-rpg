@@ -3,9 +3,9 @@
 
 //#define USES_TINTING
 
-//#define USES_SEE_THROUGH
+#define USES_SEE_THROUGH
 
-#define USES_BRIGHT_POINT_LIGHTS
+//#define USES_BRIGHT_POINT_LIGHTS
 
 //#define USES_URP_NATIVE_LIGHTS
 

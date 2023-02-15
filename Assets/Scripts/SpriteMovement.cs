@@ -24,8 +24,8 @@ public class SpriteMovement
             // check if player can move onto land
             Vector3Int belowRequestedCoordinate = requestedCoordinate + Vector3Int.down;
             Voxel belowRequestedVoxel = environment.GetVoxel(belowRequestedCoordinate);
-            // only allow movement onto solid blocks
-            if (!belowRequestedVoxel.isEmpty && belowRequestedVoxel.isSolid) {
+            // only allow movement onto nonwater
+            if (!belowRequestedVoxel.isEmpty && !belowRequestedVoxel.hasWater) {
                 return requestedCoordinate;
             }
 
