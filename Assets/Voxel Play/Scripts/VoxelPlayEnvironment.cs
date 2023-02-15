@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using VoxelPlay.GPULighting;
+using System.Runtime.CompilerServices;
 
-namespace VoxelPlay {
+namespace VoxelPlay
+{
 
     public delegate float SDF (Vector3d position);
 
@@ -23,7 +23,8 @@ namespace VoxelPlay {
         {
             Draft = 0,
             Standard = 1,
-            StandardPlusColliders = 2
+            StandardPlusColliders = 2,
+            StandardNoDetailGenerators = 3
         }
 
         public enum ObscuranceMode
@@ -247,6 +248,7 @@ namespace VoxelPlay {
         public int maxBushesPerFrame = 10;
         public bool multiThreadGeneration = true;
         public bool lowMemoryMode;
+        public bool delayedInitialization;
         public bool onlyRenderInFrustum = true;
 
         public bool serverMode;
@@ -341,6 +343,21 @@ namespace VoxelPlay {
         }
 
         /// <summary>
+        /// Triggered after a saved game is loaded
+        /// </summary>
+        public event VoxelPlayEvent OnGameLoaded;
+
+        /// <summary>
+        /// Triggered after Voxel Play has finished loading and initializing stuff
+        /// </summary>
+        public event VoxelPlayEvent OnInitialized;
+
+        /// <summary>
+        /// Triggered when some settings from Voxel Play Environment are changed
+        /// </summary>
+        public event VoxelPlayEvent OnSettingsChanged;
+
+        /// <summary>
         /// Triggered after a voxel receives damage
         /// </summary>
         public event VoxelHitEvent OnVoxelDamaged;
@@ -401,16 +418,6 @@ namespace VoxelPlay {
         public event VoxelClickEvent OnVoxelClick;
 
         /// <summary>
-        /// Triggered after the contents of a chunk changes (ie. placing a new voxel)
-        /// </summary>
-        public event VoxelChunkEvent OnChunkChanged;
-
-        /// <summary>
-        /// Triggered when a chunk is going to be unloaded (use the canUnload argument to deny the operation)
-        /// </summary>
-        public event VoxelChunkUnloadEvent OnChunkReuse;
-
-        /// <summary>
         /// Triggered after a torch is placed
         /// </summary>
         public event VoxelTorchEvent OnTorchAttached;
@@ -421,18 +428,18 @@ namespace VoxelPlay {
         public event VoxelTorchEvent OnTorchDetached;
 
         /// <summary>
-        /// Triggered after a saved game is loaded
+        /// Triggered after the contents of a chunk changes (ie. placing a new voxel)
         /// </summary>
-        public event VoxelPlayEvent OnGameLoaded;
+        public event VoxelChunkEvent OnChunkChanged;
 
         /// <summary>
-        /// Triggered after Voxel Play has finished loading and initializing stuff
+        /// Triggered when a chunk is going to be unloaded (use the canUnload argument to deny the operation)
         /// </summary>
-        public event VoxelPlayEvent OnInitialized;
+        public event VoxelChunkUnloadEvent OnChunkReuse;
 
         /// <summary>
         /// Triggered just before the chunk is filled with default contents (terrain, etc.)
-        /// Set overrideDefaultContents to fill in the voxels array with your own content (voxel array is a linear array of 18x18x18 voxels)
+        /// Set overrideDefaultContents to fill in the voxels array with your own content
         /// </summary>
         public event VoxelChunkBeforeCreationEvent OnChunkBeforeCreate;
 
@@ -452,19 +459,14 @@ namespace VoxelPlay {
         public event VoxelChunkEvent OnChunkRender;
 
         /// <summary>
-        /// Triggered when some settings from Voxel Play Environment are changed
-        /// </summary>
-        public event VoxelPlayEvent OnSettingsChanged;
-
-        /// <summary>
         /// Triggered when a model starts building
         /// </summary>
-        public event VoxelPlayModelBuildEvent OnModelBuildStart;
+        public event VoxelModelBuildStartEvent OnModelBuildStart;
 
         /// <summary>
         /// Triggered when a model ends building
         /// </summary>
-        public event VoxelPlayModelBuildEvent OnModelBuildEnd;
+        public event VoxelModelBuildEndEvent OnModelBuildEnd;
 
         /// <summary>
         /// Triggered when the seeThroughClearRoofYPos is changed
@@ -517,26 +519,33 @@ namespace VoxelPlay {
 
         #region Public API
 
-        private static Dictionary<int, VoxelPlayEnvironment> sceneToEnv = new Dictionary<int, VoxelPlayEnvironment>();
-        public VoxelPlayLightManager voxelPlayLightManager;
-        public BufferPool<VoxelChunk> chunkPool = new BufferPool<VoxelChunk>();
-        public BufferPool<VoxelIndex> indexPool = new BufferPool<VoxelIndex>();
+        static VoxelPlayEnvironment _instance;
 
         /// <summary>
         /// Enables detail generators
         /// </summary>
         public bool enableDetailGenerators = true;
 
-        public static void RegisterEnvironment(int sceneNum, VoxelPlayEnvironment env) {
-            sceneToEnv[sceneNum] = env;
-        }
-
         /// <summary>
-        /// CUSTOM. Returns the instance in the current scene.
+        /// Returns the singleton instance of Voxel Play API.
         /// </summary>
         /// <value>The instance.</value>
-        public static VoxelPlayEnvironment GetSceneInstance(int sceneNum) {
-            return sceneToEnv.GetValueOrDefault(sceneNum, null);
+        public static VoxelPlayEnvironment instance {
+            get {
+                if (_instance == null) {
+                    _instance = FindObjectOfType<VoxelPlayEnvironment> ();
+                    if (_instance == null) {
+                        VoxelPlayEnvironment [] vv = Resources.FindObjectsOfTypeAll<VoxelPlayEnvironment> ();
+                        for (int k = 0; k < vv.Length; k++) {
+                            if (vv [k].hideFlags != HideFlags.HideInHierarchy) {
+                                _instance = vv [k];
+                                break;
+                            }
+                        }
+                    }
+                }
+                return _instance;
+            }
         }
 
         /// <summary>
@@ -612,6 +621,10 @@ namespace VoxelPlay {
         public void Redraw (bool reloadWorldTextures = false)
         {
             if (reloadWorldTextures) {
+                // reset only texture providers; keep rendering materials and other stuff for speed purposes
+                foreach (TextureArrayPacker tap in texturesProviders.Values) {
+                    tap.Clear();
+                }
                 LoadWorldTextures ();
             }
             UpdateMaterialProperties ();
@@ -901,7 +914,7 @@ namespace VoxelPlay {
             VoxelChunk chunk;
             int voxelIndex;
             if (GetVoxelIndex (position, out chunk, out voxelIndex)) {
-                return chunk.voxels [voxelIndex].hasContent == 1;
+                return chunk.voxels [voxelIndex].hasContent;
             }
             return false;
         }
@@ -915,7 +928,7 @@ namespace VoxelPlay {
             VoxelChunk chunk;
             int voxelIndex;
             if (GetVoxelIndex (position, out chunk, out voxelIndex)) {
-                return chunk.voxels [voxelIndex].hasContent != 1;
+                return chunk.voxels [voxelIndex].isEmpty;
             }
             return false;
         }
@@ -1115,8 +1128,8 @@ namespace VoxelPlay {
         /// <param name="boxMax">Top/right/forward or maximum corner of the enclosing box.</param>
         /// <param name="indices">A list of indices provided by the user to write to.</param>
         /// <param name="minOpaque">Minimum opaque value for a voxel to be considered. Water has an opaque factor of 2, cutout = 3, grass = 0.</param>
-        /// <param name="hasContents">Defaults to 1 which will return existing voxels. Pass a 0 to retrieve positions without voxels. Pass -1 to ignore this filter.</param> 
-        public int GetVoxelIndices (Vector3d boxMin, Vector3d boxMax, List<VoxelIndex> indices, byte minOpaque = 0, int hasContents = 1)
+        /// <param name="hasContent">Defaults to 1 which will return existing voxels. Pass a 0 to retrieve positions without voxels. Pass -1 to ignore this filter.</param> 
+        public int GetVoxelIndices (Vector3d boxMin, Vector3d boxMax, List<VoxelIndex> indices, byte minOpaque = 0, int hasContent = 1)
         {
             Vector3d chunkPos, voxelPosition;
             VoxelIndex index = new VoxelIndex ();
@@ -1128,12 +1141,13 @@ namespace VoxelPlay {
             Vector3d chunkMaxPos = GetChunkPosition (boxMax);
             Vector3d center = (boxMax - boxMin) * 0.5;
 
-            bool createChunkIfNotExists = hasContents != 1;
+            bool createChunkIfNotExists = hasContent != 1;
 
-            if (hasContents == 0) {
+            if (hasContent == 0) {
                 minOpaque = 0;
             }
 
+            bool mustHaveContent = hasContent == 1;
             for (double y = chunkMinPos.y; y <= chunkMaxPos.y; y += CHUNK_SIZE) {
                 chunkPos.y = y;
                 int voxelIndexMin = 0;
@@ -1157,7 +1171,7 @@ namespace VoxelPlay {
                         VoxelChunk chunk;
                         if (GetChunk (chunkPos, out chunk, createChunkIfNotExists)) {
                             for (int v = voxelIndexMin; v < voxelIndexMax; v++) {
-                                if (chunk.voxels [v].opaque >= minOpaque && (hasContents == -1 || chunk.voxels [v].hasContent == hasContents)) {
+                                if (chunk.voxels [v].opaque >= minOpaque && (hasContent == -1 || chunk.voxels [v].hasContent == mustHaveContent)) {
                                     int py = v / ONE_Y_ROW;
                                     voxelPosition.y = chunk.position.y - CHUNK_HALF_SIZE + 0.5 + py;
                                     int pz = (v / ONE_Z_ROW) & CHUNK_SIZE_MINUS_ONE;
@@ -1256,8 +1270,8 @@ namespace VoxelPlay {
         /// <param name="radius">Radius of the sphere.</param>
         /// <param name="indices">A list of indices provided by the user to write to.</param>
         /// <param name="minOpaque">Minimum opaque value for a voxel to be considered. Water has opaque = 2, cutout = 3, grass = 0, solid = 15.</param>
-        /// <param name="hasContents">Defaults to 1 which will return existing voxels. Pass a 0 to retrieve positions without voxels.</param>
-        public int GetVoxelIndices (Vector3d center, float radius, List<VoxelIndex> indices, byte minOpaque = 0, byte hasContents = 1)
+        /// <param name="mustHaveContent">Defaults to true which will return existing voxels. Pass false to retrieve positions without voxels.</param>
+        public int GetVoxelIndices (Vector3d center, float radius, List<VoxelIndex> indices, byte minOpaque = 0, bool mustHaveContent = true)
         {
             Vector3d chunkPos, voxelPosition;
             VoxelIndex index = new VoxelIndex ();
@@ -1272,7 +1286,7 @@ namespace VoxelPlay {
             Vector3d chunkMaxPos = GetChunkPosition (boxMax);
             double radiusSqr = radius * radius;
 
-            if (hasContents == 0)
+            if (!mustHaveContent)
                 minOpaque = 0;
 
             for (double y = chunkMinPos.y; y <= chunkMaxPos.y; y += CHUNK_SIZE) {
@@ -1291,6 +1305,7 @@ namespace VoxelPlay {
                         voxelIndexMax = optimalMax;
                     }
                 }
+
                 for (double z = chunkMinPos.z; z <= chunkMaxPos.z; z += CHUNK_SIZE) {
                     chunkPos.z = z;
                     for (double x = chunkMinPos.x; x <= chunkMaxPos.x; x += CHUNK_SIZE) {
@@ -1298,7 +1313,7 @@ namespace VoxelPlay {
                         VoxelChunk chunk;
                         if (GetChunk (chunkPos, out chunk, false)) {
                             for (int v = voxelIndexMin; v < voxelIndexMax; v++) {
-                                if (chunk.voxels [v].hasContent == hasContents && chunk.voxels [v].opaque >= minOpaque) {
+                                if (chunk.voxels [v].hasContent == mustHaveContent && chunk.voxels [v].opaque >= minOpaque) {
                                     int py = v / ONE_Y_ROW;
                                     voxelPosition.y = chunk.position.y - CHUNK_HALF_SIZE + 0.5f + py;
                                     int pz = (v / ONE_Z_ROW) & CHUNK_SIZE_MINUS_ONE;
@@ -1479,7 +1494,7 @@ namespace VoxelPlay {
                                         if (wx < minX || wx > maxX)
                                             continue;
                                         int mx = wx - minX;
-                                        if (voxels [my, mz, mx].hasContent == 1 || !ignoreEmptyVoxels) {
+                                        if (voxels [my, mz, mx].hasContent || !ignoreEmptyVoxels) {
                                             chunk.voxels [voxelIndex] = voxels [my, mz, mx];
                                         }
                                     }
@@ -1904,7 +1919,7 @@ namespace VoxelPlay {
         /// <param name="voxelIndex">Voxel index.</param>
         public bool GetVoxelVisibility (VoxelChunk chunk, int voxelIndex)
         {
-            if ((object)chunk == null || chunk.voxels [voxelIndex].hasContent != 1)
+            if ((object)chunk == null || chunk.voxels [voxelIndex].isEmpty)
                 return false;
 
             GetVoxelChunkCoordinates (voxelIndex, out int px, out int py, out int pz);
@@ -1959,7 +1974,7 @@ namespace VoxelPlay {
                         return true;
                 }
                 int otherIndex = GetVoxelIndex (ox, oy, oz);
-                if (otherChunk.voxels [otherIndex].hasContent != 1)
+                if (otherChunk.voxels [otherIndex].isEmpty)
                     return true;
             }
 
@@ -1974,12 +1989,20 @@ namespace VoxelPlay {
         public void ChunkRedraw (VoxelChunk chunk, bool includeNeighbours = false, bool refreshLightmap = true, bool refreshMesh = true)
         {
             if (includeNeighbours) {
-                RefreshNineChunks (chunk, refreshMesh, refreshLightmap);
+                RefreshNeighbourhood (chunk, refreshMesh, refreshLightmap);
             } else {
                 ChunkRequestRefresh (chunk, refreshLightmap, refreshMesh);
             }
         }
 
+        /// <summary>
+        /// Requests a refresh of neighbours of a given chunk.
+        /// </summary>
+        public void ChunkRedrawNeighbours(VoxelChunk chunk, bool refreshLightmap = false, bool refreshMesh = true)
+        {
+            RefreshNeighbourhood(chunk, refreshLightmap, refreshMesh, true);
+
+        }
 
         /// <summary>
         /// Requests a global refresh of chunks within visible distance
@@ -2424,7 +2447,7 @@ namespace VoxelPlay {
             int voxelIndex;
             int count = positions.Count;
 
-            List<VoxelChunk> updatedChunks = chunkPool.Get ();
+            List<VoxelChunk> updatedChunks = BufferPool<VoxelChunk>.Get ();
             modificationTag++;
 
             if (voxelType == null) {
@@ -2468,7 +2491,7 @@ namespace VoxelPlay {
                 modifiedChunks.AddRange (updatedChunks);
             }
 
-            chunkPool.Release (updatedChunks);
+            BufferPool<VoxelChunk>.Release (updatedChunks);
         }
 
 
@@ -2484,7 +2507,7 @@ namespace VoxelPlay {
         {
             int count = indices.Count;
 
-            List<VoxelChunk> updatedChunks = chunkPool.Get ();
+            List<VoxelChunk> updatedChunks = BufferPool<VoxelChunk>.Get ();
             modificationTag++;
 
             if (voxelType == null) {
@@ -2514,7 +2537,7 @@ namespace VoxelPlay {
                 modifiedChunks.AddRange (updatedChunks);
             }
 
-            chunkPool.Release (updatedChunks);
+            BufferPool<VoxelChunk>.Release (updatedChunks);
         }
 
 
@@ -2541,10 +2564,10 @@ namespace VoxelPlay {
         /// <param name="modifiedChunks">Optionally return the list of modified chunks</param>
         public void VoxelPlace (Vector3d boxMin, Vector3d boxMax, VoxelDefinition voxelType, Color tintColor, List<VoxelChunk> modifiedChunks = null)
         {
-            List<VoxelIndex> tempVoxelIndices = indexPool.Get ();
+            List<VoxelIndex> tempVoxelIndices = BufferPool<VoxelIndex>.Get ();
             GetVoxelIndices (boxMin, boxMax, tempVoxelIndices, 0, -1);
             VoxelPlace (tempVoxelIndices, voxelType, tintColor, modifiedChunks);
-            indexPool.Release (tempVoxelIndices);
+            BufferPool<VoxelIndex>.Release (tempVoxelIndices);
         }
 
 
@@ -2594,23 +2617,24 @@ namespace VoxelPlay {
             if (hitInfo.point == lastHighlightInfo.point) return true;
             lastHighlightInfo = hitInfo;
 
-            Material mat;
             if (voxelHighlightGO == null) {
                 voxelHighlightGO = Instantiate (Resources.Load<GameObject> ("VoxelPlay/Prefabs/VoxelHighlightEdges"));
-                Renderer renderer = voxelHighlightGO.GetComponent<Renderer> ();
-                mat = Instantiate (renderer.sharedMaterial); // instantiates material to avoid changing resource
-                renderer.sharedMaterial = mat;
+                if (voxelHighlightMaterial == null) {
+                    Renderer renderer = voxelHighlightGO.GetComponent<Renderer>();
+                    voxelHighlightMaterial = Instantiate(renderer.sharedMaterial); // instantiates material to avoid changing resource
+                    renderer.sharedMaterial = voxelHighlightMaterial;
+                }
                 voxelHighlight = voxelHighlightGO.GetComponent<VoxelHighlight>();
                 if (voxelHighlight == null)
                 {
                     voxelHighlight = voxelHighlightGO.AddComponent<VoxelHighlight>();
                 }
             } else {
-                mat = voxelHighlightGO.GetComponent<Renderer> ().sharedMaterial;
+                voxelHighlightMaterial = voxelHighlightGO.GetComponent<Renderer> ().sharedMaterial;
             }
-            mat.color = color;
+            voxelHighlightMaterial.color = color;
             if (edgeWidth > 0f) {
-                mat.SetFloat (ShaderParams.Width, 1f / edgeWidth);
+                voxelHighlightMaterial.SetFloat (ShaderParams.Width, 1f / edgeWidth);
             }
             Transform ht = voxelHighlightGO.transform;
 
@@ -2691,8 +2715,8 @@ namespace VoxelPlay {
                     }
                 }
             }
-            if (voxelDefinitions[hitInfo.voxel.type()] != null) {
-                ht.localPosition += voxelDefinitions[hitInfo.voxel.type()].highlightOffset;
+            if (hitInfo.voxel.type != null) {
+                ht.localPosition += hitInfo.voxel.type.highlightOffset;
             }
             voxelHighlight.SetActive (true);
             return true;
@@ -2720,7 +2744,7 @@ namespace VoxelPlay {
         {
             VoxelChunk chunk;
             int voxelIndex;
-            if (!GetVoxelIndex (position, out chunk, out voxelIndex, false) || chunk.voxels [voxelIndex].hasContent != 1)
+            if (!GetVoxelIndex (position, out chunk, out voxelIndex, false) || chunk.voxels [voxelIndex].isEmpty)
                 return false;
             bool impact = HitVoxelFast (position, Misc.vector3down, damage, out _, 1, 1, false, playSound);
             return impact;
@@ -2824,7 +2848,7 @@ namespace VoxelPlay {
         {
             if ((object)chunk == null)
                 return false;
-            if (chunk.voxels [voxelIndex].hasContent == 1) {
+            if (chunk.voxels [voxelIndex].hasContent) {
                 VoxelDestroyFast (chunk, voxelIndex);
                 return true;
             }
@@ -2842,7 +2866,7 @@ namespace VoxelPlay {
             if (!GetVoxelIndex (position, out VoxelChunk chunk, out int voxelIndex, createChunkIfNotExists)) {
                 return false;
             }
-            if (chunk.voxels [voxelIndex].hasContent == 1) {
+            if (chunk.voxels [voxelIndex].hasContent) {
                 VoxelDestroyFast (chunk, voxelIndex);
                 return true;
             }
@@ -2859,7 +2883,7 @@ namespace VoxelPlay {
         /// <param name="consolidateDelay">If consolidateDelay is greater than 0, collapsed voxels will be either destroyed or converted back to normal voxels after 'duration' in seconds.</param>
         public void VoxelCollapse (Vector3d position, int amount, List<VoxelIndex> voxelIndices = null, float consolidateDelay = 0)
         {
-            List<VoxelIndex> tempVoxelIndices = indexPool.Get ();
+            List<VoxelIndex> tempVoxelIndices = BufferPool<VoxelIndex>.Get ();
             int count = GetCrumblyVoxelIndices (position, amount, tempVoxelIndices);
 
             if (voxelIndices != null) {
@@ -2872,7 +2896,7 @@ namespace VoxelPlay {
             if (captureEvents && OnVoxelCollapse != null) {
                 OnVoxelCollapse (tempVoxelIndices);
             }
-            indexPool.Release (tempVoxelIndices);
+            BufferPool<VoxelIndex>.Release (tempVoxelIndices);
         }
 
         /// <summary>
@@ -2903,7 +2927,7 @@ namespace VoxelPlay {
         {
 
             // If no voxel there cancel
-            if ((object)chunk == null || chunk.voxels [voxelIndex].hasContent != 1)
+            if ((object)chunk == null || chunk.voxels [voxelIndex].isEmpty)
                 return false;
 
             // If it a dynamic voxel?
@@ -2940,11 +2964,10 @@ namespace VoxelPlay {
                 return false;
 
             int voxelIndex = placeholder.voxelIndex;
-            if (voxelIndex < 0 || chunk.voxels [voxelIndex].hasContent != 1)
+            if (voxelIndex < 0 || chunk.voxels [voxelIndex].isEmpty)
                 return false;
 
-            // TODO switched to non-static, may cause issues
-            VoxelDefinition voxelType = voxelDefinitions[chunk.voxels [voxelIndex].type()].dynamicDefinition;
+            VoxelDefinition voxelType = chunk.voxels [voxelIndex].type.staticDefinition;
             if (voxelType != null) {
                 Color voxelColor = chunk.voxels [voxelIndex].color;
                 Vector3d targetPosition = placeholder.transform.position;
@@ -2996,7 +3019,7 @@ namespace VoxelPlay {
         public void VoxelGetDynamic (List<VoxelIndex> voxelIndices, bool addRigidbody = false, float duration = 0)
         {
 
-            List<VoxelChunk> tempChunks = chunkPool.Get ();
+            List<VoxelChunk> tempChunks = BufferPool<VoxelChunk>.Get ();
             modificationTag++;
 
             int count = voxelIndices.Count;
@@ -3015,7 +3038,7 @@ namespace VoxelPlay {
             ChunkRequestRefresh (tempChunks, false, true);
             RegisterChunkChanges (tempChunks);
 
-            chunkPool.Release (tempChunks);
+            BufferPool<VoxelChunk>.Release (tempChunks);
         }
 
 
@@ -3047,7 +3070,7 @@ namespace VoxelPlay {
         public GameObject VoxelGetDynamic (VoxelChunk chunk, int voxelIndex, bool addRigidbody = false, float duration = 0)
         {
 
-            if ((object)chunk == null || chunk.voxels [voxelIndex].hasContent == 0)
+            if ((object)chunk == null || chunk.voxels [voxelIndex].isEmpty)
                 return null;
 
             VoxelDefinition vd = voxelDefinitions [chunk.voxels [voxelIndex].typeIndex];
@@ -3328,7 +3351,7 @@ namespace VoxelPlay {
             if (placeholder != null) {
                 return placeholder.resistancePointsLeft;
             } else {
-                return chunk.voxels [voxelIndex].hasContent == 1 ? voxelDefinitions[chunk.voxels [voxelIndex].type()].resistancePoints : 0;
+                return chunk.voxels [voxelIndex].hasContent ? chunk.voxels [voxelIndex].type.resistancePoints : 0;
             }
         }
 
@@ -3587,7 +3610,7 @@ namespace VoxelPlay {
                 return 1f;
             }
 
-            if (GetVoxelIndex (position, out chunk, out voxelIndex, false) && !chunk.needsLightmapRebuild) {
+            if (GetVoxelIndex(position, out chunk, out voxelIndex, false) && !chunk.needsLightmapRebuild) {
                 if (chunk.voxels [voxelIndex].lightOrTorch != 0 || chunk.voxels [voxelIndex].opaque < FULL_OPAQUE) {
                     return chunk.voxels [voxelIndex].lightOrTorch / 15f;
                 }
@@ -3723,7 +3746,7 @@ namespace VoxelPlay {
                 placeholder.chunk = chunk;
                 placeholder.voxelIndex = voxelIndex;
                 placeholder.bounds = Misc.bounds1;
-                if (chunk.voxels [voxelIndex].hasContent == 1) {
+                if (chunk.voxels [voxelIndex].hasContent) {
                     placeholder.resistancePointsLeft = voxelDefinitions [chunk.voxels [voxelIndex].typeIndex].resistancePoints;
                     VoxelDefinition voxelDefinition = voxelDefinitions [chunk.voxels [voxelIndex].typeIndex];
 
@@ -3807,7 +3830,7 @@ namespace VoxelPlay {
             CheckEditorTintColor ();
 #endif
 
-            List<VoxelChunk> updatedChunks = chunkPool.Get ();
+            List<VoxelChunk> updatedChunks = BufferPool<VoxelChunk>.Get ();
             modificationTag++;
 
             Vector3d pos;
@@ -3839,7 +3862,7 @@ namespace VoxelPlay {
             }
 
             RegisterChunkChanges (updatedChunks);
-            chunkPool.Release (updatedChunks);
+            BufferPool<VoxelChunk>.Release (updatedChunks);
 
             Boundsd bounds = new Boundsd (new Vector3d (position.x, position.y + maxY / 2, position.z), new Vector3 (maxX + 2, maxY + 2, maxZ + 2));
             ChunkRequestRefresh (bounds, true, true);
@@ -3871,7 +3894,7 @@ namespace VoxelPlay {
                 }
             }
 
-            List<VoxelChunk> updatedChunks = chunkPool.Get ();
+            List<VoxelChunk> updatedChunks = BufferPool<VoxelChunk>.Get ();
             modificationTag++;
 
             for (int y = 0; y < maxY; y++) {
@@ -3924,7 +3947,7 @@ namespace VoxelPlay {
             }
 
             RegisterChunkChanges (updatedChunks);
-            chunkPool.Release (updatedChunks);
+            BufferPool<VoxelChunk>.Release (updatedChunks);
 
             Boundsd bounds = new Boundsd (new Vector3d (position.x, position.y + maxY / 2, position.z), new Vector3 (maxX + 2, maxY + 2, maxZ + 2));
             ChunkRequestRefresh (bounds, true, true);
@@ -3946,7 +3969,7 @@ namespace VoxelPlay {
             int halfZ = maxZ / 2;
             int halfX = maxX / 2;
 
-            List<VoxelChunk> updatedChunks = chunkPool.Get ();
+            List<VoxelChunk> updatedChunks = BufferPool<VoxelChunk>.Get ();
             modificationTag++;
 
             for (int y = 0; y < maxY; y++) {
@@ -3954,7 +3977,7 @@ namespace VoxelPlay {
                 for (int z = 0; z < maxZ; z++) {
                     pos.z = position.z + z - halfZ;
                     for (int x = 0; x < maxX; x++) {
-                        if (voxels [y, z, x].hasContent == 0) continue;
+                        if (voxels [y, z, x].isEmpty) continue;
                         pos.x = position.x + x - halfX;
                         if (useUnpopulatedChunks) {
                             GetChunkUnpopulated (pos);
@@ -3971,7 +3994,7 @@ namespace VoxelPlay {
             }
 
             RegisterChunkChanges (updatedChunks);
-            chunkPool.Release (updatedChunks);
+            BufferPool<VoxelChunk>.Release (updatedChunks);
 
             Boundsd bounds = new Boundsd (new Vector3d (position.x, position.y + maxY / 2, position.z), new Vector3 (maxX + 2, maxY + 2, maxZ + 2));
             ChunkRequestRefresh (bounds, true, true);
@@ -4002,7 +4025,7 @@ namespace VoxelPlay {
                 }
             }
             RegisterChunkChanges (chunk);
-            RefreshNineChunks (chunk);
+            RefreshNeighbourhood (chunk);
         }
 
         /// <summary>
@@ -4013,7 +4036,8 @@ namespace VoxelPlay {
         /// <param name="rotationDegrees">0, 90, 180 or 270 degree rotation. A value of 360 means random rotation.</param>
         /// <param name="colorBrightness">Optionally pass a color brightness value. This value is multiplied by the voxel color.</param>
         /// <param name="fitTerrain">If set to true, vegetation and trees are prevented and some space is flattened around the model.</param>
-        public void ModelPlace (Vector3d position, ModelDefinition model, float buildDuration, int rotationDegrees = 0, float colorBrightness = 1f, bool fitTerrain = false, VoxelPlayModelBuildEvent callback = null)
+        /// <param name="callback">User defined function called when the model has finished building in the scene.</param>
+        public void ModelPlace (Vector3d position, ModelDefinition model, float buildDuration, int rotationDegrees = 0, float colorBrightness = 1f, bool fitTerrain = false, VoxelModelBuildEndEvent callback = null)
         {
             if (buildDuration <= 0) {
                 ModelPlace (position, model, rotationDegrees, colorBrightness, fitTerrain);
@@ -4049,6 +4073,14 @@ namespace VoxelPlay {
         /// <param name="indices">Optional user-provided list. If provided, it will contain the indices and positions of all visible voxels in the model</param>
         public void ModelPlace (Vector3d position, ModelDefinition model, out Boundsd bounds, int rotationDegrees = 0, float colorBrightness = 1f, bool fitTerrain = false, List<VoxelIndex> indices = null)
         {
+            if (OnModelBuildStart != null) {
+                OnModelBuildStart(model, position, out bool cancel);
+                if (cancel) {
+                    bounds = Boundsd.empty;
+                    return;
+                }
+            }
+
             Boundsd dummyBounds = Boundsd.empty;
             int rotation;
             if (rotationDegrees == 360)
@@ -4082,7 +4114,7 @@ namespace VoxelPlay {
             for (int k = 0; k < model.bits.Length; k++) {
                 int voxelIndex = model.bits [k].voxelIndex;
                 if (!model.bits [k].isEmpty) {
-                    voxels [voxelIndex].hasContent = 1;
+                    voxels [voxelIndex].isEmpty = false;
                 }
             }
 
@@ -4096,7 +4128,7 @@ namespace VoxelPlay {
                     int maxy = sy;
                     for (int y = 0; y < sy; y++) {
                         int voxelIndex = y * sz * sx + z * sx + x;
-                        if (voxels [voxelIndex].hasContent == 1) {
+                        if (voxels [voxelIndex].isEmpty) {
                             if (miny < 0)
                                 miny = y;
                             else
@@ -4108,7 +4140,7 @@ namespace VoxelPlay {
                         maxy--;
                         for (int y = miny; y < maxy; y++) {
                             int voxelIndex = y * sz * sx + z * sx + x;
-                            if (voxels [voxelIndex].hasContent != 1) {
+                            if (voxels [voxelIndex].isEmpty) {
                                 empty.voxelIndex = voxelIndex;
                                 newBits.Add (empty);
                             }
@@ -4135,6 +4167,48 @@ namespace VoxelPlay {
         public GameObject ModelCreateGameObject (ModelDefinition modelDefinition, Vector3 offset, Vector3 scale)
         {
             return VoxelPlayConverter.GenerateVoxelObject (modelDefinition, offset, scale);
+        }
+
+
+        /// <summary>
+        /// Captures a portion of the world and creates a model definition with those contents
+        /// </summary>
+        /// <returns>The model definition containing the world contents in a given boundary</returns>
+        public ModelDefinition ModelWorldCapture(Bounds bounds) {
+
+            if (bounds.size.x < 1 || bounds.size.y < 1 || bounds.size.z < 1) return null;
+
+            ModelDefinition md = ScriptableObject.CreateInstance<ModelDefinition>();
+            int sizeX = (int)bounds.size.x;
+            int sizeY = (int)bounds.size.y;
+            int sizeZ = (int)bounds.size.z;
+            md.sizeX = sizeX;
+            md.sizeY = sizeY;
+            md.sizeZ = sizeZ;
+            ModelBit bit = new ModelBit();
+            Vector3 min = bounds.min;
+            List<ModelBit> bits =  BufferPool<ModelBit>.Get();
+            for (int y = 0; y < sizeY; y++) {
+                for (int z = 0; z < sizeZ; z++) {
+                    for (int x = 0; x < sizeX; x++) {
+                        Vector3 pos = new Vector3(min.x + x, min.y + y, min.z + z);
+                        if (!GetVoxelIndex(pos, out VoxelChunk chunk, out int voxelIndex, false)) continue;
+                        if (chunk.voxels[voxelIndex].hasContent) {
+                            VoxelDefinition vd = chunk.voxels[voxelIndex].type;
+                            if (!vd.isDynamic) {
+                                bit.voxelIndex = y * sizeZ * sizeX + z * sizeX + x;
+                                bit.voxelDefinition = vd;
+                                bit.color = chunk.voxels[voxelIndex].color;
+                                bit.rotation = chunk.voxels[voxelIndex].GetTextureRotationDegrees();
+                                bits.Add(bit);
+                            }
+                        }
+                    }
+                }
+            }
+            md.bits = bits.ToArray();
+            BufferPool<ModelBit>.Release(bits);
+            return md;
         }
 
 
@@ -4171,6 +4245,9 @@ namespace VoxelPlay {
         /// </summary>
         public void ReloadTextures ()
         {
+            // reset texture providers
+            DisposeTextures();
+            InitRenderingMaterials();
             LoadWorldTextures ();
         }
 
@@ -4214,18 +4291,16 @@ namespace VoxelPlay {
         /// <param name="txt">Text.</param>
         public void ShowMessage (string txt, float displayDuration = 4, bool flashEffect = false, bool openConsole = false, bool allowDuplicatedMessage = false, string colorName = null)
         {
-            // todo restore later if needed
-            //return;
-            //if (!allowDuplicatedMessage && lastMessage == txt)
-            //    return;
-            //lastMessage = txt;
-            //
-            //ExecuteInMainThread (delegate () {
-            //    if (!string.IsNullOrEmpty(colorName)) {
-            //         txt = "<color=" + colorName + ">" + txt + "</color>";
-            //    }
-            //    VoxelPlayUI.instance.AddMessage (txt, displayDuration, flashEffect, openConsole);
-            //});
+            if (!allowDuplicatedMessage && lastMessage == txt)
+                return;
+            lastMessage = txt;
+
+            ExecuteInMainThread (delegate () {
+                if (!string.IsNullOrEmpty(colorName)) {
+                     txt = "<color=" + colorName + ">" + txt + "</color>";
+                }
+                VoxelPlayUI.instance.AddMessage (txt, displayDuration, flashEffect, openConsole);
+            });
         }
 
         /// <summary>

@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using System;
 using Random = UnityEngine.Random;
-using UnityEngine.SceneManagement;
 
 //#define DEBUG_RAYCAST
 
@@ -209,8 +208,7 @@ namespace VoxelPlay
                         hitInfo.voxel = placeholder.chunk.voxels [placeholder.voxelIndex];
                         hitInfo.voxelCenter = placeholder.transform.position;
                         hitInfo.placeholder = placeholder;
-
-                        if (voxelDefinitions[hitInfo.voxel.type()].ignoresRayCast) return false;
+                        if (hitInfo.voxel.type.ignoresRayCast) return false;
                     }
                     return true;
                 }
@@ -326,7 +324,7 @@ namespace VoxelPlay
                         }
 
                         int voxelIndex = py * ONE_Y_ROW + pz * ONE_Z_ROW + px;
-                        if (voxels [voxelIndex].hasContent == 1 && (minOpaque == 255 || voxels [voxelIndex].opaque >= minOpaque) && !VoxelIsHidden (chunk, voxelIndex)) {
+                        if (voxels [voxelIndex].typeIndex > Voxel.HoleTypeIndex && (minOpaque == 255 || voxels [voxelIndex].opaque >= minOpaque) && !VoxelIsHidden (chunk, voxelIndex)) {
 
                             VoxelDefinition vd = voxelDefinitions [voxels [voxelIndex].typeIndex];
                             VoxelPlaceholder placeholder = null;
@@ -571,7 +569,7 @@ namespace VoxelPlay
                         }
 
                         int voxelIndex = py * ONE_Y_ROW + pz * ONE_Z_ROW + px;
-                        if (voxels [voxelIndex].hasContent == 1 && (minOpaque == 255 || voxels [voxelIndex].opaque >= minOpaque)) {
+                        if ((minOpaque == 255 || voxels [voxelIndex].opaque >= minOpaque) && voxels[voxelIndex].typeIndex > Voxel.HoleTypeIndex) {
                             if (startIndex >= indices.Length) {
                                 chunkCount = int.MaxValue;
                                 break;
@@ -823,7 +821,7 @@ namespace VoxelPlay
             }
 
             int damagedCount = 0;
-            List<VoxelIndex> tempVoxelIndicesDamageArea = indexPool.Get ();
+            List<VoxelIndex> tempVoxelIndicesDamageArea = BufferPool<VoxelIndex>.Get ();
             VoxelHitInfo hitInfo = new VoxelHitInfo ();
             GetVoxelIndices (origin, damageRadius, tempVoxelIndicesDamageArea);
             if (captureEvents && OnVoxelBeforeAreaDamage != null) {
@@ -862,7 +860,7 @@ namespace VoxelPlay
                 }
             }
 
-            indexPool.Release (tempVoxelIndicesDamageArea);
+            BufferPool<VoxelIndex>.Release (tempVoxelIndicesDamageArea);
             if (captureEvents && OnVoxelAfterAreaDamage != null) {
                 OnVoxelAfterAreaDamage (results);
             }
@@ -893,7 +891,7 @@ namespace VoxelPlay
                     damage = 0;
                 } else if (voxelTypeResistancePoints == (byte)255) {
                     if (playSound) {
-                        PlayImpactSound (voxelDefinitions[hitInfo.voxel.type()].impactSound, hitInfo.voxelCenter);
+                        PlayImpactSound (hitInfo.voxel.type.impactSound, hitInfo.voxelCenter);
                     }
                     damage = 0;
                 }
@@ -929,20 +927,22 @@ namespace VoxelPlay
                 addParticles = false;
 
             int particlesAmount;
-            float voxelLight;
+            int voxelLight;
 
             if (destroyed) {
 
                 // Add recoverable voxel on the scene (not for vegetation)
                 if (canAddRecoverableVoxel) {
-                    if (voxelType.renderType != RenderType.Invisible && voxelType.renderType != RenderType.CutoutCross && voxelType.canBeCollected && !buildMode) {
-                        bool create = true;
+                    if (voxelType.renderType != RenderType.Invisible && voxelType.canBeCollected && !buildMode) {
+                        if (Random.value <= voxelType.dropProbability) {
+                            bool create = true;
 
-                        if (captureEvents && OnVoxelBeforeDropItem != null) {
-                            OnVoxelBeforeDropItem (chunk, hitInfo, out create);
-                        }
-                        if (create) {
-                            CreateRecoverableVoxel (hitInfo.voxelCenter, voxelType, hitInfo.voxel.color);
+                            if (captureEvents && OnVoxelBeforeDropItem != null) {
+                                OnVoxelBeforeDropItem(chunk, hitInfo, out create);
+                            }
+                            if (create) {
+                                CreateRecoverableVoxel(hitInfo.voxelCenter, voxelType, hitInfo.voxel.color);
+                            }
                         }
                     }
                 }
@@ -969,12 +969,12 @@ namespace VoxelPlay
                 }
 
                 // Gets light at the destroyed voxel position
-                voxelLight = GetVoxelLight (hitInfo.voxelCenter);
+                voxelLight = GetVoxelLightPacked (hitInfo.voxelCenter);
 
             } else {
 
-                // Gets ambient light near surface
-                voxelLight = GetVoxelLight (hitInfo.point + hitInfo.normal * 0.5f);
+                // Gets voxel light near surface
+                voxelLight = GetVoxelLightPacked(hitInfo.point + hitInfo.normal * 0.5f);
 
                 // Add damage indicator
                 float lifePerc = (float)resistancePointsLeft / voxelTypeResistancePoints;
@@ -1007,7 +1007,7 @@ namespace VoxelPlay
                         }
                         Material mi = placeholder.damageIndicatorMaterial; // gets a copy of material the first time it's used
                         mi.mainTexture = world.voxelDamageTextures [textureIndex];
-                        mi.SetFloat (ShaderParams.VoxelLight, voxelLight);
+                        mi.SetInt (ShaderParams.VoxelLight, voxelLight);
                         placeholder.damageIndicator.enabled = true;
                     }
                 }
@@ -1058,7 +1058,7 @@ namespace VoxelPlay
                     SetParticleMaterialTextures (instanceMat, voxelType, hitInfo.voxel.color, true);
                     instanceMat.mainTextureOffset = new Vector2 (Random.value, Random.value);
                     instanceMat.mainTextureScale = new Vector2 (0.05f, 0.05f);
-                    instanceMat.SetFloat (ShaderParams.VoxelLight, voxelLight);
+                    instanceMat.SetInt (ShaderParams.VoxelLight, voxelLight);
                     instanceMat.SetFloat (ShaderParams.FlashDelay, 0);
 
                     // Set position
@@ -1114,7 +1114,7 @@ namespace VoxelPlay
         {
             if (materialVoxelDefinition == null) {
                 Voxel voxel = GetVoxel (position, false);
-                materialVoxelDefinition = voxelDefinitions[voxel.type()];
+                materialVoxelDefinition = voxel.type;
             }
 
             // Add random particles
@@ -1147,8 +1147,8 @@ namespace VoxelPlay
                 SetParticleMaterialTextures (instanceMat, materialVoxelDefinition, tintColor, true);
                 instanceMat.mainTextureOffset = new Vector2 (Random.value, Random.value);
                 instanceMat.mainTextureScale = new Vector2 (0.05f, 0.05f);
-                float voxelLight = GetVoxelLight (position);
-                instanceMat.SetFloat (ShaderParams.VoxelLight, voxelLight);
+                int voxelLight = GetVoxelLightPacked (position);
+                instanceMat.SetInt (ShaderParams.VoxelLight, voxelLight);
                 instanceMat.SetFloat (ShaderParams.FlashDelay, 0);
 
                 // Set position
@@ -1235,7 +1235,7 @@ namespace VoxelPlay
                 int pz = (int)(position.z - z * CHUNK_SIZE);
                 int px = (int)(position.x - x * CHUNK_SIZE);
                 int voxelIndex = py * ONE_Y_ROW + pz * ONE_Z_ROW + px;
-                bool collision = voxels[voxelIndex].hasContent == 1 && voxelDefinitions[voxels[voxelIndex].typeIndex].isSolid;
+                bool collision = voxels[voxelIndex].typeIndex > Voxel.HoleTypeIndex && voxelDefinitions[voxels[voxelIndex].typeIndex].isSolid;
                 return collision;
             }
             return false;

@@ -22,7 +22,7 @@ namespace VoxelPlayDemos {
 		int modelHeight = 32;
 
 		void Start() {
-			env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+			env = VoxelPlayEnvironment.instance;
 
 			// Position player on the scene and setup orbit parameters
 			fps = (VoxelPlayFirstPersonController)env.characterController;

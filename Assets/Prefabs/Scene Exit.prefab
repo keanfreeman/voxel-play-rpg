@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8818392679192372325}
   - component: {fileID: 2401984097205628062}
-  - component: {fileID: 1571170600660790278}
-  - component: {fileID: 3479795437378801096}
+  - component: {fileID: 227327454965721367}
+  - component: {fileID: 6946929124381226340}
   m_Layer: 0
   m_Name: Scene Exit
   m_TagString: Untagged
@@ -42,20 +42,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 440023488360116698}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &1571170600660790278
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 440023488360116698}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0.5, y: 0.5, z: 0.5}
---- !u!114 &3479795437378801096
+--- !u!114 &227327454965721367
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -67,3 +54,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c997bd00b1c15e4891dd64156dd3c47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &6946929124381226340
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 440023488360116698}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 0.5, z: 0.5}
+  m_Center: {x: 0.5, y: 0.5, z: 0.5}

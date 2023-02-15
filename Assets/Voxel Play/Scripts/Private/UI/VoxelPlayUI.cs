@@ -20,7 +20,7 @@ namespace VoxelPlay {
             _instance = FindObjectOfType<VoxelPlayUI> ();
             if (_instance != null) return;
 
-            VoxelPlayEnvironment env = null;
+            VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
             if (env == null) return;
 
             if (env.UICanvasPrefab == null) {

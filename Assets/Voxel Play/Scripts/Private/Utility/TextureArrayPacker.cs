@@ -190,7 +190,7 @@ namespace VoxelPlay {
             }
             defaultPinkColors = new Color32[len];
             Color32 color = new Color32(255, 0, 0x80, 255);
-            defaultPinkColors.Fill<Color32>(color);
+            defaultPinkColors.Fill(color);
             return defaultPinkColors;
         }
 
@@ -202,7 +202,7 @@ namespace VoxelPlay {
             }
             defaultMapColors = new Color32[len];
             Color32 color = new Color32(0, 0, 255, 255);
-            defaultMapColors.Fill<Color32>(color);
+            defaultMapColors.Fill(color);
             return defaultMapColors;
         }
 

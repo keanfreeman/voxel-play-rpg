@@ -116,8 +116,7 @@ namespace VoxelPlay
             float time = Time.time;
             if (time >= recoveryTime) {
                 if (chunk != null && chunk.voxels [voxelIndex].typeIndex != 0) {
-                    VoxelPlayEnvironment env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
-                    resistancePointsLeft = env.voxelDefinitions[chunk.voxels [voxelIndex].type()].resistancePoints;
+                    resistancePointsLeft = chunk.voxels [voxelIndex].type.resistancePoints;
                 }
                 if (damageIndicator != null) {
                     damageIndicator.enabled = false;
@@ -139,7 +138,7 @@ namespace VoxelPlay
         }
 
         public void CancelDynamicNow() {
-            VoxelPlayEnvironment env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+            VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
             if (env == null || gameObject.Equals(null))
                 return;
             env.VoxelCancelDynamic(this);
@@ -148,7 +147,7 @@ namespace VoxelPlay
         IEnumerator Consolidate ()
         {
             WaitForSeconds w = new WaitForSeconds (1f);
-            VoxelPlayEnvironment env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+            VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
             if (env == null || gameObject.Equals (null))
                 yield break;
             if (env.GetChunk (transform.position, out VoxelChunk targetChunk, false)) {

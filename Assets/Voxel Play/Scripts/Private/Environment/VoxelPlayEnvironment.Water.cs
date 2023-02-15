@@ -165,7 +165,7 @@ namespace VoxelPlay
             if (waterLevel == 0) {
                 chunk.voxels [voxelIndex].Clear (chunk.voxels [voxelIndex].light);
             } else {
-                if (chunk.voxels [voxelIndex].hasContent != 1 || vd.spreadReplaceThreshold > chunk.voxels [voxelIndex].opaque) {
+                if (chunk.voxels [voxelIndex].typeIndex <= Voxel.HoleTypeIndex || vd.spreadReplaceThreshold > chunk.voxels [voxelIndex].opaque) {
                     chunk.SetVoxel (voxelIndex, vd);
                 }
                 chunk.voxels [voxelIndex].SetWaterLevel (waterLevel);
@@ -185,7 +185,7 @@ namespace VoxelPlay
         void TryWaterSpread (Vector3d waterPos, int index)
         {
             GetVoxelIndex (waterPos, out VoxelChunk chunk, out int voxelIndex, false);
-            if ((object)chunk == null || chunk.voxels [voxelIndex].hasContent != 1) {
+            if ((object)chunk == null || chunk.voxels [voxelIndex].typeIndex <= Voxel.HoleTypeIndex) {
                 waterFloodSources.RemoveAt (index);
             }
 
@@ -204,12 +204,11 @@ namespace VoxelPlay
             Vector3d down = new Vector3d (waterPos.x, waterPos.y - 1f, waterPos.z);
             if (GetVoxelIndex (down, out otherChunk, out vIndex)) {
                 VoxelDefinition vdOther = voxelDefinitions [otherChunk.voxels [vIndex].typeIndex];
-                bool canFillWithWater = otherChunk.voxels [vIndex].hasContent != 1 || vdOther.renderType == RenderType.CutoutCross || vdOther.renderType == RenderType.Water;
+                bool canFillWithWater = otherChunk.voxels [vIndex].typeIndex <= Voxel.HoleTypeIndex || vdOther.renderType == RenderType.CutoutCross || vdOther.renderType == RenderType.Water;
                 if (canFillWithWater) {
                     int otherWaterLevel = otherChunk.voxels [vIndex].GetWaterLevel ();
                     if (otherWaterLevel < FULL_WATER) {
-                        if (OnVoxelBeforeSpread != null && !OnVoxelBeforeSpread (voxelDefinitions[chunk.voxels[voxelIndex].type()],
-                            down, voxelDefinitions[otherChunk.voxels[vIndex].type()])) {
+                        if (OnVoxelBeforeSpread != null && !OnVoxelBeforeSpread (chunk.voxels [voxelIndex].type, down, otherChunk.voxels [vIndex].type)) {
                             return;
                         }
                         otherWaterLevel++;
@@ -222,7 +221,7 @@ namespace VoxelPlay
                         }
                         AddWaterFloodInt (ref down, waterVoxel);
                         if (OnVoxelAfterSpread != null) {
-                            OnVoxelAfterSpread (voxelDefinitions[chunk.voxels[voxelIndex].type()], down);
+                            OnVoxelAfterSpread (chunk.voxels [voxelIndex].type, down);
                         }
                         return;
                     }
@@ -238,7 +237,7 @@ namespace VoxelPlay
                 otherPos.x = waterPos.x + floodHorizontalOffsets [f];
                 if (GetVoxelIndex (otherPos, out otherChunk, out vIndex, false)) {
                     VoxelDefinition vdOther = voxelDefinitions [otherChunk.voxels [vIndex].typeIndex];
-                    if (otherChunk.voxels [vIndex].hasContent != 1 || vdOther.renderType == RenderType.CutoutCross || vdOther.renderType == RenderType.Water) {
+                    if (otherChunk.voxels [vIndex].typeIndex <= Voxel.HoleTypeIndex || vdOther.renderType == RenderType.CutoutCross || vdOther.renderType == RenderType.Water) {
                         int otherWaterLevel = otherChunk.voxels [vIndex].GetWaterLevel ();
                         if (otherWaterLevel < waterLevel) {
                             leveling = 1;
@@ -248,15 +247,14 @@ namespace VoxelPlay
                                 waterLevel--;
                             }
                             if (waterLevel > 1) {
-                                if (OnVoxelBeforeSpread != null && !OnVoxelBeforeSpread (voxelDefinitions[chunk.voxels[voxelIndex].type()],
-                                        otherPos, voxelDefinitions[otherChunk.voxels[vIndex].type()])) {
+                                if (OnVoxelBeforeSpread != null && !OnVoxelBeforeSpread (chunk.voxels [voxelIndex].type, otherPos, otherChunk.voxels [vIndex].type)) {
                                     continue;
                                 }
                                 otherWaterLevel++;
                                 AddWaterFloodInt (ref otherPos, waterVoxel, waterFloodSources.nodes [index].lifeTime - 1);
                                 WaterUpdateLevelFast (otherChunk, vIndex, otherWaterLevel, waterVoxel);
                                 if (OnVoxelAfterSpread != null) {
-                                    OnVoxelAfterSpread (voxelDefinitions[chunk.voxels[voxelIndex].type()], otherPos);
+                                    OnVoxelAfterSpread (chunk.voxels [voxelIndex].type, otherPos);
                                 }
                             }
                         }
@@ -277,13 +275,12 @@ namespace VoxelPlay
                         }
                         AddWaterFloodInt (ref otherPos, vdOther, waterFloodSources.nodes [index].lifeTime - 1);
                         if (otherWaterLevel > waterLevel + leveling) {
-                            if (OnVoxelBeforeSpread != null && !OnVoxelBeforeSpread (voxelDefinitions[otherChunk.voxels[voxelIndex].type()],
-                                    otherPos, voxelDefinitions[chunk.voxels[voxelIndex].type()])) {
+                            if (OnVoxelBeforeSpread != null && !OnVoxelBeforeSpread (otherChunk.voxels [voxelIndex].type, otherPos, chunk.voxels [voxelIndex].type)) {
                                 continue;
                             }
                             waterLevel++;
                             if (OnVoxelAfterSpread != null) {
-                                OnVoxelAfterSpread (voxelDefinitions[otherChunk.voxels[voxelIndex].type()], otherPos);
+                                OnVoxelAfterSpread (otherChunk.voxels [voxelIndex].type, otherPos);
                             }
                         }
                     }

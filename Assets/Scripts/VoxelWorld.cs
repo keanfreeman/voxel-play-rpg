@@ -33,7 +33,7 @@ public class VoxelWorld
                         continue;
                     }
 
-                    VoxelDefinition type = environment.voxelDefinitions[voxel.type()];
+                    VoxelDefinition type = voxel.type;
                     if (interactableVoxels.interactableVoxels.Contains(type)) {
                         interactableAdjacentVoxels.Add(checkPosition);
                     }

@@ -268,11 +268,8 @@ namespace VoxelPlay {
 			MeshFilter mf = obj.AddComponent<MeshFilter> ();
 			Mesh mesh = GetMesh ();
 			mf.mesh = mesh;
-#if UNITY_2018_3_OR_NEWER
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset (obj, path);
-#else
-            GameObject prefab = PrefabUtility.CreatePrefab (path, obj);
-#endif
+
             // Store packed texture and mesh inside the prefab
             if (cubeShadingStyle != CubeShadingStyle.Color && mat.mainTexture != null) {
 				AssetDatabase.AddObjectToAsset (mat.mainTexture, prefab);
@@ -337,13 +334,13 @@ namespace VoxelPlay {
 				}
 			}
 			if (path == null) {
-				//if (VoxelPlayEnvironment.instance != null) {
-				//	path = AssetDatabase.GetAssetPath (VoxelPlayEnvironment.instance.world);
-				//	path = Path.GetDirectoryName (path) + "/Models";
-				//} else {
-				path = "Assets/ImportedModels";
-                Directory.CreateDirectory (path);
-				//}
+				if (VoxelPlayEnvironment.instance != null) {
+					path = AssetDatabase.GetAssetPath (VoxelPlayEnvironment.instance.world);
+					path = Path.GetDirectoryName (path) + "/Models";
+				} else {
+					path = "Assets/ImportedModels";
+                    Directory.CreateDirectory (path);
+				}
 			}
 
 			return path;

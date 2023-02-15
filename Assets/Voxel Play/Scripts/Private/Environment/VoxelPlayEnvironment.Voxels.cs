@@ -25,6 +25,7 @@ namespace VoxelPlay
         GameObject dynamicVoxelTemplate;
         GameObject defaultVoxelPrefab;
         GameObject voxelHighlightGO;
+        Material voxelHighlightMaterial;
         VoxelHighlight voxelHighlight;
         readonly float [] collapsingOffsets = {
             0, 1, 0,
@@ -59,7 +60,7 @@ namespace VoxelPlay
         {
 
             // Ensure there's content on this position
-            if (chunk.voxels [voxelIndex].hasContent != 1)
+            if (chunk.voxels [voxelIndex].typeIndex <= Voxel.HoleTypeIndex)
                 return;
 
             if (captureEvents && OnVoxelBeforeDestroyed != null) {
@@ -139,7 +140,7 @@ namespace VoxelPlay
 
             // If it's water, add flood
             if (voxelType.spreads && !buildMode) {
-                if (chunk.voxels [voxelIndex].hasContent == 0 || voxelType.spreadReplaceThreshold > chunk.voxels [voxelIndex].opaque) {
+                if (chunk.voxels [voxelIndex].typeIndex <= Voxel.HoleTypeIndex || voxelType.spreadReplaceThreshold > chunk.voxels [voxelIndex].opaque) {
                     chunk.SetVoxel (voxelIndex, voxelType, tintColor);
                 }
                 chunk.voxels [voxelIndex].SetWaterLevel ((Mathf.CeilToInt (amount * 15f)));
@@ -204,7 +205,7 @@ namespace VoxelPlay
         /// <param name="voxelIndex">Voxel index.</param>
         GameObject VoxelSetDynamic (VoxelChunk chunk, int voxelIndex, bool addRigidbody, float duration)
         {
-            if ((object)chunk == null || chunk.voxels [voxelIndex].hasContent == 0)
+            if ((object)chunk == null || chunk.voxels [voxelIndex].isEmpty)
                 return null;
 
             VoxelDefinition vd = voxelDefinitions [chunk.voxels [voxelIndex].typeIndex];
@@ -250,6 +251,7 @@ namespace VoxelPlay
                 vdDyn.name = vd.name + " (Dynamic)";
                 vdDyn.isDynamic = true;
                 vdDyn.doNotSave = true;
+                vdDyn.staticDefinition = vd;
                 vdDyn.renderType = RenderType.Custom;
                 vdDyn.textureIndexBottom = vd.textureIndexBottom;
                 vdDyn.textureIndexSide = vd.textureIndexSide;
@@ -274,7 +276,10 @@ namespace VoxelPlay
                 vdDyn.footfalls = vd.footfalls;
                 vdDyn.destructionSound = vd.destructionSound;
                 vdDyn.canBeCollected = vd.canBeCollected;
+                vdDyn.dropProbability = vd.dropProbability;
                 vdDyn.dropItem = GetItemDefinition (ItemCategory.Voxel, vd);
+                vdDyn.dropItemLifeTime = vd.dropItemLifeTime;
+                vdDyn.dropItemScale = vd.dropItemScale;
                 vdDyn.buildSound = vd.buildSound;
                 vdDyn.navigatable = true;
                 vdDyn.windAnimation = false;
@@ -291,7 +296,7 @@ namespace VoxelPlay
             // Clear any vegetation on top if voxel can be moved (has a rigidbody) to avoid floating grass block
             if (placeholder.rb != null) {
                 if (GetVoxelIndex (chunk, voxelIndex, 0, 1, 0, out VoxelChunk topChunk, out int topIndex)) {
-                    if (topChunk.voxels [topIndex].hasContent == 1 && voxelDefinitions [topChunk.voxels [topIndex].typeIndex].renderType == RenderType.CutoutCross) {
+                    if (topChunk.voxels [topIndex].hasContent && voxelDefinitions [topChunk.voxels [topIndex].typeIndex].renderType == RenderType.CutoutCross) {
                         VoxelDestroyFast (topChunk, topIndex);
                     }
                 }
@@ -345,7 +350,7 @@ namespace VoxelPlay
                     continue;
                 if (!tempVoxelPositions.TryGetValue (pos, out _)) {
                     tempVoxelPositions [pos] = true;
-                    if (GetVoxelIndex (pos, out VoxelChunk chunk, out int voxelIndex, false) && chunk.voxels [voxelIndex].hasContent == 1) {
+                    if (GetVoxelIndex (pos, out VoxelChunk chunk, out int voxelIndex, false) && chunk.voxels [voxelIndex].typeIndex > Voxel.HoleTypeIndex) {
                         VoxelDefinition vd = voxelDefinitions [chunk.voxels [voxelIndex].typeIndex];
                         if (vd.willCollapse && (vd.renderType == RenderType.Custom || chunk.voxels [voxelIndex].opaque >= 3)) {
                             vi.chunk = chunk;
@@ -473,7 +478,7 @@ namespace VoxelPlay
         Material GetDynamicVoxelMaterialFromCustom (Material refMat, bool useCutout)
         {
             Material instancingMat = useCutout ? matDynamicCutoutNonArray : matDynamicOpaqueNonArray;
-            instancingMat = Instantiate (instancingMat, this.transform);
+            instancingMat = Instantiate (instancingMat);
             instancingMat.DisableKeyword (SKW_VOXELPLAY_GPU_INSTANCING);
             if (refMat != null) {
                 if (refMat.HasProperty (ShaderParams.Color) && instancingMat.HasProperty (ShaderParams.Color)) {

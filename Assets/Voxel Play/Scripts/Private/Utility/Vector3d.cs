@@ -10,7 +10,7 @@ namespace VoxelPlay
         const double EPSILON_MAGNITUDE = 9.99999974737875E-06;    // ~= 1e-5
         const double EPSILON_MAGNITUDE_SQR = EPSILON_MAGNITUDE * EPSILON_MAGNITUDE;
         const double EPSILON_DOT_PRODUCT = 1.40129846432482E-45d;
-
+        
         public double x;
         public double y;
         public double z;

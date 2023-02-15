@@ -51,6 +51,10 @@ Shader "Voxel Play/Voxels/Triangle/Cutout"
 			#include "VPVoxelTriangleShadowsURP.cginc"
 			ENDHLSL
 		}
+
+		UsePass "Voxel Play/Voxels/Triangle/Opaque/DepthOnly"
+		UsePass "Voxel Play/Voxels/Triangle/Opaque/DepthNormalsOnly"
+
 	}
 
 	SubShader {

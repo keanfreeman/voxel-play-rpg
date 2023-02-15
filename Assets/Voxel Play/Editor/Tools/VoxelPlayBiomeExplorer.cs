@@ -60,7 +60,7 @@ namespace VoxelPlay {
             titleColor = EditorGUIUtility.isProSkin ? new Color(0.52f, 0.66f, 0.9f) : new Color(0.12f, 0.16f, 0.4f);
             waterColor = new Color(0, 0.1f, 1f, 0.8f);
             if (env == null) {
-                env = null;
+                env = VoxelPlayEnvironment.instance;
             }
             if (env != null) {
                 env.NotifyTerrainGeneratorConfigurationChanged ();
@@ -78,7 +78,7 @@ namespace VoxelPlay {
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
             if (env == null) {
-                env = null;
+                env = VoxelPlayEnvironment.instance;
                 if (env == null) {
                     world = null;
                 }
@@ -324,7 +324,9 @@ namespace VoxelPlay {
             float z = minZ + (maxZ - minZ) * (1f - tz);
             HeightMapInfo info = env.GetHeightMapInfoFast(x, z);
             sb.Clear();
-            sb.Append("Altitude: ");
+            sb.Append("Position: ");
+            sb.Append(x.ToString("0") + ", " + z.ToString("0"));
+            sb.Append("\nAltitude: ");
             sb.Append(info.groundLevel);
             sb.Append(", Moisture: ");
             sb.Append(info.moisture.ToString("F3"));
@@ -414,7 +416,7 @@ namespace VoxelPlay {
                     return;
             }
             if (!tg.isInitialized) {
-                tg.Initialize(env);
+                tg.Initialize();
             }
 
             RefreshBiomeColors();

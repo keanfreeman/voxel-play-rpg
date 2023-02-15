@@ -22,7 +22,7 @@ namespace VoxelPlay {
         }
 
         void OnGUI() {
-            VoxelPlayEnvironment env = null;
+            VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
             if (env == null) {
                 EditorGUILayout.HelpBox("Constructor tools require Voxel Play Environment in the scene..", MessageType.Info);
                 return;
@@ -97,6 +97,7 @@ namespace VoxelPlay {
 
                 EditorGUILayout.Separator();
                 EditorGUILayout.Separator();
+                EditorGUILayout.Vector3Field("Model Size", model.size);
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Label("Displace", GUILayout.Width(150));
                 if (GUILayout.Button("<X")) {

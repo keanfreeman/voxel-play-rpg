@@ -8,8 +8,14 @@ namespace VoxelPlay {
 
 		public bool enabled = true;
 
+        [Tooltip("Set to true to allow multiple nested calls to AddDetail method. This can occur if the AddDetail method triggers the creation of nearby chunks which in turn invokes the detail generator.")]
+		public bool allowNestedExecutions;
+
 		[NonSerialized]
 		public int detailGeneratorIndex;
+
+		[NonSerialized]
+		public bool busy;
 
 		protected const int ONE_Y_ROW = VoxelPlayEnvironment.CHUNK_SIZE * VoxelPlayEnvironment.CHUNK_SIZE;
 		protected const int ONE_Z_ROW = VoxelPlayEnvironment.CHUNK_SIZE;
@@ -51,7 +57,7 @@ namespace VoxelPlay {
 		public void SetChunkIsDirty(VoxelChunk chunk) {
 			if (chunk.isPopulated) {
 				// if this detail generator has modified a fully generated chunk, we need to refresh it completely
-				VoxelPlayEnvironment env = null;
+				VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
 				env.ChunkRedraw (chunk, includeNeighbours: true, refreshLightmap: true, refreshMesh: true);
 			} else {
 				// otherwise, just inform that this chunk has changes so the rest of pipeline (during CreateChunk) ensures the lightmap and mesh is rebuilt

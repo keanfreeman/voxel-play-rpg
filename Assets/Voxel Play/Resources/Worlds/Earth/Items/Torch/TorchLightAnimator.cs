@@ -32,7 +32,7 @@ namespace VoxelPlay
 		void Start ()
 		{
 			mat = GetComponent<Renderer> ().material;
-			env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+			env = VoxelPlayEnvironment.instance;
 
 			sparks = new GameObject[sparksCount];
 			sparksTime = new float[sparksCount];

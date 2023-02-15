@@ -23,10 +23,10 @@ Shader "Voxel Play/Voxels/Triangle/Opaque"
 			#pragma exclude_renderers d3d11_9x
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_NORMAL
-			#pragma multi_compile _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
-			#pragma multi_compile _ VOXELPLAY_USE_OUTLINE
-			#pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_USE_NORMAL
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
+			#pragma multi_compile_local _ VOXELPLAY_USE_OUTLINE
+			#pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
 			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS
 			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
 			#pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
@@ -53,6 +53,34 @@ Shader "Voxel Play/Voxels/Triangle/Opaque"
 			ENDHLSL
 		}
 
+		Pass {
+			Name "DepthOnly"
+			Tags { "LightMode" = "DepthOnly" }
+            HLSLPROGRAM
+            #pragma prefer_hlslcc gles
+            #pragma exclude_renderers d3d11_9x
+			#pragma target 3.5
+			#pragma vertex DepthOnlyVertex
+			#pragma fragment DepthOnlyFragment
+		    #pragma multi_compile_instancing
+			#include "VPVoxelTriangleDepthOnlyURP.cginc"
+			ENDHLSL
+		}
+
+		Pass {
+			Name "DepthNormalsOnly"
+			Tags { "LightMode" = "DepthNormalsOnly" }
+            HLSLPROGRAM
+            #pragma prefer_hlslcc gles
+            #pragma exclude_renderers d3d11_9x
+			#pragma target 3.5
+			#pragma vertex DepthNormalsVertex
+			#pragma fragment DepthNormalsFragment
+		    #pragma multi_compile_instancing
+            #pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT // forward-only variant
+			#include "VPVoxelTriangleDepthNormalsURP.cginc"
+			ENDHLSL
+		}
 	}
 
 
@@ -68,10 +96,10 @@ Shader "Voxel Play/Voxels/Triangle/Opaque"
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile_fwdbase nolightmap nodynlightmap novertexlight nodirlightmap
 			#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_NORMAL
-			#pragma multi_compile _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
-			#pragma multi_compile _ VOXELPLAY_USE_OUTLINE
-			#pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_USE_NORMAL
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
+			#pragma multi_compile_local _ VOXELPLAY_USE_OUTLINE
+			#pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
 			#define USE_EMISSION
 			#define USE_WORLD_SPACE_UV
             #include "VPCommon.cginc"

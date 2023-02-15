@@ -32,15 +32,14 @@ namespace VoxelPlay {
 		public int damageTaken;
 
 		/// <summary>
-		/// Returns the type of this voxel
+		/// Returns the voxel definition of this voxel
 		/// </summary>
-		public ushort type {
+		public VoxelDefinition type {
 			get {
                 if ((object)chunk != null && voxelIndex >= 0) {
-                    return chunk.voxels[voxelIndex].type();
+                    return chunk.voxels[voxelIndex].type;
                 }
-				// could cause issues later
-                return 0;
+                return null;
             }
 		}
 

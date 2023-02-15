@@ -12,7 +12,7 @@ UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
 
 // note: _VPAmbientLight could be left outside of saturate() function. In that case AO will be affected (diminished due to atten * ao calc, see VOXELPLAY_APPLY_LIGHTING_AO_AND_GI function below) so we leave it inside.
 #if defined(NO_SELF_SHADOWS)
-    #define VOXELPLAY_LIGHT_ATTENUATION(i) max(0, (1.0 + _WorldSpaceLightPos0.y * _VPDaylightShadowAtten) * i.light.x + _VPAmbientLight)
+    #define VOXELPLAY_LIGHT_ATTENUATION(i) max(0, (i.light.x + _WorldSpaceLightPos0.y * _VPDaylightShadowAtten * i.light.z) + _VPAmbientLight)
     #define UNITY_SHADOW_ATTEN(i) 1.0
 #else
     #if defined(USE_SOFT_SHADOWS)
@@ -20,7 +20,7 @@ UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
     #else
         #define VOXELPLAY_SHADOW_ATTENUATION(i) min(1, SHADOW_ATTENUATION(i) + max(0, LinearEyeDepth( i.pos.z ) * _LightShadowData.z + _LightShadowData.w ) )
     #endif
-    #define VOXELPLAY_LIGHT_ATTENUATION(i) saturate( saturate(VOXELPLAY_SHADOW_ATTENUATION(i) * i.light.x + _WorldSpaceLightPos0.y * _VPDaylightShadowAtten) + _VPAmbientLight)
+    #define VOXELPLAY_LIGHT_ATTENUATION(i) saturate( saturate(VOXELPLAY_SHADOW_ATTENUATION(i) * i.light.x + _WorldSpaceLightPos0.y * _VPDaylightShadowAtten * i.light.z)  + _VPAmbientLight)
     #define UNITY_SHADOW_ATTEN(i) SHADOW_ATTENUATION(i)
 #endif
 

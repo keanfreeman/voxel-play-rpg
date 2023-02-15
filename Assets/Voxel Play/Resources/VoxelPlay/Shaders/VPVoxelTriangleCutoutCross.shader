@@ -20,7 +20,7 @@ Shader "Voxel Play/Voxels/Triangle/Cutout Cross"
 			#pragma exclude_renderers d3d11_9x
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_AA
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA
 			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS
 			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
 			#pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
@@ -65,7 +65,7 @@ Shader "Voxel Play/Voxels/Triangle/Cutout Cross"
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile_fwdbase nolightmap nodynlightmap novertexlight nodirlightmap
 			#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_AA
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA
 			#define VP_CUTOUT
 			#define FRESNEL_USES_CUSTOM_NORMAL
             #include "VPCommon.cginc"

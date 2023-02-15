@@ -60,6 +60,12 @@ namespace VoxelPlay
         [Tooltip ("If a different material must be used to render this voxel type.")]
         public bool overrideMaterial;
 
+        [Tooltip("Assign a custom material. Material must be derived from VP main materials for the appropriate render type.")]
+        public Material overrideMaterialNonGeo;
+
+        [Tooltip("Enable if greedy meshing can be used for this override material.")]
+        public bool overrideMaterialGreedyMeshing;
+
         [Tooltip ("Textures are specified in the material itself.")]
         public bool texturesByMaterial;
 
@@ -84,14 +90,12 @@ namespace VoxelPlay
         [Tooltip ("Enables world space UVs. Useful when the texture spreads over several voxels.")]
         public bool worldSpaceUVs;
 
-        [Tooltip ("Assign a custom material. Material must be derived from VP main materials for the appropriate render type.")]
-        public Material overrideMaterialNonGeo;
-
-        public byte hasContent = 1;
-
-        [Tooltip ("Set this value to 15 to specify that this is a fully solid object that occludes other adjacent voxels. Custom voxels should have an opaque less than 15 or will be shown in black.")]
+        [Tooltip ("The amount of light that's blocked by this voxel. Set this value to 15 to specify that this is a fully solid object that occludes other adjacent voxels. Custom voxels should have an opaque less than 15 or will be shown in black.")]
         [Range (0, 15)]
         public byte opaque;
+
+        [Tooltip("If this custom voxel has an occluding face in this direction.")]
+        public bool occludesTop, occludesBottom, occludesLeft, occludesRight, occludesForward, occludesBack;
 
         [Tooltip ("Texture of the voxel Top side")]
         public Texture2D textureTop;
@@ -213,6 +217,10 @@ namespace VoxelPlay
         [Tooltip ("If this voxel type can be collected by the user after breaking it.")]
         public bool canBeCollected = true;
 
+        [Tooltip("Probability (0-1) of dropping an item when destroying this voxel.")]
+        [Range(0, 1)]
+        public float dropProbability = 1f;
+
         [Tooltip ("The item dropped when this voxel is destroyed. If null, a default item of the same voxel type will be used.")]
         public ItemDefinition dropItem;
 
@@ -248,6 +256,12 @@ namespace VoxelPlay
 
         [Tooltip ("The prefab to use when rendering this voxel. Make sure the prefab uses a valid material (you can copy one of the VP Model * materials provided with Voxel Play). Please check the documentation for details.")]
         public GameObject model;
+
+        [Tooltip ("Collider data will be generated for this prefab and merged with the chunk collider.")]
+        public bool generateCollider;
+
+        [Tooltip("NavMesh data will be generated for this prefab and merged with the chunk NavMesh.")]
+        public bool generateNavMesh;
 
         /// <summary>
         /// This is either a reference to the model or an instanced model in case the voxel definition configuration wants to override the material
@@ -386,9 +400,15 @@ namespace VoxelPlay
         [NonSerialized]
         public ushort index;
 
+        public bool hasContent { get { return index > Voxel.HoleTypeIndex; } }
+
         // The related dynamic voxel definition. This field is only set when a static voxel is converted to dynamic (only set once per type)
         [NonSerialized]
         public VoxelDefinition dynamicDefinition;
+
+        // The related static voxel definition. Thsi field is set so when a dynamic voxel is converted back to static, it can know which static type belongs to
+        [NonSerialized]
+        public VoxelDefinition staticDefinition;
 
         // if this voxel definition is dynamic
         [NonSerialized]
@@ -545,7 +565,10 @@ namespace VoxelPlay
         [NonSerialized]
         public bool usesDenseLeaves;
 
+
+        // ********************************
         // Static methods *****************
+        // ********************************
 
         /// <returns>true if the voxel is either null or represents the null voxel definition</returns>
         public static bool IsNull(VoxelDefinition vd) {
@@ -553,12 +576,9 @@ namespace VoxelPlay
         }
 
 
-        // Events ***********************
-
-        void OnEnable ()
-        {
-            hasContent = renderType.hasContent ();
-        }
+        // ********************************
+        // Events *************************
+        // ********************************
 
         /// <summary>
         /// Clears temporary/session non-serializable fields
@@ -573,6 +593,7 @@ namespace VoxelPlay
             textureIndexBottom = textureIndexSide = textureIndexTop = 0;
             isDynamic = false;
             dynamicDefinition = null;
+            staticDefinition = null;
             seeThroughVoxelTempTransp = 0;
             materialBufferIndex = 0;
             if (dynamicMeshes != null) {
@@ -580,7 +601,6 @@ namespace VoxelPlay
             }
             _mesh = null;
             _material = null;
-            hasContent = renderType.hasContent ();
         }
 
     }

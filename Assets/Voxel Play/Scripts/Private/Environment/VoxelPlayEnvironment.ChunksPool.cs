@@ -165,7 +165,7 @@ namespace VoxelPlay {
 
 		VoxelChunk CreateChunkPoolEntry () {
 
-			GameObject chunkGO = Instantiate<GameObject> (chunkPlaceholderPrefab, Misc.vector3far, Misc.quaternionZero, chunksRoot);
+			GameObject chunkGO = Instantiate(chunkPlaceholderPrefab, Misc.vector3far, Misc.quaternionZero, chunksRoot);
 			chunkGO.layer = layerVoxels;
 			chunkGO.hideFlags = HideFlags.DontSave;
 			#if UNITY_EDITOR

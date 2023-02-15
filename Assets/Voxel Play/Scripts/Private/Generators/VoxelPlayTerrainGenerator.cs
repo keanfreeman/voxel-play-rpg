@@ -65,17 +65,18 @@ namespace VoxelPlay {
 		/// <summary>
 		/// Use this method to initialize the terrain generator
 		/// </summary>
-		public void Initialize (VoxelPlayEnvironment environment) {
+		public void Initialize () {
+			env = VoxelPlayEnvironment.instance;
 			if (env == null)
-				env = environment;
-			world = env.world;
-			if (world == null) {
-				Debug.LogError("No world provided for environment.");
 				return;
-			}
-
+			world = env.world;
 			env.waterLevel = waterLevel;
 			Init ();
+			if (waterLevel > maxHeight) {
+				Debug.LogWarning("Water level is higher than terrain maximum height. Check terrain settings.");
+            }
+			if (world == null)
+				return;
 			isInitialized = true;
 		}
 

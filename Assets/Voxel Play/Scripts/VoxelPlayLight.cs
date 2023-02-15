@@ -10,20 +10,28 @@ namespace VoxelPlay {
 
         [NonSerialized] public Light pointLight;
 
-        [NonSerialized] private VoxelPlayLightManager voxelPlayLightManager;
-
-        [SerializeField] public VoxelPlayEnvironment voxelPlayEnvironment;
+        public bool virtualLight;
+        [ColorUsage(showAlpha: false, hdr: true)]
+        public Color lightColor = Color.white;
+        public float lightIntensity = 1f;
+        public float lightRange = 10f;
 
         public void OnEnable() {
-            if (voxelPlayLightManager == null) {
-                voxelPlayLightManager = voxelPlayEnvironment.voxelPlayLightManager;
-            }
             pointLight = GetComponent<Light>();
-            voxelPlayLightManager.RegisterLight(this);
+            VoxelPlayLightManager.RegisterLight(this);
+        }
+
+        private void OnValidate() {
+            lightIntensity = Mathf.Max(0, lightIntensity);
+            lightRange = Mathf.Max(0, lightRange);
         }
 
         public void OnDisable() {
-            voxelPlayLightManager.UnregisterLight(this);
+            VoxelPlayLightManager.UnregisterLight(this);
         }
+
+
+
+
     }
 }

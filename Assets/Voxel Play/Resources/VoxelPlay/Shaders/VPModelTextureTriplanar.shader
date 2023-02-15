@@ -50,6 +50,10 @@ Shader "Voxel Play/Models/Texture/Triplanar"
 			#include "VPModelShadowsURP.cginc"
 			ENDHLSL
 		}
+
+		UsePass "Voxel Play/Voxels/Triangle/Opaque/DepthOnly"
+		UsePass "Voxel Play/Voxels/Triangle/Opaque/DepthNormalsOnly"
+
 	}
 
 	SubShader {

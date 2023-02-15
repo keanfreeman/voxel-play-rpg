@@ -22,12 +22,13 @@ namespace VoxelPlay
             }
         }
 
-        IEnumerator ModelPlaceWithDuration(Vector3d position, ModelDefinition model, float buildDuration, int rotation = 0, float colorBrightness = 1f, bool fitTerrain = false, VoxelPlayModelBuildEvent callback = null)
+        IEnumerator ModelPlaceWithDuration(Vector3d position, ModelDefinition model, float buildDuration, int rotation = 0, float colorBrightness = 1f, bool fitTerrain = false, VoxelModelBuildEndEvent callback = null)
         {
 
             if (OnModelBuildStart != null)
             {
-                OnModelBuildStart(model, position);
+                OnModelBuildStart(model, position, out bool cancel);
+                if (cancel) yield break;
             }
             int currentIndex = 0;
             int len = model.bits.Length - 1;
@@ -99,7 +100,7 @@ namespace VoxelPlay
             Vector3d min = bounds.min;
             Vector3d max = bounds.max;
 
-            List<VoxelChunk> updatedChunks = chunkPool.Get();
+            List<VoxelChunk> updatedChunks = BufferPool<VoxelChunk>.Get();
             modificationTag++;
 
             Vector3d pos;
@@ -258,7 +259,7 @@ namespace VoxelPlay
                 }
             }
             RegisterChunkChanges(updatedChunks);
-            chunkPool.Release(updatedChunks);
+            BufferPool<VoxelChunk>.Release(updatedChunks);
 
             FastVector.Floor(ref min);
             FastVector.Ceiling(ref max);

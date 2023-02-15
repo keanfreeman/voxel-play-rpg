@@ -13,23 +13,16 @@ namespace VoxelPlay {
 		int cloudCount;
 		int cloudIndex;
 
-
-        VoxelPlayEnvironment env;
-
-        void Start() {
+		void Start() {
 			cloudCount = cloudChunks.Count;
 		}
 
         void LateUpdate() {
-            if (env == null) {
-                env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
-            }
-
             if (cloudChunks == null) return;
             VoxelChunk cloudChunk = cloudChunks[cloudIndex];
             transform.position -= new Vector3(Time.deltaTime, 0, 0);
             if (cloudChunk != null) {
-                Vector3 refPos = env.cameraMain != null ? env.cameraMain.transform.position : Misc.vector3zero;
+                Vector3 refPos = VoxelPlayEnvironment.instance.cameraMain != null ? VoxelPlayEnvironment.instance.cameraMain.transform.position : Misc.vector3zero;
                 Transform cloudTransform = cloudChunk.transform;
                 Vector3 pos = cloudTransform.position;
                 if (pos.x < refPos.x - 512) {

@@ -49,13 +49,12 @@ namespace VoxelPlay {
 				b.Refresh ();
 			}
             if (GUILayout.Button("Select Chunk")) {
-				return;
-				//VoxelChunk chunk = VoxelPlayEnvironment.instance.GetChunk(b.transform.position);
-                //if (chunk != null) {
-				//	chunk.gameObject.hideFlags = 0;
-				//	Selection.activeGameObject = chunk.gameObject;
-				//	EditorGUIUtility.PingObject(chunk.gameObject);
-                //}
+				VoxelChunk chunk = VoxelPlayEnvironment.instance.GetChunk(b.transform.position);
+                if (chunk != null) {
+					chunk.gameObject.hideFlags = 0;
+					Selection.activeGameObject = chunk.gameObject;
+					EditorGUIUtility.PingObject(chunk.gameObject);
+                }
             }
 		}
 	}

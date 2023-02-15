@@ -60,6 +60,9 @@ Shader "Voxel Play/Models/Texture/Cutout"
 			ENDHLSL
 		}
 
+		UsePass "Voxel Play/Voxels/Triangle/Opaque/DepthOnly"
+		UsePass "Voxel Play/Voxels/Triangle/Opaque/DepthNormalsOnly"
+
 	}
 
 	SubShader {

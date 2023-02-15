@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Rendering;
 
 namespace VoxelPlay.GPULighting {
 
     public class VoxelPlayLightManager : MonoBehaviour {
 
 
-        List<VoxelPlayLight> lights = new List<VoxelPlayLight>();
-        bool shouldSortLights;
+        static List<VoxelPlayLight> lights = new List<VoxelPlayLight>();
+        static bool shouldSortLights;
 
         const int MAX_LIGHTS = 32; // also given by shader buffer length
         int lastX, lastY, lastZ;
@@ -21,17 +21,29 @@ namespace VoxelPlay.GPULighting {
             public static int GlobalLightPositionsArray = Shader.PropertyToID("_VPPointLightPosition");
             public static int GlobalLightColorsArray = Shader.PropertyToID("_VPPointLightColor");
             public static int GlobalLightCount = Shader.PropertyToID("_VPPointLightCount");
-            public static int GlobalLightMaxDistSqr = Shader.PropertyToID("_VPPointMaxDistanceSqr");
         }
 
-        public void RegisterLight(VoxelPlayLight light) {
-            if (light != null && light.pointLight.type == LightType.Point && !lights.Contains(light)) {
+        public static void RegisterLight(VoxelPlayLight light) {
+            if (light == null) return;
+
+            if (!light.virtualLight) {
+
+                if (light.pointLight == null) {
+                    Debug.LogError("There's no Light component attached to the GameObject '" + light.name + "'. Fix it or enable the 'Virtual Light' option.", light.gameObject);
+                    return;
+                }
+                if (light.pointLight.type != LightType.Point) {
+                    Debug.LogError("Only point lights are supported by the Voxel Play Light component in GameObject '" + light.name + "'. Change the light type or remove the Voxel Play Light component.", light.gameObject);
+                    return;
+                }
+            }
+            if (!lights.Contains(light)) {
                 lights.Add(light);
                 shouldSortLights = true;
             }
         }
 
-        public void UnregisterLight(VoxelPlayLight light) {
+        public static void UnregisterLight(VoxelPlayLight light) {
             if (light != null && lights.Contains(light)) {
                 lights.Remove(light);
                 shouldSortLights = true;
@@ -46,17 +58,29 @@ namespace VoxelPlay.GPULighting {
                 lightColorBuffer = new Vector4[MAX_LIGHTS];
             }
             shouldSortLights = true;
+
+            RenderPipelineManager.beginCameraRendering += OnBeginCameraRendering;
+        }
+
+        // for URP
+        private void OnBeginCameraRendering(ScriptableRenderContext context, Camera camera) {
+            CheckAnchorPosition();
+        }
+
+        // for Built-in
+        void OnPreRender() {
+            CheckAnchorPosition();
         }
 
         private void Start() {
-            env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+            env = VoxelPlayEnvironment.instance;
             if (!VoxelPlayEnvironment.supportsBrightPointLights || VoxelPlayEnvironment.supportsURPNativeLights) {
                 DestroyImmediate(this);
                 return;
             }
         }
 
-        void OnPreRender() {
+        void CheckAnchorPosition() {
             if (env == null) return;
             camPos = env.currentAnchorPosWS;
             FastMath.FloorToInt(camPos.x, camPos.y, camPos.z, out int x, out int y, out int z);
@@ -102,12 +126,27 @@ namespace VoxelPlay.GPULighting {
                     continue;
                 }
 
-                Light light = lights[k].pointLight;
-                if (light == null || !vpLight.enabled) continue;
+                if (!vpLight.isActiveAndEnabled) continue;
+
+                float lightRange;
+                float lightIntensity;
+                Color lightColor;
+
+                if (vpLight.virtualLight) {
+                    lightRange = vpLight.lightRange;
+                    lightIntensity = vpLight.lightIntensity;
+                    lightColor = vpLight.lightColor;
+                } else {
+                    Light light = lights[k].pointLight;
+                    if (light == null) continue;
+                    lightRange = light.range;
+                    lightIntensity = light.intensity;
+                    lightColor = light.color;
+                }
 
                 // ignore light if it's behind camera + range
-                Vector3 lightPos = light.transform.position;
-                float range = 0.0001f + light.range * worldLightScattering;
+                Vector3 lightPos = vpLight.transform.position;
+                float range = 0.0001f + lightRange * worldLightScattering;
                 if (excludeLightsBehind) {
                     Vector3 toLight = lightPos - camPos;
                     float dot = Vector3.Dot(camForward, lightPos - camPos);
@@ -117,18 +156,17 @@ namespace VoxelPlay.GPULighting {
                 }
 
                 // ignore if intensity is zero
-                float intensity = light.intensity * worldLightIntensity;
+                float intensity = lightIntensity * worldLightIntensity;
                 if (intensity <= 0) continue;
 
                 lightPosBuffer[i].x = lightPos.x;
                 lightPosBuffer[i].y = lightPos.y;
                 lightPosBuffer[i].z = lightPos.z;
                 lightPosBuffer[i].w = range;
-                Color color = light.color;
-                lightColorBuffer[i].x = color.r * intensity;
-                lightColorBuffer[i].y = color.g * intensity;
-                lightColorBuffer[i].z = color.b * intensity;
-                lightColorBuffer[i].w = color.a;
+                lightColorBuffer[i].x = lightColor.r * intensity;
+                lightColorBuffer[i].y = lightColor.g * intensity;
+                lightColorBuffer[i].z = lightColor.b * intensity;
+                lightColorBuffer[i].w = lightColor.a;
                 i++;
                 if (i >= MAX_LIGHTS) break;
             }
@@ -147,10 +185,7 @@ namespace VoxelPlay.GPULighting {
             Shader.SetGlobalVectorArray(ShaderParams.GlobalLightPositionsArray, lightPosBuffer);
             Shader.SetGlobalVectorArray(ShaderParams.GlobalLightColorsArray, lightColorBuffer);
             Shader.SetGlobalInt(ShaderParams.GlobalLightCount, i);
-            float maxLightDistance = env.brightPointsMaxDistance * env.brightPointsMaxDistance;
-            Shader.SetGlobalFloat(ShaderParams.GlobalLightMaxDistSqr, maxLightDistance);
         }
-
 
         int distanceComparer(VoxelPlayLight a, VoxelPlayLight b) {
             Vector3 posA = a.transform.position;

@@ -1,8 +1,8 @@
-**************************************
-*            Voxel Play 2            *
-*     by Ramiro Oliva (Kronnect)     * 
-*            README FILE             *
-**************************************
+******************************************
+*             Voxel Play 2               *
+* Copyright (C) Kronnect Technologies SL * 
+*             README FILE                *
+******************************************
 
 
 What's Voxel Play?
@@ -19,7 +19,7 @@ Then, please take a look at the online documentation to learn how to use all the
 Documentation/API reference
 ---------------------------
 The user manual is available online:
-https://kronnect.freshdesk.com/support/home
+https://kronnect.com/guides
 
 You can find internal development notes in the Documentation folder.
 
@@ -28,9 +28,10 @@ Support
 -------
 Please read the documentation and browse/play with the demo scene and sample source code included before contacting us for support :-)
 
-* E-mail support: contact@kronnect.com
-* Support forum: https://kronnect.com/support
+* Support: https://kronnect.com
 * Twitter: @Kronnect
+* Email (non support): contact@kronnect.com
+
 
 
 Future updates
@@ -44,6 +45,74 @@ Of course, all updates of Voxel Play will be eventually available on the Asset S
 
 Version history
 ---------------
+
+Current version
+- Removed "hasContent" field from Voxel structure, replaced by boolean property. This saves 2 words of memory per voxel.
+- API: added ChunkRedrawNeighbours method.
+
+Version 11.2
+- Vegetation voxels can now be collected when destroyed (see "Can Be Collected" option in the voxel definition)
+- Added "Drop Probability" property to voxel definition
+- Particles and damage cracks are now influenced by torch lights
+
+Version 11.1
+- Render In Editor: added new detail level "Standard with no detail generators"
+- [Fix] Fixes for the Unity Terrain to Voxel terrain generator
+
+Version 11.0
+- Added virtual point lights. See: https://kronnect.freshdesk.com/a/solutions/articles/42000084968
+- Tweaked lighting equation so normal map are visible under shadows
+- API: added "IncludeVoxelProperties" option to GetChunkRawData/SetChunkRawData methods
+- API: added "cancel" parameter to event OnModelBuildStart
+- [Fix] Fixed potential issue when reloading textures by refreshing certain properties in the inspector
+- [Fix] Qubicle import fixes
+
+Version 10.9.3
+- [Fix] Fixed Light Manager issue not detecting player camera displacement correctly in URP
+
+Version 10.9.1
+- Improved URP shader support with the inclusion of specific DepthOnly and DepthNormals passes
+- [Fix] Fixed random generation issue that affected placement of vegetation on certain platforms
+- [Fix] Fixed some custom voxel properties not being loaded correctly from a savegame
+
+Version 10.9
+- Minimum Unity version 2020.3.16
+- Added "Delayed Initialization" option to Voxel Play Environment inspector. You can initialize the engine calling the Init() or InitAndLoadSaveGame() methods instead
+- Biome Explorer: added position to tooltip
+- Voxel Definitions: texture sample field is now exposed in the inspector for all voxel definitions
+- [Fix] Fixed voxel signature calculation which resulted in some collision mesh issues
+
+Version 10.8
+- Added "AllowNestedExecutions" to detail generator class
+- Voxel Definition: added "Greedy Meshing" option to override materials
+- [Fix] Model fitToTerrain property was being ignored when placing models with the default character controllers
+
+Version 10.7.3
+- [Fix] Fixed issue in Unity Editor when no camera is present in the scene and VP is initialized
+
+Version 10.7.2
+- [Fix] Fixed issue with building steps voxels disappearing when stacking other voxels nearby
+- [Fix] Fixed issue with rendering materials that use different relief/normal map settings
+- [Fix] Fixed water with no shadows shader render queue which resulted in overdraw with other transparent objects
+
+Version 10.7.1
+- Improvements to the Unity terrain generator
+- Added a warning when water level is higher than maximum terrain height
+- Reduced usage of global keywords
+- [Fix] Fixed savannah tree 1
+- [Fix] Fixed issue with warning when connected texture is not valid
+- [Fix] Fixed native URP issue in builds using Unity 2020.3 or later
+
+Version 10.7
+- Custom voxels: added new properties when GPU instancing is enabled: GenerateCollider & GenerateNavMesh. See: https://kronnect.freshdesk.com/support/solutions/articles/42000049143-custom-voxel-types
+- Custom voxels: added Occludes Forward/Back/Left/Right/Top/Bottom optimization options.
+- Item.itemChunk & item.itemVoxelIndex are now generalized for all persistent items. Previously, only torches used those two fields of Item class
+
+Version 10.6
+- Connected textures: added slot for optional normal map
+- API: added ModelWorldCapture(bounds). Captures a portion of the world into a Model Definition
+- [Fix] Fixed potential memory leak with "Unload Far NavMesh" option
+- [Fix] Fixed voxel highlight edges material leak when destroying a highlighted custom voxel
 
 Version 10.5.3
 - Added Bright Point Lights Max Distance option to Voxel Play Environment inspector

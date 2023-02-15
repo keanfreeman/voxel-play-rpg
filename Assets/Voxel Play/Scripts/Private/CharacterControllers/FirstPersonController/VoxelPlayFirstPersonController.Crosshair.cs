@@ -74,7 +74,9 @@ namespace VoxelPlay
 
 
         void LateUpdate() {
-            LateUpdateImpl();
+            if (env.initialized) {
+                LateUpdateImpl();
+            }
         }
 
         protected virtual void LateUpdateImpl() { 

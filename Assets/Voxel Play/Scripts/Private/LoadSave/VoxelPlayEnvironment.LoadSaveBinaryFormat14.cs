@@ -123,19 +123,23 @@ namespace VoxelPlay
                     ItemSpawn (itemDefinitionName, itemPosition, quantity);
                 }
                 // Load custom voxel properties
+                if (chunk.voxelsProperties == null) {
+                    chunk.voxelsProperties = new FastHashSet<FastHashSet<VoxelProperty>>();
+                }
                 int voxelsPropertiesCount = br.ReadInt16 ();
                 for (int k = 0; k < voxelsPropertiesCount; k++) {
-                    chunk.voxelsProperties = new FastHashSet<FastHashSet<VoxelProperty>> ();
-                    int voxelIndex = br.ReadInt16 ();
-                    int voxelPropertiesCount = br.ReadInt16 ();
-                    FastHashSet<VoxelProperty> properties = new FastHashSet<VoxelProperty> ();
-                    chunk.voxelsProperties [voxelIndex] = properties;
+                    int voxelIndex = br.ReadInt16();
+                    int voxelPropertiesCount = br.ReadInt16();
+                    if (!chunk.voxelsProperties.TryGetValue(voxelIndex, out FastHashSet<VoxelProperty> voxelProperties)) {
+                        voxelProperties = new FastHashSet<VoxelProperty>();
+                        chunk.voxelsProperties[voxelIndex] = voxelProperties;
+                    }
                     for (int i = 0; i < voxelPropertiesCount; i++) {
                         int propId = br.ReadInt32 ();
                         VoxelProperty prop;
                         prop.floatValue = br.ReadSingle ();
                         prop.stringValue = br.ReadString ();
-                        properties [propId] = prop;
+                        voxelProperties[propId] = prop;
                     }
                 }
             }
@@ -215,7 +219,7 @@ namespace VoxelPlay
                     if (chunk.voxels != null) {
                         VoxelDefinition last = null;
                         for (int k = 0; k < chunk.voxels.Length; k++) {
-                            VoxelDefinition vd = voxelDefinitions[chunk.voxels[k].type()];
+                            VoxelDefinition vd = chunk.voxels [k].type;
                             if (vd == null || vd == last || vd.isDynamic || vd.doNotSave)
                                 continue;
                             last = vd;
@@ -354,8 +358,8 @@ namespace VoxelPlay
             int k = 0;
             int numWords = 0;
             while (k < chunk.voxels.Length) {
-                if (chunk.voxels [k].hasContent == 1) {
-                    VoxelDefinition voxelDefinition = voxelDefinitions[chunk.voxels [k].type()];
+                if (chunk.voxels [k].typeIndex > 0) {
+                    VoxelDefinition voxelDefinition = chunk.voxels [k].type;
                     if (voxelDefinition.isDynamic || voxelDefinition.doNotSave) {
                         k++;
                         continue;
@@ -370,7 +374,7 @@ namespace VoxelPlay
                     Color32 tintColor = chunk.voxels [k].color;
                     int flags = chunk.voxels [k].GetFlags ();
                     k++;
-                    while (k < chunk.voxels.Length && voxelDefinitions[chunk.voxels[k].type()] == voxelDefinition && chunk.voxels [k].color.r == tintColor.r && chunk.voxels [k].color.g == tintColor.g && chunk.voxels [k].color.b == tintColor.b && voxelDefinition.renderType != RenderType.Custom && chunk.voxels [k].GetFlags () == flags) {
+                    while (k < chunk.voxels.Length && chunk.voxels [k].type == voxelDefinition && chunk.voxels [k].color.r == tintColor.r && chunk.voxels [k].color.g == tintColor.g && chunk.voxels [k].color.b == tintColor.b && voxelDefinition.renderType != RenderType.Custom && chunk.voxels [k].GetFlags () == flags) {
                         k++;
                     }
                     numWords++;
@@ -383,9 +387,9 @@ namespace VoxelPlay
             // Write voxels
             k = 0;
             while (k < chunk.voxels.Length) {
-                if (chunk.voxels [k].hasContent == 1) {
+                if (chunk.voxels [k].typeIndex > 0) {
                     int voxelIndex = k;
-                    VoxelDefinition voxelDefinition = voxelDefinitions[chunk.voxels[k].type()];
+                    VoxelDefinition voxelDefinition = chunk.voxels [k].type;
                     if (voxelDefinition.isDynamic || voxelDefinition.doNotSave) {
                         k++;
                         continue;
@@ -401,7 +405,7 @@ namespace VoxelPlay
                     byte flags = chunk.voxels [k].GetFlags ();
                     int repetitions = 1;
                     k++;
-                    while (k < chunk.voxels.Length && voxelDefinitions[chunk.voxels [k].type()] == voxelDefinition && chunk.voxels [k].color.r == tintColor.r && chunk.voxels [k].color.g == tintColor.g && chunk.voxels [k].color.b == tintColor.b && voxelDefinition.renderType != RenderType.Custom && chunk.voxels [k].GetFlags () == flags) {
+                    while (k < chunk.voxels.Length && chunk.voxels [k].type == voxelDefinition && chunk.voxels [k].color.r == tintColor.r && chunk.voxels [k].color.g == tintColor.g && chunk.voxels [k].color.b == tintColor.b && voxelDefinition.renderType != RenderType.Custom && chunk.voxels [k].GetFlags () == flags) {
                         repetitions++;
                         k++;
                     }
@@ -457,11 +461,8 @@ namespace VoxelPlay
 
             // Save custom voxel properties
             if (chunk.voxelsProperties != null) {
-                BufferPool<KeyValuePair<int, FastHashSet<VoxelProperty>>> bufferPool1 = new BufferPool<KeyValuePair<int, FastHashSet<VoxelProperty>>>();
-                BufferPool<KeyValuePair<int, VoxelProperty>> bufferPool2 = new BufferPool<KeyValuePair<int, VoxelProperty>>();
-
-                List<KeyValuePair<int, FastHashSet<VoxelProperty>>> voxelsProperties = bufferPool1.Get ();
-                List<KeyValuePair<int, VoxelProperty>> voxelProperties = bufferPool2.Get ();
+                List<KeyValuePair<int, FastHashSet<VoxelProperty>>> voxelsProperties = BufferPool<KeyValuePair<int, FastHashSet<VoxelProperty>>>.Get ();
+                List<KeyValuePair<int, VoxelProperty>> voxelProperties = BufferPool<KeyValuePair<int, VoxelProperty>>.Get ();
                 chunk.voxelsProperties.GetValues (voxelsProperties);
                 int voxelsPropertiesCount = chunk.voxelsProperties.Count;
                 bw.Write ((Int16)voxelsPropertiesCount);
@@ -484,8 +485,8 @@ namespace VoxelPlay
                         }
                     }
                 }
-                bufferPool2.Release (voxelProperties);
-                bufferPool1.Release (voxelsProperties);
+                BufferPool<KeyValuePair<int, VoxelProperty>>.Release (voxelProperties);
+                BufferPool<KeyValuePair<int, FastHashSet<VoxelProperty>>>.Release (voxelsProperties);
             } else {
                 bw.Write ((Int16)0);
             }

@@ -14,7 +14,6 @@ namespace VoxelPlay {
         public VoxelDefinition type;
         public int hidden;
         public int opaque;
-        public int hasContent;
         public int voxelLight;
         public int torchLight;
         public int waterLevel;
@@ -41,13 +40,12 @@ namespace VoxelPlay {
             }
         }
         void Update() {
-            VoxelPlayEnvironment env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+            VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
             if (env == null) return;
 
             VoxelChunk chunk;
             position = transform.position;
             if (!env.GetVoxelIndex(transform.position, out chunk, out voxelIndex, false)) {
-                hasContent = 0;
                 type = null;
                 modelInstance = null;
                 placeholder = null;
@@ -55,9 +53,8 @@ namespace VoxelPlay {
             }
             chunkPosition = chunk.position;
             env.GetVoxelChunkCoordinates(voxelIndex, out px, out py, out pz);
-            type = env.voxelDefinitions[chunk.voxels[voxelIndex].type()];
+            type = chunk.voxels[voxelIndex].type;
             opaque = chunk.voxels[voxelIndex].opaque;
-            hasContent = chunk.voxels[voxelIndex].hasContent;
             voxelLight = chunk.voxels[voxelIndex].light;
             torchLight = chunk.voxels[voxelIndex].torchLight;
             waterLevel = chunk.voxels[voxelIndex].GetWaterLevel();

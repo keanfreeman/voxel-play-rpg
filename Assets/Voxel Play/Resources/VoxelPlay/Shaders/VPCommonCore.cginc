@@ -171,7 +171,7 @@ UNITY_DECLARE_TEX2D_NOSAMPLER(_BumpMap);
 		return saturate(dot(nrm, tlightDir));
 	}
 
-	#define VOXELPLAY_APPLY_BUMPMAP(i) i.light.x *= GetPerPixelNdotL(i.tlightDir, _BumpMap.Sample(SAMPLER_NAME, i.uv.xy));
+	#define VOXELPLAY_APPLY_BUMPMAP(i) i.light.xz *= GetPerPixelNdotL(i.tlightDir, _BumpMap.Sample(SAMPLER_NAME, i.uv.xy));
 	#define VOXELPLAY_APPLY_CUSTOM_BUMPMAP(i, rawNorm) i.light.x *= GetPerPixelNdotL(i.tlightDir, rawNorm);
 
 
@@ -194,7 +194,7 @@ UNITY_DECLARE_TEX2D_NOSAMPLER(_BumpMap);
 		return max(0, dot(nrm, tlightDir));
 	}
 	// frac is necessary because uv are in world space
-	#define VOXELPLAY_APPLY_BUMPMAP(i) i.light.x *= GetPerPixelNdotL(i.tlightDir, float3(frac(i.uv.xy), i.uv.z+1));
+	#define VOXELPLAY_APPLY_BUMPMAP(i) i.light.xz *= GetPerPixelNdotL(i.tlightDir, float3(frac(i.uv.xy), i.uv.z+1));
 	#define VOXELPLAY_APPLY_CUSTOM_BUMPMAP(i, rawNorm)
 #else
 	// no normal mapping
@@ -226,14 +226,14 @@ UNITY_DECLARE_TEX2D_NOSAMPLER(_BumpMap);
 
 CBUFFER_START(VoxelPlayLightBuffers)
 float4 _VPPointLightPosition[MAX_LIGHTS];
-float4 _VPPointLightColor[MAX_LIGHTS];
+half4 _VPPointLightColor[MAX_LIGHTS];
 int _VPPointLightCount;
 float _VPPointMaxDistanceSqr;
 CBUFFER_END
 
-float3 ShadePointLights(float3 worldPos, float3 normal, float specularAtten) {
+half3 ShadePointLights(float3 worldPos, float3 normal, float specularAtten) {
 
-	float3 color = 0;
+	half3 color = 0;
 
     #if defined(USES_BRIGHT_POINT_LIGHTS)
 		float distSqr = dot(worldPos - _WorldSpaceCameraPos, worldPos - _WorldSpaceCameraPos);
@@ -280,17 +280,17 @@ float3 ShadePointLights(float3 worldPos, float3 normal) {
 	return ShadePointLights(worldPos, normal, 0.0);
 }
 
-float3 ShadePointLightsWithoutNormal(float3 worldPos) {
-    fixed3 color = 0;
+half3 ShadePointLightsWithoutNormal(float3 worldPos) {
+    half3 color = 0;
     #if defined(USES_BRIGHT_POINT_LIGHTS)
-    for (int k=0;k<32;k++) {
+    for (int k=0;k<MAX_LIGHTS;k++) {
         if (k<_VPPointLightCount) {
             float3 toLight = _VPPointLightPosition[k].xyz - worldPos;
             float dist = dot(toLight, toLight);
             toLight /= dist + 0.0001;
             float atten = dist / _VPPointLightPosition[k].w;
-            float NdL = max(abs(toLight.x), abs(toLight.z));
-            color += _VPPointLightColor[k].rgb * (NdL / (1.0 + atten));
+			float NdL = max(abs(toLight.x), abs(toLight.z));
+	        color += _VPPointLightColor[k].rgb * (NdL / (1.0 + atten));
         }
     }
     #endif
@@ -305,6 +305,12 @@ float3 ShadePointLightsWithoutNormal(float3 worldPos) {
 	#define SMOOTH_TORCH_LINEAR_LIGHTING(x) x = (x*x)
 #endif
 
+void UnpackVoxelLight(int voxelLight, out fixed sunLight, out fixed torchLight) {
+	sunLight = (voxelLight & 0x1FF) / 15.0;
+	torchLight = voxelLight/(4096.0*15.0);
+}
+
+
 #if VOXELPLAY_GLOBAL_USE_FOG
     #define VOXELPLAY_FOG_DATA(idx1) fixed4 skyColor: TEXCOORD##idx1;
     #define VOXELPLAY_APPLY_FOG(color, i) color.rgb = lerp(color.rgb, i.skyColor.rgb, i.skyColor.a);
@@ -314,25 +320,26 @@ float3 ShadePointLightsWithoutNormal(float3 worldPos) {
 		#define CLOUD_FOG_DIST_MULTIPLIER 1.0
 	#endif
 
-    #define VOXELPLAY_INITIALIZE_LIGHT_AND_FOG_NORMAL(uv, worldPos, normal) float3 viewDir = worldPos - _WorldSpaceCameraPos; float3 nviewDir = normalize(viewDir); o.skyColor = fixed4(getSkyColor(nviewDir), saturate( (dot(viewDir * CLOUD_FOG_DIST_MULTIPLIER, viewDir * CLOUD_FOG_DIST_MULTIPLIER) - _VPFogData.x) / _VPFogData.y)); o.light = fixed2(GetPerVoxelNdotL(normal), uv.w/(4096.0*15.0)); SMOOTH_TORCH_LINEAR_LIGHTING(o.light.y); uv.w = ((int)uv.w & 0x1FF) / 15.0;
-    #define VOXELPLAY_INITIALIZE_LIGHT_AND_FOG_NORMAL_NO_GI(worldPos, normal) float3 viewDir = worldPos - _WorldSpaceCameraPos; float3 nviewDir = normalize(viewDir); o.skyColor = fixed4(getSkyColor(nviewDir), saturate( (dot(viewDir * CLOUD_FOG_DIST_MULTIPLIER, viewDir * CLOUD_FOG_DIST_MULTIPLIER) - _VPFogData.x) / _VPFogData.y)); o.light = fixed2(GetPerVoxelNdotL(normal), 0);
-    #define VOXELPLAY_INITIALIZE_LIGHT_AND_FOG(uv, worldPos) float3 viewDir = worldPos - _WorldSpaceCameraPos; float3 nviewDir = normalize(viewDir); float3 normal = -nviewDir; o.skyColor = fixed4(getSkyColor(nviewDir), saturate((dot(viewDir * CLOUD_FOG_DIST_MULTIPLIER, viewDir * CLOUD_FOG_DIST_MULTIPLIER) - _VPFogData.x) / _VPFogData.y)); o.light = fixed2(GetPerVoxelNdotL(normal), uv.w/(4096.0*15.0)); SMOOTH_TORCH_LINEAR_LIGHTING(o.light.y); uv.w = ((int)uv.w & 0x1FF) / 15.0;
+    #define VOXELPLAY_INITIALIZE_LIGHT_AND_FOG_NORMAL(uv, worldPos, normal) float3 viewDir = worldPos - _WorldSpaceCameraPos; float3 nviewDir = normalize(viewDir); o.skyColor = fixed4(getSkyColor(nviewDir), saturate( (dot(viewDir * CLOUD_FOG_DIST_MULTIPLIER, viewDir * CLOUD_FOG_DIST_MULTIPLIER) - _VPFogData.x) / _VPFogData.y)); o.light = fixed3(GetPerVoxelNdotL(normal), uv.w/(4096.0*15.0), 1.0); SMOOTH_TORCH_LINEAR_LIGHTING(o.light.y); uv.w = ((int)uv.w & 0x1FF) / 15.0;
+    #define VOXELPLAY_INITIALIZE_LIGHT_AND_FOG_NORMAL_NO_GI(worldPos, normal) float3 viewDir = worldPos - _WorldSpaceCameraPos; float3 nviewDir = normalize(viewDir); o.skyColor = fixed4(getSkyColor(nviewDir), saturate( (dot(viewDir * CLOUD_FOG_DIST_MULTIPLIER, viewDir * CLOUD_FOG_DIST_MULTIPLIER) - _VPFogData.x) / _VPFogData.y)); o.light = fixed3(GetPerVoxelNdotL(normal), 0, 1.0);
+    #define VOXELPLAY_INITIALIZE_LIGHT_AND_FOG(uv, worldPos) float3 viewDir = worldPos - _WorldSpaceCameraPos; float3 nviewDir = normalize(viewDir); float3 normal = -nviewDir; o.skyColor = fixed4(getSkyColor(nviewDir), saturate((dot(viewDir * CLOUD_FOG_DIST_MULTIPLIER, viewDir * CLOUD_FOG_DIST_MULTIPLIER) - _VPFogData.x) / _VPFogData.y)); o.light = fixed3(GetPerVoxelNdotL(normal), uv.w/(4096.0*15.0), 1.0); SMOOTH_TORCH_LINEAR_LIGHTING(o.light.y); uv.w = ((int)uv.w & 0x1FF) / 15.0;
 
 #else // fallbacks when fog is disabled
 
     #define VOXELPLAY_FOG_DATA(idx1)
     #define VOXELPLAY_APPLY_FOG(color, i)
-    #define VOXELPLAY_INITIALIZE_LIGHT_AND_FOG_NORMAL(uv, worldPos, normal) o.light = fixed2(GetPerVoxelNdotL(normal), uv.w/(4096.0*15.0)); SMOOTH_TORCH_LINEAR_LIGHTING(o.light.y); uv.w = ((int)uv.w & 0x1FF) / 15.0;
-    #define VOXELPLAY_INITIALIZE_LIGHT_AND_FOG_NORMAL_NO_GI(worldPos, normal) o.light = fixed2(GetPerVoxelNdotL(normal), 0);
-    #define VOXELPLAY_INITIALIZE_LIGHT_AND_FOG(uv, worldPos) float3 viewDir = _WorldSpaceCameraPos - worldPos; float3 normal = normalize(viewDir); o.light = fixed2(GetPerVoxelNdotL(normal), uv.w/(4096.0*15.0)); SMOOTH_TORCH_LINEAR_LIGHTING(o.light.y); uv.w = ((int)uv.w & 0x1FF) / 15.0;
+    #define VOXELPLAY_INITIALIZE_LIGHT_AND_FOG_NORMAL(uv, worldPos, normal) o.light = fixed3(GetPerVoxelNdotL(normal), uv.w/(4096.0*15.0), 1.0); SMOOTH_TORCH_LINEAR_LIGHTING(o.light.y); uv.w = ((int)uv.w & 0x1FF) / 15.0;
+    #define VOXELPLAY_INITIALIZE_LIGHT_AND_FOG_NORMAL_NO_GI(worldPos, normal) o.light = fixed3(GetPerVoxelNdotL(normal), 0, 1.0);
+    #define VOXELPLAY_INITIALIZE_LIGHT_AND_FOG(uv, worldPos) float3 viewDir = _WorldSpaceCameraPos - worldPos; float3 normal = normalize(viewDir); o.light = fixed3(GetPerVoxelNdotL(normal), uv.w/(4096.0*15.0), 1.0); SMOOTH_TORCH_LINEAR_LIGHTING(o.light.y); uv.w = ((int)uv.w & 0x1FF) / 15.0;
 
 #endif // VOXELPLAY_GLOBAL_USE_FOG
 
 #define TORCH_LIGHT_CONTRIBUTION i.light.yyy
 
 #if VOXELPLAY_PIXEL_LIGHTS
-	#define VOXELPLAY_LIGHT_DATA(idx1,idx2) fixed2 light: TEXCOORD##idx1; float3 wpos: TEXCOORD##idx2;
-	#if VOXELPLAY_USE_AO || defined(USE_SPECULAR)
+    // light.x = classic NdL lighting term, light.y = voxel lighting, light.z = bump map term
+	#define VOXELPLAY_LIGHT_DATA(idx1,idx2) fixed3 light: TEXCOORD##idx1; float3 wpos: TEXCOORD##idx2;
+	#if defined(USE_SPECULAR)
 		#define VOXELPLAY_SET_VERTEX_LIGHT(i, worldPos, normal) i.wpos = worldPos; i.norm = normal;
 		#define VOXELPLAY_SET_VERTEX_LIGHT_WITHOUT_NORMAL(i, worldPos) i.wpos = worldPos;
 		#define VOXELPLAY_SET_FACE_LIGHT(i, worldPos, normal)
@@ -345,16 +352,10 @@ float3 ShadePointLightsWithoutNormal(float3 worldPos) {
 	#define VOXELPLAY_SET_LIGHT_WITHOUT_NORMAL(i, worldPos) i.wpos = worldPos;
 	#define VOXELPLAY_VERTEX_LIGHT_COLOR(specularAtten) ShadePointLights(i.wpos, i.norm, specularAtten)
 #else
-	#define VOXELPLAY_LIGHT_DATA(idx1,idx2) fixed2 light: TEXCOORD##idx1; fixed3 vertexLightColor: TEXCOORD##idx2;
-	#if VOXELPLAY_USE_AO
-		#define VOXELPLAY_SET_VERTEX_LIGHT(i, worldPos, normal) i.vertexLightColor = ShadePointLights(worldPos, normal);
-		#define VOXELPLAY_SET_VERTEX_LIGHT_WITHOUT_NORMAL(i, worldPos) i.vertexLightColor = ShadePointLights(worldPos, normal);
-		#define VOXELPLAY_SET_FACE_LIGHT(i, worldPos, normal)
-	#else
-		#define VOXELPLAY_SET_VERTEX_LIGHT(i, worldPos, normal)
-		#define VOXELPLAY_SET_VERTEX_LIGHT_WITHOUT_NORMAL(i, worldPos)
-		#define VOXELPLAY_SET_FACE_LIGHT(i, worldPos, normal) i.vertexLightColor = ShadePointLights(worldPos, normal);
-	#endif
+	#define VOXELPLAY_LIGHT_DATA(idx1,idx2) fixed3 light: TEXCOORD##idx1; fixed3 vertexLightColor: TEXCOORD##idx2;
+	#define VOXELPLAY_SET_VERTEX_LIGHT(i, worldPos, normal)
+	#define VOXELPLAY_SET_VERTEX_LIGHT_WITHOUT_NORMAL(i, worldPos)
+	#define VOXELPLAY_SET_FACE_LIGHT(i, worldPos, normal) i.vertexLightColor = ShadePointLights(worldPos, normal);
 	#define VOXELPLAY_SET_LIGHT(i, worldPos, normal) i.vertexLightColor = ShadePointLights(worldPos, normal);
 	#define VOXELPLAY_SET_LIGHT_WITHOUT_NORMAL(i, worldPos) i.vertexLightColor = ShadePointLightsWithoutNormal(worldPos);
 	#define VOXELPLAY_VERTEX_LIGHT_COLOR(atten) i.vertexLightColor

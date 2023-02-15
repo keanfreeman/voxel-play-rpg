@@ -62,7 +62,7 @@ namespace VoxelPlay
 
         void Start ()
         {
-            env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+            env = VoxelPlayEnvironment.instance;
             if (env == null) {
                 DestroyImmediate (this);
                 return;
@@ -86,7 +86,7 @@ namespace VoxelPlay
                             Material mat = mats [m];
                             if (mat != null && !mat.shader.name.Contains ("Voxel Play")) {
                                 if (!upgradedMaterials.TryGetValue (mat, out Material upgradedMaterial)) {
-                                    upgradedMaterial = Instantiate(mat, this.transform);
+                                    upgradedMaterial = Instantiate(mat);
                                     if (mat.renderQueue >= 3000 && mat.HasProperty(ShaderParams.Color) && mat.color.a < 1f)
                                     {
                                         upgradedMaterial.shader = vpShaderTransp;

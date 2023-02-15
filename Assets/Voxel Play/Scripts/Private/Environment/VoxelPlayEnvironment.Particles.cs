@@ -33,11 +33,17 @@ namespace VoxelPlay
 
         void InitParticles ()
         {
-            // todo change if needed
-            GameObject fx = transform.GetChild(2).gameObject;
+
+            Transform t = transform.Find (VM_FX_ROOT);
+            if (t != null) {
+                DestroyImmediate (t.gameObject);
+            }
+
+            GameObject fx = new GameObject (VM_FX_ROOT);
             fx.hideFlags = HideFlags.DontSave;
             fxRoot = fx.transform;
             fxRoot.hierarchyCapacity = 100;
+            fxRoot.SetParent (worldRoot, false);
 
             if (damageParticlePrefab == null) {
                 damageParticlePrefab = Resources.Load<GameObject> ("VoxelPlay/Prefabs/DamageParticle");
@@ -59,10 +65,10 @@ namespace VoxelPlay
 
         void DestroyParticles ()
         {
-            //if (fxRoot != null) {
-            //    DestroyImmediate (fxRoot.gameObject);
-            //    fxRoot = null;
-            //}
+            if (fxRoot != null) {
+                DestroyImmediate (fxRoot.gameObject);
+                fxRoot = null;
+            }
         }
 
 
@@ -76,7 +82,7 @@ namespace VoxelPlay
             int lastCX = -1;
             int lastCY = -1;
             int lastCZ = -1;
-            float lastLight = -1;
+            int lastLight = -1;
             float now = Time.time;
             Vector3 scale;
             bool noMoreLightingChecks = false;
@@ -100,16 +106,16 @@ namespace VoxelPlay
                     scale.x = scale.y = scale.z = sc;
                     particleTransform.localScale = scale;
                 }
-                if (!effectiveGlobalIllumination || noMoreLightingChecks)
+                if (noMoreLightingChecks || !effectiveGlobalIllumination)
                     continue;
                 Vector3d currentPos = particleTransform.position;
                 int cx = (int)currentPos.x;
                 int cy = (int)currentPos.y;
                 int cz = (int)currentPos.z;
                 if (shouldUpdateParticlesLighting || cx != particlePool [k].lastX || cy != particlePool [k].lastY || cz != particlePool [k].lastZ) {
-                    float voxelLight = lastLight;
+                    int voxelLight = lastLight;
                     if (lastCX != cx || lastCY != cy || lastCZ != cz) {
-                        voxelLight = GetVoxelLight (currentPos, out chunk, out voxelIndex);
+                        voxelLight = GetVoxelLightPacked (currentPos, out chunk, out voxelIndex);
                         if ((object)chunk == null || chunk.needsLightmapRebuild) {
                             shouldUpdateParticlesLighting = true;
                             noMoreLightingChecks = true;
@@ -122,7 +128,7 @@ namespace VoxelPlay
                         lastBuoyancy = chunk.voxels[voxelIndex].GetWaterLevel() >= 10 ? 400f : 0f;
                     }
                     particlePool[k].buoyancy = lastBuoyancy;
-                    renderer.sharedMaterial.SetFloat (ShaderParams.VoxelLight, voxelLight);
+                    renderer.sharedMaterial.SetInt (ShaderParams.VoxelLight, voxelLight);
                     particlePool [k].lastX = cx;
                     particlePool [k].lastY = cy;
                     particlePool [k].lastZ = cz;
@@ -221,7 +227,7 @@ namespace VoxelPlay
             }
             instanceMat.mainTextureOffset = Misc.vector2zero;
             instanceMat.mainTextureScale = Misc.vector2one;
-            instanceMat.SetFloat (ShaderParams.VoxelLight, GetVoxelLight (particlePosition));
+            instanceMat.SetInt (ShaderParams.VoxelLight, GetVoxelLightPacked (particlePosition));
             instanceMat.SetFloat (ShaderParams.FlashDelay, 5f);
 
             // Self-destruct

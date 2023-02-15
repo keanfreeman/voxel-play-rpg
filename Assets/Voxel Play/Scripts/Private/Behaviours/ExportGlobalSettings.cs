@@ -27,31 +27,28 @@ namespace VoxelPlay {
 
 		void UpdateSettings () {
 			// Avoid interfering with Voxel Play environment.			
-			//if (VoxelPlayEnvironment.instance != null) {
-			//	return;
-
-			return;
-
-			//}
-			//if (lightPosBuffer != null && lightPosBuffer.Length > 0) {
-			//	Shader.SetGlobalVectorArray ("_VPPointLightPosition", lightPosBuffer);
-			//}
-			//if (lightColorBuffer != null && lightColorBuffer.Length > 0) {
-			//	Shader.SetGlobalVectorArray ("_VPPointLightColor", lightColorBuffer);
-			//}
-			//Shader.SetGlobalInt ("_VPPointLightCount", lightCount);
-			//Shader.SetGlobalFloat ("_VPEmissionIntensity", emissionIntensity);
-			//Shader.SetGlobalColor ("_VPSkyTint", skyTint);
-			//Shader.SetGlobalVector ("_VPFogData", fogData);
-			//Shader.SetGlobalFloat ("_VPFogAmount", fogAmount);
-			//Shader.SetGlobalFloat ("_VPExposure", exposure);
-			//Shader.SetGlobalFloat ("_VPAmbientLight", ambientLight);
-			//Shader.SetGlobalFloat ("_VPDaylightShadowAtten", daylightShadowAtten);
-			//if (enableFog) {
-			//	Shader.EnableKeyword ("VOXELPLAY_GLOBAL_USE_FOG");
-			//} else {
-			//	Shader.DisableKeyword ("VOXELPLAY_GLOBAL_USE_FOG");
-			//}
+			if (VoxelPlayEnvironment.instance != null) {
+				return;
+			}
+			if (lightPosBuffer != null && lightPosBuffer.Length > 0) {
+				Shader.SetGlobalVectorArray ("_VPPointLightPosition", lightPosBuffer);
+			}
+			if (lightColorBuffer != null && lightColorBuffer.Length > 0) {
+				Shader.SetGlobalVectorArray ("_VPPointLightColor", lightColorBuffer);
+			}
+			Shader.SetGlobalInt ("_VPPointLightCount", lightCount);
+			Shader.SetGlobalFloat ("_VPEmissionIntensity", emissionIntensity);
+			Shader.SetGlobalColor ("_VPSkyTint", skyTint);
+			Shader.SetGlobalVector ("_VPFogData", fogData);
+			Shader.SetGlobalFloat ("_VPFogAmount", fogAmount);
+			Shader.SetGlobalFloat ("_VPExposure", exposure);
+			Shader.SetGlobalFloat ("_VPAmbientLight", ambientLight);
+			Shader.SetGlobalFloat ("_VPDaylightShadowAtten", daylightShadowAtten);
+			if (enableFog) {
+				Shader.EnableKeyword ("VOXELPLAY_GLOBAL_USE_FOG");
+			} else {
+				Shader.DisableKeyword ("VOXELPLAY_GLOBAL_USE_FOG");
+			}
 		}
 	
 

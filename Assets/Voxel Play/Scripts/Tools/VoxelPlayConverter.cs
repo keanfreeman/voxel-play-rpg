@@ -72,10 +72,12 @@ namespace VoxelPlay
 
             public override int GetHashCode ()
             {
-                int hash = 23;
-                hash = hash * 31 + center.GetHashCode ();
-                hash = hash * 31 + size.GetHashCode ();
-                return hash;
+                unchecked {
+                    int hash = 23;
+                    hash = hash * 31 + center.GetHashCode();
+                    hash = hash * 31 + size.GetHashCode();
+                    return hash;
+                }
             }
         }
 
@@ -205,17 +207,17 @@ namespace VoxelPlay
         }
 
 
-        static List<Vector3> vertices = new List<Vector3> ();
-        static List<int> indices = new List<int> ();
-        static List<Vector3> uvs = new List<Vector3> ();
-        static List<Vector3> normals = new List<Vector3> ();
-        static List<Color32> meshColors = new List<Color32> ();
+        static readonly List<Vector3> vertices = new List<Vector3> ();
+        static readonly List<int> indices = new List<int> ();
+        static readonly List<Vector3> uvs = new List<Vector3> ();
+        static readonly List<Vector3> normals = new List<Vector3> ();
+        static readonly List<Color32> meshColors = new List<Color32> ();
         static Cuboid [] cuboids = new Cuboid [128];
         static Material litMat;
 
-        public static GameObject GenerateVoxelObject (Color32 [] colors, int sizeX, int sizeY, int sizeZ, Vector3 offset, Vector3 scale)
+        public static GameObject GenerateVoxelObject (Color32 [] colors, int sizeX, int sizeY, int sizeZ, Vector3 offset, Vector3 scale, bool skipTransparentColors = true, int alphaCutoutThreshold = 128)
         {
-            return GenerateVoxelObject (colors, null, sizeX, sizeY, sizeZ, offset, scale, true);
+            return GenerateVoxelObject (colors, null, sizeX, sizeY, sizeZ, offset, scale, skipTransparentColors: skipTransparentColors, alphaCutoutThreshold: alphaCutoutThreshold);
         }
 
         static void Encapsulate(int k, Vector3 pointMin, Vector3 pointMax) {
@@ -227,7 +229,7 @@ namespace VoxelPlay
             else if (pointMax.z > cuboids[k].max.z) cuboids[k].max.z = pointMax.z;
         }
 
-        public static GameObject GenerateVoxelObject (Color32 [] colors, int [] textureIndices, int sizeX, int sizeY, int sizeZ, Vector3 offset, Vector3 scale, bool skipTransparentEntries = false, int cutOutThreshold = 255)
+        public static GameObject GenerateVoxelObject (Color32 [] colors, int [] textureIndices, int sizeX, int sizeY, int sizeZ, Vector3 offset, Vector3 scale, bool skipTransparentColors = true, int alphaCutoutThreshold = 128)
         {
 
             int index;
@@ -243,7 +245,7 @@ namespace VoxelPlay
                     for (int x = 0; x < sizeX; x++) {
                         index = posy + posz + x;
                         Color32 color = colors [index];
-                        if (!skipTransparentEntries || color.a >= cutOutThreshold) {
+                        if (!skipTransparentColors || color.a >= alphaCutoutThreshold) {
                             cuboid.min.x = x - sizeX / 2f;
                             cuboid.min.y = y;
                             cuboid.min.z = z - sizeZ / 2f;

@@ -91,10 +91,10 @@ namespace VoxelPlay {
 
 		public static VoxelPlayThirdPersonController instance {
 			get {
-				//if (_thirdPersonController == null) {
-				//	_thirdPersonController = VoxelPlayEnvironment.instance.characterController as VoxelPlayThirdPersonController;
-				//}
-				return null;
+				if (_thirdPersonController == null) {
+					_thirdPersonController = VoxelPlayEnvironment.instance.characterController as VoxelPlayThirdPersonController;
+				}
+				return _thirdPersonController;
 			}
 		}
 
@@ -113,7 +113,7 @@ namespace VoxelPlay {
 
 
 		void OnEnable () {
-			env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+			env = VoxelPlayEnvironment.instance;
 			if (env == null) {
 				Debug.LogError ("Voxel Play Environment must be added first.");
 			} else {
@@ -699,7 +699,7 @@ namespace VoxelPlay {
 			// Check water on character controller position (which is at base of character)
 			Vector3 aboveCurPos = curPos + new Vector3 (0, 0.3f, 0);
 			Voxel voxelCh = env.GetVoxel (aboveCurPos);
-			CheckDamage (env.voxelDefinitions[voxelCh.type()]);
+			CheckDamage (voxelCh.type);
 
 			// Safety check to avoid character go under terrain
 			if (voxelCh.isSolid) {

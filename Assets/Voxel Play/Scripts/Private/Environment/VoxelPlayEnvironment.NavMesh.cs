@@ -86,6 +86,7 @@ namespace VoxelPlay
                 navMeshDisposedSources.Enqueue (chunk.navMeshSourceIndex);
                 chunk.navMeshSourceIndex = -1;
             }
+            // note: chunk.navMesh is reused when new navigation data is generated for the same mesh; do not destroy here.
         }
 
         void UpdateNavMesh ()

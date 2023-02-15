@@ -48,6 +48,10 @@ Shader "Voxel Play/Models/VertexLit"
 			#include "VPModelShadowsURP.cginc"
 			ENDHLSL
 		}
+
+		UsePass "Voxel Play/Voxels/Triangle/Opaque/DepthOnly"
+		UsePass "Voxel Play/Voxels/Triangle/Opaque/DepthNormalsOnly"
+
 	}
 
 	SubShader {

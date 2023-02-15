@@ -18,12 +18,12 @@ namespace VoxelPlay
                 if (ct == null) continue;
                 VoxelDefinition vd = ctt [k].voxelDefinition;
                 if (VoxelDefinition.IsNull(vd)) {
-                    LogMessage("Connected texture " + (k + 1) + "/" + cttCount + " " + vd.name + " ignored since voxel definition is unknown or not yet loaded.");
+                    LogMessage("Connected texture " + (k + 1) + "/" + cttCount + " " + ct.name + " ignored since voxel definition is unknown or not yet loaded.");
                     continue;
                 }
                 LogMessage("Connected texture " + (k + 1) + "/" + cttCount + " " + vd.name + " loaded.");
                 for (int j = 0; j < ct.config.Length; j++) {
-                    ct.config [j].textureIndex = vd.textureArrayPacker.AddTexture (ct.config [j].texture, null, null, null);
+                    ct.config [j].textureIndex = vd.textureArrayPacker.AddTexture (ct.config [j].texture, null, ct.config[j].normalMap, null);
                 }
                 ct.Init ();
             }

@@ -25,10 +25,10 @@ Shader "Voxel Play/Voxels/Dynamic/Triangle Opaque"
 			#pragma prefer_hlslcc gles
 			#pragma exclude_renderers d3d11_9x
 			//#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_NORMAL
-			#pragma multi_compile _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
-			#pragma multi_compile _ VOXELPLAY_USE_OUTLINE
-			#pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_USE_NORMAL
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
+			#pragma multi_compile_local _ VOXELPLAY_USE_OUTLINE
+			#pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
 			#define USE_EMISSION
             #define USE_WORLD_SPACE_NORMAL
 			#define USE_PACKED_LIGHT
@@ -67,10 +67,10 @@ Shader "Voxel Play/Voxels/Dynamic/Triangle Opaque"
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile_fwdbase nolightmap nodynlightmap novertexlight nodirlightmap
 			//#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_NORMAL
-			#pragma multi_compile _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
-			#pragma multi_compile _ VOXELPLAY_USE_OUTLINE
-			#pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_USE_NORMAL
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
+			#pragma multi_compile_local _ VOXELPLAY_USE_OUTLINE
+			#pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
 			#define USE_EMISSION
             #define USE_WORLD_SPACE_NORMAL
 			#define USE_PACKED_LIGHT

@@ -33,7 +33,7 @@ Shader "Voxel Play/Voxels/Triangle/Water Realistic No Shadows"
 			#pragma prefer_hlslcc gles
 			#pragma exclude_renderers d3d11_9x
 			#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
             #define NO_SHADOWS
             #include "VPCommonURP.cginc"
 			#include "VPVoxelTriangleWaterRealisticPass.cginc"
@@ -56,7 +56,7 @@ Shader "Voxel Play/Voxels/Triangle/Water Realistic No Shadows"
 			#pragma fragment frag
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
             #include "VPCommon.cginc"
 			#include "VPVoxelTriangleWaterRealisticPass.cginc"
 			ENDCG

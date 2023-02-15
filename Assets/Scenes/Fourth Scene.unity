@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.8039578, g: 0.7774757, b: 0.9176081, a: 1}
+  m_IndirectSpecularColor: {r: 0.7854401, g: 0.7527566, b: 0.8500957, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -270,7 +270,7 @@ MonoBehaviour:
   particlePoolSize: 1000
   voxelDefinitionsCount: 11
   enableURP: 0
-  debugLevel: 1
+  debugLevel: 0
   world: {fileID: 11400000, guid: e8a87dfb9bf9c574abef1d46b120001c, type: 2}
   enableBuildMode: 0
   enableGeneration: 1
@@ -304,7 +304,7 @@ MonoBehaviour:
   loadingText: Initializing...
   initialWaitTime: 0
   initialWaitText: Loading World...
-  loadSavedGame: 0
+  loadSavedGame: 1
   saveFilename: beach
   globalIllumination: 1
   ambientLight: 0.2
@@ -363,6 +363,7 @@ MonoBehaviour:
   maxBushesPerFrame: 10
   multiThreadGeneration: 1
   lowMemoryMode: 0
+  delayedInitialization: 0
   onlyRenderInFrustum: 1
   serverMode: 0
   enableColliders: 1
@@ -383,7 +384,6 @@ MonoBehaviour:
   defaultImpactSound: {fileID: 0}
   defaultVoxel: {fileID: 11400000, guid: 764590ab8f7e04785a8ac184f4ff675a, type: 2}
   defaultWaterVoxel: {fileID: 11400000, guid: f196cfea1816a4cb6b8e24bea23c4d60, type: 2}
-  voxelPlayLightManager: {fileID: 0}
   enableDetailGenerators: 1
 --- !u!114 &582458982
 MonoBehaviour:
@@ -400,7 +400,6 @@ MonoBehaviour:
   playerPrefab: {fileID: 7062049782252913140, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
   opossumPrefab: {fileID: 6944743723035480207, guid: a806406e61d5e2146bba48accb192b09, type: 3}
   sceneExitPrefab: {fileID: 440023488360116698, guid: 4242af01c09d0984f9c6587337ba132b, type: 3}
-  playerStartPosition: {x: 523, y: 100, z: 246}
   vpEnvironment: {fileID: 0}
   parentSceneChanger: {fileID: 0}
   playerInstance: {fileID: 0}
@@ -415,135 +414,7 @@ Transform:
   m_LocalPosition: {x: 520.112, y: 50.481716, z: 249.81}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1533824114}
-  - {fileID: 1877951559}
-  - {fileID: 1032382142}
-  - {fileID: 1312955173}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1032382141
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1032382142}
-  m_Layer: 0
-  m_Name: VMFX Root
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1032382142
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1032382141}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -520.112, y: -50.481716, z: -249.81}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 582458983}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1312955172
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1312955173}
-  m_Layer: 0
-  m_Name: Clouds Root
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1312955173
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1312955172}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 582458983}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1533824113
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1533824114}
-  m_Layer: 0
-  m_Name: Voxel Play World
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1533824114
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1533824113}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -520.112, y: -50.481716, z: -249.81}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 582458983}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1877951558
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1877951559}
-  m_Layer: 0
-  m_Name: Chunks Root
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1877951559
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1877951558}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -520.112, y: -50.481716, z: -249.81}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 582458983}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

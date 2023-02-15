@@ -36,7 +36,8 @@ namespace VoxelPlay
 
         public void Clear ()
         {
-            for (int k = 0; k < slicesFull.Length; k++) {
+            int slicesCount = slicesFull.Length;
+            for (int k = 0; k < slicesCount; k++) {
                 slicesFull [k].Clear ();
             }
         }

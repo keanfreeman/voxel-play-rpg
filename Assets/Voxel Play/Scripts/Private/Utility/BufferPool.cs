@@ -4,18 +4,18 @@ using UnityEngine;
 namespace VoxelPlay
 {
 
-    public class BufferPool<T> {
+    public class BufferPool<T>
+    {
 
-        struct BufferEntry {
+        struct BufferEntry
+        {
             public List<T> buffer;
             public bool inUse;
         }
 
-        BufferEntry[] buffers = new BufferEntry[16];
+        static BufferEntry [] buffers = new BufferEntry [16];
 
-        public BufferPool() {}
-
-        public List<T> Get ()
+        public static List<T> Get ()
         {
             for (int k = 0; k < buffers.Length; k++) {
                 if (!buffers [k].inUse) {
@@ -30,7 +30,7 @@ namespace VoxelPlay
             return null;
         }
 
-        public void Release (List<T> buffer)
+        public static void Release (List<T> buffer)
         {
             if (buffer == null) return;
             for (int k = 0; k < buffers.Length; k++) {

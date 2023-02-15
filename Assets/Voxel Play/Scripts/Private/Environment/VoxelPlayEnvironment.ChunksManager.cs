@@ -142,7 +142,7 @@ namespace VoxelPlay {
             InitHeightMap();
             InitBiomes();
             if (world != null && world.terrainGenerator != null) {
-                world.terrainGenerator.Initialize(this);
+                world.terrainGenerator.Initialize();
             }
         }
 
@@ -181,7 +181,7 @@ namespace VoxelPlay {
                 if (world.terrainGenerator == null) {
                     world.terrainGenerator = Resources.Load<NullTerrainGenerator>("VoxelPlay/Defaults/NullTerrainGenerator");
                 }
-                world.terrainGenerator.Initialize(this);
+                world.terrainGenerator.Initialize();
 
                 worldHasDetailGenerators = world.detailGenerators != null && world.detailGenerators.Length > 0;
                 if (worldHasDetailGenerators) {
@@ -205,13 +205,25 @@ namespace VoxelPlay {
                 chunkPlaceholderPrefab = Resources.Load<GameObject>("VoxelPlay/Prefabs/ChunkGEO");
             }
             if (chunksRoot == null) {
-                // todo change if needed
-                GameObject cr = transform.GetChild(1).gameObject;
+                chunksRoot = transform.Find(CHUNKS_ROOT);
+                if (chunksRoot != null) {
+                    DestroyImmediate(chunksRoot.gameObject);
+                }
+                do {
+                    chunksRoot = worldRoot.Find(CHUNKS_ROOT);
+                    if (chunksRoot != null) {
+                        DestroyImmediate(chunksRoot.gameObject);
+                    }
+                } while (chunksRoot != null);
+            }
+            if (chunksRoot == null) {
+                GameObject cr = new GameObject(CHUNKS_ROOT);
                 cr.hideFlags = HideFlags.DontSave;
                 chunksRoot = cr.transform;
                 chunksRoot.hierarchyCapacity = 20000;
+                chunksRoot.SetParent(worldRoot, false);
             }
-            //chunksRoot.gameObject.SetActive(true);
+            chunksRoot.gameObject.SetActive(true);
         }
 
         /// <summary>
@@ -356,7 +368,13 @@ namespace VoxelPlay {
             }
 
             // Inform detail generators
-            if (needDetailGeneratorInvoke && worldHasDetailGenerators && enableDetailGenerators) {
+            bool useDetailGenerators = worldHasDetailGenerators && enableDetailGenerators;
+#if UNITY_EDITOR
+            if (renderInEditorDetail == EditorRenderDetail.StandardNoDetailGenerators && !applicationIsPlaying) {
+                useDetailGenerators = false;
+            }
+#endif
+            if (needDetailGeneratorInvoke && useDetailGenerators) {
                 needDetailGeneratorInvoke = false;
                 for (int k = 0; k < world.detailGenerators.Length; k++) {
                     if (world.detailGenerators[k].enabled) {
@@ -905,7 +923,7 @@ namespace VoxelPlay {
             FastMath.FloorToInt(chunk.position.x / CHUNK_SIZE, chunk.position.y / CHUNK_SIZE, chunk.position.z / CHUNK_SIZE, out chunkX, out chunkY, out chunkZ);
 
             VoxelChunk neighbour;
-            List<VoxelChunk> tempChunks = chunkPool.Get();
+            List<VoxelChunk> tempChunks = BufferPool<VoxelChunk>.Get();
 
             for (int y = -1; y <= 1; y++) {
                 for (int z = -1; z <= 1; z++) {
@@ -929,7 +947,7 @@ namespace VoxelPlay {
                 ComputeLightmap(tempChunks[k]);
                 updatedChunks.Add(tempChunks[k]);
             }
-            chunkPool.Release(tempChunks);
+            BufferPool<VoxelChunk>.Release(tempChunks);
             ProcessLightmapUpdates();
         }
 

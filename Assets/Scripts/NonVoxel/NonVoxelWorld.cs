@@ -33,7 +33,14 @@ namespace NonVoxel {
         }
 
         public bool IsPositionOccupied(Vector3Int position) {
-            return positionToObject.ContainsKey(position);
+            GameObject gameObject = positionToObject.GetValueOrDefault(position, null);
+            if (gameObject == null) {
+                return false;
+            }
+            if (gameObject.GetComponent<SceneExit>() != null) {
+                return false;
+            }
+            return true;
         }
 
         public void RotateNonPlayerCreatures(KeyCode rotationDirection) {

@@ -78,7 +78,7 @@ namespace VoxelPlay {
                 for (int z = 0; z < VoxelPlayEnvironment.CHUNK_SIZE; z++) {
                     int vyz = vy + (z + 1) * VoxelPlayEnvironment.CHUNK_SIZE_PLUS_2;
                     for (int x = 0; x < VoxelPlayEnvironment.CHUNK_SIZE; x++, voxelIndex++) {
-                        if (voxels[voxelIndex].hasContent != 1)
+                        if (voxels[voxelIndex].typeIndex <= Voxel.HoleTypeIndex)
                             continue;
 
                         // If voxel is surrounded by material, don't render
@@ -208,8 +208,9 @@ namespace VoxelPlay {
                         pos.z = z - VoxelPlayEnvironment.CHUNK_HALF_SIZE + 0.5f;
 
                         chunkVoxelCount++;
-                        VoxelDefinition type = env.voxelDefinitions[voxels[voxelIndex].typeIndex];
-                        voxelSignature += type.index + surroundingOpaque;
+                        int typeIndex = voxels[voxelIndex].typeIndex;
+                        VoxelDefinition type = env.voxelDefinitions[typeIndex];
+                        voxelSignature += typeIndex * voxelIndex + surroundingOpaque;
 
                         List<int> indices = meshJobs[jobIndex].indexBuffers[type.materialBufferIndex];
 
@@ -320,7 +321,7 @@ namespace VoxelPlay {
 
                             // back face
                             if (hb == 0) {
-                                if (chunk_middle_back_middle[middle_back_middle].opaque == FULL_OPAQUE) {
+                                if (v1b == FULL_OPAQUE) {
                                     foam = 1;
                                 } else if (z > 0 || (object)chunk.back != null) {
                                     AddFaceWater(faceVerticesBack, normalsBack, pos, indicesWater, typeWater.textureIndexSide, light + noflow, 0, corner_height_bl, 0, corner_height_br);
@@ -332,7 +333,7 @@ namespace VoxelPlay {
 
                             // front face
                             if (hf == 0) {
-                                if (chunk_middle_forward_middle[middle_forward_middle].opaque == FULL_OPAQUE) {
+                                if (v1f == FULL_OPAQUE) {
                                     foam |= 2;
                                 } else if (z < VoxelPlayEnvironment.CHUNK_SIZE_MINUS_ONE || (object)chunk.forward != null) {
                                     AddFaceWater(faceVerticesForward, normalsForward, pos, indicesWater, typeWater.textureIndexSide, light + noflow, 0, corner_height_fr, 0, corner_height_fl);
@@ -344,7 +345,7 @@ namespace VoxelPlay {
 
                             // left face
                             if (hl == 0) {
-                                if (chunk_middle_middle_left[middle_middle_left].opaque == FULL_OPAQUE) {
+                                if (v1l == FULL_OPAQUE) {
                                     foam |= 4;
                                 } else if (x > 0 || (object)chunk.left != null) {
                                     AddFaceWater(faceVerticesLeft, normalsLeft, pos, indicesWater, typeWater.textureIndexSide, light + noflow, 0, corner_height_fl, 0, corner_height_bl);
@@ -356,7 +357,7 @@ namespace VoxelPlay {
 
                             // right face
                             if (hr == 0) {
-                                if (chunk_middle_middle_right[middle_middle_right].opaque == FULL_OPAQUE) {
+                                if (v1r == FULL_OPAQUE) {
                                     foam |= 8;
                                 } else if (x < VoxelPlayEnvironment.CHUNK_SIZE_MINUS_ONE || (object)chunk.right != null) {
                                     AddFaceWater(faceVerticesRight, normalsRight, pos, indicesWater, typeWater.textureIndexSide, light + noflow, 0, corner_height_br, 0, corner_height_fr);
@@ -367,36 +368,34 @@ namespace VoxelPlay {
                             }
 
                             // top (hide only if water level is full or voxel on top is water)
-                            if (chunk_top_middle_middle[top_middle_middle].hasContent != 1 || (wh < 15 && th == 0)) {
+                            if (chunk_top_middle_middle[top_middle_middle].typeIndex <= Voxel.HoleTypeIndex || (wh < 15 && th == 0)) {
                                 if (type.showFoam) {
                                     // corner foam
                                     if (hbl == 0) {
-                                        foam |= chunk_middle_back_left[middle_back_left].hasContent << 4;
+                                        if (chunk_middle_back_left[middle_back_left].typeIndex > Voxel.HoleTypeIndex) foam |= 1 << 4;
                                     }
                                     if (hfl == 0) {
-                                        foam |= chunk_middle_forward_left[middle_forward_left].hasContent << 5;
+                                        if (chunk_middle_forward_left[middle_forward_left].typeIndex > Voxel.HoleTypeIndex) foam |= 1 << 5;
                                     }
                                     if (hfr == 0) {
-                                        foam |= chunk_middle_forward_right[middle_forward_right].hasContent << 6;
+                                        if (chunk_middle_forward_right[middle_forward_right].typeIndex > Voxel.HoleTypeIndex) foam |= 1 << 6;
                                     }
                                     if (hbr == 0) {
-                                        foam |= chunk_middle_back_right[middle_back_right].hasContent << 7;
+                                        if (chunk_middle_back_right[middle_back_right].typeIndex > Voxel.HoleTypeIndex) foam |= 1 << 7;
                                     }
                                 } else {
                                     foam = 0;
                                 }
-                                if (y < VoxelPlayEnvironment.CHUNK_SIZE_MINUS_ONE || (object)chunk.top != null) {
                                     AddFaceWater(faceVerticesTop, normalsUp, pos, indicesWater, typeWater.textureIndexSide, light + foam + flow, corner_height_bl, corner_height_fl, corner_height_br, corner_height_fr);
                                     AddFaceWater(faceVerticesTopFlipped, normalsUp, pos, indicesWater, typeWater.textureIndexSide, light + flow, corner_height_fl, corner_height_bl, corner_height_fr, corner_height_br);
 #if USES_TINTING
                                         tempChunkColors32.AddRange(faceColors);
                                         tempChunkColors32.AddRange(faceColors);
 #endif
-                                }
                             }
 
                             // bottom
-                            if (chunk_bottom_middle_middle[bottom_middle_middle].hasContent != 1) {
+                            if (chunk_bottom_middle_middle[bottom_middle_middle].typeIndex <= Voxel.HoleTypeIndex) {
                                 AddFaceWater(faceVerticesBottom, normalsDown, pos, indicesWater, typeWater.textureIndexSide, light + noflow, 0, 0, 0, 0);
 #if USES_TINTING
                                         tempChunkColors32.AddRange(faceColors);
@@ -571,7 +570,6 @@ namespace VoxelPlay {
                             case RenderType.Transp6tex: {
                                     int rotationIndex = voxels[voxelIndex].GetTextureRotation();
                                     float light = voxels[voxelIndex].packedLight;
-                                    int typeIndex = voxels[voxelIndex].typeIndex;
 
                                     // back face
                                     if (v1b != FULL_OPAQUE && chunk_middle_back_middle[middle_back_middle].typeIndex != typeIndex) {
@@ -701,8 +699,70 @@ namespace VoxelPlay {
                                 }
                                 break;
                             default: //case RenderType.Custom:
-                                mivs.Add(voxelIndex);
-                                break;
+                                {
+                                    // check if voxel is surrounded
+                                    bool s1b = env.voxelDefinitions[chunk_middle_back_middle[middle_back_middle].typeIndex].occludesForward;
+                                    bool s1f = env.voxelDefinitions[chunk_middle_forward_middle[middle_forward_middle].typeIndex].occludesBack;
+                                    bool s1u = env.voxelDefinitions[chunk_top_middle_middle[top_middle_middle].typeIndex].occludesBottom;
+                                    bool s1d = env.voxelDefinitions[chunk_bottom_middle_middle[bottom_middle_middle].typeIndex].occludesTop;
+                                    bool s1l = env.voxelDefinitions[chunk_middle_middle_left[middle_middle_left].typeIndex].occludesRight;
+                                    bool s1r = env.voxelDefinitions[chunk_middle_middle_right[middle_middle_right].typeIndex].occludesLeft;
+                                    if (s1b && s1f && s1u && s1d && s1l && s1r) {
+                                        chunkVoxelCount--;
+                                        continue;
+                                    }
+                                    //int surroundingSolid = s1b + s1f + s1u + s1d + s1l + s1r;
+
+                                    mivs.Add(voxelIndex);
+
+                                    bool addCollider = type.generateCollider && enableColliders;
+
+                                    if (addCollider) {
+                                        bool addNavMesh = enableNavMesh && type.generateNavMesh;
+
+                                        // back face
+                                        if (v1b < FULL_OPAQUE) {
+                                            greedyCollider.AddQuad(FaceDirection.Back, x, y, z);
+                                            if (addNavMesh) {
+                                                greedyNavMesh.AddQuad(FaceDirection.Back, x, y, z);
+                                            }
+                                        }
+                                        // forward face
+                                        if (v1f < FULL_OPAQUE) {
+                                            greedyCollider.AddQuad(FaceDirection.Forward, x, y, z);
+                                            if (addNavMesh) {
+                                                greedyNavMesh.AddQuad(FaceDirection.Forward, x, y, z);
+                                            }
+                                        }
+                                        // left face
+                                        if (v1l < FULL_OPAQUE) {
+                                            greedyCollider.AddQuad(FaceDirection.Left, z, y, x);
+                                            if (addNavMesh) {
+                                                greedyNavMesh.AddQuad(FaceDirection.Left, z, y, x);
+                                            }
+                                        }
+                                        // right face
+                                        if (v1r < FULL_OPAQUE) {
+                                            greedyCollider.AddQuad(FaceDirection.Right, z, y, x);
+                                            if (addNavMesh) {
+                                                greedyNavMesh.AddQuad(FaceDirection.Right, z, y, x);
+                                            }
+                                        }
+                                        // top face
+                                        if (v1u < FULL_OPAQUE) {
+                                            greedyCollider.AddQuad(FaceDirection.Top, x, z, y);
+                                            if (addNavMesh) {
+                                                greedyNavMesh.AddQuad(FaceDirection.Top, x, z, y);
+                                            }
+                                        }
+                                        // bottom face
+                                        if (v1d < FULL_OPAQUE) {
+                                            greedyCollider.AddQuad(FaceDirection.Bottom, x, z, y);
+                                        }
+                                    }
+
+                                    break;
+                                }
                             case RenderType.Invisible: {
                                     // back face
                                     if (v1b < FULL_OPAQUE) {
@@ -755,8 +815,8 @@ namespace VoxelPlay {
                                             greedyCollider.AddQuad(FaceDirection.Bottom, x, z, y);
                                         }
                                     }
+                                    break;
                                 }
-                                break;
                             case RenderType.Cutout: {
 
                                     if (allowAO || type.overrideMaterial || type.texturesCustomPacking) {
@@ -1145,7 +1205,7 @@ namespace VoxelPlay {
                                     int lb = chunk_middle_back_middle[middle_back_middle].packedLight;
                                     int ld = chunk_bottom_middle_middle[bottom_middle_middle].packedLight;
 
-                                    bool doNotPackVertices = type.overrideMaterial || type.texturesCustomPacking || env.enableCurvature || type.renderType.supportsTextureAnimation();
+                                    bool doNotPackVertices = (type.overrideMaterial && !type.overrideMaterialGreedyMeshing) || type.texturesCustomPacking || env.enableCurvature || type.renderType.supportsTextureAnimation();
 
                                     if (allowAO || doNotPackVertices) {
 

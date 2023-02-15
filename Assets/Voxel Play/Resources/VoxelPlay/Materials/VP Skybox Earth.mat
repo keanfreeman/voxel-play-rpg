@@ -2,14 +2,17 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: VP Skybox Earth
   m_Shader: {fileID: 4800000, guid: 277a78673a27d426da226f5a838c8f11, type: 3}
-  m_ShaderKeywords: _EMISSION _SUNDISK_HIGH_QUALITY
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _EMISSION
+  - _SUNDISK_HIGH_QUALITY
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -63,6 +66,7 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _AtmosphereThickness: 1
     - _BumpScale: 1
@@ -103,6 +107,6 @@ Material:
     - _SkyDawn: {r: 1, g: 0.29411766, b: 0.13725491, a: 1}
     - _SkyDown: {r: 1, g: 0.5, b: 0.52, a: 1}
     - _SkyTint: {r: 0.52, g: 0.5, b: 1, a: 1}
-    - _SunLightColor: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+    - _SunLightColor: {r: 1, g: 1, b: 1, a: 1}
     - _WaterColor: {r: 0.4, g: 0.4, b: 1, a: 1}
   m_BuildTextureStacks: []

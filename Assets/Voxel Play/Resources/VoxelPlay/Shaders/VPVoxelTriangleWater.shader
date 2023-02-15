@@ -19,8 +19,8 @@ Shader "Voxel Play/Voxels/Triangle/Water"
 			#pragma prefer_hlslcc gles
 			#pragma exclude_renderers d3d11_9x
 			#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
-			#pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
+			#pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
 			#define USE_SHADOWS
             #define USE_SOFT_SHADOWS
 			#define USE_SPECULAR
@@ -45,9 +45,9 @@ Shader "Voxel Play/Voxels/Triangle/Water"
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile_fwdbase nolightmap nodynlightmap novertexlight nodirlightmap
 			#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_NORMAL
-			#pragma multi_compile _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
-			#pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_USE_NORMAL
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
+			#pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
 			#define USE_SHADOWS
             #define USE_SOFT_SHADOWS
 			#define USE_SPECULAR

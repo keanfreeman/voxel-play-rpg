@@ -59,12 +59,11 @@ namespace VoxelPlay
         public IVoxelPlayPlayer pickingPlayer;
 
         VoxelPlayEnvironment env;
-        VoxelChunk lastChunk;
         Material mat;
         Vector3d lastPosition;
 
         /// <summary>
-        /// Stores the voxel related to this item (used atm for torches)
+        /// Stores the voxel related to this item
         /// </summary>
         public VoxelChunk itemChunk;
         public int itemVoxelIndex = -1;
@@ -74,14 +73,14 @@ namespace VoxelPlay
             if (rb == null) {
                 rb = GetComponent<Rigidbody> ();
             }
-            env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+            env = VoxelPlayEnvironment.instance;
             if (persistentItem) {
                 // Clone material to support voxel lighting
                 Renderer renderer = GetComponent<Renderer> ();
                 if (renderer != null) {
                     mat = renderer.sharedMaterial;
                     if (mat != null) {
-                        mat = Instantiate<Material> (mat);
+                        mat = Instantiate(mat);
                         renderer.sharedMaterial = mat;
                     }
                 }
@@ -174,7 +173,7 @@ namespace VoxelPlay
 
             Vector3d currentPosition = transform.position;
 
-            if (lastChunk != null && lastChunk.isRendered) {
+            if (itemChunk != null && itemChunk.isRendered) {
                 if (currentPosition == lastPosition) {
                     return;
                 }
@@ -188,17 +187,17 @@ namespace VoxelPlay
             }
 
             // Update owner chunk
-            VoxelChunk currentChunk;
-            if (!env.GetChunk (currentPosition, out currentChunk, true))
+            if (!env.GetVoxelIndex (currentPosition, out VoxelChunk currentChunk, out int currentVoxelIndex, true))
                 return;
-            if (currentChunk != lastChunk) {
-                if (lastChunk != null) {
-                    lastChunk.RemoveItem (this);
-                    env.RegisterChunkChanges (lastChunk);
+            if (currentVoxelIndex != itemVoxelIndex || currentChunk != itemChunk) {
+                if (itemChunk != null) {
+                    itemChunk.RemoveItem (this);
+                    env.RegisterChunkChanges (itemChunk);
                 }
                 currentChunk.AddItem (this);
                 env.RegisterChunkChanges (currentChunk);
-                lastChunk = currentChunk;
+                itemChunk = currentChunk;
+                itemVoxelIndex = currentVoxelIndex;
             }
 
             if (currentChunk.isRendered && rb != null && !rb.useGravity) {
@@ -208,8 +207,8 @@ namespace VoxelPlay
 
         void OnDestroy ()
         {
-            if (lastChunk != null) {
-                lastChunk.RemoveItem (this);
+            if (itemChunk != null) {
+                itemChunk.RemoveItem (this);
             }
         }
 

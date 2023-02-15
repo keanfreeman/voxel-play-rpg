@@ -163,7 +163,7 @@ namespace VoxelPlay
 
         void OnValidate ()
         {
-            VoxelPlayEnvironment env = null;
+            VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
             if (env != null && this == env.world) {
                 if (setTimeAndAzimuth) {
                     env.SetTimeOfDay (timeOfDay, azimuth);

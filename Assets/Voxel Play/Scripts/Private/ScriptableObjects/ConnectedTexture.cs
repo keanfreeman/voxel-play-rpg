@@ -13,6 +13,7 @@ namespace VoxelPlay
     {
         public bool tl, t, tr, l, r, bl, b, br;
         public Texture2D texture;
+        public Texture2D normalMap;
         [NonSerialized]
         public int textureIndex, key, slots;
     }

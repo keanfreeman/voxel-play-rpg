@@ -190,7 +190,7 @@ namespace VoxelPlay {
             m_StepCycle = 0f;
             m_NextStep = m_StepCycle / 2f;
 
-            env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+            env = VoxelPlayEnvironment.instance;
             if (env == null) {
                 Debug.LogError("Voxel Play Environment must be added first.");
             } else {
@@ -262,7 +262,7 @@ namespace VoxelPlay {
                     if (index.typeIndex != lastVoxelTypeIndex || voxelUnder == null) {
                         lastVoxelTypeIndex = index.typeIndex;
                         if (lastVoxelTypeIndex != 0) {
-                            voxelUnder = env.voxelDefinitions[index.type];
+                            voxelUnder = index.type;
                             SetFootstepSounds(voxelUnder.footfalls, voxelUnder.landingSound, voxelUnder.jumpSound);
                             if (voxelUnder.triggerWalkEvent && OnVoxelWalk != null) {
                                 OnVoxelWalk(index.chunk, index.voxelIndex);
@@ -467,7 +467,7 @@ namespace VoxelPlay {
                     // Basic placement rules
                     bool canPlace = crosshairOnBlock;
                     Voxel existingVoxel = _crosshairHitInfo.voxel;
-                    VoxelDefinition existingVoxelType = env.voxelDefinitions[existingVoxel.type()];
+                    VoxelDefinition existingVoxelType = existingVoxel.type;
                     Vector3d placePos;
 
                     VoxelDefinition placeVoxelType = currentItem.voxelType;
@@ -487,7 +487,7 @@ namespace VoxelPlay {
                         }
                     }
 
-                    VoxelDefinition existingVoxelOnPlacePos = env.voxelDefinitions[env.GetVoxel(placePos).type()];
+                    VoxelDefinition existingVoxelOnPlacePos = env.GetVoxel(placePos).type;
                     float distanceFromCenter = (float)(_crosshairHitInfo.point.y - env.GetVoxelPosition(_crosshairHitInfo.voxelCenter).y);
                     bool isOverCenter = false;
 
@@ -556,7 +556,7 @@ namespace VoxelPlay {
                             canPlace = false;
                         }
                         if (canPlace) {
-                            if (existingVoxelOnPlacePos.hasContent == 1) {
+                            if (existingVoxelOnPlacePos.hasContent) {
                                 env.VoxelDestroy(placePos);
                             }
                         } else {
@@ -629,9 +629,9 @@ namespace VoxelPlay {
                             }
                             if (currentItem.model.buildDuration > 0) {
                                 modelBuildInProgress = true;
-                                env.ModelPlace(modelBuildPreviewPosition, currentItem.model, currentItem.model.buildDuration, buildRotationDegrees, 1f, true, FinishBuilding);
+                                env.ModelPlace(modelBuildPreviewPosition, currentItem.model, currentItem.model.buildDuration, buildRotationDegrees, 1f, fitTerrain: currentItem.model.fitToTerrain, FinishBuilding);
                             } else {
-                                env.ModelPlace(modelBuildPreviewPosition, currentItem.model, buildRotationDegrees, colorBrightness: 1f, fitTerrain: true);
+                                env.ModelPlace(modelBuildPreviewPosition, currentItem.model, buildRotationDegrees, colorBrightness: 1f, fitTerrain: currentItem.model.fitToTerrain);
                             }
                             player.ConsumeItem();
                         } else {

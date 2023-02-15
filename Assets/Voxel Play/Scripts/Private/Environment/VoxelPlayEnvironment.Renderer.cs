@@ -1,5 +1,5 @@
 ﻿//#define USES_SEE_THROUGH
-//#define USES_BRIGHT_POINT_LIGHTS
+#define USES_BRIGHT_POINT_LIGHTS
 //#define USES_URP_NATIVE_LIGHTS
 //#define USES_FRESNEL
 using System;
@@ -62,11 +62,14 @@ namespace VoxelPlay {
         }
 
 
-        public struct RenderingMaterial {
+        public struct RenderingMaterialDescriptor {
             public Material templateMaterial;
-            public RenderType renderType;
-            public Material material;
             public TextureArrayPacker textureProvider;
+        }
+
+        public struct RenderingMaterial {
+            public RenderingMaterialDescriptor descriptor;
+            public Material material;
             public VoxelPlayGreedyMesherLitAO greedyMesherLitAO;
             public VoxelPlayGreedyMesherLit greedyMesherLit;
         }
@@ -155,7 +158,7 @@ namespace VoxelPlay {
         Color32[] surroundingColors;
 
         // Each material has an index power of 2 which is combined with other materials to create a multi-material chunk mesh
-        Dictionary<Material, int> materialIndices;
+        Dictionary<RenderingMaterialDescriptor, int> materialIndices;
         int lastRenderingMaterialIndex;
 
         // Multi-thread support
@@ -180,45 +183,13 @@ namespace VoxelPlay {
             // Init rendering-related stuff
             voxelPlaceholderPrefab = Resources.Load<GameObject>("VoxelPlay/Defaults/VoxelPlaceholder");
 
-            // Init system arrays and structures
-            if (materialsDict == null) {
-                materialsDict = new FastHashSet<Material[]>();
-            } else {
-                materialsDict.Clear();
-            }
-
-            // Init main texture array
-            if (mainTextureProvider == null) {
-                TextureProviderSettings settings = new TextureProviderSettings { textureSize = this.textureSize, textureScale = 1, enableNormalMap = this.enableNormalMap, enableReliefMap = this.enableReliefMapping };
-                mainTextureProvider = GetTextureArrayPacker(settings);
-                mainTextureProvider.Clear();
-            }
-
-            // Assign materials to rendering buffers
-            renderingMaterials = new RenderingMaterial[MAX_MATERIALS_PER_CHUNK];
-            lastRenderingMaterialIndex = -1;
-
-            if (materialIndices == null) {
-                materialIndices = new Dictionary<Material, int>();
-            } else {
-                materialIndices.Clear();
-            }
-
             // Triangle opaque and cutout are always loaded because dynamic voxels requires them
-            matDynamicOpaque = Instantiate(Resources.Load<Material>("VoxelPlay/Materials/VP Voxel Dynamic Opaque"), this.transform);
-            matDynamicCutout = Instantiate(Resources.Load<Material>("VoxelPlay/Materials/VP Voxel Dynamic Cutout"), this.transform);
+            matDynamicOpaque = Instantiate(Resources.Load<Material>("VoxelPlay/Materials/VP Voxel Dynamic Opaque"));
+            matDynamicCutout = Instantiate(Resources.Load<Material>("VoxelPlay/Materials/VP Voxel Dynamic Cutout"));
             matDynamicOpaqueNonArray = Resources.Load<Material>("VoxelPlay/Materials/VP Model Texture");
             matDynamicCutoutNonArray = Resources.Load<Material>("VoxelPlay/Materials/VP Model Texture Cutout");
 
-            // In this exact order
-            RegisterRenderingMaterial(RenderType.Opaque.GetDefaultMaterial(this), RenderType.Opaque, mainTextureProvider);
-            RegisterRenderingMaterial(RenderType.CutoutCross.GetDefaultMaterial(this), RenderType.CutoutCross, mainTextureProvider);
-            RegisterRenderingMaterial(RenderType.Cutout.GetDefaultMaterial(this), RenderType.Cutout, mainTextureProvider);
-            RegisterRenderingMaterial(RenderType.Water.GetDefaultMaterial(this), RenderType.Water, mainTextureProvider);
-            RegisterRenderingMaterial(RenderType.Transp6tex.GetDefaultMaterial(this), RenderType.Transp6tex, mainTextureProvider);
-            RegisterRenderingMaterial(RenderType.Cloud.GetDefaultMaterial(this), RenderType.Cloud, mainTextureProvider);
-            RegisterRenderingMaterial(RenderType.OpaqueAnimated.GetDefaultMaterial(this), RenderType.OpaqueAnimated, mainTextureProvider);
-            RegisterRenderingMaterial(RenderType.OpaqueNoAO.GetDefaultMaterial(this), RenderType.OpaqueNoAO, mainTextureProvider);
+            InitRenderingMaterials();
 
             if (surroundingColors == null || surroundingColors.Length < 27) {
                 surroundingColors = new Color32[27];
@@ -265,11 +236,12 @@ namespace VoxelPlay {
 
             if (templateMat == null) return 0;
 
-            if (!forceNewRegistration && materialIndices.TryGetValue(templateMat, out int materialIndex)) return materialIndex; // already registered
+            RenderingMaterialDescriptor desc = new RenderingMaterialDescriptor { templateMaterial = templateMat, textureProvider = provider };
+            if (!forceNewRegistration && materialIndices.TryGetValue(desc, out int materialIndex)) return materialIndex; // already registered
 
             if (lastRenderingMaterialIndex < renderingMaterials.Length - 1) {
                 lastRenderingMaterialIndex++;
-                Material mat = Instantiate(templateMat, this.transform);
+                Material mat = Instantiate(templateMat);
 
                 VoxelPlayGreedyMesherLitAO greedyMesherLitAO = null;
                 VoxelPlayGreedyMesherLit greedyMesherLit = null;
@@ -291,8 +263,8 @@ namespace VoxelPlay {
                         break;
                 }
 
-                renderingMaterials[lastRenderingMaterialIndex] = new RenderingMaterial { templateMaterial = templateMat, renderType = rt, material = mat, textureProvider = provider, greedyMesherLitAO = greedyMesherLitAO, greedyMesherLit = greedyMesherLit };
-                materialIndices[templateMat] = lastRenderingMaterialIndex;
+                renderingMaterials[lastRenderingMaterialIndex] = new RenderingMaterial { descriptor = desc, material = mat, greedyMesherLitAO = greedyMesherLitAO, greedyMesherLit = greedyMesherLit };
+                materialIndices[desc] = lastRenderingMaterialIndex;
             } else {
                 Debug.LogError("Too many override materials. Max materials supported = " + MAX_MATERIALS_PER_CHUNK);
             }
@@ -300,17 +272,18 @@ namespace VoxelPlay {
             return lastRenderingMaterialIndex;
         }
 
-        int RegisterRenderingMaterialNoTextureArray(Material templateMat, RenderType rt) {
+        int RegisterRenderingMaterialNoTextureArray(Material templateMat) {
 
             if (templateMat == null) return 0;
 
-            if (materialIndices.TryGetValue(templateMat, out int materialIndex)) return materialIndex; // already registered
+            RenderingMaterialDescriptor desc = new RenderingMaterialDescriptor { templateMaterial = templateMat };
+            if (materialIndices.TryGetValue(desc, out int materialIndex)) return materialIndex; // already registered
 
             if (lastRenderingMaterialIndex < renderingMaterials.Length - 1) {
                 lastRenderingMaterialIndex++;
-                Material mat = Instantiate(templateMat, this.transform);
-                renderingMaterials[lastRenderingMaterialIndex] = new RenderingMaterial { templateMaterial = templateMat, renderType = rt, material = mat, textureProvider = null };
-                materialIndices[templateMat] = lastRenderingMaterialIndex;
+                Material mat = Instantiate(templateMat);
+                renderingMaterials[lastRenderingMaterialIndex] = new RenderingMaterial { descriptor = desc, material = mat };
+                materialIndices[desc] = lastRenderingMaterialIndex;
             } else {
                 Debug.LogError("Too many override materials. Max materials supported = " + MAX_MATERIALS_PER_CHUNK);
             }
@@ -405,7 +378,7 @@ namespace VoxelPlay {
             emptyChunkAboveTerrain = new Voxel[CHUNK_VOXEL_COUNT];
             for (int k = 0; k < emptyChunkAboveTerrain.Length; k++) {
                 emptyChunkAboveTerrain[k].light = FULL_LIGHT;
-                emptyChunkUnderground[k].hasContent = 1;
+                emptyChunkUnderground[k].typeIndex = Voxel.HoleTypeIndex + 1;
                 emptyChunkUnderground[k].opaque = FULL_OPAQUE;
             }
 
@@ -451,6 +424,7 @@ namespace VoxelPlay {
 
             NotifyCameraMove();
             UpdateAmbientProperties();
+            UpdateLightProperties();
 
             if (renderingMaterials == null || renderingMaterials.Length == 0)
                 return;
@@ -487,7 +461,7 @@ namespace VoxelPlay {
                 if (mat != null) {
                     bool enableNormalMap = this.enableNormalMap;
                     bool enableReliefMap = this.enableReliefMapping;
-                    TextureArrayPacker provider = renderingMaterials[k].textureProvider;
+                    TextureArrayPacker provider = renderingMaterials[k].descriptor.textureProvider;
                     if (provider != null) {
                         enableNormalMap = provider.settings.enableNormalMap;
                         enableReliefMap = provider.settings.enableReliefMap;
@@ -500,7 +474,6 @@ namespace VoxelPlay {
                             mat.SetTextureScale(ShaderParams.MainTex, new Vector2(textureScale, textureScale));
                         }
                     }
-                    ToggleMaterialKeyword(mat, SKW_VOXELPLAY_USE_AO, !draftModeActive && enableSmoothLighting);
                     ToggleMaterialKeyword(mat, SKW_VOXELPLAY_TRANSP_BLING, transparentBling);
                     ToggleMaterialKeyword(mat, SKW_VOXELPLAY_AA_TEXELS, hqFiltering && !enableReliefMap);
 
@@ -615,6 +588,11 @@ namespace VoxelPlay {
 
         }
 
+        void UpdateLightProperties() {
+            float maxLightDistance = brightPointsMaxDistance * brightPointsMaxDistance;
+            Shader.SetGlobalFloat(ShaderParams.GlobalLightMaxDistSqr, maxLightDistance);
+        }
+
         void UpdateWaterMat() {
             // Update realistic water properties
             Material waterMat = renderingMaterials[INDICES_BUFFER_WATER].material;
@@ -682,8 +660,8 @@ namespace VoxelPlay {
             if (mat == null) return;
             fresnelExponent = Mathf.Max(fresnelExponent, 1f);
             fresnelIntensity = Mathf.Max(fresnelIntensity, 0f);
-            mat.SetFloat("_FresnelExponent", fresnelExponent);
-            mat.SetColor("_FresnelColor", fresnelColor * (enableFresnel ? fresnelIntensity : 0));
+            mat.SetFloat(ShaderParams.FresnelExponent, fresnelExponent);
+            mat.SetColor(ShaderParams.FresnelColor, fresnelColor * (enableFresnel ? fresnelIntensity : 0));
         }
 
         bool CreateChunkMeshJob(VoxelChunk chunk) {
@@ -715,6 +693,7 @@ namespace VoxelPlay {
 
 
         void GenerateChunkMeshDataInMainThread(long endTime) {
+
             long elapsed;
             MeshingThread thread = meshingThreads[0];
             do {
@@ -783,7 +762,7 @@ namespace VoxelPlay {
                 int colliderVerticesCount = meshJobs[jobIndex].colliderVertices.Count;
                 Mesh colliderMesh = chunk.mc.sharedMesh;
 #if UNITY_EDITOR
-                if (!applicationIsPlaying && renderInEditorDetail != EditorRenderDetail.StandardPlusColliders) {
+                if (renderInEditorDetail != EditorRenderDetail.StandardPlusColliders && !applicationIsPlaying) {
                     colliderVerticesCount = 0;
                 }
 #endif
@@ -958,7 +937,7 @@ namespace VoxelPlay {
                 return mesh;
             }
 
-            Mesh meshWithColors = Instantiate(bm.mesh, this.transform);
+            Mesh meshWithColors = Instantiate(bm.mesh);
             meshWithColors.hideFlags = HideFlags.DontSave;
 
             Color32[] originalColors32 = voxelDefinition.meshColors32;
@@ -1061,7 +1040,7 @@ namespace VoxelPlay {
                 return mesh;
             }
 
-            Mesh meshWithColors = Instantiate(bm.mesh, this.transform);
+            Mesh meshWithColors = Instantiate(bm.mesh);
             meshWithColors.hideFlags = HideFlags.DontSave;
             meshWithColors.SetColors(modelMeshColors);
 
@@ -1128,7 +1107,7 @@ namespace VoxelPlay {
                         if (prefab == null) continue;
 
                         placeholder.modelTemplate = prefab;
-                        placeholder.modelInstance = Instantiate(prefab, this.transform);
+                        placeholder.modelInstance = Instantiate(prefab);
                         placeholder.modelInstance.name = "DynamicVoxelInstance";
                         // Note: placeHolder.modelInstance layer must be different from layerVoxels to allow dynamic voxels collide with terrain. So don't set its layer to layer voxels
                         placeholder.modelMeshRenderers = placeholder.modelInstance.GetComponentsInChildren<MeshRenderer>();

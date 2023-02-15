@@ -10,7 +10,6 @@ namespace VoxelPlay
         public static int ColorsAndLightArray = Shader.PropertyToID ("_ColorsAndLight");
         public static int RotationsArray = Shader.PropertyToID ("_Rotations");
         public static int VoxelLight = Shader.PropertyToID ("_VoxelLight");
-        public static int GlobalEmissionIntensity = Shader.PropertyToID ("_VPEmissionIntensity");
         public static int FlashDelay = Shader.PropertyToID ("_FlashDelay");
         public static int TexSides = Shader.PropertyToID ("_TexSides");
         public static int TexBottom = Shader.PropertyToID ("_TexBottom");
@@ -27,6 +26,11 @@ namespace VoxelPlay
         public static int WaveAmplitude = Shader.PropertyToID("_WaveAmplitude");
         public static int UnderWaterFogColor = Shader.PropertyToID("_UnderWaterFogColor");
         public static int InverseView = Shader.PropertyToID("_InverseView");
+        public static int FresnelExponent = Shader.PropertyToID("_FresnelExponent");
+        public static int FresnelColor = Shader.PropertyToID("_FresnelColor");
+
+        public static int GlobalEmissionIntensity = Shader.PropertyToID("_VPEmissionIntensity");
+        public static int GlobalLightMaxDistSqr = Shader.PropertyToID("_VPPointMaxDistanceSqr");
     }
 
 }

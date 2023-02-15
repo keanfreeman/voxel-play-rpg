@@ -131,7 +131,7 @@ namespace VoxelPlay
         {
 
             // Make sure the voxel exists (has not been removed just before this call) and is solid 
-            if (hitInfo.chunk.voxels [hitInfo.voxelIndex].hasContent != 1 || hitInfo.chunk.voxels [hitInfo.voxelIndex].opaque < FULL_OPAQUE) {
+            if (hitInfo.chunk.voxels [hitInfo.voxelIndex].isEmpty || hitInfo.chunk.voxels [hitInfo.voxelIndex].opaque < FULL_OPAQUE) {
                 return null;
             }
 
@@ -202,8 +202,8 @@ namespace VoxelPlay
             itemInfo.itemDefinition = torchDefinition;
             itemInfo.canPickOnApproach = false;
             itemInfo.canBeDestroyed = true;
-            itemInfo.itemChunk = hitInfo.chunk;
-            itemInfo.itemVoxelIndex = hitInfo.voxelIndex;
+            itemInfo.itemChunk = chunk;
+            itemInfo.itemVoxelIndex = voxelIndex;
 
             // Add light source to chunk
             LightSource lightSource = new LightSource ();

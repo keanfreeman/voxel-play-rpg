@@ -4,17 +4,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public enum SceneIndex {
+    NONE = -1,
+    INIT_SCENE = 0,
+    SECOND_SCENE = 1,
+    THIRD_SCENE = 2,
+    FOURTH_SCENE = 3
+}
+
 public class SceneChanger : MonoBehaviour
 {
+    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject opossumPrefab;
+    [SerializeField] private GameObject sceneExitPrefab;
     [SerializeField] private GameObject uiDocument;
 
-    enum SceneIndex {
-        NONE = -1,
-        INIT_SCENE = 0,
-        SECOND_SCENE = 1,
-        THIRD_SCENE = 2,
-        FOURTH_SCENE = 3,
-    }
+    GameObject playerInstance;
+    Vector3Int playerStartPosition;
+
+    NonVoxelInitialization nonVoxelInitialization;
 
     private class SceneInfo {
         public Scene scene { get; }
@@ -29,7 +37,7 @@ public class SceneChanger : MonoBehaviour
     private Dictionary<SceneIndex, SceneInfo> loadedScenes = new Dictionary<SceneIndex, SceneInfo>();
 
     void Awake() {
-        DontDestroyOnLoad(gameObject);
+        nonVoxelInitialization = new NonVoxelInitialization(playerPrefab, opossumPrefab, sceneExitPrefab);
 
         loadedScenes[SceneIndex.INIT_SCENE] = new SceneInfo(SceneManager.GetActiveScene(), null);
 
@@ -37,45 +45,33 @@ public class SceneChanger : MonoBehaviour
         SceneManager.LoadScene(secondSceneIndex);
         Scene secondScene = SceneManager.GetSceneByBuildIndex(secondSceneIndex);
         loadedScenes[SceneIndex.SECOND_SCENE] = new SceneInfo(secondScene, null);
-        
-        int thirdSceneIndex = (int)SceneIndex.THIRD_SCENE;
-        Scene thirdScene = LoadSceneAsInactive(thirdSceneIndex);
-        loadedScenes[SceneIndex.THIRD_SCENE] = new SceneInfo(thirdScene, null);
 
-        //int fourthSceneIndex = (int)SceneIndex.FOURTH_SCENE;
-        //Scene fourthScene = LoadSceneAsInactive(fourthSceneIndex);
-        //loadedScenes[SceneIndex.FOURTH_SCENE] = new SceneInfo(fourthScene, null);
+        playerStartPosition = nonVoxelInitialization.GetPlayerStartPosition(SceneIndex.SECOND_SCENE);
+        playerInstance = Instantiate(playerPrefab, playerStartPosition, Quaternion.identity);
+
+        DontDestroyOnLoad(playerInstance);
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Update() {
-        if (
-            !loadedScenes[SceneIndex.SECOND_SCENE].scene.isLoaded
-            || !loadedScenes[SceneIndex.THIRD_SCENE].scene.isLoaded
-            //!loadedScenes[SceneIndex.FOURTH_SCENE].scene.isLoaded
-            ) {
+        // load all scenebuilders
+        bool allPopulated = true;
+        foreach (KeyValuePair<SceneIndex, SceneInfo> sceneInfo in loadedScenes) {
+            if (sceneInfo.Key != SceneIndex.INIT_SCENE && sceneInfo.Value.sceneBuilder == null) {
+                allPopulated = false;
+                if (!sceneInfo.Value.scene.isLoaded) {
+                    return;
+                }
+                playerInstance.transform.SetPositionAndRotation(playerStartPosition, Quaternion.identity);
+                loadedScenes[sceneInfo.Key].sceneBuilder = GetSceneBuilderForScene(loadedScenes[sceneInfo.Key].scene);
+                loadedScenes[sceneInfo.Key].sceneBuilder.Init(uiDocument, playerStartPosition, playerInstance,
+                    nonVoxelInitialization.GetSceneObjects(sceneInfo.Key));
+            }
+        }
+        if (!allPopulated) {
             return;
         }
 
-        if (loadedScenes[SceneIndex.SECOND_SCENE].sceneBuilder == null) {
-            loadedScenes[SceneIndex.SECOND_SCENE].sceneBuilder =
-                GetSceneBuilderForScene(loadedScenes[SceneIndex.SECOND_SCENE].scene);
-            loadedScenes[SceneIndex.SECOND_SCENE].sceneBuilder.Init(uiDocument);
-            loadedScenes[SceneIndex.SECOND_SCENE].sceneBuilder.enabled = true;
-        }
-        if (loadedScenes[SceneIndex.THIRD_SCENE].sceneBuilder == null) {
-            loadedScenes[SceneIndex.THIRD_SCENE].sceneBuilder =
-                GetSceneBuilderForScene(loadedScenes[SceneIndex.THIRD_SCENE].scene);
-            loadedScenes[SceneIndex.THIRD_SCENE].sceneBuilder.Init(uiDocument);
-            loadedScenes[SceneIndex.THIRD_SCENE].sceneBuilder.enabled = true;
-        }
-        //if (loadedScenes[SceneIndex.FOURTH_SCENE].sceneBuilder == null) {
-        //    loadedScenes[SceneIndex.FOURTH_SCENE].sceneBuilder =
-        //        GetSceneBuilderForScene(loadedScenes[SceneIndex.FOURTH_SCENE].scene);
-        //    loadedScenes[SceneIndex.FOURTH_SCENE].sceneBuilder.Init(uiDocument);
-        //}
-
-        SceneManager.SetActiveScene(loadedScenes[SceneIndex.SECOND_SCENE].scene);
-        loadedScenes[SceneIndex.SECOND_SCENE].sceneBuilder.enabled = true;
         gameObject.SetActive(false);
     }
 
@@ -91,38 +87,16 @@ public class SceneChanger : MonoBehaviour
         throw new MissingReferenceException("Could not find a scenebuilder for scene " + scene.name);
     }
 
-    public void LoadScene(int fromScene, int toScene) {
-        Scene nextScene = SceneManager.GetSceneByBuildIndex(toScene);
+    public void LoadNextScene(SceneIndex currentScene, Destination destination) {
+        SceneManager.LoadScene((int)destination.destinationScene);
 
-        // todo fix to wait until loaded as loading is not immediate
-        if (!nextScene.isLoaded) {
-            LoadSceneAsInactive(toScene);
-        }
+        playerStartPosition = destination.destinationTile;
 
-        loadedScenes[(SceneIndex)fromScene].sceneBuilder.PrepareForSceneInactive();
+        Scene destinationScene = SceneManager.GetSceneByBuildIndex((int)destination.destinationScene);
+        loadedScenes.Remove(currentScene);
+        currentScene = (SceneIndex)destinationScene.buildIndex;
+        loadedScenes[currentScene] = new SceneInfo(destinationScene, null);
 
-        SceneBuilder nextSceneBuilder = loadedScenes[(SceneIndex)fromScene].sceneBuilder;
-        SetActiveScene(nextSceneBuilder.playerInstance);
-    }
-
-    public Scene LoadSceneAsInactive(int index) {
-        SceneManager.LoadScene(index, LoadSceneMode.Additive);
-        Scene scene = SceneManager.GetSceneByBuildIndex(index);
-        return scene;
-    }
-
-    public void SetActiveScene(GameObject playerObject) {
-        int newSceneIndex = SceneManager.GetActiveScene().buildIndex == 2 ? 1 : 2;
-        Debug.Log("Making " + newSceneIndex + " active");
-
-        Scene nextScene = SceneManager.GetSceneByBuildIndex(newSceneIndex);
-        SceneManager.MoveGameObjectToScene(playerObject, nextScene);
-        SceneManager.SetActiveScene(nextScene);
-        loadedScenes[(SceneIndex)newSceneIndex].sceneBuilder.OnMadeActive(playerObject);
-    }
-
-    // not blocking
-    public void DestroyScene(Scene scene) {
-        SceneManager.UnloadSceneAsync(scene);
+        gameObject.SetActive(true);
     }
 }

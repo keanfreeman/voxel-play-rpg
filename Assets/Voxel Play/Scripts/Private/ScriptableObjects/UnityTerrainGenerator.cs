@@ -27,6 +27,7 @@ namespace VoxelPlay {
 		[Serializable]
 		public struct VegetationVoxelDefinitionMapping {
 			public Texture2D preview;
+            public string previewName;
 			public VoxelDefinition vd;
 			public TerrainResourceAction action;
 		}
@@ -64,7 +65,17 @@ namespace VoxelPlay {
         TerrainData lastTerrainDataLoaded;
 		Vector3 terrainPos = Vector3.zero;
 
-		protected override void Init () {
+        int terrainDataHeightmapResolution;
+        float terrainDataSizeX, terrainDataSizeZ;
+
+        private void OnDestroy() {
+            heights = null;
+            terrainData = null;
+            treeSettings = null;
+            detailSettings = null;
+        }
+
+        protected override void Init() {
 
 			if (splatSettings == null || splatSettings.Length == 0) {
 				splatSettings = new TerrainVoxelDefinitionMapping[64];
@@ -87,7 +98,7 @@ namespace VoxelPlay {
 			if (world != null && world.terrainGenerator == null) {
 				world.terrainGenerator = this;
 			}
-			if (terrainData == null) {
+			if (terrainData == null || treeSettings == null || treeSettings.Length == 0) {
 				Terrain activeTerrain = Terrain.activeTerrain;
 				if (activeTerrain != null) {
 					terrainData = activeTerrain.terrainData;
@@ -144,14 +155,14 @@ namespace VoxelPlay {
 					}
 
 					if (detailLayerCount > 0) {
+                        int detailX = x * terrainData.detailWidth / tw;
 						for (int v = 0; v < detailLayerCount; v++) {
 							currentDetailLayer++;
 							if (currentDetailLayer >= detailLayerCount) {
 								currentDetailLayer = 0;
-							}
-							if (detailSettings [currentDetailLayer].vd != null) {
-								int detailX = x * terrainData.detailWidth / tw;
-								int o = detailLayers [currentDetailLayer].detailLayer [detailY, detailX];
+                            }
+                            if ((object)detailSettings[currentDetailLayer].vd != null) {
+                                int o = detailLayers[currentDetailLayer].detailLayer[detailY, detailX];
 								if (o > vegDensity) {
 									heights [i].vegetationVoxel = detailSettings [currentDetailLayer].vd;
 									break;
@@ -162,26 +173,27 @@ namespace VoxelPlay {
 				}
 			}
 
-			float sx = terrainData.size.x;
-			float sz = terrainData.size.z;
-			for (int t = 0; t < terrainData.treeInstances.Length; t++) {
-				TreeInstance ti = terrainData.treeInstances [t];
-				int hindex = GetHeightIndex (ti.position.x * sx - sx / 2, ti.position.z * sz - sz / 2);
-				heights [hindex].treeModel = treeSettings [ti.prototypeIndex].md;
-			}
-		}
+            terrainDataHeightmapResolution = terrainData.heightmapResolution;
+            terrainDataSizeX = terrainData.size.x;
+            terrainDataSizeZ = terrainData.size.z;
+
+            int treeInstancesLength = terrainData.treeInstances.Length;
+            for (int t = 0; t < treeInstancesLength; t++) {
+                TreeInstance ti = terrainData.GetTreeInstance(t);
+                Vector3 treePosition = ti.position;
+                int y = (int)(treePosition.z * th);
+                int x = (int)(treePosition.x * tw);
+                int hindex = y * tw + x;
+                heights[hindex].treeModel = treeSettings[ti.prototypeIndex].md;
+            }
+        }
 
 		public void ExamineTerrainData () {
-			#if UNITY_EDITOR
+#if UNITY_EDITOR
 			if (terrainData == null)
 				return;
-#if UNITY_2018_3_OR_NEWER
             for (int k = 0; k < terrainData.terrainLayers.Length && k < splatSettings.Length; k++) {
                 splatSettings[k].preview = TextureTools.GetSolidTexture(terrainData.terrainLayers[k].diffuseTexture);
-#else
-			for (int k = 0; k < terrainData.splatPrototypes.Length && k < splatSettings.Length; k++) {
-				splatSettings [k].preview = TextureTools.GetSolidTexture (terrainData.splatPrototypes [k].texture);
-#endif
                 if (splatSettings [k].dirtWith == 0) {
 					splatSettings [k].dirtWith = (k + 1);
 					splatSettings [k].blendPower = 0.5f;
@@ -201,29 +213,33 @@ namespace VoxelPlay {
 				}
 			}
 			for (int k = 0; k < terrainData.detailPrototypes.Length; k++) {
-				if (terrainData.detailPrototypes [k].prototype != null) {
-					detailSettings [k].preview = UnityEditor.AssetPreview.GetAssetPreview (terrainData.detailPrototypes [k].prototype);
-				} else {
+                if (terrainData.detailPrototypes[k].prototype != null) {
+                    Texture2D preview = UnityEditor.AssetPreview.GetAssetPreview(terrainData.detailPrototypes[k].prototype);
+                    detailSettings[k].previewName = terrainData.detailPrototypes[k].prototype.name;
+                    detailSettings[k].preview = preview;
+                } else {
 					detailSettings [k].preview = terrainData.detailPrototypes [k].prototypeTexture;
 				}
-				if (detailSettings [k].preview == null) {
-					detailSettings [k].action = TerrainResourceAction.Ignore;
-				} else if (detailSettings [k].vd == null && detailSettings [k].action == TerrainResourceAction.Assigned) {
-					detailSettings [k].action = TerrainResourceAction.Create;
-				}
-			}
-			UnityEditor.EditorUtility.SetDirty (this);
+                if (detailSettings[k].vd != null) {
+                    detailSettings[k].action = TerrainResourceAction.Assigned;
+                } else if (detailSettings[k].vd == null && detailSettings[k].action == TerrainResourceAction.Assigned) {
+                    detailSettings[k].action = TerrainResourceAction.Create;
+                } else if (detailSettings[k].preview == null) {
+                    detailSettings[k].action = TerrainResourceAction.Ignore;
+                }
+            }
+            UnityEditor.EditorUtility.SetDirty(this);
 #endif
         }
 
-		int GetHeightIndex (double x, double z) {
-			int w = terrainData.heightmapResolution;
-			int h = terrainData.heightmapResolution;
+        int GetHeightIndex(double x, double z) {
+            int w = terrainDataHeightmapResolution;
+            int h = terrainDataHeightmapResolution;
 
-			float sx = terrainData.size.x;
-			float sz = terrainData.size.z;
+            float sx = terrainDataSizeX;
+            float sz = terrainDataSizeZ;
 
-			float fx = w / sx;
+            float fx = w / sx;
 			float fz = h / sz;
 
 			int tx = (int)((x - terrainPos.x) * fx);
@@ -319,9 +335,9 @@ namespace VoxelPlay {
 						}
 					} else if (pos.y == groundLevel) {
 						isAboveSurface = true;
-						if (voxels [voxelIndex].hasContent == 0) {
+						if (voxels [voxelIndex].typeIndex == 0) {
 							// surface => draw voxel top, vegetation and trees
-										voxels [voxelIndex].Set (vd);
+							voxels [voxelIndex].Set (vd);
 #if UNITY_EDITOR
 							if (!env.draftModeActive) {
 #endif
@@ -354,7 +370,7 @@ namespace VoxelPlay {
 					// Continue filling down
 					vd = heights [hindex].terrainVoxelDirt;
 					while (voxelIndex > bedrockRow) {
-						if (voxels [voxelIndex].hasContent == 0) {
+						if (voxels [voxelIndex].typeIndex == 0) {
 							voxels [voxelIndex].SetFastOpaque (vd);
 						}
 						voxelIndex -= ONE_Y_ROW;

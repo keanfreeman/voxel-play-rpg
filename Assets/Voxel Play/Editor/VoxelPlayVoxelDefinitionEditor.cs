@@ -7,7 +7,8 @@ namespace VoxelPlay {
     public class VoxelPlayVoxelDefinitionEditor : UnityEditor.Editor {
 
         SerializedProperty title, renderType, opaque;
-        SerializedProperty overrideMaterial, texturesByMaterial, overrideMaterialNonGeo;
+        SerializedProperty occludesTop, occludesBottom, occludesForward, occludesBack, occludesLeft, occludesRight;
+        SerializedProperty overrideMaterial, overrideMaterialNonGeo, overrideMaterialGreedyMeshing, texturesByMaterial;
         SerializedProperty texturesCustomPacking, texturesPackingSize, texturesPackingScale, texturesPackingNormalMap, texturesPackingReliefMap;
         SerializedProperty textureTop, textureTopEmission, textureTopNRM, textureTopDISP;
         SerializedProperty textureSide, textureSideEmission, textureSideNRM, textureSideDISP;
@@ -17,9 +18,9 @@ namespace VoxelPlay {
         SerializedProperty textureBottom, textureBottomEmission, textureBottomNRM, textureBottomDISP;
         SerializedProperty showFoam, tintColor, colorVariation, alpha;
         SerializedProperty pickupSound, buildSound, footfalls, jumpSound, landingSound, impactSound, destructionSound;
-        SerializedProperty showDamageCracks, resistancePoints, canBeCollected, hidden, dropItem, dropItemLifeTime, dropItemScale;
+        SerializedProperty showDamageCracks, resistancePoints, canBeCollected, dropProbability, hidden, dropItem, dropItemLifeTime, dropItemScale;
         SerializedProperty icon, textureSample, overrideMainTexture, overrideMainTextureOffset, triggerCollapse, willCollapse, navigatable, denseLeaves, windAnimation;
-        SerializedProperty model, prefabMaterial, gpuInstancing, castShadows, receiveShadows, createGameObject;
+        SerializedProperty model, prefabMaterial, gpuInstancing, castShadows, receiveShadows, createGameObject, generateCollider, generateNavMesh;
         SerializedProperty offset, offsetRandom, offsetRandomRange, scale, rotation, rotationRandomY, promotesTo, replacedBy;
         SerializedProperty spreads, drains, spreadDelay, spreadDelayRandom, spreadReplaceThreshold, supportsBevel, diveColor, height;
         SerializedProperty playerDamage, playerDamageDelay, ignoresRayCast, highlightOffset;
@@ -69,6 +70,7 @@ namespace VoxelPlay {
             renderType = serializedObject.FindProperty("renderType");
             overrideMaterial = serializedObject.FindProperty("overrideMaterial");
             overrideMaterialNonGeo = serializedObject.FindProperty("overrideMaterialNonGeo");
+            overrideMaterialGreedyMeshing = serializedObject.FindProperty("overrideMaterialGreedyMeshing");
             texturesByMaterial = serializedObject.FindProperty("texturesByMaterial");
 
             texturesCustomPacking = serializedObject.FindProperty("texturesCustomPacking");
@@ -78,6 +80,13 @@ namespace VoxelPlay {
             texturesPackingReliefMap = serializedObject.FindProperty("texturesPackingReliefMap");
 
             opaque = serializedObject.FindProperty("opaque");
+            occludesTop = serializedObject.FindProperty("occludesTop");
+            occludesBottom = serializedObject.FindProperty("occludesBottom");
+            occludesForward = serializedObject.FindProperty("occludesForward");
+            occludesBack = serializedObject.FindProperty("occludesBack");
+            occludesLeft = serializedObject.FindProperty("occludesLeft");
+            occludesRight = serializedObject.FindProperty("occludesRight");
+
             textureTop = serializedObject.FindProperty("textureTop");
             textureTopEmission = serializedObject.FindProperty("textureTopEmission");
             textureTopNRM = serializedObject.FindProperty("textureTopNRM");
@@ -119,6 +128,7 @@ namespace VoxelPlay {
             showDamageCracks = serializedObject.FindProperty("showDamageCracks");
 
             canBeCollected = serializedObject.FindProperty("canBeCollected");
+            dropProbability = serializedObject.FindProperty("dropProbability");
             hidden = serializedObject.FindProperty("hidden");
             dropItem = serializedObject.FindProperty("dropItem");
             dropItemLifeTime = serializedObject.FindProperty("dropItemLifeTime");
@@ -136,6 +146,8 @@ namespace VoxelPlay {
             castShadows = serializedObject.FindProperty("castShadows");
             receiveShadows = serializedObject.FindProperty("receiveShadows");
             createGameObject = serializedObject.FindProperty("createGameObject");
+            generateCollider = serializedObject.FindProperty("generateCollider");
+            generateNavMesh = serializedObject.FindProperty("generateNavMesh");
             offset = serializedObject.FindProperty("offset");
             offsetRandom = serializedObject.FindProperty("offsetRandom");
             offsetRandomRange = serializedObject.FindProperty("offsetRandomRange");
@@ -197,7 +209,6 @@ namespace VoxelPlay {
             }
             titleLabelStyle.normal.textColor = titleColor;
             titleLabelStyle.fontStyle = FontStyle.Bold;
-            EditorGUIUtility.labelWidth = 130;
 
             EditorGUILayout.Separator();
             GUILayout.Label("Rendering", titleLabelStyle);
@@ -219,6 +230,7 @@ namespace VoxelPlay {
 
                 EditorGUILayout.PropertyField(overrideMaterial);
                 if (overrideMaterial.boolValue) {
+                    EditorGUI.indentLevel++;
                     EditorGUILayout.HelpBox("Material shader must be compatible with the original VP shader.\nCheck the online documentation for more details.", MessageType.Info);
                     EditorGUILayout.BeginHorizontal();
                     EditorGUILayout.PropertyField(overrideMaterialNonGeo, new GUIContent("Material", "Overriding material."));
@@ -230,6 +242,8 @@ namespace VoxelPlay {
                     if (texturesByMaterial.boolValue) {
                         EditorGUILayout.HelpBox("Shaders with name 'Voxel Play/Voxels/Override Examples/*** are examples you can use or duplicate.", MessageType.Info);
                     }
+                    EditorGUILayout.PropertyField(overrideMaterialGreedyMeshing, new GUIContent("Greedy Meshing", "Enables greedy meshing when using this override material."));
+                    EditorGUI.indentLevel--;
                 }
             }
 
@@ -256,7 +270,6 @@ namespace VoxelPlay {
                     EditorGUILayout.PropertyField(scale);
                     EditorGUILayout.PropertyField(rotation);
                     EditorGUILayout.PropertyField(rotationRandomY);
-                    TextureField(textureSample, false, "Texture Sample", "Texture that represents the object colors. Used for sampling particle colors and inventory.");
                     EditorGUILayout.PropertyField(overrideMainTexture);
                     if (overrideMainTexture.boolValue) {
                         EditorGUI.indentLevel++;
@@ -264,12 +277,34 @@ namespace VoxelPlay {
                         EditorGUI.indentLevel--;
                     }
                     EditorGUILayout.PropertyField(opaque, new GUIContent("Opaque", "Set this value to 15 to specify that this is a fully solid object that occludes other adjacent voxels. A lower value let light pass through and reduces it by this amount. 0 = fully transparent."));
+                    if (opaque.intValue == VoxelPlayEnvironment.FULL_OPAQUE) {
+                        occludesTop.boolValue = occludesBottom.boolValue = occludesLeft.boolValue = occludesRight.boolValue = occludesForward.boolValue = occludesBack.boolValue = true;
+                    }
+                    EditorGUILayout.PropertyField(occludesTop);
+                    EditorGUILayout.PropertyField(occludesBottom);
+                    EditorGUILayout.PropertyField(occludesLeft);
+                    EditorGUILayout.PropertyField(occludesRight);
+                    EditorGUILayout.PropertyField(occludesForward);
+                    EditorGUILayout.PropertyField(occludesBack);
                     EditorGUILayout.PropertyField(gpuInstancing, new GUIContent("GPU Instancing", "Uses GPU instancing to render the model."));
+                    if (allowUpsideDownVoxel.boolValue) {
+                        EditorGUILayout.HelpBox("GPU instancing is not compatible with 'Allow Upside Down' option.", MessageType.Info);
+                    }
                     if (gpuInstancing.boolValue) {
                         EditorGUI.indentLevel++;
-                        EditorGUILayout.PropertyField(castShadows, new GUIContent("Cast Shadows", "If this instanced voxel can cast shadows."));
+                        EditorGUILayout.PropertyField(castShadows, new GUIContent("Cast Shadows"));
                         EditorGUILayout.PropertyField(receiveShadows, new GUIContent("Receive Shadows", "If this instanced voxel can cast shadows."));
-                        EditorGUILayout.PropertyField(createGameObject, new GUIContent("Create GameObject", "When GPU instancing is enabled, the rendering will be done in GPU but you can still force the creation of a gameobject which can hold colliders or custom scripts."));
+                        EditorGUILayout.PropertyField(createGameObject, new GUIContent("Create GameObject"));
+                        EditorGUILayout.PropertyField(generateCollider, new GUIContent("Generate Collider"));
+                        if (createGameObject.boolValue && generateCollider.boolValue) {
+                            GameObject o = (GameObject)model.objectReferenceValue;
+                            if (o!=null && o.GetComponentInChildren<Collider>() != null) {
+                                EditorGUILayout.HelpBox("A collider has been found in the prefab. Consider removing it when using the option 'Generate Collider'", MessageType.Warning);
+                            }
+                        }
+                        GUI.enabled = generateCollider.boolValue;
+                        EditorGUILayout.PropertyField(generateNavMesh, new GUIContent("Generate NavMesh"));
+                        GUI.enabled = true;
                         EditorGUI.indentLevel--;
                     } else {
                         EditorGUILayout.PropertyField(computeLighting);
@@ -415,6 +450,8 @@ namespace VoxelPlay {
                     break;
             }
 
+            TextureField(textureSample, false, "Texture Sample", "Texture that represents the object colors. Used for sampling particle colors and inventory.");
+
             if (rt == RenderType.Cutout || rt == RenderType.CutoutCross) {
                 EditorGUILayout.PropertyField(colorVariation);
             } else if (rt == RenderType.OpaqueAnimated) {
@@ -456,6 +493,7 @@ namespace VoxelPlay {
                 EditorGUILayout.PropertyField(canBeCollected);
                 if (canBeCollected.boolValue) {
                     EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(dropProbability);
                     EditorGUILayout.PropertyField(dropItem);
                     EditorGUILayout.PropertyField(dropItemLifeTime);
                     EditorGUILayout.PropertyField(dropItemScale);
@@ -515,6 +553,7 @@ namespace VoxelPlay {
                             newDefinition.dropItemLifeTime = dropItemLifeTime.floatValue;
                             newDefinition.upsideDownVoxel = target as VoxelDefinition;
                             newDefinition.canBeCollected = canBeCollected.boolValue;
+                            newDefinition.dropProbability = dropProbability.floatValue;
                             newDefinition.dropItemScale = dropItemScale.floatValue;
                             newDefinition.isUpsideDown = true;
                             newDefinition.rotation.z = -180f;
@@ -613,7 +652,7 @@ namespace VoxelPlay {
         VoxelPlayEnvironment env {
             get {
                 if (_env == null) {
-                    _env = null;
+                    _env = VoxelPlayEnvironment.instance;
                 }
                 return _env;
             }

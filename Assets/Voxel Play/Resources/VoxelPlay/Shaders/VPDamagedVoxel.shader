@@ -25,7 +25,7 @@ Shader "Voxel Play/FX/DamagedVoxel"
 			#include "VPCommon.cginc"
 
 			fixed3 _Color;
-			fixed _VoxelLight;
+			int _VoxelLight;
 
 			struct v2f
 			{
@@ -57,10 +57,15 @@ Shader "Voxel Play/FX/DamagedVoxel"
                 half3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 half nl = 0.25 + max(0.25, dot(worldNormal, _WorldSpaceLightPos0.xyz)) * daylight;
                 // factor in the light color
-                o.diff = max(saturate(nl), _VPAmbientLight) * _VoxelLight * _LightColor0.rgb * _Color;
+                fixed sunLight, torchLight;
+                UnpackVoxelLight(_VoxelLight, sunLight, torchLight);
+                o.diff = max(saturate(nl), _VPAmbientLight) * sunLight * _LightColor0.rgb + torchLight;
+				o.diff *= _Color;
+                o.diff += ShadePointLights(worldPos, worldNormal);
 				#if defined(VERTEXLIGHT_ON)
-                o.vertexLightColor = Shade4PointLights(unity_4LightPosX0, unity_4LightPosY0, unity_4LightPosZ0,unity_LightColor[0].rgb, unity_LightColor[1].rgb,unity_LightColor[2].rgb, unity_LightColor[3].rgb,unity_4LightAtten0, worldPos, worldNormal);
+					o.vertexLightColor = Shade4PointLights(unity_4LightPosX0, unity_4LightPosY0, unity_4LightPosZ0,unity_LightColor[0].rgb, unity_LightColor[1].rgb,unity_LightColor[2].rgb, unity_LightColor[3].rgb,unity_4LightAtten0, worldPos, worldNormal);
                 #endif
+
 				return o;
 			}
 			
@@ -70,9 +75,9 @@ Shader "Voxel Play/FX/DamagedVoxel"
 
 				fixed4 col = tex2D(_MainTex, i.uv) * 0.5;
 				#if defined(VERTEXLIGHT_ON)
-                col.rgb *= i.diff + i.vertexLightColor;
+					col.rgb *= i.diff + i.vertexLightColor;
                 #else
-                col.rgb *= i.diff;
+					col.rgb *= i.diff;
                 #endif
 				return col;
 			}

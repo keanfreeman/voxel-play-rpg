@@ -116,7 +116,7 @@ namespace VoxelPlay {
 
 		void CheckReferences () {
 			if (env == null) {
-				env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+				env = VoxelPlayEnvironment.instance;
 			}
 
 			sb = new StringBuilder (1000);
@@ -388,10 +388,7 @@ namespace VoxelPlay {
 				FocusInputField ();
 			}
 
-            if (env == null) {
-                env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
-            }
-            env.input.enabled = !state;
+			VoxelPlayEnvironment.instance.input.enabled = !state;
 		}
 
 		/// <summary>
@@ -990,7 +987,7 @@ namespace VoxelPlay {
 			selectedItemNameShadow.text = txt;
 			selectedItemPlaceholder.SetActive (true);
 			string quantity = inventoryItem.quantity.ToString ();
-			bool quantityVisible = !env.buildMode;
+			bool quantityVisible = !VoxelPlayEnvironment.instance.buildMode;
 			selectedItemQuantityShadow.enabled = quantityVisible;
 			selectedItemQuantityShadow.text = quantity;
 			selectedItemQuantity.enabled = quantityVisible;
@@ -1133,7 +1130,7 @@ namespace VoxelPlay {
 				if (env.lastHitInfo.voxel.typeIndex != 0) {
 					sbDebug.AppendLine ();
 					sbDebug.Append ("     Voxel Type=");
-					AppendValueDebug (env.voxelDefinitions[env.lastHitInfo.voxel.type()]);
+					AppendValueDebug (env.lastHitInfo.voxel.type.name);
 
 					sbDebug.Append (", Pos: X=");
 					Vector3d v = env.GetVoxelPosition (hitChunk.position, px, py, pz);

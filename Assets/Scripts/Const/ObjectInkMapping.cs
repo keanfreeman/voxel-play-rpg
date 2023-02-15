@@ -19,9 +19,7 @@ public class ObjectInkMapping : MonoBehaviour
     }
 
     public Story GetStoryFromVoxel(Voxel voxel) {
-        VoxelPlayEnvironment env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
-
-        string voxelName = env.voxelDefinitions[voxel.type()].name;
+        string voxelName = voxel.type.name;
         if (voxelName == "BedVoxel" || voxelName == "EmptyBedVoxel") {
             Story story = new Story(NoResponseObjectInk.text);
             story.ChoosePathString("bed");

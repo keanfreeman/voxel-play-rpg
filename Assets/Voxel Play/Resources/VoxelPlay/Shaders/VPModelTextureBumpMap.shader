@@ -57,6 +57,10 @@ Shader "Voxel Play/Models/Texture/Opaque BumpMap"
 			#include "VPModelShadowsURP.cginc"
 			ENDHLSL
 		}
+
+		UsePass "Voxel Play/Voxels/Triangle/Opaque/DepthOnly"
+		UsePass "Voxel Play/Voxels/Triangle/Opaque/DepthNormalsOnly"
+
 	}
 
 

@@ -63,7 +63,7 @@ public class SpriteMovement
         }
         int slopeRotation = voxel.GetTextureRotation();
 
-        return voxel.type() == slopeVoxel.index;
+        return voxel.type == slopeVoxel;
     }
 
     public bool IsSlopeUpRelativeToSprite(Vector3Int requestedCoordinate,

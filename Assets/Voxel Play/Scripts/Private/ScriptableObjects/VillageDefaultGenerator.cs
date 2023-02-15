@@ -25,7 +25,7 @@ namespace VoxelPlay {
 		/// Initialization method. Called by Voxel Play at startup.
 		/// </summary>
 		public override void Init() {
-			env = null;
+			env = VoxelPlayEnvironment.instance;
 			buildingPositions = new Dictionary<Vector3d, BuildingStatus>(100);
 
 			// Fill models with empty blocks so they clear any terrain or vegetation inside them when placing on the world

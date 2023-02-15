@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace VoxelPlay {
@@ -7,11 +6,29 @@ namespace VoxelPlay {
 	[HelpURL("https://kronnect.freshdesk.com/support/solutions/articles/42000049602-interactive-objects")]
 	public partial class VoxelPlayInteractiveObjectsManager : MonoBehaviour {
 
-        VoxelPlayInteractiveObject[] objs, nearObjs;
+		static VoxelPlayInteractiveObjectsManager _instance;
+		VoxelPlayInteractiveObject[] objs, nearObjs;
 		int count, nearCount;
 		VoxelPlayEnvironment env;
 		int lastPlayerPosX, lastPlayerPosY, lastPlayerPosZ;
 		Collider lastCollider;
+
+		public static VoxelPlayInteractiveObjectsManager instance {
+			get {
+				if (_instance == null) {
+					VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
+					if (env != null) {
+						_instance = env.GetComponent<VoxelPlayInteractiveObjectsManager> ();
+						if (_instance == null) {
+							_instance = env.gameObject.AddComponent<VoxelPlayInteractiveObjectsManager> ();
+						}
+					}
+
+				}
+				return _instance;
+			}
+		}
+
 
 		public void InteractiveObjectRegister (VoxelPlayInteractiveObject o) {
 			o.registrationIndex = AddToDynamicList (o, ref objs, ref count);
@@ -35,7 +52,7 @@ namespace VoxelPlay {
 		}
 
 		void Start () {
-			env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+			env = VoxelPlayEnvironment.instance;
 		}
 
 		void LateUpdate () {

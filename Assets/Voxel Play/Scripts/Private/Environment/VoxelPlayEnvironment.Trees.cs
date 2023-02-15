@@ -120,7 +120,7 @@ namespace VoxelPlay {
 
 			VoxelIndex index = new VoxelIndex ();
 			bool informIndices = false;
-			List<VoxelIndex> tempVoxelIndices = indexPool.Get ();
+			List<VoxelIndex> tempVoxelIndices = BufferPool<VoxelIndex>.Get ();
 			if (OnTreeAfterCreate != null) {
 				informIndices = true;
 			}
@@ -198,7 +198,7 @@ namespace VoxelPlay {
                             } else {
                                 // fills one voxel beneath with tree voxel to avoid the issue of having some trees floating on some edges/corners
                                 if (voxelIndex >= ONE_Y_ROW) {
-								if (chunk.voxels [voxelIndex - ONE_Y_ROW].hasContent != 1) {
+								if (chunk.voxels [voxelIndex - ONE_Y_ROW].typeIndex <= Voxel.HoleTypeIndex) {
 									chunk.voxels [voxelIndex - ONE_Y_ROW].Set (treeVoxel, tree.bits [b].finalColor);
 									if (informIndices) {
 										index.chunk = chunk;
@@ -212,7 +212,7 @@ namespace VoxelPlay {
                                     VoxelChunk bottomChunk = chunk.bottom;
                                     if ((object)bottomChunk != null && !bottomChunk.modified) {
                                         int bottomIndex = voxelIndex + (CHUNK_SIZE - 1) * ONE_Y_ROW;
-                                        if (bottomChunk.voxels[bottomIndex].hasContent != 1) {
+                                        if (bottomChunk.voxels[bottomIndex].typeIndex <= Voxel.HoleTypeIndex) {
                                             chunk.voxels[bottomIndex].Set(treeVoxel, tree.bits[b].finalColor);
                                             if (informIndices) {
                                                 index.chunk = bottomChunk;
@@ -247,7 +247,7 @@ namespace VoxelPlay {
 				OnTreeAfterCreate (tempVoxelIndices);
 			}
 
-			indexPool.Release (tempVoxelIndices);
+			BufferPool<VoxelIndex>.Release (tempVoxelIndices);
 
 			int refreshChunksCount = treeChunkRefreshRequests.Count;
 			for (int k = 0; k < refreshChunksCount; k++) {

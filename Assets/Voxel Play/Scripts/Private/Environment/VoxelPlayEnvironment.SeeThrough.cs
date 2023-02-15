@@ -35,7 +35,7 @@ namespace VoxelPlay
 
         int CreateSeeThroughVoxelDefinition (VoxelDefinition original)
         {
-            VoxelDefinition clone = Instantiate(original, this.transform);
+            VoxelDefinition clone = Instantiate(original);
             clone.name = original.name + " SeeThrough";
             clone.renderType = RenderType.Transp6tex;
             clone.index = 0;
@@ -166,7 +166,7 @@ namespace VoxelPlay
                 chunkPosBase.y = chunkPosBase.y - CHUNK_HALF_SIZE + 0.5f;
                 chunkPosBase.z = chunkPosBase.z - CHUNK_HALF_SIZE + 0.5f;
                 for (int voxelIndex = 0; voxelIndex < chunk.voxels.Length; voxelIndex++) {
-                    if (chunk.voxels [voxelIndex].hasContent == 1) {
+                    if (chunk.voxels [voxelIndex].typeIndex > Voxel.HoleTypeIndex) {
                         int py = voxelIndex / ONE_Y_ROW;
                         voxelPosition.y = py + chunkPosBase.y;
                         if (voxelPosition.y < minY)
@@ -269,7 +269,7 @@ namespace VoxelPlay
         void VoxelSetHiddenOne (VoxelChunk chunk, int voxelIndex, bool hidden, HideStyle hiddenStyle)
         {
 
-            if (chunk.voxels [voxelIndex].hasContent != 1)
+            if (chunk.voxels [voxelIndex].typeIndex <= Voxel.HoleTypeIndex)
                 return;
 
             int typeIndex = chunk.voxels [voxelIndex].typeIndex;

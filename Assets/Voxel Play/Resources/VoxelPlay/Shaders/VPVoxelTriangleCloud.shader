@@ -24,8 +24,8 @@ Shader "Voxel Play/Voxels/Triangle/Cloud"
 			#pragma exclude_renderers d3d11_9x
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_AA
-            #pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA
+            #pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
             #define NO_SELF_SHADOWS
             #define SUN_SCATTERING
             #define NO_AMBIENT
@@ -64,8 +64,8 @@ Shader "Voxel Play/Voxels/Triangle/Cloud"
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile_fwdbase nolightmap nodynlightmap novertexlight nodirlightmap
 			#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_AA
-            #pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA
+            #pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
             #define NO_SELF_SHADOWS
             #define SUN_SCATTERING
             #define NO_AMBIENT

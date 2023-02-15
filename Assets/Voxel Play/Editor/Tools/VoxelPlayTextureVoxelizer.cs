@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Collections;
-using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEditor;
@@ -13,7 +11,7 @@ namespace VoxelPlay {
 		Texture2D texture;
 		Vector3 size = new Vector3 (1, 1, 1f / 16);
         [Range(0,255)]
-		int cutoutThreshold = 255;
+		int alphaCutoutThreshold = 1;
 
 		[MenuItem ("Assets/Create/Voxel Play/Texture Voxelizer", false, 1000)]
 		public static void ShowWindow () {
@@ -38,7 +36,7 @@ namespace VoxelPlay {
 			}
 
 			size = EditorGUILayout.Vector3Field (new GUIContent ("Size", "Size of the resulting prefab."), size);
-			cutoutThreshold = EditorGUILayout.IntField (new GUIContent("Cut Out Threshold", "Minimum alpha value for pixels (0-255)"), cutoutThreshold);
+			alphaCutoutThreshold = EditorGUILayout.IntField (new GUIContent("Cut Out Threshold", "Minimum alpha value for pixels (0-255)"), alphaCutoutThreshold);
 
 			EditorGUILayout.Separator ();
 			GUI.enabled = texture != null;
@@ -68,15 +66,12 @@ namespace VoxelPlay {
 
 			Vector3 scale = new Vector3 (size.x / texture.width, size.y / texture.height, size.z);
 			Vector3 offset = new Vector3 (0, -0.5f, 0);
-			GameObject obj = VoxelPlayConverter.GenerateVoxelObject (colors, null, sizeX, sizeY, sizeZ, offset, scale, true, cutoutThreshold);
+			GameObject obj = VoxelPlayConverter.GenerateVoxelObject (colors, null, sizeX, sizeY, sizeZ, offset, scale, skipTransparentColors: true, alphaCutoutThreshold);
 
 			string path = GetPathForNewAsset ();
 			path += "/" + GetFilenameForNewModel (baseModel.name) + ".prefab";
-#if UNITY_2018_3_OR_NEWER
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(obj, path);
-#else
-			GameObject prefab = PrefabUtility.CreatePrefab (path, obj);
-#endif
+
 			// Store the mesh inside the prefab
 			Mesh mesh = obj.GetComponent<MeshFilter> ().sharedMesh;
 			AssetDatabase.AddObjectToAsset (mesh, prefab);

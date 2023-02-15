@@ -25,7 +25,7 @@ namespace VoxelPlay {
         SerializedProperty enableNormalMap, usePixelLights, enableFresnel, fresnelExponent, fresnelIntensity, fresnelColor;
         SerializedProperty hqFiltering, mipMapBias, filterMode, doubleSidedGlass, transparentBling, useComputeBuffers;
         SerializedProperty maxChunks, prewarmChunksInEditor, visibleChunksDistance, distanceAnchor, unloadFarChunks, unloadFarNavMesh;
-        SerializedProperty adjustCameraFarClip, forceChunkDistance, maxCPUTimePerFrame, maxChunksPerFrame, maxTreesPerFrame, maxBushesPerFrame, lowMemoryMode, onlyRenderInFrustum;
+        SerializedProperty adjustCameraFarClip, forceChunkDistance, maxCPUTimePerFrame, maxChunksPerFrame, maxTreesPerFrame, maxBushesPerFrame, lowMemoryMode, delayedInitialization, onlyRenderInFrustum;
 #if !UNITY_WEBGL
         SerializedProperty multiThreadGeneration;
 #endif
@@ -172,6 +172,7 @@ namespace VoxelPlay {
             multiThreadGeneration = serializedObject.FindProperty("multiThreadGeneration");
 #endif
             lowMemoryMode = serializedObject.FindProperty("lowMemoryMode");
+            delayedInitialization = serializedObject.FindProperty("delayedInitialization");
             onlyRenderInFrustum = serializedObject.FindProperty("onlyRenderInFrustum");
             serverMode = serializedObject.FindProperty("serverMode");
             enableColliders = serializedObject.FindProperty("enableColliders");
@@ -994,6 +995,7 @@ namespace VoxelPlay {
                     lowMemoryMode.boolValue = true;
                 }
                 EditorGUILayout.PropertyField(lowMemoryMode, new GUIContent("Low Memory Mode", "When enabled, internal rendering buffers are not pre-allocated during start up. Memory allocation occur when needed only. Enable this option to reduce memory pressure warnings on mobile devices or on dedicated servers with low memory. Some memory allocation spike can occur when a buffer needs resizing."));
+                EditorGUILayout.PropertyField(delayedInitialization, new GUIContent("Delayed Initialization", "When enabled, Voxel Play won't initialize until you call the Init() method."));
             }
 
             EditorGUILayout.Separator();

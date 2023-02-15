@@ -112,10 +112,10 @@ namespace VoxelPlay {
 
         public static VoxelPlayFirstPersonController instance {
             get {
-                //if (_firstPersonController == null) {
-                //    _firstPersonController = VoxelPlayEnvironment.instance.characterController as VoxelPlayFirstPersonController;
-                //}
-                return null;
+                if (_firstPersonController == null) {
+                    _firstPersonController = VoxelPlayEnvironment.instance.characterController as VoxelPlayFirstPersonController;
+                }
+                return _firstPersonController;
             }
         }
 
@@ -131,7 +131,7 @@ namespace VoxelPlay {
             if (hasCharacterController) {
                 m_CharacterController.stepOffset = 0.4f;
             }
-            env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+            env = VoxelPlayEnvironment.instance;
             if (env != null) {
                 env.characterController = this;
                 env.OnOriginPreShift -= OnOriginPreShift;
@@ -196,22 +196,20 @@ namespace VoxelPlay {
             ToggleCharacterController(false);
 
             // Position character on ground
-            if (!env.saveFileIsLoaded) {
-                if (startOnFlat && env.world != null) {
-                    float minAltitude = env.world.terrainGenerator.maxHeight;
-                    Vector3 flatPos = transform.position;
-                    Vector3 randomPos;
-                    for (int k = 0; k < startOnFlatIterations; k++) {
-                        randomPos = Random.insideUnitSphere * 1000;
-                        float alt = env.GetTerrainHeight(randomPos);
-                        if (alt < minAltitude && alt >= env.waterLevel + 1) {
-                            minAltitude = alt;
-                            randomPos.y = alt + GetCharacterHeight() + 1;
-                            flatPos = randomPos;
-                        }
+            if (startOnFlat && env.world != null && !env.saveFileIsLoaded) {
+                float minAltitude = env.world.terrainGenerator.maxHeight;
+                Vector3 flatPos = transform.position;
+                Vector3 randomPos;
+                for (int k = 0; k < startOnFlatIterations; k++) {
+                    randomPos = Random.insideUnitSphere * 1000;
+                    float alt = env.GetTerrainHeight(randomPos);
+                    if (alt < minAltitude && alt >= env.waterLevel + 1) {
+                        minAltitude = alt;
+                        randomPos.y = alt + GetCharacterHeight() + 1;
+                        flatPos = randomPos;
                     }
-                    transform.position = flatPos;
                 }
+                transform.position = flatPos;
             }
 
             InitCrosshair();
@@ -382,12 +380,11 @@ namespace VoxelPlay {
                     }
                 }
 
-                VoxelDefinition _crosshairHitInfoVD = env.voxelDefinitions[_crosshairHitInfo.voxel.type()];
                 if (crosshairOnBlock && input.GetButtonDown(InputButtonNames.MiddleButton)) {
-                    if (_crosshairHitInfoVD.allowUpsideDownVoxel && _crosshairHitInfoVD.upsideDownVoxel != null) {
-                        player.SetSelectedItem(_crosshairHitInfoVD.hidden ? _crosshairHitInfoVD.upsideDownVoxel : _crosshairHitInfoVD);
+                    if (_crosshairHitInfo.voxel.type.allowUpsideDownVoxel && _crosshairHitInfo.voxel.type.upsideDownVoxel != null) {
+                        player.SetSelectedItem(_crosshairHitInfo.voxel.type.hidden ? _crosshairHitInfo.voxel.type.upsideDownVoxel : _crosshairHitInfo.voxel.type);
                     } else {
-                        player.SetSelectedItem(_crosshairHitInfoVD);
+                        player.SetSelectedItem(_crosshairHitInfo.voxel.type);
                     }
                 }
 
@@ -400,7 +397,7 @@ namespace VoxelPlay {
                             env.ShowMessage("<color=green>Back to <color=yellow>Normal Mode</color>.</color>");
                         }
                     } else if (manageVoxelRotation && input.GetButtonDown(InputButtonNames.Rotate)) {
-                        if (_crosshairHitInfoVD.allowsTextureRotation) {
+                        if (_crosshairHitInfo.voxel.type.allowsTextureRotation) {
                             int rotation = env.GetVoxelTexturesRotation(_crosshairHitInfo.chunk, _crosshairHitInfo.voxelIndex);
                             rotation = (rotation + 1) % 4;
                             env.VoxelSetTexturesRotation(_crosshairHitInfo.chunk, _crosshairHitInfo.voxelIndex, rotation);
@@ -505,7 +502,7 @@ namespace VoxelPlay {
                 voxelCh = Voxel.Empty;
             }
             VoxelDefinition voxelChType = env.voxelDefinitions[voxelCh.typeIndex];
-            if (voxelCh.hasContent == 1) {
+            if (voxelCh.hasContent) {
                 CheckEnterTrigger(chunk, voxelIndex);
                 CheckDamage(voxelChType);
             }
@@ -522,7 +519,7 @@ namespace VoxelPlay {
                 // Check if water surrounds camera
                 Voxel voxelCamera = env.GetVoxel(nearClipPos, false);
                 VoxelDefinition voxelCameraType = env.voxelDefinitions[voxelCamera.typeIndex];
-                if (voxelCamera.hasContent == 1) {
+                if (voxelCamera.hasContent) {
                     CheckEnterTrigger(chunk, voxelIndex);
                     CheckDamage(voxelCameraType);
                 }
@@ -552,7 +549,7 @@ namespace VoxelPlay {
                     underWaterMat.color = voxelCameraType.diveColor;
 
                     // continue until open air if there's a solid block
-                    while (voxel1Up.hasContent == 1) {
+                    while (voxel1Up.hasContent) {
                         pos1Up.y += 1f;
                         voxel1Up = env.GetVoxel(pos1Up);
                         wl = voxel1Up.GetWaterLevel();
@@ -629,7 +626,9 @@ namespace VoxelPlay {
 
 
         private void FixedUpdate() {
-            FixedUpdateImpl();
+            if (env.initialized) {
+                FixedUpdateImpl();
+            }
         }
 
         protected virtual void FixedUpdateImpl() {
@@ -696,8 +695,7 @@ namespace VoxelPlay {
                     m_MoveDir.y = -stickToGroundForce;
                     if (m_Jump) {
                         // if player is crouching, cancel it
-                        if (isCrouched)
-                        {
+                        if (isCrouched) {
                             isCrouched = false;
                             UpdateCrouch();
                         }
@@ -834,8 +832,7 @@ namespace VoxelPlay {
                     movingSmooth = true;
                     isCrouched = false;
                     UpdateCrouch();
-                }
-                else {
+                } else {
                     prevCrouchYPos = crouch.position.y;
                 }
             }
@@ -974,9 +971,13 @@ namespace VoxelPlay {
         /// </summary>
         public override void MoveTo(Vector3 newPosition) {
             CheckCharacterController();
-            m_CharacterController.enabled = false;
-            transform.position = newPosition;
-            m_CharacterController.enabled = true;
+            if (m_CharacterController != null) {
+                m_CharacterController.enabled = false;
+                transform.position = newPosition;
+                m_CharacterController.enabled = true;
+            } else {
+                transform.position = newPosition;
+            }
         }
 
         /// <summary>
@@ -984,9 +985,13 @@ namespace VoxelPlay {
         /// </summary>
         public override void Move(Vector3 deltaPosition) {
             CheckCharacterController();
-            m_CharacterController.enabled = false;
-            transform.position += deltaPosition;
-            m_CharacterController.enabled = true;
+            if (m_CharacterController != null) {
+                m_CharacterController.enabled = false;
+                transform.position += deltaPosition;
+                m_CharacterController.enabled = true;
+            } else {
+                transform.position += deltaPosition;
+            }
         }
 
 

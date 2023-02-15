@@ -21,9 +21,9 @@ Shader "Voxel Play/Voxels/Override Examples/Triangle/Opaque World Space UV Bumpe
 			#pragma exclude_renderers d3d11_9x
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_AA
-			#pragma multi_compile _ VOXELPLAY_USE_OUTLINE
-			#pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA
+			#pragma multi_compile_local _ VOXELPLAY_USE_OUTLINE
+			#pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
 			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS
 			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
 			#pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
@@ -50,6 +50,10 @@ Shader "Voxel Play/Voxels/Override Examples/Triangle/Opaque World Space UV Bumpe
 			#include "VPVoxelTriangleShadowsURP.cginc"
 			ENDHLSL
 		}
+
+		UsePass "Voxel Play/Voxels/Triangle/Opaque/DepthOnly"
+		UsePass "Voxel Play/Voxels/Triangle/Opaque/DepthNormalsOnly"
+
 	}
 
 	SubShader {
@@ -64,9 +68,9 @@ Shader "Voxel Play/Voxels/Override Examples/Triangle/Opaque World Space UV Bumpe
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile_fwdbase nolightmap nodynlightmap novertexlight nodirlightmap
 			#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_AA
-			#pragma multi_compile _ VOXELPLAY_USE_OUTLINE
-			#pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA
+			#pragma multi_compile_local _ VOXELPLAY_USE_OUTLINE
+			#pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
             #define NON_ARRAY_TEXTURE
             #define USE_WORLD_SPACE_UV
 			#define USE_CUSTOM_BUMP_MAP

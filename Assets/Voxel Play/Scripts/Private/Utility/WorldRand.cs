@@ -1,41 +1,37 @@
 ﻿using UnityEngine;
 
-namespace VoxelPlay
-{
+namespace VoxelPlay {
 
-    public static class WorldRand
-    {
+    public static class WorldRand {
 
         const int RANDOM_TABLE_SIZE = 8192; // 2^13
         const int RANDOM_TABLE_SIZE_MINUS_ONE = RANDOM_TABLE_SIZE - 1;
-#if UNITY_ANDROID || UNITY_WEBGL
+        //#if UNITY_ANDROID || UNITY_WEBGL
         const long MAGIC1 = 2166136261; // 17
         const long MAGIC2 = 16777619;   // 23
-#else
-        const uint MAGIC1 = 2166136261; // 17
-        const uint MAGIC2 = 16777619;   // 23
-#endif
+        /*#else // TODO: RML
+                const uint MAGIC1 = 2166136261; // 17
+                const uint MAGIC2 = 16777619;   // 23
+        #endif*/
 
-        static float [] rnd;
+        static float[] rnd;
         static uint rndIndex = 0;
 
-        static WorldRand ()
-        {
-            Randomize (0);
+        static WorldRand() {
+            Randomize(0);
         }
 
         /// <summary>
         /// Initializes random table with seed
         /// </summary>
-        public static void Randomize (int seed)
-        {
-            Random.InitState (seed);
+        public static void Randomize(int seed) {
+            Random.InitState(seed);
             if (rnd == null || rnd.Length == 0)
-                rnd = new float [RANDOM_TABLE_SIZE];
+                rnd = new float[RANDOM_TABLE_SIZE];
             for (int k = 0; k < rnd.Length; k++) {
                 do {
-                    rnd [k] = Random.value;
-                } while (rnd [k] == 1f);
+                    rnd[k] = Random.value;
+                } while (rnd[k] == 1f);
             }
         }
 
@@ -43,91 +39,85 @@ namespace VoxelPlay
         /// <summary>
         /// Get one of the random values "linked" to a given position
         /// </summary>
-        public static float GetValue (Vector3 position)
-        {
-#if UNITY_ANDROID || UNITY_WEBGL
+        public static float GetValue(Vector3 position) {
+            // #if UNITY_ANDROID || UNITY_WEBGL
             long hash = MAGIC1;
             hash = hash * MAGIC2 ^ (long)position.x;
             hash = hash * MAGIC2 ^ (long)position.y;
             hash = hash * MAGIC2 ^ (long)position.z;
             rndIndex = (uint)(hash & RANDOM_TABLE_SIZE_MINUS_ONE);
-#else
-            uint hash = MAGIC1;
-            hash = hash * MAGIC2 ^ (uint)position.x;
-            hash = hash * MAGIC2 ^ (uint)position.y;
-            hash = hash * MAGIC2 ^ (uint)position.z;
-            rndIndex = hash & RANDOM_TABLE_SIZE_MINUS_ONE;
-#endif
-            return rnd [rndIndex];
+            /*#else // Causes issues on certain platforms including M1 on 2021.3
+                        uint hash = MAGIC1;
+                        hash = hash * MAGIC2 ^ (uint)position.x;
+                        hash = hash * MAGIC2 ^ (uint)position.y;
+                        hash = hash * MAGIC2 ^ (uint)position.z;
+                        rndIndex = hash & RANDOM_TABLE_SIZE_MINUS_ONE;
+            #endif*/
+            return rnd[rndIndex];
         }
 
 
         /// <summary>
         /// Get one of the random values "linked" to a given position
         /// </summary>
-        public static float GetValue (Vector3d position)
-        {
-#if UNITY_ANDROID || UNITY_WEBGL
+        public static float GetValue(Vector3d position) {
+            //#if UNITY_ANDROID || UNITY_WEBGL
             long hash = MAGIC1;
             hash = hash * MAGIC2 ^ (long)position.x;
             hash = hash * MAGIC2 ^ (long)position.y;
             hash = hash * MAGIC2 ^ (long)position.z;
             rndIndex = (uint)(hash & RANDOM_TABLE_SIZE_MINUS_ONE);
-#else
-            uint hash = MAGIC1;
-            hash = hash * MAGIC2 ^ (uint)position.x;
-            hash = hash * MAGIC2 ^ (uint)position.y;
-            hash = hash * MAGIC2 ^ (uint)position.z;
-            rndIndex = hash & RANDOM_TABLE_SIZE_MINUS_ONE;
-#endif
-            return rnd [rndIndex];
+            /*#else // Causes issues on certain platforms including M1
+                        uint hash = MAGIC1;
+                        hash = hash * MAGIC2 ^ (uint)position.x;
+                        hash = hash * MAGIC2 ^ (uint)position.y;
+                        hash = hash * MAGIC2 ^ (uint)position.z;
+                        rndIndex = hash & RANDOM_TABLE_SIZE_MINUS_ONE;
+            #endif*/
+            return rnd[rndIndex];
         }
 
 
         /// <summary>
         /// Get one of the random values "linked" to a given position
         /// </summary>
-        public static float GetValue (double x, double z)
-        {
-#if UNITY_ANDROID || UNITY_WEBGL
+        public static float GetValue(double x, double z) {
+            //#if UNITY_ANDROID || UNITY_WEBGL
             long hash = MAGIC1;
             hash = hash * MAGIC2 ^ (long)x;
             hash = hash * MAGIC2 ^ (long)z;
             rndIndex = (uint)(hash & RANDOM_TABLE_SIZE_MINUS_ONE);
-#else
-            uint hash = MAGIC1;
-            hash = hash * MAGIC2 ^ (uint)x;
-            hash = hash * MAGIC2 ^ (uint)z;
-            rndIndex = hash & RANDOM_TABLE_SIZE_MINUS_ONE;
-#endif
-            return rnd [rndIndex];
+            /*#else // Causes issues on certain platforms including M1
+                        uint hash = MAGIC1;
+                        hash = hash * MAGIC2 ^ (uint)x;
+                        hash = hash * MAGIC2 ^ (uint)z;
+                        rndIndex = hash & RANDOM_TABLE_SIZE_MINUS_ONE;
+            #endif*/
+            return rnd[rndIndex];
         }
 
 
         /// <summary>
         /// Gets a random value "linked" to a given value
         /// </summary>
-        public static float GetValue (int someValue)
-        {
+        public static float GetValue(int someValue) {
             rndIndex = (uint)someValue & RANDOM_TABLE_SIZE_MINUS_ONE;
-            return rnd [rndIndex];
+            return rnd[rndIndex];
         }
 
         /// <summary>
         /// Returns a random value between min (inclusive) and max (exclusive) "linked" to a given position
         /// </summary>
-        public static int Range (int min, int max, Vector3d position)
-        {
-            float v = GetValue (position);
+        public static int Range(int min, int max, Vector3d position) {
+            float v = GetValue(position);
             return (int)(min + (max - min) * 0.99999f * v);
         }
 
         /// <summary>
         /// Returns a random value between min (inclusive) and max (exclusive)
         /// </summary>
-        public static int Range (int min, int max)
-        {
-            float v = GetValue ();
+        public static int Range(int min, int max) {
+            float v = GetValue();
             return (int)(min + (max - min) * 0.99999f * v);
         }
 
@@ -135,28 +125,25 @@ namespace VoxelPlay
         /// <summary>
         /// Returns a random value between min (inclusive) and max (inclusive)
         /// </summary>
-        public static float Range (float min, float max)
-        {
-            float v = GetValue ();
+        public static float Range(float min, float max) {
+            float v = GetValue();
             return min + (max - min) * v;
         }
 
         /// Returns a random value between min (inclusive) and max (inclusive) "linked" to a given seed
         /// </summary>
-        public static float Range (float min, float max, int seed)
-        {
-            float v = GetValue (seed);
+        public static float Range(float min, float max, int seed) {
+            float v = GetValue(seed);
             return min + (max - min) * v;
         }
 
         /// <summary>
         /// Returns a random value in 0-1 range
         /// </summary>
-		public static float GetValue ()
-        {
+		public static float GetValue() {
             rndIndex++;
             rndIndex &= RANDOM_TABLE_SIZE_MINUS_ONE;
-            return rnd [rndIndex];
+            return rnd[rndIndex];
         }
 
         /// <summary>
@@ -166,12 +153,11 @@ namespace VoxelPlay
         /// <param name="position">Position.</param>
         /// <param name="scale">Scale.</param>
         /// <param name="shift">Random values are in 0..1 range. Shift is added to the random value before being multiplied by scale.</param>
-        public static Vector3 GetVector3 (Vector3d position, float scale, float shift = 0)
-        {
-            float x = (GetValue (position) + shift) * scale;
-            float y = (GetValue () + shift) * scale;
-            float z = (GetValue () + shift) * scale;
-            return new Vector3 (x, y, z);
+        public static Vector3 GetVector3(Vector3d position, float scale, float shift = 0) {
+            float x = (GetValue(position) + shift) * scale;
+            float y = (GetValue() + shift) * scale;
+            float z = (GetValue() + shift) * scale;
+            return new Vector3(x, y, z);
         }
 
         /// <summary>
@@ -181,12 +167,11 @@ namespace VoxelPlay
         /// <param name="position">Position.</param>
         /// <param name="scale">Scale.</param>
         /// <param name="shift">Random values are in 0..1 range. Shift is added to the random value before being multiplied by scale.</param>
-        public static Vector3 GetVector3 (Vector3d position, Vector3 scale, float shift = 0)
-        {
-            float x = (GetValue (position) + shift) * scale.x;
-            float y = (GetValue () + shift) * scale.y;
-            float z = (GetValue () + shift) * scale.z;
-            return new Vector3 (x, y, z);
+        public static Vector3 GetVector3(Vector3d position, Vector3 scale, float shift = 0) {
+            float x = (GetValue(position) + shift) * scale.x;
+            float y = (GetValue() + shift) * scale.y;
+            float z = (GetValue() + shift) * scale.z;
+            return new Vector3(x, y, z);
         }
 
 

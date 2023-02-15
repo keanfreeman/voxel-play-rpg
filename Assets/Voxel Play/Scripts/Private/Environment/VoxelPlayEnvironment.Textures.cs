@@ -37,6 +37,43 @@ namespace VoxelPlay {
         TextureArrayPacker mainTextureProvider;
         Dictionary<TextureProviderSettings, TextureArrayPacker> texturesProviders = new Dictionary<TextureProviderSettings, TextureArrayPacker>();
 
+        void InitRenderingMaterials() {
+
+            // Init system arrays and structures
+            if (materialsDict == null) {
+                materialsDict = new FastHashSet<Material[]>();
+            } else {
+                materialsDict.Clear();
+            }
+
+            // Assign materials to rendering buffers
+            if (renderingMaterials == null || renderingMaterials.Length != MAX_MATERIALS_PER_CHUNK) {
+                renderingMaterials = new RenderingMaterial[MAX_MATERIALS_PER_CHUNK];
+            }
+            lastRenderingMaterialIndex = -1;
+
+            if (materialIndices == null) {
+                materialIndices = new Dictionary<RenderingMaterialDescriptor, int>();
+            } else {
+                materialIndices.Clear();
+            }
+
+            if (mainTextureProvider == null) {
+                TextureProviderSettings settings = new TextureProviderSettings { textureSize = this.textureSize, textureScale = 1, enableNormalMap = this.enableNormalMap, enableReliefMap = this.enableReliefMapping };
+                mainTextureProvider = GetTextureArrayPacker(settings);
+                mainTextureProvider.Clear();
+            }
+
+            // In this exact order
+            RegisterRenderingMaterial(RenderType.Opaque.GetDefaultMaterial(this), RenderType.Opaque, mainTextureProvider);
+            RegisterRenderingMaterial(RenderType.CutoutCross.GetDefaultMaterial(this), RenderType.CutoutCross, mainTextureProvider);
+            RegisterRenderingMaterial(RenderType.Cutout.GetDefaultMaterial(this), RenderType.Cutout, mainTextureProvider);
+            RegisterRenderingMaterial(RenderType.Water.GetDefaultMaterial(this), RenderType.Water, mainTextureProvider);
+            RegisterRenderingMaterial(RenderType.Transp6tex.GetDefaultMaterial(this), RenderType.Transp6tex, mainTextureProvider);
+            RegisterRenderingMaterial(RenderType.Cloud.GetDefaultMaterial(this), RenderType.Cloud, mainTextureProvider);
+            RegisterRenderingMaterial(RenderType.OpaqueAnimated.GetDefaultMaterial(this), RenderType.OpaqueAnimated, mainTextureProvider);
+            RegisterRenderingMaterial(RenderType.OpaqueNoAO.GetDefaultMaterial(this), RenderType.OpaqueNoAO, mainTextureProvider);
+        }
 
         void DisposeTextures() {
             if (voxelDefinitions != null) {
@@ -174,9 +211,9 @@ namespace VoxelPlay {
                         case CustomVoxelMaterial.TextureCutout: instancingMat = Resources.Load<Material>("VoxelPlay/Materials/VP Model Texture Cutout"); break;
                     }
                     if (instancingMat != null) {
-                        instancingMat = Instantiate(instancingMat, this.transform);
+                        instancingMat = Instantiate(instancingMat);
                         if (!vd.gpuInstancing) instancingMat.DisableKeyword(SKW_VOXELPLAY_GPU_INSTANCING);
-                        vd.prefab = Instantiate(vd.model, this.transform);
+                        vd.prefab = Instantiate(vd.model);
                         vd.prefab.SetActive(false);
                         vd.prefab.transform.SetParent(transform, false);
                         Renderer[] rr = vd.prefab.GetComponentsInChildren<Renderer>();
@@ -209,7 +246,7 @@ namespace VoxelPlay {
                 // Override main texture?
                 if (vd.overrideMainTexture && vd.textureSample != null) {
                     if (vd.prefab == vd.model) {
-                        vd.prefab = Instantiate(vd.model, this.transform);
+                        vd.prefab = Instantiate(vd.model);
                         vd.prefab.SetActive(false);
                         vd.prefab.transform.SetParent(transform, false);
                     }
@@ -217,7 +254,7 @@ namespace VoxelPlay {
                     for (int k = 0; k < rr.Length; k++) {
                         Material refMat = rr[k].sharedMaterial;
                         if (refMat != null && refMat.HasProperty(ShaderParams.MainTex)) {
-                            Material mat = Instantiate(refMat, this.transform);
+                            Material mat = Instantiate(refMat);
                             mat.mainTexture = vd.textureSample;
                             if (vd.overrideMainTextureOffset != Vector2.zero) {
                                 mat.SetTextureOffset(ShaderParams.MainTex, vd.overrideMainTextureOffset);
@@ -248,7 +285,7 @@ namespace VoxelPlay {
             // Some material fixes. If compute shaders option is enabled, replace shaders with appropriate and also fix the Voxel Light value.
             Material prefabMat = vd.material;
             if (prefabMat != null) {
-                if (prefabMat.shader.name.Contains("/Model") && prefabMat.HasProperty("_VoxelLight")) {
+                if (prefabMat.HasProperty(ShaderParams.VoxelLight) && prefabMat.shader.name.Contains("/Model")) {
                     float voxelLight = prefabMat.GetFloat(ShaderParams.VoxelLight);
                     if (voxelLight == 1f) {
                         prefabMat.SetFloat(ShaderParams.VoxelLight, 15);
@@ -256,27 +293,27 @@ namespace VoxelPlay {
                 }
                 if (useComputeBuffers) {
                     if (prefabMat.shader.name.Contains("Models/Texture/Opaque")) {
-                        prefabMat = Instantiate(prefabMat, this.transform);
+                        prefabMat = Instantiate(prefabMat);
                         prefabMat.shader = Shader.Find("Voxel Play/Models/GPU Instanced Indirect/Texture/Opaque");
                         vd.material = prefabMat;
                     } else
                     if (prefabMat.shader.name.Contains("Models/Texture/Alpha")) {
-                        prefabMat = Instantiate(prefabMat, this.transform);
+                        prefabMat = Instantiate(prefabMat);
                         prefabMat.shader = Shader.Find("Voxel Play/Models/GPU Instanced Indirect/Texture/Alpha");
                         vd.material = prefabMat;
                     } else
                     if (prefabMat.shader.name.Contains("Models/Texture/Cutout")) {
-                        prefabMat = Instantiate(prefabMat, this.transform);
+                        prefabMat = Instantiate(prefabMat);
                         prefabMat.shader = Shader.Find("Voxel Play/Models/GPU Instanced Indirect/Texture/Cutout");
                         vd.material = prefabMat;
                     } else
                     if (prefabMat.shader.name.Contains("Models/Texture/Triplanar")) {
-                        prefabMat = Instantiate(prefabMat, this.transform);
+                        prefabMat = Instantiate(prefabMat);
                         prefabMat.shader = Shader.Find("Voxel Play/Models/GPU Instanced Indirect/Texture/Triplanar");
                         vd.material = prefabMat;
                     } else
                     if (prefabMat.shader.name.Contains("Models/VertexLit")) {
-                        prefabMat = Instantiate(prefabMat, this.transform);
+                        prefabMat = Instantiate(prefabMat);
                         prefabMat.shader = Shader.Find("Voxel Play/Models/GPU Instanced Indirect/VertexLit");
                         vd.material = prefabMat;
                     }
@@ -300,7 +337,6 @@ namespace VoxelPlay {
             if (vd.gpuInstancing) {
                 vd.gpuInstancing = false;
             }
-
             // get default water voxel definition
             if (vd.renderType == RenderType.Water && currentWaterVoxelDefinition == null) {
                 currentWaterVoxelDefinition = vd;
@@ -318,11 +354,16 @@ namespace VoxelPlay {
             }
             // Assign rendering material
             Material mat = vd.GetOverrideMaterial();
+            if (vd.overrideMaterial && !vd.texturesByMaterial && mat != null && mat.HasProperty(ShaderParams.MainTex) && mat.mainTexture != null && mat.mainTexture.dimension != UnityEngine.Rendering.TextureDimension.Tex2DArray) {
+                ShowError("Voxel definition " + vd.name + " overrides material but shader does not use texture array. Use a compatible shader or enable the 'Textures by Material' option and provide your own textures in the material itself. Using default material for its render type.");
+                mat = null;
+            }
             if (mat == null) {
                 mat = vd.renderType.GetDefaultMaterial(this);
             }
-            if (vd.texturesByMaterial) {
-                vd.materialBufferIndex = RegisterRenderingMaterialNoTextureArray(mat, vd.renderType);
+
+            if (vd.overrideMaterial && vd.texturesByMaterial) {
+                vd.materialBufferIndex = RegisterRenderingMaterialNoTextureArray(mat);
             } else {
                 // Is this texture provider provider full? Texture Arrays have a limit of 2048 slices on Shader Model 4.5 or later. Otherwise, the limit is 256.
                 if (textureArrayPacker != null && textureArrayPacker.isFull) {
@@ -330,8 +371,8 @@ namespace VoxelPlay {
                     // Look for another compatible texture array packer already registered
                     bool foundSuitableTextureArray = false;
                     for (int k = lastRenderingMaterialIndex; k >= 0; k--) {
-                        Material rmTemplateMaterial = renderingMaterials[k].templateMaterial;
-                        TextureArrayPacker rmProvider = renderingMaterials[k].textureProvider;
+                        Material rmTemplateMaterial = renderingMaterials[k].descriptor.templateMaterial;
+                        TextureArrayPacker rmProvider = renderingMaterials[k].descriptor.textureProvider;
                         if (rmTemplateMaterial == templateMat && rmProvider != null && !rmProvider.isFull && rmProvider.settings == textureArrayPacker.settings) {
                             textureArrayPacker = rmProvider;
                             vd.materialBufferIndex = k;
@@ -573,7 +614,7 @@ namespace VoxelPlay {
 
             if (top != null) {
                 if (res != 0 && (top.width != res || top.height != res)) {
-                    vd.textureThumbnailTop = Instantiate(top, this.transform);
+                    vd.textureThumbnailTop = Instantiate(top);
                     vd.textureThumbnailTopInstanced = true;
                     vd.textureThumbnailTop.hideFlags = HideFlags.DontSave;
                     TextureTools.ScaleTexture(vd.textureThumbnailTop, res, res, FilterMode.Point);
@@ -583,7 +624,7 @@ namespace VoxelPlay {
             }
             if (side != null) {
                 if (res != 0 && (side.width != res || side.height != res)) {
-                    vd.textureThumbnailSide = Instantiate(side, this.transform);
+                    vd.textureThumbnailSide = Instantiate(side);
                     vd.textureThumbnailSideInstanced = true;
                     vd.textureThumbnailSide.hideFlags = HideFlags.DontSave;
                     TextureTools.ScaleTexture(vd.textureThumbnailSide, res, res, FilterMode.Point);
@@ -593,7 +634,7 @@ namespace VoxelPlay {
             }
             if (bottom != null) {
                 if (res != 0 && (bottom.width != res || bottom.height != res)) {
-                    vd.textureThumbnailBottom = Instantiate(bottom, this.transform);
+                    vd.textureThumbnailBottom = Instantiate(bottom);
                     vd.textureThumbnailBottomInstanced = true;
                     vd.textureThumbnailBottom.hideFlags = HideFlags.DontSave;
                     TextureTools.ScaleTexture(vd.textureThumbnailBottom, res, res, FilterMode.Point);
@@ -612,8 +653,9 @@ namespace VoxelPlay {
             if (voxelDefinitions != null) {
                 // clear any previous voxel definition by resetting the index field
                 for (int k = 0; k < voxelDefinitionsCount; k++) {
-                    if (voxelDefinitions[k] != null) {
-                        voxelDefinitions[k].Reset();
+                    VoxelDefinition vd = voxelDefinitions[k];
+                    if (vd != null) {
+                        vd.Reset();
                     }
                 }
             } else {
@@ -636,19 +678,41 @@ namespace VoxelPlay {
             nullVoxelDefinition.canBeCollected = false;
             nullVoxelDefinition.ignoresRayCast = true;
             nullVoxelDefinition.renderType = RenderType.Invisible;
+            nullVoxelDefinition.doNotSave = true;
             AddVoxelTextures(nullVoxelDefinition);
+
+            // Add a reserved slot
+            VoxelDefinition reserved = ScriptableObject.CreateInstance<VoxelDefinition>();
+            reserved.name = "Reverved";
+            reserved.hidden = true;
+            reserved.canBeCollected = false;
+            reserved.ignoresRayCast = true;
+            reserved.renderType = RenderType.Invisible;
+            reserved.doNotSave = true;
+            AddVoxelTextures(reserved);
+
+            // Add the default hole voxel definition
+            VoxelDefinition hole = ScriptableObject.CreateInstance<VoxelDefinition>();
+            hole.name = "DefaultHole";
+            hole.hidden = true;
+            hole.canBeCollected = false;
+            hole.ignoresRayCast = true;
+            hole.renderType = RenderType.Invisible;
+            hole.doNotSave = true;
+            AddVoxelTextures(hole);
 
             // Check default voxel
             if (defaultVoxel == null) {
                 defaultVoxel = Resources.Load<VoxelDefinition>("VoxelPlay/Defaults/DefaultVoxel");
             }
+            defaultVoxel.doNotSave = true;
+            AddVoxelTextures(defaultVoxel);
 
             if (defaultWaterVoxel == null) {
                 defaultWaterVoxel = Resources.Load<VoxelDefinition>("VoxelPlay/Defaults/Water/VoxelWaterSea");
             }
             currentWaterVoxelDefinition = defaultWaterVoxel;
 
-            AddVoxelTextures(defaultVoxel);
 
             // Add all biome textures
             if (world.biomes != null) {
@@ -811,11 +875,11 @@ namespace VoxelPlay {
             if (renderingMaterials != null) {
                 for (int k = 0; k < renderingMaterials.Length; k++) {
                     RenderingMaterial rm = renderingMaterials[k];
-                    if (rm.textureProvider != null) {
+                    if (rm.descriptor.textureProvider != null) {
                         Material mat = rm.material;
                         if (mat != null && mat.HasProperty(ShaderParams.MainTex)) {
-                            rm.textureProvider.CreateTextureArray();
-                            mat.SetTexture(ShaderParams.MainTex, rm.textureProvider.textureArray);
+                            rm.descriptor.textureProvider.CreateTextureArray();
+                            mat.SetTexture(ShaderParams.MainTex, rm.descriptor.textureProvider.textureArray);
                         }
                     }
                 }
@@ -824,7 +888,7 @@ namespace VoxelPlay {
             matDynamicCutout.SetTexture(ShaderParams.MainTex, mainTextureProvider.textureArray);
 
             if (modelHighlightMat == null) {
-                modelHighlightMat = Instantiate(Resources.Load<Material>("VoxelPlay/Materials/VP Highlight Model"), this.transform) as Material;
+                modelHighlightMat = Instantiate(Resources.Load<Material>("VoxelPlay/Materials/VP Highlight Model")) as Material;
             }
             modelHighlightMat.SetTexture(ShaderParams.MainTex, mainTextureProvider.textureArray);
 

@@ -5,7 +5,6 @@ using System.Threading;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -31,7 +30,8 @@ namespace VoxelPlay
     public delegate void VoxelPlayEvent ();
     public delegate void VoxelLightRefreshEvent ();
     public delegate void RepaintActionEvent ();
-    public delegate void VoxelPlayModelBuildEvent (ModelDefinition model, Vector3d position);
+    public delegate void VoxelModelBuildStartEvent (ModelDefinition model, Vector3d position, out bool cancel);
+    public delegate void VoxelModelBuildEndEvent(ModelDefinition model, Vector3d position);
     public delegate void VoxelCollapseEvent (List<VoxelIndex> indices);
 
 
@@ -56,7 +56,6 @@ namespace VoxelPlay
         // Shader keywords
         public const string SKW_VOXELPLAY_GPU_INSTANCING = "VOXELPLAY_GPU_INSTANCING";
         public const string SKW_VOXELPLAY_USE_ROTATION = "VOXELPLAY_USE_ROTATION";
-        const string SKW_VOXELPLAY_USE_AO = "VOXELPLAY_USE_AO";
         const string SKW_VOXELPLAY_USE_OUTLINE = "VOXELPLAY_USE_OUTLINE";
         const string SKW_VOXELPLAY_USE_PARALLAX = "VOXELPLAY_USE_PARALLAX";
         const string SKW_VOXELPLAY_GLOBAL_USE_FOG = "VOXELPLAY_GLOBAL_USE_FOG";
@@ -123,13 +122,19 @@ namespace VoxelPlay
 
         #region Gameloop events
 
-        void OnEnable ()
+        void OnEnable() {
+            applicationIsPlaying = Application.isPlaying;
+            if (delayedInitialization && applicationIsPlaying) return;
+            OnEnableInternal();
+        }
+
+        void OnEnableInternal ()
         {
             if (!initialized) {
 #if UNITY_EDITOR
                 CheckSpecialFeaturesScriptingSupport ();
 #endif
-                BootEngine ();
+                InitAndLoadSaveGame();
             }
         }
 
@@ -169,12 +174,15 @@ namespace VoxelPlay
 
         #region Initialization and disposal
 
-        void BootEngine ()
+        /// <summary>
+        /// Initializes the engine and loads any save game specified in the saveGameFile property.
+        /// </summary>
+        public void InitAndLoadSaveGame ()
         {
-            Init (MayLoadGame);
+            Init (MayLoadSaveGame);
         }
 
-        void MayLoadGame ()
+        void MayLoadSaveGame ()
         {
             if (applicationIsPlaying || (!applicationIsPlaying && renderInEditor)) {
                 if (loadSavedGame)
@@ -183,16 +191,19 @@ namespace VoxelPlay
         }
 
 
+        /// <summary>
+        /// Initilizes the engine. Optionally call the callback function when initalization ends.
+        /// </summary>
+        /// <param name="callback">Callback function to be called when initialization ends.</param>
         public void Init(AfterInitCallback callback = null) {
             StartCoroutine(InitBackground(callback));
         }
 
-        IEnumerator InitBackground(AfterInitCallback callback = null) {
+        IEnumerator InitBackground(AfterInitCallback callback = null) { 
             LogMessage ("Init started...", true);
 
             initialized = false;
             sceneCam = null;
-            applicationIsPlaying = Application.isPlaying;
             tempColliders = new Collider [1];
             InitMainThreading ();
 
@@ -254,15 +265,15 @@ namespace VoxelPlay
                 }
             }
 
-//#if UNITY_EDITOR
-//            if (cameraMain.actualRenderingPath != RenderingPath.Forward) {
-//                Debug.LogWarning ("Voxel Play works better with Forward Rendering path.");
-//            }
-//#endif
+#if UNITY_EDITOR
+            if (cameraMain != null && cameraMain.actualRenderingPath != RenderingPath.Forward) {
+                Debug.LogWarning ("Voxel Play works better with Forward Rendering path.");
+            }
 #if !UNITY_2019_1_OR_NEWER
             if (!isMobilePlatform && QualitySettings.antiAliasing < 2) {
                 Debug.LogWarning ("Voxel Play looks better with MSAA enabled (x2 minimum to enable crosshair).");
             }
+#endif
 #endif
 
             if (isMobilePlatform && applicationIsPlaying && adjustCameraFarClip) {
@@ -310,8 +321,7 @@ namespace VoxelPlay
                     inputPrefab = inputControllerPCPrefab;
                 }
 #endif
-                // todo remove if needed
-                inputPrefab = null;
+
                 if (inputPrefab != null) {
                     GameObject inputGO = Instantiate(inputPrefab);
                     inputGO.name = inputPrefab.name;
@@ -470,10 +480,8 @@ namespace VoxelPlay
             if (input != null) {
                 input.enabled = true;
             }
-
-            // TODO add back if needed
-            //VoxelPlayUI.instance.ToggleInitializationPanel (false);
-            //ShowMessage (welcomeMessage, welcomeMessageDuration, true);
+            VoxelPlayUI.instance.ToggleInitializationPanel (false);
+            ShowMessage (welcomeMessage, welcomeMessageDuration, true);
         }
 
         /// <summary>
@@ -495,9 +503,7 @@ namespace VoxelPlay
 
             // Create world root
             if (worldRoot == null) {
-                // todo revert if needed
-                GameObject wr = transform.GetChild(0).gameObject;
-                //GameObject wr = GameObject.Find (VOXELPLAY_WORLD_ROOT);
+                GameObject wr = GameObject.Find (VOXELPLAY_WORLD_ROOT);
                 if (wr == null) {
                     wr = new GameObject (VOXELPLAY_WORLD_ROOT);
                     wr.transform.position = Misc.vector3zero;
@@ -602,7 +608,6 @@ namespace VoxelPlay
                 if (meshingIdle) {
                     bool captureChunkChangeEventsState = captureChunkChanges;
                     captureChunkChanges = false;
-                    detailGeneratorsBusy = false;
 
                     STAGE = 3;
                     CheckChunksInRange (creationMaxTime);
@@ -775,7 +780,7 @@ namespace VoxelPlay
         {
             if (!applicationIsPlaying) {
                 if (!initialized) {
-                    BootEngine ();
+                    InitAndLoadSaveGame ();
                 }
                 DoWork ();
             }
@@ -820,18 +825,9 @@ namespace VoxelPlay
             if (Application.isPlaying || !gameObject.activeInHierarchy)
                 return;
 
-#if UNITY_2018_3_OR_NEWER
             // Do not execute if gameobject is prefab
             if (PrefabUtility.GetPrefabInstanceStatus (gameObject) == PrefabInstanceStatus.Connected)
                 return;
-
-#else
-            // Do not execute if gameobject is prefab
-            if (PrefabUtility.GetPrefabType (gameObject) == PrefabType.Prefab)
-                return;
-            if (PrefabUtility.GetPrefabParent (gameObject) == null && PrefabUtility.GetPrefabObject (gameObject) != null)
-                return;
-#endif
 
             if ((Voxel.supportsTinting != enableTinting) || (supportsSeeThrough != seeThrough) || supportsBrightPointLights != enableBrightPointLights || supportsFresnel != enableFresnel || supportsURPNativeLights != enableURPNativeLights) {
                 UpdateSpecialFeaturesCodeMacro ();

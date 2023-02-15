@@ -25,9 +25,9 @@ Shader "Voxel Play/Voxels/Dynamic/Triangle Cutout"
 			#pragma prefer_hlslcc gles
 			#pragma exclude_renderers d3d11_9x
 			//#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_NORMAL
-			#pragma multi_compile _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
-			#pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_USE_NORMAL
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
+			#pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
 			#define VP_CUTOUT
             #define USE_WORLD_SPACE_NORMAL
 			#define USE_PACKED_LIGHT
@@ -66,9 +66,9 @@ Shader "Voxel Play/Voxels/Dynamic/Triangle Cutout"
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile_fwdbase nolightmap nodynlightmap novertexlight nodirlightmap
 			//#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_NORMAL
-			#pragma multi_compile _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
-			#pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_USE_NORMAL
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA VOXELPLAY_USE_PARALLAX
+			#pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
 			#define VP_CUTOUT
             #define USE_WORLD_SPACE_NORMAL
 			#define USE_PACKED_LIGHT

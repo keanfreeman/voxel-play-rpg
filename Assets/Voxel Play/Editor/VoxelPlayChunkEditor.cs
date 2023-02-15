@@ -1,12 +1,10 @@
 using UnityEngine;
 using UnityEditor;
-using System;
-using System.Collections;
 
 namespace VoxelPlay {
 				
 	[CustomEditor (typeof(VoxelChunk))]
-	public class VoxelPlayChunkEditor : UnityEditor.Editor {
+	public class VoxelPlayChunkEditor : Editor {
 
         public override void OnInspectorGUI () {
 

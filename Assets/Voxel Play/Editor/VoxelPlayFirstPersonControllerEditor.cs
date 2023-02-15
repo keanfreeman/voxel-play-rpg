@@ -39,7 +39,7 @@ namespace VoxelPlay {
             constructorSize = serializedObject.FindProperty("constructorSize");
 
             fps = (VoxelPlayFirstPersonController)target;
-            env = null;
+            env = VoxelPlayEnvironment.instance;
 		}
 
 

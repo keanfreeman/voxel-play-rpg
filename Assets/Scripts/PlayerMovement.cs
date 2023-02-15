@@ -27,8 +27,6 @@ public class PlayerMovement : MonoBehaviour {
     public InputManager inputManager;
 
     // STATE
-    bool isFollowingSprite = false;
-
     bool isMoving = false;
     bool isFacingRight = false;
     bool isSprinting = false;

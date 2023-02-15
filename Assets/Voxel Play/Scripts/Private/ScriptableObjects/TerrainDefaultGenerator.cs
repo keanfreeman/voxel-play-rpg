@@ -176,8 +176,7 @@ namespace VoxelPlay {
         /// <param name="moisture">Moisture in 0-1 range.</param>
         public override void GetHeightAndMoisture(double x, double z, out float altitude, out float moisture) {
             if (!isInitialized) {
-                Debug.LogError("Environment not initialized for TerrainDefaultGenerator");
-                Initialize(env);
+                Initialize();
             }
 
             bool allowBeach = true;
@@ -415,10 +414,10 @@ namespace VoxelPlay {
                                 // request one vegetation voxel one position above which means the chunk above this one
                                 Vector3d abovePos = pos;
                                 abovePos.y++;
-                                env.RequestVegetationCreation(abovePos, env.GetUnderwaterVegetation(biome, rn / biome.underwaterVegetationDensity));
+                                env.RequestVegetationCreation(abovePos, env.GetVegetation(biome.underwaterVegetation, rn / biome.underwaterVegetationDensity));
                             } else if (voxels[voxelIndex + ONE_Y_ROW].opaque < 15) {
                                 // directly place a vegetation voxel above this voxel
-                                voxels[voxelIndex + ONE_Y_ROW].Set(env.GetUnderwaterVegetation(biome, rn / biome.underwaterVegetationDensity));
+                                voxels[voxelIndex + ONE_Y_ROW].Set(env.GetVegetation(biome.underwaterVegetation, rn / biome.underwaterVegetationDensity));
                                 env.vegetationCreated++;
                             }
                         }
@@ -426,7 +425,7 @@ namespace VoxelPlay {
 
                 } else if (pos.y == groundLevel) {
                     isAboveSurface = true;
-                    if (voxels[voxelIndex].hasContent == 0) {
+                    if (voxels[voxelIndex].typeIndex == 0) {
                         if (paintShore && pos.y == waterLevel) {
                             // this is on the shore, place a shoreVoxel
                             voxels[voxelIndex].Set(shoreVoxel);
@@ -447,11 +446,11 @@ namespace VoxelPlay {
                                             // request one vegetation voxel one position above which means the chunk above this one
                                             Vector3d abovePos = pos;
                                             abovePos.y++;
-                                            env.RequestVegetationCreation(abovePos, env.GetVegetation(biome, rn / biome.vegetationDensity));
+                                            env.RequestVegetationCreation(abovePos, env.GetVegetation(biome.vegetation, rn / biome.vegetationDensity));
                                         } else {
                                             // directly place a vegetation voxel above this voxel
                                             if (env.enableVegetation) {
-                                                voxels[voxelIndex + ONE_Y_ROW].Set(env.GetVegetation(biome, rn / biome.vegetationDensity));
+                                                voxels[voxelIndex + ONE_Y_ROW].Set(env.GetVegetation(biome.vegetation, rn / biome.vegetationDensity));
                                                 env.vegetationCreated++;
                                             }
                                         }
@@ -470,7 +469,7 @@ namespace VoxelPlay {
 
                 // fill hole with water
                 int lastHoleIndex = -1;
-                while (voxelIndex > bedrockRow && voxels[voxelIndex].hasContent == 2 && pos.y <= waterLevel) {
+                while (voxelIndex > bedrockRow && voxels[voxelIndex].typeIndex == Voxel.HoleTypeIndex && pos.y <= waterLevel) {
                     if (hasWater) {
                         voxels[voxelIndex].SetFastWater(waterVoxel);
                     }
@@ -481,9 +480,9 @@ namespace VoxelPlay {
 
                 // Continue filling down
                 for (; voxelIndex > bedrockRow; voxelIndex -= ONE_Y_ROW, pos.y--) {
-                    if (voxels[voxelIndex].hasContent == 0) { // avoid holes
+                    if (voxels[voxelIndex].typeIndex == Voxel.EmptyTypeIndex) { // avoid holes
                         voxels[voxelIndex].SetFastOpaque(biome.voxelDirt);
-                    } else if (voxels[voxelIndex].hasContent == 2) { // hole under water level -> fill with water
+                    } else if (voxels[voxelIndex].typeIndex == Voxel.HoleTypeIndex) { // hole under water level -> fill with water
                         lastHoleIndex = voxelIndex;
                         if (hasWater && pos.y <= waterLevel) { // hole under water level -> fill with water
                             voxels[voxelIndex].SetFastWater(waterVoxel);
@@ -503,7 +502,7 @@ namespace VoxelPlay {
                     float rn = WorldRand.GetValue(placePos);
                     if (rn < biome.vegetationDensity && biome.vegetation.Length > 0) {
                         // request one vegetation voxel one position above which means the chunk above this one
-                        env.RequestVegetationCreation(placePos, env.GetVegetation(biome, rn / biome.vegetationDensity));
+                        env.RequestVegetationCreation(placePos, env.GetVegetation(biome.vegetation, rn / biome.vegetationDensity));
                     }
                 }
 
@@ -560,9 +559,10 @@ namespace VoxelPlay {
                     return;
 
                 // Replace solid voxels with ore
-                if (chunk.voxels[voxelIndex].opaque >= VoxelPlayEnvironment.CHUNK_SIZE_MINUS_ONE) {
+                if (chunk.voxels[voxelIndex].opaque >= VoxelPlayEnvironment.FULL_OPAQUE) {
                     chunk.voxels[voxelIndex].SetFastOpaque(oreDefinition);
                 }
+
                 // Check if spawn continues
                 Vector3d prevPos = veinPos;
                 float v = WorldRand.GetValue(veinPos);

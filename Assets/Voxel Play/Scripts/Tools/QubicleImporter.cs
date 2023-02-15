@@ -23,7 +23,7 @@ namespace VoxelPlay
             using (BinaryReader br = new BinaryReader (stream, encoding)) {
                 version = br.ReadUInt32 ();
                 if (version != 257) {
-                    Debug.LogError ("Voxel Play: Unrecognized Qubicly binary version in model!");
+                    Debug.LogError ("Voxel Play: Unrecognized Qubicle binary version in model!");
                     return ColorBasedModelDefinition.Null;
                 }
                 colorFormat = br.ReadUInt32 ();

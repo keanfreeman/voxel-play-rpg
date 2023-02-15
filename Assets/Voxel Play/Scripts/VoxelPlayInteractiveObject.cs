@@ -6,7 +6,6 @@
 using System;
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace VoxelPlay {
 				
@@ -54,23 +53,20 @@ namespace VoxelPlay {
 		public virtual void OnPlayerAction() {}
 
 		public void Start() {
-			env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+			env = VoxelPlayEnvironment.instance;
 			if (env != null) {
-				if (env.GetComponent<VoxelPlayInteractiveObjectsManager>() == null) {
-                    VoxelPlayInteractiveObjectsManager mgr = env.gameObject.AddComponent<VoxelPlayInteractiveObjectsManager>();
-					mgr.InteractiveObjectRegister(this);
-				}
+				VoxelPlayInteractiveObjectsManager.instance.InteractiveObjectRegister (this);
 			}
 			OnStart ();
 		}
 
 		public void OnDestroy() {
 			if (env != null) {
-				VoxelPlayInteractiveObjectsManager mgr = env.GetComponent<VoxelPlayInteractiveObjectsManager>();
-                if (mgr != null) {
-                    mgr.InteractiveObjectUnRegister(this);
-                }
+				VoxelPlayInteractiveObjectsManager.instance.InteractiveObjectUnRegister (this);
 			}
+			
 		}
+
+
 	}
 }

@@ -1,15 +1,13 @@
 ﻿using System;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
-
 using UnityEngine;
 using UnityEditor;
 
 namespace VoxelPlay {
 				
 	[CustomEditor (typeof(UnityTerrainGenerator))]
-	public class VoxelPlayTerrainUnityEditor : UnityEditor.Editor {
+	public class VoxelPlayTerrainUnityEditor : Editor {
 
 		Color titleColor;
 		static GUIStyle titleLabelStyle, boxStyle, sectionHeaderStyle;
@@ -38,22 +36,28 @@ namespace VoxelPlay {
 			tg = (UnityTerrainGenerator)target;
 			if (tg == null)
 				return;
+            if (tg.terrainData == null) {
+                tg.Initialize();
+            }
 			terrainData = serializedObject.FindProperty ("terrainData");
 			waterLevel = serializedObject.FindProperty ("waterLevel");
 			waterVoxel = serializedObject.FindProperty ("waterVoxel");
 			vegetationDensity = serializedObject.FindProperty ("vegetationDensity");
 			if (tg.terrainData != null) {
 				// Check previews
-#if UNITY_2018_3_OR_NEWER
                 for (int k = 0; k < tg.terrainData.terrainLayers.Length && k < tg.splatSettings.Length; k++) {
-#else
-				for (int k = 0; k < tg.terrainData.splatPrototypes.Length && k < tg.splatSettings.Length; k++) {
-#endif
-					if (tg.splatSettings [k].preview == null) {
-						tg.ExamineTerrainData ();
-						break;
-					}
-				}
+                    if (tg.splatSettings[k].preview == null) {
+                        tg.ExamineTerrainData();
+                        break;
+                    }
+                }
+                int detailLayerCount = tg.terrainData.detailPrototypes.Length;
+                for (int k = 0; k < detailLayerCount && k < tg.detailSettings.Length; k++) {
+                    if (tg.detailSettings[k].preview == null) {
+                        tg.ExamineTerrainData();
+                        break;
+                    }
+                }
 			}
 			if (Terrain.activeTerrain != null) {
 				activeTerrain = Terrain.activeTerrain;
@@ -66,9 +70,8 @@ namespace VoxelPlay {
 			if (tg == null)
 				return;
 
-			if (tg.splatSettings == null || tg.splatSettings.Length == 0) {
-				Debug.LogError("No environment available in UnityEditor");
-				//tg.Initialize ();
+			if (tg.splatSettings == null || tg.splatSettings.Length == 0 || tg.treeSettings == null || tg.treeSettings.Length == 0) {
+				tg.Initialize ();
 			}
 
 			serializedObject.Update ();
@@ -122,11 +125,7 @@ namespace VoxelPlay {
 				EditorGUILayout.LabelField ("Texture Size", GUILayout.Width (EditorGUIUtility.labelWidth));
 				terrainTextureSize = EditorGUILayout.IntField (terrainTextureSize);
 				EditorGUILayout.EndHorizontal ();
-#if UNITY_2018_3_OR_NEWER
                 for (int k = 0; k < tg.terrainData.terrainLayers.Length && k < tg.splatSettings.Length; k++) {
-#else
-					for (int k = 0; k < tg.terrainData.splatPrototypes.Length && k < tg.splatSettings.Length; k++) {
-#endif
 					EditorGUILayout.LabelField ("Texture " + (k + 1), GUILayout.Width (80));
 					EditorGUILayout.BeginHorizontal ();
 					EditorGUILayout.LabelField (new GUIContent (tg.splatSettings [k].preview), boxStyle, GUILayout.Width (thumbnailSize), GUILayout.Height (thumbnailSize));
@@ -140,11 +139,7 @@ namespace VoxelPlay {
 					tg.splatSettings [k].smoothPower = EditorGUILayout.Slider (tg.splatSettings [k].smoothPower, 0, 1f);
 					EditorGUILayout.EndHorizontal ();
 
-#if UNITY_2018_3_OR_NEWER
                     int textureCount = tg.terrainData.terrainLayers.Length;
-#else
-					int textureCount = tg.terrainData.splatPrototypes.Length;
-#endif
                     if (textureIndices == null || textureIndices.Length != textureCount) {
 						textureIndices = new string[textureCount];
 						textureIndicesValues = new int[textureCount];
@@ -245,6 +240,9 @@ namespace VoxelPlay {
 					EditorGUILayout.LabelField ("Voxel Def.", GUILayout.Width (80));
 					tg.detailSettings [k].vd = (VoxelDefinition)EditorGUILayout.ObjectField (tg.detailSettings [k].vd, typeof(VoxelDefinition), false);
 					EditorGUILayout.EndHorizontal ();
+                        if (tg.detailSettings[k].vd == null && tg.detailSettings[k].action == UnityTerrainGenerator.TerrainResourceAction.Assigned) {
+                            tg.detailSettings[k].action = UnityTerrainGenerator.TerrainResourceAction.Create;
+                        }
 					EditorGUILayout.BeginHorizontal ();
 					EditorGUILayout.LabelField ("Action", GUILayout.Width (80));
 					tg.detailSettings [k].action = (UnityTerrainGenerator.TerrainResourceAction)EditorGUILayout.EnumPopup (tg.detailSettings [k].action);
@@ -303,9 +301,17 @@ namespace VoxelPlay {
 
 
 		string GetPath () {
-			// supplying null due to no singleton
-			WorldDefinition wd = null;
-			return System.IO.Path.GetDirectoryName (AssetDatabase.GetAssetPath (wd)) + "/Resources/" + wd.name;
+			WorldDefinition wd = VoxelPlayEnvironment.instance.world;
+			string path;
+			string name;
+			if (wd == null) {
+				path = AssetDatabase.GetAssetPath(terrainData.objectReferenceValue);
+				name = terrainData.name;
+			} else {
+				path = AssetDatabase.GetAssetPath(wd);
+				name = wd.name;
+            }
+			return Path.GetDirectoryName (path) + "/Resources/" + name;
 		}
 
 		Texture2D CreateTextureFile (Texture2D tex, string path, string filename, float smoothPower) {
@@ -404,11 +410,7 @@ namespace VoxelPlay {
 		void GenerateTerrainVoxels (bool forceGeneration) {
 			string path = GetPath () + "/TerrainVoxels";
 			CheckDirectory (path);
-#if UNITY_2018_3_OR_NEWER
             for (int k = 0; k < tg.terrainData.terrainLayers.Length && k < tg.splatSettings.Length; k++) {
-#else
-			for (int k = 0; k < tg.terrainData.splatPrototypes.Length && k < tg.splatSettings.Length; k++) {
-#endif
                 if (forceGeneration || tg.splatSettings [k].action == UnityTerrainGenerator.TerrainResourceAction.Create) {
 					if (tg.splatSettings [k].preview == null)
 						continue;
@@ -484,14 +486,32 @@ namespace VoxelPlay {
 				if (forceGeneration || tg.detailSettings [k].action == UnityTerrainGenerator.TerrainResourceAction.Create) {
 					if (tg.detailSettings [k].preview == null)
 						continue;
-					TextureTools.EnsureTextureReadable (tg.detailSettings [k].preview);
-					tg.detailSettings [k].vd = GenerateVoxelFromTexture (null, tg.detailSettings [k].preview, null, vegetationTextureSize, path, "VoxelVegetation " + tg.detailSettings [k].preview.name, RenderType.CutoutCross, 0);
-					tg.detailSettings [k].action = UnityTerrainGenerator.TerrainResourceAction.Assigned;
-				}
-			}
-		}
+                    TextureTools.EnsureTextureReadable(tg.detailSettings[k].preview);
+                    MakeTransparentTexture(tg.detailSettings[k].preview);
+                    tg.detailSettings[k].vd = GenerateVoxelFromTexture(null, tg.detailSettings[k].preview, null, vegetationTextureSize, path, "VoxelVegetation " + tg.detailSettings[k].previewName, RenderType.CutoutCross, 0);
+                    tg.detailSettings[k].action = UnityTerrainGenerator.TerrainResourceAction.Assigned;
+                }
+            }
+        }
 
-		void GenerateTreeModels (bool forceGeneration) {
+        /// <summary>
+        /// Assumes transparent color is first color in the color array of the texture
+        /// </summary>
+        void MakeTransparentTexture(Texture2D originalTex) {
+            Color32[] colors = originalTex.GetPixels32();
+            Color32 transpColor = colors[0];
+            int colorsLength = colors.Length;
+            for (int k = 1; k < colorsLength; k++) {
+                Color32 c = colors[k];
+                if (c.r == transpColor.r && c.g == transpColor.g && c.b == transpColor.b && c.a == transpColor.a) {
+                    colors[k] = Misc.color32Transparent;
+                }
+            }
+            originalTex.SetPixels32(colors);
+            originalTex.Apply();
+        }
+
+        void GenerateTreeModels(bool forceGeneration) {
 			if (tg.terrainData.treePrototypes.Length == 0) return;
 
 			string path = GetPath () + "/Trees";
@@ -522,7 +542,7 @@ namespace VoxelPlay {
 						continue;
 					
 					// Build model definition
-					ModelDefinition md = ScriptableObject.CreateInstance<ModelDefinition> ();
+                    ModelDefinition md = CreateInstance<ModelDefinition>();
 					md.sizeX = sizeX;
 					md.sizeY = sizeY;
 					md.sizeZ = sizeZ;
@@ -558,10 +578,25 @@ namespace VoxelPlay {
 			}
 		}
 
+		Texture2D lastFlatTex;
+		Color lastFlatColor;
+
 		void AddModelBit (List<ModelBit>bits, ModelDefinition md, Vector3 pos, Vector2 uv, Material mat, string path, float smoothPower) {
 			Texture2D tex = (Texture2D)mat.mainTexture;
-			if (tex == null)
-				return;
+			if (tex == null) {
+				if (mat.color == lastFlatColor && lastFlatTex != null) {
+					tex = lastFlatTex;
+				} else {
+					tex = new Texture2D(1, 1);
+					tex.name = mat.name;
+					Color32[] colors = new Color32[1];
+					colors[0] = mat.color;
+					tex.SetPixels32(colors);
+					tex.Apply();
+					lastFlatTex = tex;
+					lastFlatColor = mat.color;
+				}
+			}
 			int y = Mathf.Clamp (Mathf.FloorToInt (pos.y), 0, md.sizeY - 1);
 			int z = Mathf.Clamp (Mathf.FloorToInt (pos.z) + md.sizeZ / 2, 0, md.sizeZ - 1);
 			int x = Mathf.Clamp (Mathf.FloorToInt (pos.x) + md.sizeX / 2, 0, md.sizeX - 1);
@@ -584,11 +619,11 @@ namespace VoxelPlay {
 				RenderType rt = RenderType.Cutout;
 				string matName = mat.name.ToUpper ();
 				string texName = tex.name.ToUpper ();
-				if (matName.Contains ("BRANCH") || matName.Contains ("BARK") || texName.Contains ("BARK")) {
+				if (matName.Contains ("BRANCH") || matName.Contains ("BARK") || texName.Contains ("BARK") || matName.Contains("TRUNK")) {
 					rt = RenderType.Opaque;
 					vd = GenerateVoxelFromTexture (tex, tex, tex, treeTextureSize, path, "VoxelTree " + tex.name, rt, smoothPower);
 				} else {
-					Texture2D frondTex = GenerateFrondTexture (tex, uv, treeTextureSize, path);
+					Texture2D frondTex = GenerateFrondTexture (tex, uv, treeTextureSize);
 					vd = GenerateVoxelFromTexture (frondTex, frondTex, frondTex, treeTextureSize, path, "VoxelTree " + frondTex.name, rt, smoothPower);
 				}
 				textureVoxels [tex] = vd;
@@ -597,7 +632,7 @@ namespace VoxelPlay {
 			bits.Add (bit);
 		}
 
-		Texture2D GenerateFrondTexture (Texture2D tex, Vector2 uv, int textureSize, string path) {
+		Texture2D GenerateFrondTexture (Texture2D tex, Vector2 uv, int textureSize) {
 			Color32[] sourceColors = tex.GetPixels32 ();
 			// Extract representative colors around uv position
 			int w = textureSize;
@@ -610,7 +645,9 @@ namespace VoxelPlay {
 				int ty = Mathf.Clamp (y0, 0, h - 1);
 				for (int x0 = x - gap; x0 < x + gap; x0++) {
 					int tx = Mathf.Clamp (x0, 0, w - 1);
-					repColors.Add (sourceColors [ty * w + tx]);
+					int colorIndex = ty * w + tx;
+					if (colorIndex >= sourceColors.Length) colorIndex = 0;
+					repColors.Add(sourceColors[colorIndex]);
 				}
 			}
 			Color32[] colors = repColors.ToArray ();
@@ -663,7 +700,7 @@ namespace VoxelPlay {
 			if (k >= 0) {
 				s = s.Substring (0, k);
 			}
-			char[] invalidChars = System.IO.Path.GetInvalidFileNameChars ();
+            char[] invalidChars = Path.GetInvalidFileNameChars();
 			for (int i = 0; i < invalidChars.Length; i++) {
 				if (s.IndexOf (invalidChars [i]) >= 0) {
 					s = s.Replace (invalidChars [i], '_');

@@ -11,16 +11,16 @@ namespace VoxelPlay
         {
 
             float lineHeight = EditorGUIUtility.standardVerticalSpacing + EditorGUIUtility.singleLineHeight;
+            float left = position.x;
 
             const float w = 60f;
             const float sw = 70f;
 
-            position.y += 6;
-
             float previewSize = lineHeight * 4f;
-            Rect previewRect = new Rect (position.position, new Vector2 (previewSize, previewSize));
+            Rect previewRect = new Rect(position.position, new Vector2(previewSize, previewSize));
             previewRect.x += sw * 3 - 5f;
-            previewRect.y += 2f;
+
+            position.y += 6;
 
             Rect box = new Rect (position.x - 2f, position.y - 4f, sw * 4f + 12f + previewSize, lineHeight * 3f + 14f);
             GUI.Box (box, GUIContent.none);
@@ -81,6 +81,15 @@ namespace VoxelPlay
                 }
             }
 
+            SerializedProperty normalMap = property.FindPropertyRelative("normalMap");
+            position.x = left;
+            position.y += lineHeight + 2f;
+            position.width = 300;
+            float labelWidth = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = 150;
+            EditorGUI.ObjectField(position, normalMap, new GUIContent("Optional Normal Map:"));
+            EditorGUIUtility.labelWidth = labelWidth;
+
             if ((EditorGUI.EndChangeCheck () || GUI.enabled) && !Application.isPlaying) {
                 UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty (UnityEngine.SceneManagement.SceneManager.GetActiveScene ());
             }
@@ -101,7 +110,7 @@ namespace VoxelPlay
 
         public override float GetPropertyHeight (SerializedProperty prop, GUIContent label)
         {
-            return EditorGUIUtility.singleLineHeight * 4f + 5f;
+            return EditorGUIUtility.singleLineHeight * 5f + 5f;
         }
 
     }

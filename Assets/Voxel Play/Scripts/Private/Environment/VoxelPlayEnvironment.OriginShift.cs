@@ -16,7 +16,7 @@ namespace VoxelPlay
         public bool useOriginShift;
         public int originShiftDistanceThreshold = 1000;
 
-        readonly List<Transform> originShiftTransforms = new List<Transform> ();
+        readonly static List<Transform> originShiftTransforms = new List<Transform> ();
 
         public void RegisterOriginShiftTransform (Transform t)
         {

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using VoxelPlay;
 
 namespace VoxelPlayDemos
@@ -14,7 +13,7 @@ namespace VoxelPlayDemos
 
         void Start ()
         {
-            env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+            env = VoxelPlayEnvironment.instance;
 
             // When Voxel Play is ready, do some stuff...
             env.OnInitialized += OnInitialized;
@@ -141,7 +140,7 @@ namespace VoxelPlayDemos
             if (fpsController.crosshairOnBlock) {
                 VoxelChunk chunk = fpsController.crosshairHitInfo.chunk;
                 int voxelIndex = fpsController.crosshairHitInfo.voxelIndex;
-                VoxelDefinition type = env.voxelDefinitions[chunk.voxels[voxelIndex].type()];
+                VoxelDefinition type = chunk.voxels[voxelIndex].type;
                 if (!type.renderType.supportsDynamic()) {
                     env.ShowError ("The voxel type " + type.name + " can't be levitated.");
                     return;

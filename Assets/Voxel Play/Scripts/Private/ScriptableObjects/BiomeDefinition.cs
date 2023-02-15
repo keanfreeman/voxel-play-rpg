@@ -87,7 +87,9 @@ namespace VoxelPlay
         public Color biomeMapColorTemp;
 
         [Header ("Terrain Voxels")]
+        [Tooltip("Voxel definition used for voxels that are on the surface in this biome.")]
         public VoxelDefinition voxelTop;
+        [Tooltip("Voxel definition used for underground voxels in this biome.")]
         public VoxelDefinition voxelDirt;
         public BiomeOre [] ores;
 
@@ -131,7 +133,7 @@ namespace VoxelPlay
                 underwaterVegetation = new BiomeVegetation [0];
             }
 
-            VoxelPlayEnvironment env = null;
+            VoxelPlayEnvironment env = VoxelPlayEnvironment.instance;
             if (env == null) return;
 
             float maxAltitude = 255;
@@ -168,7 +170,6 @@ namespace VoxelPlay
                     underwaterVegetation [v].vegetation = env.defaultVoxel;
                 }
             }
-
         }
     }
 }

@@ -46,7 +46,7 @@ namespace VoxelPlay {
         /// Initialization method. Called by Voxel Play at startup.
         /// </summary>
         public override void Init() {
-            env = null;
+            env = VoxelPlayEnvironment.instance;
             wormBorn = new Dictionary<Vector3d, bool>(100);
 
             GenerateNoise(ref noiseValuesX, 0);
@@ -234,8 +234,8 @@ namespace VoxelPlay {
                                         int px = x - chunkX * VoxelPlayEnvironment.CHUNK_SIZE;
                                         int voxelIndex = voxelIndexZ + px;
 
-                                            // set this voxel as a "hole" (hasContent = 2) so it doesn't get filled by terrain generator when it creates terrain
-                                            chunk.voxels[voxelIndex].hasContent = 2;
+                                        // set this voxel as a "hole" (hasContent = 2) so it doesn't get filled by terrain generator when it creates terrain
+                                        chunk.voxels[voxelIndex].typeIndex = Voxel.HoleTypeIndex;
                                     }
                                 }
                             }

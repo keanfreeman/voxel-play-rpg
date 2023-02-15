@@ -10,7 +10,7 @@ namespace VoxelPlayDemos {
 		VoxelPlayEnvironment env;
 
 		void Start () {
-			env = VoxelPlayEnvironment.GetSceneInstance(gameObject.scene.buildIndex);
+			env = VoxelPlayEnvironment.instance;
 
 			// When Voxel Play is ready, do some stuff...
 			env.OnInitialized += OnInitialized;

@@ -17,6 +17,7 @@ namespace VoxelPlay {
 		ImportFormat importFormat;
 		bool importIgnoreOffset = true;
 		bool importIgnoreTransparency = true;
+
 		string importFilename;
 		Vector3 scale = Misc.vector3one;
 		ColorToVoxelMap mapping;
@@ -123,15 +124,12 @@ namespace VoxelPlay {
 			}
 			Color32[] colors = baseModel.colors;
 
-			GameObject obj = VoxelPlayConverter.GenerateVoxelObject (colors, sizeX, sizeY, sizeZ, new Vector3(offsetX, offsetY, offsetZ), scale);
+			GameObject obj = VoxelPlayConverter.GenerateVoxelObject (colors, sizeX, sizeY, sizeZ, new Vector3(offsetX, offsetY, offsetZ), scale, true, 1);
 
 			string path = GetPathForNewAsset ();
 			path += "/" + GetFilenameForNewModel (baseModel.name) + ".prefab";
-#if UNITY_2018_3_OR_NEWER
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(obj, path);
-#else
-			GameObject prefab = PrefabUtility.CreatePrefab (path, obj);
-#endif
+
 			// Store the mesh inside the prefab
 			Mesh mesh = obj.GetComponent<MeshFilter>().sharedMesh;
 			AssetDatabase.AddObjectToAsset (mesh, prefab);
@@ -155,7 +153,7 @@ namespace VoxelPlay {
 
 		ColorBasedModelDefinition QubicleBinaryToColorBasedModelDefinition () {
 			ColorBasedModelDefinition baseModel = ColorBasedModelDefinition.Null;
-			Stream file = System.IO.File.Open (importFilename, FileMode.Open);
+			Stream file = File.Open (importFilename, FileMode.Open);
 			try {
 				baseModel = QubicleImporter.ImportBinary (file, System.Text.Encoding.UTF8);
 			} catch {
@@ -167,12 +165,12 @@ namespace VoxelPlay {
 
 		string GetPathForNewAsset () {
 			string path;
-			//if (VoxelPlayEnvironment.instance != null) {
-			//	path = AssetDatabase.GetAssetPath (VoxelPlayEnvironment.instance.world);
-			//	path = System.IO.Path.GetDirectoryName (path) + "/Models";
-			//} else {
-			path = "Assets/ImportedModels";
-			//}
+			if (VoxelPlayEnvironment.instance != null) {
+				path = AssetDatabase.GetAssetPath (VoxelPlayEnvironment.instance.world);
+				path = System.IO.Path.GetDirectoryName (path) + "/Models";
+			} else {
+				path = "Assets/ImportedModels";
+			}
 			System.IO.Directory.CreateDirectory (path);
 			return path;
 		}

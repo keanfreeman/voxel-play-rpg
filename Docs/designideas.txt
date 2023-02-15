@@ -1,0 +1,7 @@
+
+
+objects/components that generally need to always exist (sound managers, scene managers, state managers, etc) should be on DoNotDestroy in the init scene
+
+there should be a playermanager that handles movement, object instantiation, switching between scenes, etc.
+
+create an object (manager?) in each scene that keeps track of the state of that particular scene (initializing positions, saving states, etc)

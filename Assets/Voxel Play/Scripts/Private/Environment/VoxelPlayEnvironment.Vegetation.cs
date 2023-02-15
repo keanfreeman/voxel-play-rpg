@@ -76,39 +76,19 @@ namespace VoxelPlay {
 		/// <returns>The vegetation.</returns>
 		/// <param name="biome">Biome.</param>
 		/// <param name="random">Random.</param>
-		public VoxelDefinition GetVegetation (BiomeDefinition biome, float random) {
+		public VoxelDefinition GetVegetation (BiomeVegetation[] vegetation, float random) {
 			float acumProb = 0;
 			int index = 0;
-			for (int t = 0; t < biome.vegetation.Length; t++) {
-				acumProb += biome.vegetation [t].probability;
+			for (int t = 0; t < vegetation.Length; t++) {
+				acumProb += vegetation [t].probability;
 				if (random < acumProb) {
 					index = t;
 					break;
 				}
 			}
-			return biome.vegetation [index].vegetation;
+			return vegetation [index].vegetation;
 		}
 
-
-		/// <summary>
-		/// Gets the underwater vegetation voxel based on position, biome and a random value
-		/// </summary>
-		/// <returns>The vegetation.</returns>
-		/// <param name="biome">Biome.</param>
-		/// <param name="random">Random.</param>
-		public VoxelDefinition GetUnderwaterVegetation (BiomeDefinition biome, float random)
-		{
-			float acumProb = 0;
-			int index = 0;
-			for (int t = 0; t < biome.underwaterVegetation.Length; t++) {
-				acumProb += biome.underwaterVegetation [t].probability;
-				if (random < acumProb) {
-					index = t;
-					break;
-				}
-			}
-			return biome.underwaterVegetation [index].vegetation;
-		}
 
 		/// <summary>
 		/// Creates the vegetation.

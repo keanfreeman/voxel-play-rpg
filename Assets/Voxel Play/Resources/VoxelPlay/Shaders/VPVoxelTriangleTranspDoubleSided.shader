@@ -22,10 +22,10 @@ Shader "Voxel Play/Voxels/Triangle/Transp Double Sided"
 			#pragma exclude_renderers d3d11_9x
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_AA
-			#pragma multi_compile _ VOXELPLAY_USE_OUTLINE
-			#pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
-			#pragma multi_compile _ VOXELPLAY_TRANSP_BLING
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA
+			#pragma multi_compile_local _ VOXELPLAY_USE_OUTLINE
+			#pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_TRANSP_BLING
 			#define NO_SHADOWS
             #include "VPCommonURP.cginc"
 			#include "VPCommonCore.cginc"
@@ -48,10 +48,10 @@ Shader "Voxel Play/Voxels/Triangle/Transp Double Sided"
 			#pragma fragment frag
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile _ VOXELPLAY_GLOBAL_USE_FOG
-			#pragma multi_compile _ VOXELPLAY_USE_AA
-			#pragma multi_compile _ VOXELPLAY_USE_OUTLINE
-			#pragma multi_compile _ VOXELPLAY_PIXEL_LIGHTS
-			#pragma multi_compile _ VOXELPLAY_TRANSP_BLING
+			#pragma multi_compile_local _ VOXELPLAY_USE_AA
+			#pragma multi_compile_local _ VOXELPLAY_USE_OUTLINE
+			#pragma multi_compile_local _ VOXELPLAY_PIXEL_LIGHTS
+			#pragma multi_compile_local _ VOXELPLAY_TRANSP_BLING
 			#include "VPCommon.cginc"
 			#include "VPVoxelTriangleTranspPass.cginc"
 			ENDCG
