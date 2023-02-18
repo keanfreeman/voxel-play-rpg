@@ -39,11 +39,23 @@ public class SpriteMovement
                 && !twoBelowAheadVoxel.isEmpty) {
                 return requestedCoordinate + Vector3Int.down;
             }
+
+            // check if the player can jump down 1 tile
+            if (belowRequestedVoxel.isEmpty && !twoBelowAheadVoxel.isEmpty && !twoBelowAheadVoxel.hasWater) {
+                return requestedCoordinate + Vector3Int.down;
+            }
         }
 
         // check if player can move up slope
         if (IsSlope(requestedVoxel) && IsSlopeUpRelativeToSprite(requestedCoordinate, currCoordinate,
                 requestedVoxel.GetTextureRotation())) {
+            return requestedCoordinate + Vector3Int.up;
+        }
+
+        // check if the player can jump up 1 tile
+        Vector3Int aboveRequestedCoordinate = requestedCoordinate + Vector3Int.up;
+        Voxel aboveRequestedVoxel = environment.GetVoxel(aboveRequestedCoordinate);
+        if (!requestedVoxel.isEmpty && aboveRequestedVoxel.isEmpty) {
             return requestedCoordinate + Vector3Int.up;
         }
 

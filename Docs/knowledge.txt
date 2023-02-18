@@ -1,3 +1,6 @@
+when using the "voxel dirt additional" feature, make sure to not set Max/Min Altitude to zero, or it will not generate the layer correctly.
+- also, min altitude can equal bedrock.
+
 I tried adding another scene with a different environment/world definition. For some reason, the world will not render and 
 it seems to load twice. I think for now I may give up on the idea of having multiple environments. The only thing I think it would 
 provide would be quicker load times, and I'm too early on in this project to worry about saving a few seconds between environments.

@@ -341,7 +341,7 @@ MonoBehaviour:
   enableCurvature: 0
   seeThrough: 1
   seeThroughTarget: {fileID: 0}
-  seeThroughRadius: 3
+  seeThroughRadius: 5
   seeThroughAlpha: 0.25
   _seeThroughHeightOffset: 0
   enableBrightPointLights: 0

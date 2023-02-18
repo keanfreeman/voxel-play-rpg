@@ -17,9 +17,9 @@ public class NonVoxelInitialization {
         sceneObjects = new Dictionary<SceneIndex, List<NonVoxelEntity>> {
             {
                 SceneIndex.SECOND_SCENE, new List<NonVoxelEntity> {
-                    new NonVoxelEntity(playerPrefab, new Vector3Int(523, 50, 246)),
-                    new NonVoxelEntity(opossumPrefab, new Vector3Int(527, 53, 247)),
-                    new NonVoxelEntity(opossumPrefab, new Vector3Int(521, 50, 246)),
+                    new NonVoxelEntity(playerPrefab, new Vector3Int(864, 29, 348)),
+                    new NonVoxelEntity(opossumPrefab, new Vector3Int(835, 29, 349)),
+                    new NonVoxelEntity(opossumPrefab, new Vector3Int(835, 29, 347)),
                     new SceneExitCube(
                         sceneExitPrefab,
                         new Vector3Int(523, 50, 249),

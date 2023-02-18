@@ -167,7 +167,7 @@ public class PlayerMovement : MonoBehaviour {
             return;
         }
         isRotating = false;
-        startRotation = spriteChildTransform.transform.rotation;
+        startRotation = spriteChildTransform.rotation;
 
         KeyCode direction;
         if (Input.GetKey(KeyCode.LeftArrow)) {

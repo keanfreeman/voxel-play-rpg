@@ -14,14 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seed: 0
   biomes:
-  - {fileID: 11400000, guid: b3dda5f94f82e48de8e056209e1872db, type: 2}
+  - {fileID: 11400000, guid: 06652c2aac3cbb345bc5e50309ca3d54, type: 2}
   defaultBiome: {fileID: 0}
   infinite: 1
   extents: {x: 1024, y: 1024, z: 1024}
   grassWindSpeed: 1
   treeWindSpeed: 1
-  terrainGenerator: {fileID: 11400000, guid: 2faffc4d4fc214e42875dbf64b8f7db2, type: 2}
-  detailGenerators: []
+  terrainGenerator: {fileID: 11400000, guid: 78aa2e91bea90e747b3a9a2e2b77e1c0, type: 2}
+  detailGenerators:
+  - {fileID: 11400000, guid: ef5af20135a438442b0fc48944524976, type: 2}
   skyboxDesktop: 1
   skyboxMobile: 3
   skyboxDayCubemap: {fileID: 0}
@@ -83,6 +84,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cd9073026c0ca45b8933efa0210d3048, type: 2}
   - {fileID: 11400000, guid: f196cfea1816a4cb6b8e24bea23c4d60, type: 2}
   - {fileID: 11400000, guid: 1f54f31b0c670ea43b5305e36d711885, type: 2}
+  - {fileID: 11400000, guid: 61e312d6220fd44548ef6bcb198450ed, type: 2}
+  - {fileID: 11400000, guid: 62e537e35412d45a799ca5f5da92f457, type: 2}
   items:
   - {fileID: 11400000, guid: 5becc8720cff94ce6afda3f0ae711b81, type: 2}
   resourceLocation: 

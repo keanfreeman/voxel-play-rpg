@@ -45,7 +45,7 @@ public class SceneBuilder : MonoBehaviour
         vpEnvironment = gameObject.GetComponent<VoxelPlayEnvironment>();
         vpEnvironment.cameraMain = playerInstance.transform.GetChild(0).GetChild(0).GetComponent<Camera>();
         vpEnvironment.enabled = true;
-        vpEnvironment.seeThroughTarget = playerInstance.transform.GetChild(0).gameObject;
+        vpEnvironment.seeThroughTarget = playerInstance.transform.GetChild(1).gameObject;
 
         spriteMovement = new SpriteMovement(vpEnvironment);
         InitCreaturesAndWorld();
@@ -79,7 +79,7 @@ public class SceneBuilder : MonoBehaviour
         temp.inputManager = inputManager;
         temp.spriteRenderer = playerInstance.GetComponentInChildren<SpriteRenderer>();
         temp.animator = playerInstance.GetComponentInChildren<Animator>();
-        temp.spriteChildTransform = playerInstance.GetComponentInChildren<Transform>();
+        temp.spriteChildTransform = playerInstance.transform.GetChild(0);
         return temp;
     }
 

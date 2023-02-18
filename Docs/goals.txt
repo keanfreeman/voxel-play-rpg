@@ -1,5 +1,6 @@
 CURRENT GOALS
-change the hiding logic to hide all voxels in between the camera and the 
+add a keybind to destroy the voxel in front/below the character, and replace it with a slope
+
 
 TODO
 break out some logic into higher level managers, like the player movement script

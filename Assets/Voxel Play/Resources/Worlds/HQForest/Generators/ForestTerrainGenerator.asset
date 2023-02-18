@@ -3,8 +3,9 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -12,16 +13,19 @@ MonoBehaviour:
   m_Name: ForestTerrainGenerator
   m_EditorClassIdentifier: 
   maxHeight: 255
-  minHeight: -16
-  seaLevel: -1
+  minHeight: -100
   waterLevel: 25
   steps:
   - enabled: 1
     operation: 0
+    description: 
     noiseTexture: {fileID: 2800000, guid: a098096f8833147feac87b2948d79b92, type: 3}
     frecuency: 0.1
     noiseRangeMin: 0
     noiseRangeMax: 0.3
+    octaves: 0
+    persistence: 0
+    lacunarity: 0
     inputIndex0: 0
     inputIndex1: 0
     threshold: 0
@@ -36,10 +40,14 @@ MonoBehaviour:
     max: 0
   - enabled: 1
     operation: 1
+    description: 
     noiseTexture: {fileID: 2800000, guid: 6dd155b02d17142c79ea0aaf630bf92b, type: 3}
     frecuency: 0.5
     noiseRangeMin: 0
     noiseRangeMax: 1
+    octaves: 0
+    persistence: 0
+    lacunarity: 0
     inputIndex0: 0
     inputIndex1: 0
     threshold: 0
@@ -54,10 +62,14 @@ MonoBehaviour:
     max: 0
   - enabled: 1
     operation: 303
+    description: 
     noiseTexture: {fileID: 0}
     frecuency: 0
     noiseRangeMin: 0
     noiseRangeMax: 0
+    octaves: 0
+    persistence: 0
+    lacunarity: 0
     inputIndex0: 1
     inputIndex1: 0
     threshold: 0
@@ -72,10 +84,14 @@ MonoBehaviour:
     max: 1
   - enabled: 1
     operation: 300
+    description: 
     noiseTexture: {fileID: 0}
     frecuency: 0
     noiseRangeMin: 0
     noiseRangeMax: 0
+    octaves: 0
+    persistence: 0
+    lacunarity: 0
     inputIndex0: 0
     inputIndex1: 1
     threshold: 0
@@ -90,10 +106,14 @@ MonoBehaviour:
     max: 0
   - enabled: 1
     operation: 104
+    description: 
     noiseTexture: {fileID: 0}
     frecuency: 0
     noiseRangeMin: 0
     noiseRangeMax: 0
+    octaves: 0
+    persistence: 0
+    lacunarity: 0
     inputIndex0: 0
     inputIndex1: 0
     threshold: 0
@@ -108,10 +128,14 @@ MonoBehaviour:
     max: 0
   - enabled: 1
     operation: 202
+    description: 
     noiseTexture: {fileID: 0}
     frecuency: 0
     noiseRangeMin: 0
     noiseRangeMax: 0
+    octaves: 0
+    persistence: 0
+    lacunarity: 0
     inputIndex0: 0
     inputIndex1: 0
     threshold: 0
@@ -126,10 +150,14 @@ MonoBehaviour:
     max: 1
   - enabled: 1
     operation: 104
+    description: 
     noiseTexture: {fileID: 0}
     frecuency: 0
     noiseRangeMin: 0
     noiseRangeMax: 0
+    octaves: 0
+    persistence: 0
+    lacunarity: 0
     inputIndex0: 0
     inputIndex1: 0
     threshold: 0
@@ -144,10 +172,14 @@ MonoBehaviour:
     max: 0
   - enabled: 1
     operation: 204
+    description: 
     noiseTexture: {fileID: 0}
     frecuency: 0
     noiseRangeMin: 0
     noiseRangeMax: 0
+    octaves: 0
+    persistence: 0
+    lacunarity: 0
     inputIndex0: 0
     inputIndex1: 0
     threshold: 0.105
@@ -162,10 +194,14 @@ MonoBehaviour:
     max: 0
   - enabled: 1
     operation: 0
+    description: 
     noiseTexture: {fileID: 2800000, guid: 6dd155b02d17142c79ea0aaf630bf92b, type: 3}
     frecuency: 0.3
     noiseRangeMin: 0
     noiseRangeMax: 0.4
+    octaves: 0
+    persistence: 0
+    lacunarity: 0
     inputIndex0: 0
     inputIndex1: 0
     threshold: 0
@@ -180,10 +216,14 @@ MonoBehaviour:
     max: 0
   - enabled: 1
     operation: 104
+    description: 
     noiseTexture: {fileID: 0}
     frecuency: 0
     noiseRangeMin: 0
     noiseRangeMax: 0
+    octaves: 0
+    persistence: 0
+    lacunarity: 0
     inputIndex0: 8
     inputIndex1: 0
     threshold: 0
@@ -198,10 +238,14 @@ MonoBehaviour:
     max: 0
   - enabled: 1
     operation: 301
+    description: 
     noiseTexture: {fileID: 0}
     frecuency: 0
     noiseRangeMin: 0
     noiseRangeMax: 0
+    octaves: 0
+    persistence: 0
+    lacunarity: 0
     inputIndex0: 9
     inputIndex1: 7
     threshold: 0
@@ -216,10 +260,14 @@ MonoBehaviour:
     max: 0
   - enabled: 1
     operation: 204
+    description: 
     noiseTexture: {fileID: 0}
     frecuency: 0
     noiseRangeMin: 0
     noiseRangeMax: 0
+    octaves: 0
+    persistence: 0
+    lacunarity: 0
     inputIndex0: 10
     inputIndex1: 0
     threshold: 0.11
@@ -234,10 +282,14 @@ MonoBehaviour:
     max: 0
   - enabled: 1
     operation: 105
+    description: 
     noiseTexture: {fileID: 0}
     frecuency: 0
     noiseRangeMin: 0
     noiseRangeMax: 0
+    octaves: 0
+    persistence: 0
+    lacunarity: 0
     inputIndex0: 0
     inputIndex1: 0
     threshold: 0.14
@@ -250,6 +302,8 @@ MonoBehaviour:
     weight1: 0
     min: 0
     max: 0
+  hint: The final value returned by the steps chain should be in 0..1 range. This
+    value will be multiplied by the Max Height param to determine the terrain altitude.
   seaDepthMultiplier: 1
   beachWidth: 0.02
   waterVoxel: {fileID: 11400000, guid: 14881402d0f4f4a6f9fa038dcdff273a, type: 2}
