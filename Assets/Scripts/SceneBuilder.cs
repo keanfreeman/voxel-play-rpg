@@ -97,12 +97,14 @@ public class SceneBuilder : MonoBehaviour
                     sceneExitComponent.Init(parentSceneChanger, sceneExitCube.destination);
                 }
 
-                NPCBehavior npcBehavior = gameObject.GetComponent<NPCBehavior>();
-                if (npcBehavior != null) {
+                if (nonVoxelEntity.GetType() == typeof(NPC)) {
+                    NPCBehavior npcBehavior = gameObject.GetComponent<NPCBehavior>();
                     npcBehavior.nonVoxelWorld = nonVoxelWorld;
                     npcBehavior.spriteMovement = spriteMovement;
                     npcBehavior.environment = vpEnvironment;
                     npcBehavior.rng = rng;
+
+                    nonVoxelWorld.npcs.Add(npcBehavior);
                 }
             }
         }

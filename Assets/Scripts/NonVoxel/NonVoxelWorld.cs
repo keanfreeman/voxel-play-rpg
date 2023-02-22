@@ -8,6 +8,8 @@ namespace NonVoxel {
         private Dictionary<Vector3Int, GameObject> positionToObject
             = new Dictionary<Vector3Int, GameObject>();
 
+        public HashSet<MonoBehaviour> npcs = new HashSet<MonoBehaviour>();
+
         public bool IsInWorld(GameObject gameObject) {
             return objectToPosition.ContainsKey(gameObject);
         }

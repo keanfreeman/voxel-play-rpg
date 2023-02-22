@@ -31,17 +31,17 @@ public class NPCBehavior : MonoBehaviour
         childTransform = transform.GetChild(0);
     }
 
-    void Update()
-    {
-        if (!environment.initialized) {
-            return;
-        }
+    //void Update()
+    //{
+    //    if (!environment.initialized) {
+    //        return;
+    //    }
+    //
+    //    HandleCameraRotation();
+    //    HandleMovement();
+    //}
 
-        HandleCameraRotation();
-        HandleMovement();
-    }
-
-    public void MoveSprite(Vector3Int position) {
+    private void MoveSprite(Vector3Int position) {
         nonVoxelWorld.SetPosition(gameObject, position);
         transform.position = position;
     }
@@ -54,7 +54,7 @@ public class NPCBehavior : MonoBehaviour
         return rng.Next(0, 2) == 0 ? Vector3Int.forward : Vector3Int.back;
     }
 
-    private void HandleMovement() {
+    public void HandleRandomMovement() {
         if (isRotating || Time.time - lastMoveTime < NPC_MIN_IDLE_TIME) {
             return;
         }
@@ -76,7 +76,7 @@ public class NPCBehavior : MonoBehaviour
         }
     }
 
-    private void HandleCameraRotation() {
+    public void HandleCameraRotation() {
         if (isRotating && !IsRotationDone()) {
             return;
         }

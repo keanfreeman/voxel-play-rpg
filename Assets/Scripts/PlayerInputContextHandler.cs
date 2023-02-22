@@ -1,5 +1,6 @@
 using Ink.Runtime;
 using NonVoxel;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,7 @@ public class PlayerInputContextHandler
             case ControlState.FIRST_PERSON:
                 break;
             case ControlState.SPRITE_NEUTRAL:
+                HandleNPCs();
                 bool isTransitioning = playerMovement.HandleMovementControls();
                 if (isTransitioning) {
                     return;
@@ -61,13 +63,12 @@ public class PlayerInputContextHandler
         }
     }
 
-    //private void HandleSwapCameraState() {
-    //    if (inputManager.WasSwitchInputTypeTriggered()) {
-    //        playerMovement.ToggleFreeCamera();
-    //        controlState = (controlState == ControlState.FIRST_PERSON) 
-    //            ? ControlState.SPRITE_NEUTRAL : ControlState.FIRST_PERSON;
-    //    }
-    //}
+    private void HandleNPCs() {
+        foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
+            npc.HandleRandomMovement();
+            npc.HandleCameraRotation();
+        }
+    }
 
     private void HandlePlayerPrimaryInput() {
         if (!inputManager.WasInteractTriggered()) {
