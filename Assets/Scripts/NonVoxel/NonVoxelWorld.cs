@@ -46,11 +46,8 @@ namespace NonVoxel {
         }
 
         public void RotateNonPlayerCreatures(KeyCode rotationDirection) {
-            foreach (GameObject gameObject in objectToPosition.Keys) {
-                NPCBehavior npcBehavior = gameObject.GetComponent<NPCBehavior>();
-                if (npcBehavior != null) {
-                    npcBehavior.rotationDirection = rotationDirection;
-                }
+            foreach (NPCBehavior npcBehavior in npcs) {
+                npcBehavior.rotationDirection = rotationDirection;
             }
         }
 

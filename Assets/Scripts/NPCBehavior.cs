@@ -13,11 +13,12 @@ public class NPCBehavior : MonoBehaviour
     private const float NPC_MIN_IDLE_TIME = 1;
     private const float NPC_MAX_IDLE_TIME = 5;
 
-    public System.Random rng;
-    public VoxelPlayEnvironment environment;
-    public NonVoxelWorld nonVoxelWorld;
-    public SpriteMovement spriteMovement;
+    private System.Random rng;
+    private VoxelPlayEnvironment environment;
+    private NonVoxelWorld nonVoxelWorld;
+    private SpriteMovement spriteMovement;
     private Transform childTransform;
+    private NPC npcInfo;
 
     private float lastMoveTime = 0;
 
@@ -31,15 +32,14 @@ public class NPCBehavior : MonoBehaviour
         childTransform = transform.GetChild(0);
     }
 
-    //void Update()
-    //{
-    //    if (!environment.initialized) {
-    //        return;
-    //    }
-    //
-    //    HandleCameraRotation();
-    //    HandleMovement();
-    //}
+    public void Init(NonVoxelWorld nonVoxelWorld, SpriteMovement spriteMovement,
+        VoxelPlayEnvironment environment, System.Random rng, NPC npcInfo) {
+        this.nonVoxelWorld = nonVoxelWorld;
+        this.spriteMovement = spriteMovement;
+        this.environment = environment;
+        this.rng = rng;
+        this.npcInfo = npcInfo;
+    }
 
     private void MoveSprite(Vector3Int position) {
         nonVoxelWorld.SetPosition(gameObject, position);

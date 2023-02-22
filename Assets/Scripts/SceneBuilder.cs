@@ -88,7 +88,8 @@ public class SceneBuilder : MonoBehaviour
 
         foreach (NonVoxelEntity nonVoxelEntity in nonVoxelEntities) {
             if (nonVoxelEntity.startPosition != playerStartPosition) {
-                GameObject gameObject = Instantiate(nonVoxelEntity.prefab, nonVoxelEntity.startPosition, Quaternion.identity);
+                GameObject gameObject = Instantiate(nonVoxelEntity.prefab,
+                    nonVoxelEntity.startPosition, Quaternion.identity);
                 nonVoxelWorld.SetPosition(gameObject, nonVoxelEntity.startPosition);
                 
                 if (nonVoxelEntity.GetType() == typeof(SceneExitCube)) {
@@ -98,12 +99,9 @@ public class SceneBuilder : MonoBehaviour
                 }
 
                 if (nonVoxelEntity.GetType() == typeof(NPC)) {
+                    NPC npcInfo = (NPC)nonVoxelEntity;
                     NPCBehavior npcBehavior = gameObject.GetComponent<NPCBehavior>();
-                    npcBehavior.nonVoxelWorld = nonVoxelWorld;
-                    npcBehavior.spriteMovement = spriteMovement;
-                    npcBehavior.environment = vpEnvironment;
-                    npcBehavior.rng = rng;
-
+                    npcBehavior.Init(nonVoxelWorld, spriteMovement, vpEnvironment, rng, npcInfo);
                     nonVoxelWorld.npcs.Add(npcBehavior);
                 }
             }

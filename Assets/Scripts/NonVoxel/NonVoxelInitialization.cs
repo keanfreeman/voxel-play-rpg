@@ -15,27 +15,34 @@ public class NonVoxelInitialization {
         this.sceneExitPrefab = sceneExitPrefab;
 
         List<NPC> battleGroup1 = new List<NPC> {
-            new NPC(playerPrefab, new Vector3Int(864, 29, 348)),
             new NPC(opossumPrefab, new Vector3Int(835, 29, 349)),
             new NPC(opossumPrefab, new Vector3Int(835, 29, 347))
         };
         foreach (NPC npc in battleGroup1) {
-            npc.battleGroup = battleGroup1;
+            npc.battleGroup = new BattleGroup(battleGroup1);
         }
         List<NPC> battleGroup2 = new List<NPC> {
-            new NPC(playerPrefab, new Vector3Int(466, 26, -46)),
-            new NPC(opossumPrefab, new Vector3Int(468, 26, -46))
+            new NPC(opossumPrefab, new Vector3Int(834, 29, 349)),
+            new NPC(opossumPrefab, new Vector3Int(833, 29, 349))
         };
         foreach (NPC npc in battleGroup2) {
-            npc.battleGroup = battleGroup2;
+            npc.battleGroup = new BattleGroup(battleGroup2);
+        }
+        List<NPC> battleGroup3 = new List<NPC> {
+            new NPC(opossumPrefab, new Vector3Int(468, 26, -46))
+        };
+        foreach (NPC npc in battleGroup3) {
+            npc.battleGroup = new BattleGroup(battleGroup3);
         }
 
         sceneObjects = new Dictionary<SceneIndex, List<NonVoxelEntity>> {
             {
                 SceneIndex.SECOND_SCENE, new List<NonVoxelEntity> {
+                    new PlayerCharacter(playerPrefab, new Vector3Int(864, 29, 348)),
                     battleGroup1[0],
                     battleGroup1[1],
-                    battleGroup1[2],
+                    battleGroup2[0],
+                    battleGroup2[1],
                     new SceneExitCube(
                         sceneExitPrefab,
                         new Vector3Int(523, 50, 249),
@@ -44,8 +51,8 @@ public class NonVoxelInitialization {
             },
             {
                 SceneIndex.FOURTH_SCENE, new List<NonVoxelEntity> {
-                    battleGroup2[0],
-                    battleGroup2[1],
+                    new PlayerCharacter(playerPrefab, new Vector3Int(466, 26, -66)),
+                    battleGroup3[0],
                     new SceneExitCube(
                         sceneExitPrefab,
                         new Vector3Int(466, 26, -44),
