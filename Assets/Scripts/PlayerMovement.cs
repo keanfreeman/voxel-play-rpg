@@ -27,14 +27,14 @@ public class PlayerMovement : MonoBehaviour {
     public InputManager inputManager;
 
     // STATE
-    bool isMoving = false;
+    public bool isMoving = false;
     bool isFacingRight = false;
     bool isSprinting = false;
     float moveStartTimestamp;
     Vector3 moveStartPoint;
     Vector3 moveEndPoint;
 
-    bool isRotating;
+    public bool isRotating;
     float rotateStartTimestamp;
     Quaternion startRotation;
     Quaternion endRotation;

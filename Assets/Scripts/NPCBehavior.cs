@@ -18,18 +18,31 @@ public class NPCBehavior : MonoBehaviour
     private NonVoxelWorld nonVoxelWorld;
     private SpriteMovement spriteMovement;
     private Transform childTransform;
-    private NPC npcInfo;
 
     private float lastMoveTime = 0;
 
-    public KeyCode rotationDirection = KeyCode.None;
     private bool isRotating = false;
     float rotateStartTimestamp;
     Quaternion startRotation;
     Quaternion endRotation;
 
+    public bool encounteredPlayer = false;
+    public KeyCode rotationDirection = KeyCode.None;
+    public NPC npcInfo;
+    public HashSet<NPCBehavior> teammates;
+
     public void Start() {
         childTransform = transform.GetChild(0);
+    }
+
+    public void Update() {
+        HandleCameraRotation();
+    }
+    
+    private void OnTriggerEnter(Collider other) {
+        if (other.gameObject.tag == "Player") {
+            encounteredPlayer = true;
+        }
     }
 
     public void Init(NonVoxelWorld nonVoxelWorld, SpriteMovement spriteMovement,
@@ -76,7 +89,7 @@ public class NPCBehavior : MonoBehaviour
         }
     }
 
-    public void HandleCameraRotation() {
+    private void HandleCameraRotation() {
         if (isRotating && !IsRotationDone()) {
             return;
         }

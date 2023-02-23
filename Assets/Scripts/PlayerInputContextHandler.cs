@@ -15,6 +15,7 @@ public class PlayerInputContextHandler
         FIRST_PERSON,
         SPRITE_NEUTRAL,
         DIALOGUE,
+        COMBAT,
         SEQUENCE
     }
 
@@ -25,6 +26,7 @@ public class PlayerInputContextHandler
     private VoxelWorld voxelWorld;
     private InputManager inputManager;
     private ObjectInkMapping objectInkMapping;
+    private Combat combat;
 
     public PlayerInputContextHandler(PlayerMovement playerMovement, NonVoxelWorld nonVoxelWorld,
             Dialogue dialogue, VoxelWorld voxelWorld, InputManager inputManager,
@@ -36,6 +38,9 @@ public class PlayerInputContextHandler
         this.inputManager = inputManager;
         this.objectInkMapping = objectInkMapping;
         controlState = ControlState.SPRITE_NEUTRAL;
+
+        System.Random rng = new System.Random();
+        combat = new Combat(nonVoxelWorld, rng, new Dice(rng));
     }
 
     public void HandlePlayerInput() {
@@ -44,11 +49,18 @@ public class PlayerInputContextHandler
             case ControlState.FIRST_PERSON:
                 break;
             case ControlState.SPRITE_NEUTRAL:
-                HandleNPCs();
+                NPCBehavior npcInCombat = HandleNPCsFreeMovement();
+                if (!playerMovement.isMoving && !playerMovement.isRotating
+                        && npcInCombat != null) {
+                    controlState = ControlState.COMBAT;
+                    combat.firstCombatant = npcInCombat;
+                    return;
+                }
                 bool isTransitioning = playerMovement.HandleMovementControls();
                 if (isTransitioning) {
                     return;
                 }
+
                 HandlePlayerPrimaryInput();
                 break;
             case ControlState.DIALOGUE:
@@ -58,16 +70,29 @@ public class PlayerInputContextHandler
                     inputManager.SwitchDialogueToPlayerControlState();
                 }
                 break;
+            case ControlState.COMBAT:
+                // determine combat order (initiative)
+                // iterate through turns until no players are left or no NPCs are left
+                combat.RunCombat();
+                break;
             default:
                 break;
         }
     }
 
-    private void HandleNPCs() {
+    // returns true if combat started
+    private NPCBehavior HandleNPCsFreeMovement() {
         foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
+            if (npc.encounteredPlayer) {
+                return npc;
+            }
             npc.HandleRandomMovement();
-            npc.HandleCameraRotation();
         }
+        return null;
+    }
+
+    private void HandleNPCsCombat() {
+
     }
 
     private void HandlePlayerPrimaryInput() {

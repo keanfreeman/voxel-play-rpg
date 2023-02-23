@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6944743723035480206}
   - component: {fileID: 6944743723035480201}
+  - component: {fileID: 509808264901212375}
   m_Layer: 0
   m_Name: NPCSpriteContainer
   m_TagString: NPC
@@ -45,8 +46,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d74f9bab6df392d4ba464afb11f4d42e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  environment: {fileID: 0}
+  encounteredPlayer: 0
   rotationDirection: 0
+--- !u!65 &509808264901212375
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6944743723035480207}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 6, y: 2, z: 6}
+  m_Center: {x: 0.5, y: 0.5, z: 0.5}
 --- !u!1 &6944743724923771677
 GameObject:
   m_ObjectHideFlags: 0

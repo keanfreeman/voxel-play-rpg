@@ -1,4 +1,5 @@
 using NonVoxel;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Resources;
@@ -86,6 +87,8 @@ public class SceneBuilder : MonoBehaviour
     private void InitCreaturesAndWorld() {
         nonVoxelWorld.SetPosition(playerInstance, playerStartPosition);
 
+        Dictionary<Guid, HashSet<NPCBehavior>> battleGroups = 
+            new Dictionary<Guid, HashSet<NPCBehavior>>();
         foreach (NonVoxelEntity nonVoxelEntity in nonVoxelEntities) {
             if (nonVoxelEntity.startPosition != playerStartPosition) {
                 GameObject gameObject = Instantiate(nonVoxelEntity.prefab,
@@ -103,6 +106,13 @@ public class SceneBuilder : MonoBehaviour
                     NPCBehavior npcBehavior = gameObject.GetComponent<NPCBehavior>();
                     npcBehavior.Init(nonVoxelWorld, spriteMovement, vpEnvironment, rng, npcInfo);
                     nonVoxelWorld.npcs.Add(npcBehavior);
+
+                    Guid battleGroupID = npcInfo.battleGroup.groupID;
+                    if (!battleGroups.ContainsKey(battleGroupID)) {
+                        battleGroups[battleGroupID] = new HashSet<NPCBehavior>();
+                    }
+                    battleGroups[battleGroupID].Add(npcBehavior);
+                    npcBehavior.teammates = battleGroups[battleGroupID];
                 }
             }
         }

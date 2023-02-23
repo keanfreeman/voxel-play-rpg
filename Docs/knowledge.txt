@@ -1,3 +1,8 @@
+there are two layers to objects, the actual instantiated objects/creatures (monobehaviors) and the 
+information about them that's immutable, or predates their existence.
+
+enums should be used when a list of things never changes, as in, it wouldn't change at runtime
+
 when using the "voxel dirt additional" feature, make sure to not set Max/Min Altitude to zero, or it will not generate the layer correctly.
 - also, min altitude can equal bedrock.
 

@@ -14,22 +14,25 @@ public class NonVoxelInitialization {
         this.opossumPrefab = opossumPrefab;
         this.sceneExitPrefab = sceneExitPrefab;
 
+        NPCStats wolfStats = new NPCStats("Wolf", "1/4", 13, 40, 11, 12, 15, 12, 3, 12, 6);
+        PlayerStats playerStats = new PlayerStats("Player1", 1, 30, 10, 10, 10, 10, 10, 10, 10);
+
         List<NPC> battleGroup1 = new List<NPC> {
-            new NPC(opossumPrefab, new Vector3Int(835, 29, 349)),
-            new NPC(opossumPrefab, new Vector3Int(835, 29, 347))
+            new NPC(opossumPrefab, new Vector3Int(835, 29, 349), wolfStats),
+            new NPC(opossumPrefab, new Vector3Int(835, 29, 347), wolfStats)
         };
         foreach (NPC npc in battleGroup1) {
             npc.battleGroup = new BattleGroup(battleGroup1);
         }
         List<NPC> battleGroup2 = new List<NPC> {
-            new NPC(opossumPrefab, new Vector3Int(834, 29, 349)),
-            new NPC(opossumPrefab, new Vector3Int(833, 29, 349))
+            new NPC(opossumPrefab, new Vector3Int(825, 31, 349), wolfStats),
+            new NPC(opossumPrefab, new Vector3Int(825, 31, 350), wolfStats)
         };
         foreach (NPC npc in battleGroup2) {
             npc.battleGroup = new BattleGroup(battleGroup2);
         }
         List<NPC> battleGroup3 = new List<NPC> {
-            new NPC(opossumPrefab, new Vector3Int(468, 26, -46))
+            new NPC(opossumPrefab, new Vector3Int(468, 26, -46), wolfStats)
         };
         foreach (NPC npc in battleGroup3) {
             npc.battleGroup = new BattleGroup(battleGroup3);
@@ -38,7 +41,7 @@ public class NonVoxelInitialization {
         sceneObjects = new Dictionary<SceneIndex, List<NonVoxelEntity>> {
             {
                 SceneIndex.SECOND_SCENE, new List<NonVoxelEntity> {
-                    new PlayerCharacter(playerPrefab, new Vector3Int(864, 29, 348)),
+                    new PlayerCharacter(playerPrefab, new Vector3Int(864, 29, 348), playerStats),
                     battleGroup1[0],
                     battleGroup1[1],
                     battleGroup2[0],
@@ -51,7 +54,7 @@ public class NonVoxelInitialization {
             },
             {
                 SceneIndex.FOURTH_SCENE, new List<NonVoxelEntity> {
-                    new PlayerCharacter(playerPrefab, new Vector3Int(466, 26, -66)),
+                    new PlayerCharacter(playerPrefab, new Vector3Int(466, 26, -66), playerStats),
                     battleGroup3[0],
                     new SceneExitCube(
                         sceneExitPrefab,
