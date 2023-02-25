@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.8039577, g: 0.79490787, b: 1.0017545, a: 1}
+  m_IndirectSpecularColor: {r: 0.8039578, g: 0.7774757, b: 0.9176081, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -350,6 +350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 7062049782252913140, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
+  detachedCameraPrefab: {fileID: 1275296119661960477, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
   opossumPrefab: {fileID: 6944743723035480207, guid: a806406e61d5e2146bba48accb192b09, type: 3}
   sceneExitPrefab: {fileID: 440023488360116698, guid: 4242af01c09d0984f9c6587337ba132b, type: 3}
   uiDocument: {fileID: 1150598840}

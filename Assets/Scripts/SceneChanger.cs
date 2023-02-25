@@ -15,12 +15,14 @@ public enum SceneIndex {
 public class SceneChanger : MonoBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject detachedCameraPrefab;
     [SerializeField] private GameObject opossumPrefab;
     [SerializeField] private GameObject sceneExitPrefab;
     [SerializeField] private GameObject uiDocument;
 
     GameObject playerInstance;
     Vector3Int playerStartPosition;
+    GameObject detachedCameraInstance;
 
     NonVoxelInitialization nonVoxelInitialization;
 
@@ -49,8 +51,11 @@ public class SceneChanger : MonoBehaviour
         playerStartPosition = nonVoxelInitialization.GetPlayerStartPosition(SceneIndex.SECOND_SCENE);
         playerInstance = Instantiate(playerPrefab, playerStartPosition, Quaternion.identity);
 
+        detachedCameraInstance = Instantiate(detachedCameraPrefab, playerStartPosition, Quaternion.identity);
+
         DontDestroyOnLoad(playerInstance);
         DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(detachedCameraInstance);
     }
 
     private void Update() {
@@ -65,7 +70,7 @@ public class SceneChanger : MonoBehaviour
                 playerInstance.transform.SetPositionAndRotation(playerStartPosition, Quaternion.identity);
                 loadedScenes[sceneInfo.Key].sceneBuilder = GetSceneBuilderForScene(loadedScenes[sceneInfo.Key].scene);
                 loadedScenes[sceneInfo.Key].sceneBuilder.Init(uiDocument, playerStartPosition, playerInstance,
-                    nonVoxelInitialization.GetSceneObjects(sceneInfo.Key));
+                    nonVoxelInitialization.GetSceneObjects(sceneInfo.Key), detachedCameraInstance);
             }
         }
         if (!allPopulated) {

@@ -14,6 +14,7 @@ public class PlayerInputContextHandler
     public enum ControlState {
         FIRST_PERSON,
         SPRITE_NEUTRAL,
+        DETACHED,
         DIALOGUE,
         COMBAT,
         SEQUENCE
@@ -27,16 +28,18 @@ public class PlayerInputContextHandler
     private InputManager inputManager;
     private ObjectInkMapping objectInkMapping;
     private Combat combat;
+    private DetachedCamera detachedCamera;
 
     public PlayerInputContextHandler(PlayerMovement playerMovement, NonVoxelWorld nonVoxelWorld,
             Dialogue dialogue, VoxelWorld voxelWorld, InputManager inputManager,
-            ObjectInkMapping objectInkMapping) {
+            ObjectInkMapping objectInkMapping, DetachedCamera detachedCamera) {
         this.playerMovement = playerMovement;
         this.nonVoxelWorld = nonVoxelWorld;
         this.dialogue = dialogue;
         this.voxelWorld = voxelWorld;
         this.inputManager = inputManager;
         this.objectInkMapping = objectInkMapping;
+        this.detachedCamera = detachedCamera;
         controlState = ControlState.SPRITE_NEUTRAL;
 
         System.Random rng = new System.Random();
@@ -62,6 +65,11 @@ public class PlayerInputContextHandler
                 }
 
                 HandlePlayerPrimaryInput();
+                HandleSwitchInputMode();
+                break;
+            case ControlState.DETACHED:
+                detachedCamera.HandleFrame();
+                HandleSwitchInputMode();
                 break;
             case ControlState.DIALOGUE:
                 HandleDialogueContinue();
@@ -77,6 +85,23 @@ public class PlayerInputContextHandler
                 break;
             default:
                 break;
+        }
+    }
+
+    private void HandleSwitchInputMode() {
+        if (inputManager.WasSwitchInputTypeTriggered()) {
+            if (controlState == ControlState.SPRITE_NEUTRAL) {
+                controlState = ControlState.DETACHED;
+                inputManager.SwitchPlayerToDetachedControlState();
+                playerMovement.SetCameraState(false);
+                detachedCamera.GetComponentInChildren<Camera>().enabled = true;
+            }
+            else {
+                controlState = ControlState.SPRITE_NEUTRAL;
+                inputManager.SwitchDetachedToPlayerControlState();
+                playerMovement.SetCameraState(true);
+                detachedCamera.GetComponentInChildren<Camera>().enabled = false;
+            }
         }
     }
 
@@ -103,7 +128,7 @@ public class PlayerInputContextHandler
         // check for interactable objects
         Story story = null;
 
-        Vector3Int currPosition = nonVoxelWorld.GetPosition(playerMovement.spriteContainer);
+        Vector3Int currPosition = nonVoxelWorld.GetPosition(playerMovement.gameObject);
         List<Vector3Int> interactablePositions = nonVoxelWorld.GetInteractableAdjacentObjects(currPosition);
         if (interactablePositions.Count > 0) {
             Vector3Int firstItem = interactablePositions.First();

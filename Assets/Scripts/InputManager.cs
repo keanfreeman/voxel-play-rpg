@@ -35,6 +35,26 @@ public class InputManager
         playerInputActions.Player.Enable();
     }
 
+    public void SwitchPlayerToDetachedControlState() {
+        playerInputActions.Player.Disable();
+        playerInputActions.Detached.Enable();
+    }
+
+    public void SwitchDetachedToPlayerControlState() {
+        playerInputActions.Player.Enable();
+        playerInputActions.Detached.Disable();
+    }
+
+    // DETACHED
+
+    public Vector2 GetDetachedMove() {
+        return playerInputActions.Detached.Move.ReadValue<Vector2>();
+    }
+
+    public float GetDetachedVerticalMove() {
+        return playerInputActions.Detached.MoveVertical.ReadValue<float>();
+    }
+
     // DIALOGUE
 
     public bool WasContinueTriggered() {
@@ -48,7 +68,8 @@ public class InputManager
     }
 
     public bool WasSwitchInputTypeTriggered() {
-        return playerInputActions.Player.SwitchInputType.triggered;
+        return playerInputActions.Player.SwitchInputType.triggered
+            || playerInputActions.Detached.SwitchInputType.triggered;
     }
 
     private void MoveRight_canceled(InputAction.CallbackContext obj) {

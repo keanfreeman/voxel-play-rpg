@@ -15,7 +15,8 @@ public class SceneBuilder : MonoBehaviour
     public VoxelPlayEnvironment vpEnvironment;
     public SceneChanger parentSceneChanger;
     public GameObject playerInstance;
-    
+    public GameObject detachedCamera;
+
     private Vector3Int playerStartPosition;
     private NonVoxelWorld nonVoxelWorld = new NonVoxelWorld();
     private SpriteMovement spriteMovement;
@@ -28,17 +29,21 @@ public class SceneBuilder : MonoBehaviour
     private PlayerInputActions playerInputActions;
     private InputManager inputManager;
     private ObjectInkMapping objectInkMapping;
+    private DetachedCamera detachedCameraComponent;
 
     private GameObject uiDocument;
 
     private List<NonVoxelEntity> nonVoxelEntities;
 
-    public void Init(GameObject uiDocument, Vector3Int playerStartPosition, GameObject playerInstance,
-            List<NonVoxelEntity> nonVoxelEntities) {
+    public void Init(GameObject uiDocument, Vector3Int playerStartPosition, 
+            GameObject playerInstance, List<NonVoxelEntity> nonVoxelEntities,
+            GameObject detachedCamera) {
         this.uiDocument = uiDocument;
         this.playerStartPosition = playerStartPosition;
         this.playerInstance = playerInstance;
         this.nonVoxelEntities = nonVoxelEntities;
+        this.detachedCamera = detachedCamera;
+        this.detachedCameraComponent = detachedCamera.GetComponent<DetachedCamera>();
         enabled = true;
     }
 
@@ -60,7 +65,8 @@ public class SceneBuilder : MonoBehaviour
         voxelWorld = new VoxelWorld(vpEnvironment, interactableVoxels);
         objectInkMapping = GetComponent<ObjectInkMapping>();
         playerInputContextHandler = new PlayerInputContextHandler(playerMovement, nonVoxelWorld, dialogue, voxelWorld,
-            inputManager, objectInkMapping);
+            inputManager, objectInkMapping, detachedCameraComponent);
+        detachedCameraComponent.Init(playerStartPosition, vpEnvironment, inputManager);
     }
 
     public void Update() {
@@ -73,15 +79,9 @@ public class SceneBuilder : MonoBehaviour
     }
 
     private PlayerMovement InitPlayerMovement() {
-        PlayerMovement temp = GetComponent<PlayerMovement>();
-        temp.spriteContainer = playerInstance;
-        temp.nonVoxelWorld = nonVoxelWorld;
-        temp.spriteMovement = spriteMovement;
-        temp.inputManager = inputManager;
-        temp.spriteRenderer = playerInstance.GetComponentInChildren<SpriteRenderer>();
-        temp.animator = playerInstance.GetComponentInChildren<Animator>();
-        temp.spriteChildTransform = playerInstance.transform.GetChild(0);
-        return temp;
+        PlayerMovement playerMovement = playerInstance.GetComponent<PlayerMovement>();
+        playerMovement.Init(nonVoxelWorld, spriteMovement, inputManager);
+        return playerMovement;
     }
 
     private void InitCreaturesAndWorld() {

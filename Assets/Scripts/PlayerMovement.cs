@@ -17,14 +17,15 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField]
     const float SPRINT_SPEEDUP = 2f;
 
+    [SerializeField] private Camera playerCamera;
+    [SerializeField] private Transform spriteChildTransform;
+    [SerializeField] private Animator animator;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+
     // IMPORT
-    public GameObject spriteContainer;
-    public Transform spriteChildTransform;
-    public NonVoxelWorld nonVoxelWorld;
-    public SpriteMovement spriteMovement;
-    public Animator animator;
-    public SpriteRenderer spriteRenderer;
-    public InputManager inputManager;
+    private NonVoxelWorld nonVoxelWorld;
+    private SpriteMovement spriteMovement;
+    private InputManager inputManager;
 
     // STATE
     public bool isMoving = false;
@@ -40,8 +41,19 @@ public class PlayerMovement : MonoBehaviour {
     Quaternion endRotation;
     PlayerCameraDirection playerCameraDirection = PlayerCameraDirection.NORTH;
 
+    public void Init(NonVoxelWorld nonVoxelWorld, SpriteMovement spriteMovement,
+        InputManager inputManager) {
+        this.nonVoxelWorld = nonVoxelWorld;
+        this.spriteMovement = spriteMovement;
+        this.inputManager = inputManager;
+    }
+
     void Start() {
         moveStartTimestamp = Time.time;
+    }
+
+    public void SetCameraState(bool newState) {
+        playerCamera.enabled = newState;
     }
 
     // returns true if we need to freeze other controls while moving/rotating
@@ -62,7 +74,7 @@ public class PlayerMovement : MonoBehaviour {
         //if (Input.GetKey(KeyCode.LeftShift)) {
         //    isSprinting = true;
         //}
-        Vector3 spriteCurrPosition = spriteContainer.transform.position;
+        Vector3 spriteCurrPosition = transform.position;
         SpriteMoveDirection requestedDirection = inputManager.moveDirection;
         if (requestedDirection == SpriteMoveDirection.NONE) {
             animator.SetBool("isMoving", isMoving);
@@ -88,9 +100,9 @@ public class PlayerMovement : MonoBehaviour {
         SpriteMoveDirection cameraAdjustedPlayerMove = CameraAdjustedPlayerMove(requestedDirection,
             playerCameraDirection);
         Vector3Int desiredCoordinate = spriteMovement.GetSpriteDesiredCoordinate(
-            nonVoxelWorld.GetPosition(spriteContainer), cameraAdjustedPlayerMove);
+            nonVoxelWorld.GetPosition(gameObject), cameraAdjustedPlayerMove);
         Vector3Int? actualCoordinate = spriteMovement.GetTerrainAdjustedCoordinate(desiredCoordinate,
-            nonVoxelWorld.GetPosition(spriteContainer));
+            nonVoxelWorld.GetPosition(gameObject));
         if (!actualCoordinate.HasValue) {
             Debug.Log("Tried to move in an invalid way.");
             return;
@@ -101,7 +113,7 @@ public class PlayerMovement : MonoBehaviour {
             Debug.Log("Tried to move into a non-voxel-occupied space.");
             return;
         }
-        nonVoxelWorld.SetPosition(spriteContainer, destinationCoordinate);
+        nonVoxelWorld.SetPosition(gameObject, destinationCoordinate);
         moveStartPoint = spriteCurrPosition;
         moveEndPoint = destinationCoordinate;
         isMoving = true;
@@ -232,7 +244,7 @@ public class PlayerMovement : MonoBehaviour {
         float sprintMultiplier = isSprinting ? SPRINT_SPEEDUP : 1;
         float fractionOfMovementDone = timeSinceMoveBegan * sprintMultiplier / (TIME_TO_MOVE_A_TILE);
         float linearFriendlyFraction = Mathf.Min(fractionOfMovementDone, 1f);
-        spriteContainer.transform.position = Vector3.Lerp(moveStartPoint, moveEndPoint, linearFriendlyFraction);
+        transform.position = Vector3.Lerp(moveStartPoint, moveEndPoint, linearFriendlyFraction);
         return linearFriendlyFraction >= 1f;
     }
 }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.7850523, g: 0.7691516, b: 0.92772114, a: 1}
+  m_IndirectSpecularColor: {r: 0.7854401, g: 0.7527566, b: 0.8500957, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -134,7 +134,6 @@ GameObject:
   - component: {fileID: 582458983}
   - component: {fileID: 582458982}
   - component: {fileID: 582458984}
-  - component: {fileID: 582458980}
   - component: {fileID: 582458979}
   - component: {fileID: 582458978}
   - component: {fileID: 582458977}
@@ -231,27 +230,23 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 31fa9576-fc93-4f2a-965d-1d2f029958a9
     m_ActionName: Dialogue/Move[/XInputControllerWindows/leftStick,/XInputControllerWindows/dpad,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 07377626-f1fd-470e-832e-3204d45f8bdb
+    m_ActionName: Detached/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: cc311897-409b-455a-a633-c03d2eb7f32c
+    m_ActionName: Detached/MoveVertical[/Keyboard/leftShift,/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 960a3911-73e7-4d9f-b384-8a440cb7c3de
+    m_ActionName: Detached/Switch Input Type[/Keyboard/k]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &582458980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582458976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eabec125adc06c54492729f7895dcefd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spriteContainer: {fileID: 7062049782252913140, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
-  spriteChildTransform: {fileID: 0}
-  animator: {fileID: 0}
-  spriteRenderer: {fileID: 0}
 --- !u!114 &582458982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,6 +262,7 @@ MonoBehaviour:
   vpEnvironment: {fileID: 0}
   parentSceneChanger: {fileID: 0}
   playerInstance: {fileID: 0}
+  detachedCamera: {fileID: 0}
 --- !u!4 &582458983
 Transform:
   m_ObjectHideFlags: 0
