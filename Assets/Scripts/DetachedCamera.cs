@@ -31,6 +31,7 @@ public class DetachedCamera : MonoBehaviour
             Quaternion.identity);
         detachedCameraBottomComponent = detachedCameraBottom
             .GetComponent<DetachedCameraBottom>();
+        detachedCameraBottomComponent.Init(vpEnvironment);
     }
 
     public void HandleFrame() {

@@ -1,16 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VoxelPlay;
 
 public class DetachedCameraBottom : MonoBehaviour
 {
+    private VoxelPlayEnvironment vpEnvironment;
+
     private Vector3 moveStartPoint;
-    private Vector3 moveEndPoint;
+    private Vector3Int moveEndPoint;
     private float moveStartTime;
 
-    private const float TRANSITION_TIME = 0.2f;
+    private const float TRANSITION_TIME = 0.1f;
 
-    public void MoveTo(Vector3 position) {
+    Vector3Int? currHighlighted;
+
+    public void Init(VoxelPlayEnvironment vpEnvironment) {
+        this.vpEnvironment = vpEnvironment;
+    }
+
+    public void MoveTo(Vector3Int position) {
         moveStartTime = Time.time;
         moveStartPoint = transform.position;
         moveEndPoint = position;
@@ -25,5 +34,15 @@ public class DetachedCameraBottom : MonoBehaviour
             yield return null;
         }
         transform.position = moveEndPoint;
+        //HighlightVoxel();
+    }
+
+    private void HighlightVoxel() {
+        currHighlighted = moveEndPoint;
+        float edgeWidth = 5f;
+        VoxelHitInfo voxelHitInfo;
+        vpEnvironment.RayCast(new Rayd(currHighlighted.Value,
+            new Vector3(0.001f, 0.001f, 0.001f)), out voxelHitInfo, 0.001f);
+        vpEnvironment.VoxelHighlight(voxelHitInfo, new Color(100f, 100f, 100f), edgeWidth);
     }
 }
