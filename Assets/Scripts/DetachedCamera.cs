@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using VoxelPlay;
 
 public class DetachedCamera : MonoBehaviour
@@ -8,7 +9,8 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] private Camera detachedCamera;
     [SerializeField] private AudioListener audioListener;
     [SerializeField] private GameObject detachedCameraBottomPrefab;
-    
+
+    private PlayerMovement playerMovement;
     private VoxelPlayEnvironment vpEnvironment;
     private InputManager inputManager;
     private GameObject detachedCameraBottom;
@@ -20,22 +22,46 @@ public class DetachedCamera : MonoBehaviour
     
     private Vector3Int currVoxel;
 
-    public void Init(Vector3Int startPosition, VoxelPlayEnvironment vpEnvironment,
+    void Awake() {
+        gameObject.SetActive(false);
+    }
+
+    public void Init(PlayerMovement playerMovement, VoxelPlayEnvironment vpEnvironment,
         InputManager inputManager) {
         this.vpEnvironment = vpEnvironment;
         this.inputManager = inputManager;
-        transform.position = startPosition;
-        currVoxel = startPosition;
+        this.playerMovement = playerMovement;
+        transform.position = playerMovement.currVoxel;
+        currVoxel = playerMovement.currVoxel;
 
-        detachedCameraBottom = Instantiate(detachedCameraBottomPrefab, startPosition,
+        detachedCameraBottom = Instantiate(detachedCameraBottomPrefab, currVoxel,
             Quaternion.identity);
         detachedCameraBottomComponent = detachedCameraBottom
             .GetComponent<DetachedCameraBottom>();
         detachedCameraBottomComponent.Init(vpEnvironment);
     }
 
+    // move to player, become visible, etc.
+    public void BecomeActive() {
+        transform.position = playerMovement.currVoxel;
+        currVoxel = playerMovement.currVoxel;
+
+        gameObject.SetActive(true);
+        detachedCameraBottomComponent.MoveImmediate(currVoxel);
+        detachedCameraBottomComponent.SetVisibility(true);
+    }
+
+    // become invisible and take up no resources
+    public void BecomeInactive() {
+        gameObject.SetActive(false);
+        detachedCameraBottomComponent.SetVisibility(false);
+    }
+
     public void HandleFrame() {
-        UpdateHighlighterPosition();
+        bool movedVoxels = UpdateCurrVoxel();
+        if (movedVoxels) {
+            detachedCameraBottomComponent.MoveAnimated(currVoxel);
+        }
         MoveCursor();
     }
 
@@ -55,7 +81,8 @@ public class DetachedCamera : MonoBehaviour
         }
     }
 
-    private void UpdateHighlighterPosition() {
+    // returns true if the voxel was changed
+    private bool UpdateCurrVoxel() {
         bool movedVoxels = false;
         Vector3 deviation = currVoxel - transform.position;
         if (Mathf.Abs(deviation.x) > VOXEL_CHANGE_DISTANCE) {
@@ -70,9 +97,6 @@ public class DetachedCamera : MonoBehaviour
             movedVoxels = true;
             currVoxel += deviation.z > 0 ? Vector3Int.back : Vector3Int.forward;
         }
-
-        if (movedVoxels) {
-            detachedCameraBottomComponent.MoveTo(currVoxel);
-        }
+        return movedVoxels;
     }
 }

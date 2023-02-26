@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour {
     float moveStartTimestamp;
     Vector3 moveStartPoint;
     Vector3 moveEndPoint;
+    public Vector3Int currVoxel;
 
     public bool isRotating;
     float rotateStartTimestamp;
@@ -41,8 +42,9 @@ public class PlayerMovement : MonoBehaviour {
     Quaternion endRotation;
     PlayerCameraDirection playerCameraDirection = PlayerCameraDirection.NORTH;
 
-    public void Init(NonVoxelWorld nonVoxelWorld, SpriteMovement spriteMovement,
-        InputManager inputManager) {
+    public void Init(Vector3Int playerStartPosition, NonVoxelWorld nonVoxelWorld,
+        SpriteMovement spriteMovement, InputManager inputManager) {
+        this.currVoxel = playerStartPosition;
         this.nonVoxelWorld = nonVoxelWorld;
         this.spriteMovement = spriteMovement;
         this.inputManager = inputManager;
@@ -74,7 +76,6 @@ public class PlayerMovement : MonoBehaviour {
         //if (Input.GetKey(KeyCode.LeftShift)) {
         //    isSprinting = true;
         //}
-        Vector3 spriteCurrPosition = transform.position;
         SpriteMoveDirection requestedDirection = inputManager.moveDirection;
         if (requestedDirection == SpriteMoveDirection.NONE) {
             animator.SetBool("isMoving", isMoving);
@@ -97,12 +98,12 @@ public class PlayerMovement : MonoBehaviour {
         spriteRenderer.flipX = isFacingRight;
         
 
-        SpriteMoveDirection cameraAdjustedPlayerMove = CameraAdjustedPlayerMove(requestedDirection,
-            playerCameraDirection);
+        SpriteMoveDirection cameraAdjustedPlayerMove = CameraAdjustedPlayerMove(
+            requestedDirection, playerCameraDirection);
         Vector3Int desiredCoordinate = spriteMovement.GetSpriteDesiredCoordinate(
-            nonVoxelWorld.GetPosition(gameObject), cameraAdjustedPlayerMove);
-        Vector3Int? actualCoordinate = spriteMovement.GetTerrainAdjustedCoordinate(desiredCoordinate,
-            nonVoxelWorld.GetPosition(gameObject));
+            currVoxel, cameraAdjustedPlayerMove);
+        Vector3Int? actualCoordinate = spriteMovement.GetTerrainAdjustedCoordinate(
+            desiredCoordinate, currVoxel);
         if (!actualCoordinate.HasValue) {
             Debug.Log("Tried to move in an invalid way.");
             return;
@@ -114,8 +115,9 @@ public class PlayerMovement : MonoBehaviour {
             return;
         }
         nonVoxelWorld.SetPosition(gameObject, destinationCoordinate);
-        moveStartPoint = spriteCurrPosition;
+        moveStartPoint = currVoxel;
         moveEndPoint = destinationCoordinate;
+        currVoxel = destinationCoordinate;
         isMoving = true;
         animator.SetBool("isMoving", isMoving);
         moveStartTimestamp = Time.time;

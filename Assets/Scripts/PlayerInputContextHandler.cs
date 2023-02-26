@@ -94,13 +94,13 @@ public class PlayerInputContextHandler
                 controlState = ControlState.DETACHED;
                 inputManager.SwitchPlayerToDetachedControlState();
                 playerMovement.SetCameraState(false);
-                detachedCamera.GetComponentInChildren<Camera>().enabled = true;
+                detachedCamera.BecomeActive();
             }
             else {
                 controlState = ControlState.SPRITE_NEUTRAL;
                 inputManager.SwitchDetachedToPlayerControlState();
+                detachedCamera.BecomeInactive();
                 playerMovement.SetCameraState(true);
-                detachedCamera.GetComponentInChildren<Camera>().enabled = false;
             }
         }
     }

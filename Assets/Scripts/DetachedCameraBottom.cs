@@ -15,11 +15,24 @@ public class DetachedCameraBottom : MonoBehaviour
 
     Vector3Int? currHighlighted;
 
+    void Awake() {
+        gameObject.SetActive(false);
+    }
+
     public void Init(VoxelPlayEnvironment vpEnvironment) {
         this.vpEnvironment = vpEnvironment;
     }
 
-    public void MoveTo(Vector3Int position) {
+    public void SetVisibility(bool visibility) {
+        StopAllCoroutines();
+        gameObject.SetActive(visibility);
+    }
+
+    public void MoveImmediate(Vector3Int position) {
+        transform.position = position;
+    }
+
+    public void MoveAnimated(Vector3Int position) {
         moveStartTime = Time.time;
         moveStartPoint = transform.position;
         moveEndPoint = position;

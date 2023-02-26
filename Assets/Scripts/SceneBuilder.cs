@@ -66,7 +66,7 @@ public class SceneBuilder : MonoBehaviour
         objectInkMapping = GetComponent<ObjectInkMapping>();
         playerInputContextHandler = new PlayerInputContextHandler(playerMovement, nonVoxelWorld, dialogue, voxelWorld,
             inputManager, objectInkMapping, detachedCameraComponent);
-        detachedCameraComponent.Init(playerStartPosition, vpEnvironment, inputManager);
+        detachedCameraComponent.Init(playerMovement, vpEnvironment, inputManager);
     }
 
     public void Update() {
@@ -80,7 +80,7 @@ public class SceneBuilder : MonoBehaviour
 
     private PlayerMovement InitPlayerMovement() {
         PlayerMovement playerMovement = playerInstance.GetComponent<PlayerMovement>();
-        playerMovement.Init(nonVoxelWorld, spriteMovement, inputManager);
+        playerMovement.Init(playerStartPosition, nonVoxelWorld, spriteMovement, inputManager);
         return playerMovement;
     }
 
