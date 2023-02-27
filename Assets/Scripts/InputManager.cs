@@ -55,6 +55,10 @@ public class InputManager
         return playerInputActions.Detached.MoveVertical.ReadValue<float>();
     }
 
+    public float GetDetachedRotation() {
+        return playerInputActions.Detached.RotateCamera.ReadValue<Vector2>().x;
+    }
+
     // DIALOGUE
 
     public bool WasContinueTriggered() {

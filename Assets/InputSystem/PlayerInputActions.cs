@@ -129,6 +129,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""bc7a115f-d494-4c0c-8b74-97c41a744589"",
+                    ""path"": ""<Gamepad>/leftStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move Up"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""166fc781-9857-46ea-9d10-d9db61fec305"",
                     ""path"": ""<Gamepad>/dpad/down"",
                     ""interactions"": """",
@@ -142,6 +153,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""4df93093-f2b9-46a2-ab59-4cb5bfe13bc2"",
                     ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move Down"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bdbfb38c-b395-4aa4-8d50-ed06fcbe3f17"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -173,6 +195,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""5159e5e8-df8f-48fe-9c63-bf120098a6cc"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move Left"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""e90395dc-7830-4651-846b-7dbc5ddc53c4"",
                     ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
@@ -186,6 +219,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""1dc02ea2-5bbb-449b-8c06-b9c17ad68a4f"",
                     ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move Right"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""253330d5-9c38-4a6d-99fa-b3f200499dfb"",
+                    ""path"": ""<Gamepad>/leftStick/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -372,6 +416,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotateCamera"",
+                    ""type"": ""Value"",
+                    ""id"": ""e8410c45-e32d-44de-ac4a-076728f43e40"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -528,6 +581,72 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Switch Input Type"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""01a3890a-7782-4c53-b964-d4ca75497950"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone"",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""e81b25d1-7ddf-4ce5-b1d0-98c4a1f21521"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""6ad78568-2ce5-4986-a33b-366f09044be9"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""9d87614b-027a-4573-8574-cbd0df088b47"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""07ded540-17c3-4fd6-b6de-7b688153d704"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""96cac7cf-3bae-4654-b858-a156681d02a2"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -551,6 +670,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Detached_Move = m_Detached.FindAction("Move", throwIfNotFound: true);
         m_Detached_MoveVertical = m_Detached.FindAction("MoveVertical", throwIfNotFound: true);
         m_Detached_SwitchInputType = m_Detached.FindAction("Switch Input Type", throwIfNotFound: true);
+        m_Detached_RotateCamera = m_Detached.FindAction("RotateCamera", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -727,6 +847,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Detached_Move;
     private readonly InputAction m_Detached_MoveVertical;
     private readonly InputAction m_Detached_SwitchInputType;
+    private readonly InputAction m_Detached_RotateCamera;
     public struct DetachedActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -734,6 +855,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Detached_Move;
         public InputAction @MoveVertical => m_Wrapper.m_Detached_MoveVertical;
         public InputAction @SwitchInputType => m_Wrapper.m_Detached_SwitchInputType;
+        public InputAction @RotateCamera => m_Wrapper.m_Detached_RotateCamera;
         public InputActionMap Get() { return m_Wrapper.m_Detached; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -752,6 +874,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @SwitchInputType.started -= m_Wrapper.m_DetachedActionsCallbackInterface.OnSwitchInputType;
                 @SwitchInputType.performed -= m_Wrapper.m_DetachedActionsCallbackInterface.OnSwitchInputType;
                 @SwitchInputType.canceled -= m_Wrapper.m_DetachedActionsCallbackInterface.OnSwitchInputType;
+                @RotateCamera.started -= m_Wrapper.m_DetachedActionsCallbackInterface.OnRotateCamera;
+                @RotateCamera.performed -= m_Wrapper.m_DetachedActionsCallbackInterface.OnRotateCamera;
+                @RotateCamera.canceled -= m_Wrapper.m_DetachedActionsCallbackInterface.OnRotateCamera;
             }
             m_Wrapper.m_DetachedActionsCallbackInterface = instance;
             if (instance != null)
@@ -765,6 +890,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @SwitchInputType.started += instance.OnSwitchInputType;
                 @SwitchInputType.performed += instance.OnSwitchInputType;
                 @SwitchInputType.canceled += instance.OnSwitchInputType;
+                @RotateCamera.started += instance.OnRotateCamera;
+                @RotateCamera.performed += instance.OnRotateCamera;
+                @RotateCamera.canceled += instance.OnRotateCamera;
             }
         }
     }
@@ -788,5 +916,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnMoveVertical(InputAction.CallbackContext context);
         void OnSwitchInputType(InputAction.CallbackContext context);
+        void OnRotateCamera(InputAction.CallbackContext context);
     }
 }

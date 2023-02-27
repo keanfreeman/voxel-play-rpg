@@ -9,6 +9,7 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] private Camera detachedCamera;
     [SerializeField] private AudioListener audioListener;
     [SerializeField] private GameObject detachedCameraBottomPrefab;
+    [SerializeField] private GameObject rotationObject;
 
     private PlayerMovement playerMovement;
     private VoxelPlayEnvironment vpEnvironment;
@@ -18,7 +19,8 @@ public class DetachedCamera : MonoBehaviour
 
     private const float SPEED_MULTIPLIER = 6.0f;
     private const float VOXEL_CHANGE_DISTANCE = 0.51f;
-    private const float CURSOR_CENTER_SPEED = 1f;
+    private const float CURSOR_CENTER_SPEED = 1.5f;
+    private const float ROTATION_SPEED = 100f;
     
     private Vector3Int currVoxel;
 
@@ -67,6 +69,7 @@ public class DetachedCamera : MonoBehaviour
         if (movedVoxels) {
             detachedCameraBottomComponent.MoveAnimated(currVoxel);
         }
+        RotateCursor();
         MoveCursor();
     }
 
@@ -77,13 +80,21 @@ public class DetachedCamera : MonoBehaviour
             float fractionToMove = Time.deltaTime * CURSOR_CENTER_SPEED;
             transform.position = Vector3.MoveTowards(transform.position, currVoxel,
                 Mathf.Min(fractionToMove, 1f));
+            return;
+        }
 
-        }
-        else {
-            float moveSpeed = Time.deltaTime * SPEED_MULTIPLIER;
-            transform.Translate(move.x * moveSpeed, verticalMove * moveSpeed,
-                move.y * moveSpeed);
-        }
+        // move direction depends on current camera rotation
+        float rotationRadians = Mathf.Deg2Rad * rotationObject.transform.eulerAngles.y * -1;
+        Vector2 moveWithRotation = VectorMath.rotate(move, rotationRadians);
+        float moveSpeed = Time.deltaTime * SPEED_MULTIPLIER;
+        transform.Translate(moveWithRotation.x * moveSpeed, verticalMove * moveSpeed,
+            moveWithRotation.y * moveSpeed);
+    }
+
+    private void RotateCursor() {
+        float rotation = inputManager.GetDetachedRotation();
+        rotationObject.transform.Rotate(Vector3.up,
+            rotation * Time.deltaTime * ROTATION_SPEED);
     }
 
     // returns true if the voxel was changed
