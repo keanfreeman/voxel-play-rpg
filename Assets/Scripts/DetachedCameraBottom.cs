@@ -5,6 +5,8 @@ using VoxelPlay;
 
 public class DetachedCameraBottom : MonoBehaviour
 {
+    [SerializeField] public GameObject seeThroughTarget;
+
     private VoxelPlayEnvironment vpEnvironment;
 
     private Vector3 moveStartPoint;

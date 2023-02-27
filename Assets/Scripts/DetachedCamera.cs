@@ -51,7 +51,7 @@ public class DetachedCamera : MonoBehaviour
 
         detachedCameraBottomComponent.MoveImmediate(currVoxel);
         detachedCameraBottomComponent.SetVisibility(true);
-        vpEnvironment.seeThroughTarget = detachedCameraBottomComponent.gameObject;
+        vpEnvironment.seeThroughTarget = detachedCameraBottomComponent.seeThroughTarget;
     }
 
     // become invisible and take up no resources
