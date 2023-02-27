@@ -17,7 +17,8 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField]
     const float SPRINT_SPEEDUP = 2f;
 
-    [SerializeField] private Camera playerCamera;
+    [SerializeField] public Camera playerCamera;
+    [SerializeField] public GameObject voxelHideTarget;
     [SerializeField] private Transform spriteChildTransform;
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;

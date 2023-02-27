@@ -268,10 +268,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 6500786811678633717}
+  voxelHideTarget: {fileID: 8632896763368513787}
   spriteChildTransform: {fileID: 7062049781447327525}
   animator: {fileID: 7546837740235280303}
   spriteRenderer: {fileID: 7062049781447327524}
   isMoving: 0
+  currVoxel: {x: 0, y: 0, z: 0}
   isRotating: 0
 --- !u!1 &8632896763368513787
 GameObject:

@@ -47,12 +47,17 @@ public class DetachedCamera : MonoBehaviour
         currVoxel = playerMovement.currVoxel;
 
         gameObject.SetActive(true);
+        vpEnvironment.cameraMain = detachedCamera;
+
         detachedCameraBottomComponent.MoveImmediate(currVoxel);
         detachedCameraBottomComponent.SetVisibility(true);
+        vpEnvironment.seeThroughTarget = detachedCameraBottomComponent.gameObject;
     }
 
     // become invisible and take up no resources
     public void BecomeInactive() {
+        vpEnvironment.cameraMain = playerMovement.playerCamera;
+        vpEnvironment.seeThroughTarget = playerMovement.voxelHideTarget;
         gameObject.SetActive(false);
         detachedCameraBottomComponent.SetVisibility(false);
     }
