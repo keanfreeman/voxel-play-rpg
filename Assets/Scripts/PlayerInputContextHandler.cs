@@ -29,10 +29,12 @@ public class PlayerInputContextHandler
     private ObjectInkMapping objectInkMapping;
     private Combat combat;
     private DetachedCamera detachedCamera;
+    PartyManager partyManager;
 
     public PlayerInputContextHandler(PlayerMovement playerMovement, NonVoxelWorld nonVoxelWorld,
             Dialogue dialogue, VoxelWorld voxelWorld, InputManager inputManager,
-            ObjectInkMapping objectInkMapping, DetachedCamera detachedCamera) {
+            ObjectInkMapping objectInkMapping, DetachedCamera detachedCamera,
+            PartyManager partyManager) {
         this.playerMovement = playerMovement;
         this.nonVoxelWorld = nonVoxelWorld;
         this.dialogue = dialogue;
@@ -40,10 +42,11 @@ public class PlayerInputContextHandler
         this.inputManager = inputManager;
         this.objectInkMapping = objectInkMapping;
         this.detachedCamera = detachedCamera;
+        this.partyManager = partyManager;
         controlState = ControlState.SPRITE_NEUTRAL;
 
         System.Random rng = new System.Random();
-        combat = new Combat(nonVoxelWorld, rng, new Dice(rng));
+        combat = new Combat(nonVoxelWorld, rng, new Dice(rng), partyManager);
     }
 
     public void HandlePlayerInput() {
@@ -79,8 +82,6 @@ public class PlayerInputContextHandler
                 }
                 break;
             case ControlState.COMBAT:
-                // determine combat order (initiative)
-                // iterate through turns until no players are left or no NPCs are left
                 combat.RunCombat();
                 break;
             default:

@@ -1,3 +1,5 @@
+using InstantiatedEntity;
+using NonVoxelEntity;
 using System.Collections.Generic;
 using UnityEngine;
 

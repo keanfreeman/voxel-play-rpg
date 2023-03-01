@@ -1,5 +1,6 @@
 using MovementDirection;
 using NonVoxel;
+using NonVoxelEntity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

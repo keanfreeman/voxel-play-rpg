@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Combat/Resources/CombatStyle.uss?fileID=7433441132597879392&amp;guid=092a365b51d080c41ba5be8ca7578c86&amp;type=3#CombatStyle" />
+    <ui:VisualElement name="EntireScreen" style="flex-grow: 1; flex-direction: column-reverse; width: auto; height: auto;">
+        <ui:VisualElement name="CombatUI" style="align-items: flex-start; justify-content: flex-end; flex-grow: 0.3; margin-bottom: 5px; padding-bottom: 5px; margin-left: 5px; margin-right: 5px; padding-left: 5px; padding-right: 5px; margin-top: 0; background-color: rgba(166, 94, 19, 0.75); padding-top: 0; flex-direction: column; height: auto;">
+            <CustomComponents.ActionChoiceBar class="action_choice_bar" />
+            <ui:VisualElement name="ActionTypeBar" style="width: auto; flex-direction: row; flex-grow: 0; border-left-width: 3px; border-right-width: 3px; border-top-width: 3px; border-bottom-width: 3px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); margin-top: 3px;">
+                <ui:Button text="Actions" display-tooltip-when-elided="true" name="ActionButton" />
+                <ui:Button text="Bonus Actions" display-tooltip-when-elided="true" name="BonusActionButton" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

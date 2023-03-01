@@ -1,4 +1,6 @@
+using InstantiatedEntity;
 using NonVoxel;
+using NonVoxelEntity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,6 +19,7 @@ public class SceneBuilder : MonoBehaviour
     public GameObject playerInstance;
     public GameObject detachedCamera;
 
+    private InstantiatedEntity.PlayerCharacter playerCharacter;
     private Vector3Int playerStartPosition;
     private NonVoxelWorld nonVoxelWorld = new NonVoxelWorld();
     private SpriteMovement spriteMovement;
@@ -30,13 +33,14 @@ public class SceneBuilder : MonoBehaviour
     private InputManager inputManager;
     private ObjectInkMapping objectInkMapping;
     private DetachedCamera detachedCameraComponent;
+    private PartyManager partyManager;
 
     private GameObject uiDocument;
 
-    private List<NonVoxelEntity> nonVoxelEntities;
+    private List<Entity> nonVoxelEntities;
 
     public void Init(GameObject uiDocument, Vector3Int playerStartPosition, 
-            GameObject playerInstance, List<NonVoxelEntity> nonVoxelEntities,
+            GameObject playerInstance, List<Entity> nonVoxelEntities,
             GameObject detachedCamera) {
         this.uiDocument = uiDocument;
         this.playerStartPosition = playerStartPosition;
@@ -56,6 +60,7 @@ public class SceneBuilder : MonoBehaviour
         spriteMovement = new SpriteMovement(vpEnvironment);
         InitCreaturesAndWorld();
 
+        partyManager = new PartyManager(playerCharacter);
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
         inputManager = new InputManager(playerInputActions);
@@ -64,8 +69,9 @@ public class SceneBuilder : MonoBehaviour
         interactableVoxels = GetComponent<InteractableVoxels>();
         voxelWorld = new VoxelWorld(vpEnvironment, interactableVoxels);
         objectInkMapping = GetComponent<ObjectInkMapping>();
-        playerInputContextHandler = new PlayerInputContextHandler(playerMovement, nonVoxelWorld, dialogue, voxelWorld,
-            inputManager, objectInkMapping, detachedCameraComponent);
+        playerInputContextHandler = new PlayerInputContextHandler(playerMovement, 
+            nonVoxelWorld, dialogue, voxelWorld, inputManager, 
+            objectInkMapping, detachedCameraComponent, partyManager);
         detachedCameraComponent.Init(playerMovement, vpEnvironment, inputManager);
     }
 
@@ -85,35 +91,42 @@ public class SceneBuilder : MonoBehaviour
     }
 
     private void InitCreaturesAndWorld() {
+        playerCharacter = playerInstance.GetComponent<InstantiatedEntity.PlayerCharacter>();
         nonVoxelWorld.SetPosition(playerInstance, playerStartPosition);
 
         Dictionary<Guid, HashSet<NPCBehavior>> battleGroups = 
             new Dictionary<Guid, HashSet<NPCBehavior>>();
-        foreach (NonVoxelEntity nonVoxelEntity in nonVoxelEntities) {
-            if (nonVoxelEntity.startPosition != playerStartPosition) {
-                GameObject gameObject = Instantiate(nonVoxelEntity.prefab,
-                    nonVoxelEntity.startPosition, Quaternion.identity);
-                nonVoxelWorld.SetPosition(gameObject, nonVoxelEntity.startPosition);
+        foreach (Entity nonVoxelEntity in nonVoxelEntities) {
+            // player starts out instantiated
+            if (nonVoxelEntity.GetType() == typeof(NonVoxelEntity.PlayerCharacter)) {
+                NonVoxelEntity.PlayerCharacter entity = 
+                    (NonVoxelEntity.PlayerCharacter)nonVoxelEntity;
+                playerCharacter.Init(entity);
+                continue;
+            }
+
+            GameObject gameObject = Instantiate(nonVoxelEntity.prefab,
+                nonVoxelEntity.startPosition, Quaternion.identity);
+            nonVoxelWorld.SetPosition(gameObject, nonVoxelEntity.startPosition);
                 
-                if (nonVoxelEntity.GetType() == typeof(SceneExitCube)) {
-                    SceneExitCube sceneExitCube = (SceneExitCube)nonVoxelEntity;
-                    SceneExit sceneExitComponent = gameObject.GetComponent<SceneExit>();
-                    sceneExitComponent.Init(parentSceneChanger, sceneExitCube.destination);
-                }
+            if (nonVoxelEntity.GetType() == typeof(SceneExitCube)) {
+                SceneExitCube sceneExitCube = (SceneExitCube)nonVoxelEntity;
+                SceneExit sceneExitComponent = gameObject.GetComponent<SceneExit>();
+                sceneExitComponent.Init(parentSceneChanger, sceneExitCube.destination);
+            }
 
-                if (nonVoxelEntity.GetType() == typeof(NPC)) {
-                    NPC npcInfo = (NPC)nonVoxelEntity;
-                    NPCBehavior npcBehavior = gameObject.GetComponent<NPCBehavior>();
-                    npcBehavior.Init(nonVoxelWorld, spriteMovement, vpEnvironment, rng, npcInfo);
-                    nonVoxelWorld.npcs.Add(npcBehavior);
+            if (nonVoxelEntity.GetType() == typeof(NPC)) {
+                NPC npcInfo = (NPC)nonVoxelEntity;
+                NPCBehavior npcBehavior = gameObject.GetComponent<NPCBehavior>();
+                npcBehavior.Init(nonVoxelWorld, spriteMovement, vpEnvironment, rng, npcInfo);
+                nonVoxelWorld.npcs.Add(npcBehavior);
 
-                    Guid battleGroupID = npcInfo.battleGroup.groupID;
-                    if (!battleGroups.ContainsKey(battleGroupID)) {
-                        battleGroups[battleGroupID] = new HashSet<NPCBehavior>();
-                    }
-                    battleGroups[battleGroupID].Add(npcBehavior);
-                    npcBehavior.teammates = battleGroups[battleGroupID];
+                Guid battleGroupID = npcInfo.battleGroup.groupID;
+                if (!battleGroups.ContainsKey(battleGroupID)) {
+                    battleGroups[battleGroupID] = new HashSet<NPCBehavior>();
                 }
+                battleGroups[battleGroupID].Add(npcBehavior);
+                npcBehavior.teammates = battleGroups[battleGroupID];
             }
         }
     }

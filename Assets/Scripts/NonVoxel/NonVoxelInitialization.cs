@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using NonVoxelEntity;
+
 public class NonVoxelInitialization {
     private GameObject playerPrefab;
     private GameObject opossumPrefab;
     private GameObject sceneExitPrefab;
 
-    public Dictionary<SceneIndex, List<NonVoxelEntity>> sceneObjects;
+    public Dictionary<SceneIndex, List<Entity>> sceneObjects;
 
-    public NonVoxelInitialization(GameObject playerPrefab, GameObject opossumPrefab, GameObject sceneExitPrefab) {
+    public NonVoxelInitialization(GameObject playerPrefab, GameObject opossumPrefab,
+            GameObject sceneExitPrefab) {
         this.playerPrefab = playerPrefab;
         this.opossumPrefab = opossumPrefab;
         this.sceneExitPrefab = sceneExitPrefab;
@@ -17,65 +20,56 @@ public class NonVoxelInitialization {
         NPCStats wolfStats = new NPCStats("Wolf", "1/4", 13, 40, 11, 12, 15, 12, 3, 12, 6);
         PlayerStats playerStats = new PlayerStats("Player1", 1, 30, 10, 10, 10, 10, 10, 10, 10);
 
-        List<NPC> battleGroup1 = new List<NPC> {
+        BattleGroup battleGroup1 = new BattleGroup(new List<NPC> {
             new NPC(opossumPrefab, new Vector3Int(835, 29, 349), wolfStats),
             new NPC(opossumPrefab, new Vector3Int(835, 29, 347), wolfStats)
-        };
-        foreach (NPC npc in battleGroup1) {
-            npc.battleGroup = new BattleGroup(battleGroup1);
-        }
-        List<NPC> battleGroup2 = new List<NPC> {
+        });
+        BattleGroup battleGroup2 = new BattleGroup(new List<NPC> {
             new NPC(opossumPrefab, new Vector3Int(825, 31, 349), wolfStats),
             new NPC(opossumPrefab, new Vector3Int(825, 31, 350), wolfStats)
-        };
-        foreach (NPC npc in battleGroup2) {
-            npc.battleGroup = new BattleGroup(battleGroup2);
-        }
-        List<NPC> battleGroup3 = new List<NPC> {
+        });
+        BattleGroup battleGroup3 = new BattleGroup(new List<NPC> {
             new NPC(opossumPrefab, new Vector3Int(468, 26, -46), wolfStats)
-        };
-        foreach (NPC npc in battleGroup3) {
-            npc.battleGroup = new BattleGroup(battleGroup3);
-        }
+        });
 
-        sceneObjects = new Dictionary<SceneIndex, List<NonVoxelEntity>> {
+        sceneObjects = new Dictionary<SceneIndex, List<Entity>> {
             {
-                SceneIndex.SECOND_SCENE, new List<NonVoxelEntity> {
+                SceneIndex.SECOND_SCENE, new List<Entity> {
                     new PlayerCharacter(playerPrefab, new Vector3Int(864, 29, 348), playerStats),
-                    battleGroup1[0],
-                    battleGroup1[1],
-                    battleGroup2[0],
-                    battleGroup2[1],
+                    battleGroup1.combatants[0],
+                    battleGroup1.combatants[1],
+                    battleGroup2.combatants[0],
+                    battleGroup2.combatants[1],
                     new SceneExitCube(
                         sceneExitPrefab,
-                        new Vector3Int(523, 50, 249),
+                        new Vector3Int(864, 29, 351),
                         new Destination(SceneIndex.FOURTH_SCENE, new Vector3Int(466, 26, -46)))
                 }
             },
             {
-                SceneIndex.FOURTH_SCENE, new List<NonVoxelEntity> {
-                    new PlayerCharacter(playerPrefab, new Vector3Int(466, 26, -66), playerStats),
-                    battleGroup3[0],
+                SceneIndex.FOURTH_SCENE, new List<Entity> {
+                    new PlayerCharacter(playerPrefab, new Vector3Int(466, 26, -40), playerStats),
+                    battleGroup3.combatants[0],
                     new SceneExitCube(
                         sceneExitPrefab,
                         new Vector3Int(466, 26, -44),
-                        new Destination(SceneIndex.SECOND_SCENE, new Vector3Int(523, 50, 246)))
+                        new Destination(SceneIndex.SECOND_SCENE, new Vector3Int(864, 29, 348)))
                 }
             }
         };
     }
 
     public Vector3Int GetPlayerStartPosition(SceneIndex sceneIndex) {
-        List<NonVoxelEntity> nonVoxelEntities = GetSceneObjects(sceneIndex);
-        foreach (NonVoxelEntity nonVoxelEntity in nonVoxelEntities) {
-            if (nonVoxelEntity.prefab == playerPrefab) {
+        List<Entity> nonVoxelEntities = GetSceneObjects(sceneIndex);
+        foreach (Entity nonVoxelEntity in nonVoxelEntities) {
+            if (nonVoxelEntity.GetType() == typeof(PlayerCharacter)) {
                 return nonVoxelEntity.startPosition;
             }
         }
         throw new KeyNotFoundException($"No player position for scene {sceneIndex} found.");
     }
 
-    public List<NonVoxelEntity> GetSceneObjects(SceneIndex sceneIndex) {
-        return sceneObjects.GetValueOrDefault(sceneIndex, new List<NonVoxelEntity>());
+    public List<Entity> GetSceneObjects(SceneIndex sceneIndex) {
+        return sceneObjects.GetValueOrDefault(sceneIndex, new List<Entity>());
     }
 }
