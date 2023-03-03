@@ -26,7 +26,7 @@ public class SceneBuilder : MonoBehaviour
     private System.Random rng = new System.Random();
     private PlayerInputContextHandler playerInputContextHandler;
     private PlayerMovement playerMovement;
-    private Dialogue dialogue;
+    private DialogueUI dialogue;
     private VoxelWorld voxelWorld;
     private InteractableVoxels interactableVoxels;
     private PlayerInputActions playerInputActions;
@@ -65,7 +65,7 @@ public class SceneBuilder : MonoBehaviour
         playerInputActions.Player.Enable();
         inputManager = new InputManager(playerInputActions);
         playerMovement = InitPlayerMovement();
-        dialogue = uiDocument.GetComponent<Dialogue>();
+        dialogue = uiDocument.GetComponent<DialogueUI>();
         interactableVoxels = GetComponent<InteractableVoxels>();
         voxelWorld = new VoxelWorld(vpEnvironment, interactableVoxels);
         objectInkMapping = GetComponent<ObjectInkMapping>();

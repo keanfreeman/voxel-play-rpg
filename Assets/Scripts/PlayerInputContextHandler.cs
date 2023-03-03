@@ -23,7 +23,7 @@ public class PlayerInputContextHandler
     private ControlState controlState;
     private PlayerMovement playerMovement;
     private NonVoxelWorld nonVoxelWorld;
-    private Dialogue dialogue;
+    private DialogueUI dialogue;
     private VoxelWorld voxelWorld;
     private InputManager inputManager;
     private ObjectInkMapping objectInkMapping;
@@ -32,7 +32,7 @@ public class PlayerInputContextHandler
     PartyManager partyManager;
 
     public PlayerInputContextHandler(PlayerMovement playerMovement, NonVoxelWorld nonVoxelWorld,
-            Dialogue dialogue, VoxelWorld voxelWorld, InputManager inputManager,
+            DialogueUI dialogue, VoxelWorld voxelWorld, InputManager inputManager,
             ObjectInkMapping objectInkMapping, DetachedCamera detachedCamera,
             PartyManager partyManager) {
         this.playerMovement = playerMovement;

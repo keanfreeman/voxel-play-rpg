@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="CombatUI" src="project://database/Assets/UI/Combat/CombatUI.uxml?fileID=9197481963319205126&amp;guid=4427790308f05e245b38b13353743d4a&amp;type=3#CombatUI" />
+    <ui:Template name="DialogueUI" src="project://database/Assets/UI/Dialogue/DialogueUI.uxml?fileID=9197481963319205126&amp;guid=12c4e2d84b3996d4199548bbfc5a2461&amp;type=3#DialogueUI" />
+    <ui:Instance template="CombatUI" name="CombatUI" style="height: 100%; width: 100%; display: flex; position: absolute; left: 0; top: 0;" />
+    <ui:Instance template="DialogueUI" name="DialogueUI" style="height: 100%; left: 0; top: 0; position: absolute; display: none; width: 100%; right: auto; bottom: auto;" />
+</ui:UXML>

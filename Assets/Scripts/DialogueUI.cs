@@ -8,7 +8,9 @@ using System.Linq;
 using System;
 using UnityEngine.InputSystem;
 
-public class Dialogue : MonoBehaviour {
+public class DialogueUI : MonoBehaviour {
+    [SerializeField] UIDocument uiDocument;
+
     private string currentLine;
     private Story currentStory;
     
@@ -16,34 +18,32 @@ public class Dialogue : MonoBehaviour {
     private bool inChoice = false;
 
     // UIDocument
-    private VisualElement root;
+    private TemplateContainer dialogueRoot;
     private Label dialogueText;
     private VisualElement choiceHolder;
 
     private const float TEXT_WAIT_SPEED = 0.01f;
-    private const string GIVEN_TEXT = "GivenText";
-    private const string CHOICE_HOLDER = "ChoiceHolder";
+    private const string DIALOGUE_UI = "DialogueUI";
+    private const string GIVEN_TEXT = "DialogueGivenText";
+    private const string CHOICE_HOLDER = "DialogueChoiceHolder";
 
-    private void Start() {
-        DontDestroyOnLoad(gameObject);
+    private void Awake() {
+        dialogueRoot = uiDocument.rootVisualElement.Q<TemplateContainer>(DIALOGUE_UI);
+        dialogueText = dialogueRoot.Q<Label>(GIVEN_TEXT);
+        choiceHolder = dialogueRoot.Q<VisualElement>(CHOICE_HOLDER);
 
-        root = gameObject.GetComponent<UIDocument>().rootVisualElement;
-        dialogueText = root.Query<Label>(GIVEN_TEXT).First();
-        choiceHolder = root.Query<VisualElement>(CHOICE_HOLDER).First();
-
-        SetUIVisibility(false);
         dialogueText.text = string.Empty;
         choiceHolder.Clear();
     }
 
-    private void SetUIVisibility(bool isVisible) {
-        root.style.visibility = isVisible ? Visibility.Visible : Visibility.Hidden;
+    private void SetDisplayState(bool isVisible) {
+        dialogueRoot.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
     }
 
     public void StartDialogue(Story story) {
         isDialogueActive = true;
         dialogueText.text = string.Empty;
-        SetUIVisibility(true);
+        SetDisplayState(true);
 
         currentStory = story;
         currentLine = currentStory.Continue();
@@ -77,7 +77,7 @@ public class Dialogue : MonoBehaviour {
 
             // end dialogue
             isDialogueActive = false;
-            SetUIVisibility(false);
+            SetDisplayState(false);
         }
 
         // display remaining text

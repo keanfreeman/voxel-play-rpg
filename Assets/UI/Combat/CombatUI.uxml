@@ -1,9 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Combat/Resources/CombatStyle.uss?fileID=7433441132597879392&amp;guid=092a365b51d080c41ba5be8ca7578c86&amp;type=3#CombatStyle" />
-    <ui:VisualElement name="EntireScreen" style="flex-grow: 1; flex-direction: column-reverse; width: auto; height: auto;">
-        <ui:VisualElement name="CombatUI" style="align-items: flex-start; justify-content: flex-end; flex-grow: 0.3; margin-bottom: 5px; padding-bottom: 5px; margin-left: 5px; margin-right: 5px; padding-left: 5px; padding-right: 5px; margin-top: 0; background-color: rgba(166, 94, 19, 0.75); padding-top: 0; flex-direction: column; height: auto;">
+    <Style src="project://database/Assets/UI/CommonStyle.uss?fileID=7433441132597879392&amp;guid=026a39900ed2bf348b8b1fcf8b7c191b&amp;type=3#CommonStyle" />
+    <ui:VisualElement name="EntireScreen" style="flex-grow: 1; flex-direction: column-reverse; width: auto; height: auto; align-items: center;">
+        <ui:VisualElement name="CombatUI" style="align-items: flex-start; justify-content: flex-end; flex-grow: 0; margin-bottom: 2%; padding-bottom: 5px; margin-left: 0; margin-right: 0; padding-left: 5px; padding-right: 5px; margin-top: 0; background-color: rgba(166, 94, 19, 0.75); padding-top: 5px; flex-direction: column; height: auto; width: 70%;">
             <CustomComponents.ActionChoiceBar class="action_choice_bar" />
-            <ui:VisualElement name="ActionTypeBar" style="width: auto; flex-direction: row; flex-grow: 0; border-left-width: 3px; border-right-width: 3px; border-top-width: 3px; border-bottom-width: 3px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); margin-top: 3px;">
+            <ui:VisualElement name="ActionTypeBar" style="width: auto; flex-direction: row; flex-grow: 0; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); margin-top: 3px;">
                 <ui:Button text="Actions" display-tooltip-when-elided="true" name="ActionButton" />
                 <ui:Button text="Bonus Actions" display-tooltip-when-elided="true" name="BonusActionButton" />
             </ui:VisualElement>
