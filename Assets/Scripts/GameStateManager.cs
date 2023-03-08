@@ -21,7 +21,6 @@ public enum ControlState {
 
 public class GameStateManager : MonoBehaviour
 {
-
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private CombatManager combatManager;
     [SerializeField] private CombatUI combatUI;
@@ -32,11 +31,10 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private ObjectInkMapping objectInkMapping;
     [SerializeField] private VoxelWorldManager voxelWorldManager;
 
-    public ControlState controlState { get; set; }
+    public ControlState controlState { get; set; } = ControlState.LOADING;
 
     void Awake() {
         DontDestroyOnLoad(gameObject);
-        controlState = ControlState.LOADING;
     }
 
     void Update() {
@@ -44,14 +42,18 @@ public class GameStateManager : MonoBehaviour
             case ControlState.FIRST_PERSON:
                 break;
             case ControlState.SPRITE_NEUTRAL:
+                bool isTransitioning = playerMovement.HandleMovementControls();
                 NPCBehavior npcInCombat = HandleNPCsFreeMovement();
-                if (!playerMovement.isMoving && !playerMovement.isRotating
-                        && npcInCombat != null) {
-                    controlState = ControlState.COMBAT;
+                if (npcInCombat != null) {
+                    inputManager.playerInputActions.Player.Disable();
                     combatManager.SetFirstCombatant(npcInCombat);
+                    if (!isTransitioning) {
+                        controlState = ControlState.COMBAT;
+                        Debug.Log("Entered combat");
+                        inputManager.SwitchPlayerControlStateToUI();
+                    }
                     return;
                 }
-                bool isTransitioning = playerMovement.HandleMovementControls();
                 if (isTransitioning) {
                     return;
                 }

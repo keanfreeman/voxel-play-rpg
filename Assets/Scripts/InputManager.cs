@@ -9,7 +9,7 @@ public class InputManager : MonoBehaviour
 {
     [SerializeField] private EventSystem eventSystem;
 
-    private PlayerInputActions playerInputActions;
+    public PlayerInputActions playerInputActions;
     
     public SpriteMoveDirection moveDirection = SpriteMoveDirection.NONE;
 
