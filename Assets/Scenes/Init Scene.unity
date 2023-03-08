@@ -266,7 +266,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 582458976}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6cc2d8c584a2c2b44abf3b7f86bb0e42, type: 3}
   m_Name: 
@@ -295,7 +295,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 582458976}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a3cd911642bb8f24bb1da8b5dd623f9c, type: 3}
   m_Name: 
@@ -466,7 +466,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!114 &705507996
 MonoBehaviour:
@@ -536,6 +536,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
+      propertyPath: inputManager
+      value: 
+      objectReference: {fileID: 2066669309}
+    - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
+      propertyPath: playerMovement
+      value: 
+      objectReference: {fileID: 1823400829}
+    - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
+      propertyPath: voxelWorldManager
+      value: 
+      objectReference: {fileID: 1568004907}
+    - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
+      propertyPath: detachedCameraBottom
+      value: 
+      objectReference: {fileID: 1702908726}
     - target: {fileID: 1275296119661960477, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
       propertyPath: m_Name
       value: DetachedCamera
@@ -710,6 +726,67 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1562076875
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 161552250556516067, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: m_Name
+      value: VoxelBottomHighlighter
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652038474705052530, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: m_RootOrder
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652038474705052530, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652038474705052530, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652038474705052530, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652038474705052530, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652038474705052530, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652038474705052530, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652038474705052530, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652038474705052530, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652038474705052530, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652038474705052530, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2893097453921135557, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: voxelWorldManager
+      value: 
+      objectReference: {fileID: 1568004907}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 874745ef182559848a96ae759b288aca, type: 3}
 --- !u!1 &1568004906
 GameObject:
   m_ObjectHideFlags: 0
@@ -802,6 +879,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1702908726 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2893097453921135557, guid: 874745ef182559848a96ae759b288aca, type: 3}
+  m_PrefabInstance: {fileID: 1562076875}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9395764123d5d674a8dd6dbd2e252415, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1823400827 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7062049782252913140, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}

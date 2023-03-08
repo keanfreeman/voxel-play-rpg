@@ -6,8 +6,7 @@ using VoxelPlay;
 public class DetachedCameraBottom : MonoBehaviour
 {
     [SerializeField] public GameObject seeThroughTarget;
-
-    private VoxelPlayEnvironment vpEnvironment;
+    [SerializeField] private VoxelWorldManager voxelWorldManager;
 
     private Vector3 moveStartPoint;
     private Vector3Int moveEndPoint;
@@ -18,11 +17,8 @@ public class DetachedCameraBottom : MonoBehaviour
     Vector3Int? currHighlighted;
 
     void Awake() {
+        DontDestroyOnLoad(gameObject);
         gameObject.SetActive(false);
-    }
-
-    public void Init(VoxelPlayEnvironment vpEnvironment) {
-        this.vpEnvironment = vpEnvironment;
     }
 
     public void SetVisibility(bool visibility) {
@@ -56,8 +52,9 @@ public class DetachedCameraBottom : MonoBehaviour
         currHighlighted = moveEndPoint;
         float edgeWidth = 5f;
         VoxelHitInfo voxelHitInfo;
-        vpEnvironment.RayCast(new Rayd(currHighlighted.Value,
+        voxelWorldManager.environment.RayCast(new Rayd(currHighlighted.Value,
             new Vector3(0.001f, 0.001f, 0.001f)), out voxelHitInfo, 0.001f);
-        vpEnvironment.VoxelHighlight(voxelHitInfo, new Color(100f, 100f, 100f), edgeWidth);
+        voxelWorldManager.environment
+            .VoxelHighlight(voxelHitInfo, new Color(100f, 100f, 100f), edgeWidth);
     }
 }
