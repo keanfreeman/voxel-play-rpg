@@ -22,11 +22,9 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private Transform spriteChildTransform;
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
-
-    // IMPORT
-    private NonVoxelWorld nonVoxelWorld;
-    private SpriteMovement spriteMovement;
-    private InputManager inputManager;
+    [SerializeField] private NonVoxelWorld nonVoxelWorld;
+    [SerializeField] private InputManager inputManager;
+    [SerializeField] private SpriteMovement spriteMovement;
 
     // STATE
     public bool isMoving = false;
@@ -35,7 +33,7 @@ public class PlayerMovement : MonoBehaviour {
     float moveStartTimestamp;
     Vector3 moveStartPoint;
     Vector3 moveEndPoint;
-    public Vector3Int currVoxel;
+    public Vector3Int currVoxel { get; private set; }
 
     public bool isRotating;
     float rotateStartTimestamp;
@@ -43,16 +41,19 @@ public class PlayerMovement : MonoBehaviour {
     Quaternion endRotation;
     PlayerCameraDirection playerCameraDirection = PlayerCameraDirection.NORTH;
 
-    public void Init(Vector3Int playerStartPosition, NonVoxelWorld nonVoxelWorld,
-        SpriteMovement spriteMovement, InputManager inputManager) {
-        this.currVoxel = playerStartPosition;
-        this.nonVoxelWorld = nonVoxelWorld;
-        this.spriteMovement = spriteMovement;
-        this.inputManager = inputManager;
+    void Awake() {
+        DontDestroyOnLoad(gameObject);
+        moveStartTimestamp = Time.time;
     }
 
-    void Start() {
-        moveStartTimestamp = Time.time;
+    public void SetCurrVoxel(Vector3Int currVoxel) {
+        this.currVoxel = currVoxel;
+    }
+
+    public void HaltMovement() {
+        StopAllCoroutines();
+        isMoving = false;
+        animator.SetBool("isMoving", isMoving);
     }
 
     public void SetCameraState(bool newState) {

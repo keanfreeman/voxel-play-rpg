@@ -1,3 +1,16 @@
+things I would need accessible between every possible scene:
+- loading screen
+- audio
+- information to inform loaded scenes what exactly to load (e.g. a particular save file)
+
+
+as much as possible, I will avoid creating nested classes whose dependencies need to be fulfilled 
+by passing them through the constructor. if a constructor starts to have too many parameters, 
+it's a sign the class does too much and needs to be broken out into 
+
+the issue with having the contexthandler get created by the scenebuilder is that it
+requires all dependencies to be set by the former.
+
 objects/components that generally need to always exist (sound managers, scene managers, state managers, etc) should be on DoNotDestroy in the init scene
 
 there should be a playermanager that handles movement, object instantiation, switching between scenes, etc.

@@ -9,7 +9,7 @@ public class NonVoxelInitialization {
     private GameObject opossumPrefab;
     private GameObject sceneExitPrefab;
 
-    public Dictionary<SceneIndex, List<Entity>> sceneObjects;
+    public Dictionary<int, List<Entity>> environmentObjects;
 
     public NonVoxelInitialization(GameObject playerPrefab, GameObject opossumPrefab,
             GameObject sceneExitPrefab) {
@@ -32,9 +32,9 @@ public class NonVoxelInitialization {
             new NPC(opossumPrefab, new Vector3Int(468, 26, -46), wolfStats)
         });
 
-        sceneObjects = new Dictionary<SceneIndex, List<Entity>> {
+        environmentObjects = new Dictionary<int, List<Entity>> {
             {
-                SceneIndex.SECOND_SCENE, new List<Entity> {
+                3, new List<Entity> {
                     new PlayerCharacter(playerPrefab, new Vector3Int(864, 29, 348), playerStats),
                     battleGroup1.combatants[0],
                     battleGroup1.combatants[1],
@@ -43,33 +43,43 @@ public class NonVoxelInitialization {
                     new SceneExitCube(
                         sceneExitPrefab,
                         new Vector3Int(864, 29, 351),
-                        new Destination(SceneIndex.FOURTH_SCENE, new Vector3Int(466, 26, -46)))
+                        new Destination(1, new Vector3Int(466, 29, -46)))
                 }
             },
             {
-                SceneIndex.FOURTH_SCENE, new List<Entity> {
-                    new PlayerCharacter(playerPrefab, new Vector3Int(466, 26, -40), playerStats),
+                1, new List<Entity> {
+                    new PlayerCharacter(playerPrefab, new Vector3Int(466, 29, -46), playerStats),
                     battleGroup3.combatants[0],
                     new SceneExitCube(
                         sceneExitPrefab,
-                        new Vector3Int(466, 26, -44),
-                        new Destination(SceneIndex.SECOND_SCENE, new Vector3Int(864, 29, 348)))
+                        new Vector3Int(463, 29, -46),
+                        new Destination(2, new Vector3Int(864, 29, 348)))
+                }
+            },
+            {
+                2, new List<Entity> {
+                    new PlayerCharacter(playerPrefab, new Vector3Int(-3, 44, 85), playerStats),
+                    battleGroup3.combatants[0],
+                    new SceneExitCube(
+                        sceneExitPrefab,
+                        new Vector3Int(-3, 44, 83),
+                        new Destination(3, new Vector3Int(864, 29, 348)))
                 }
             }
         };
     }
 
-    public Vector3Int GetPlayerStartPosition(SceneIndex sceneIndex) {
-        List<Entity> nonVoxelEntities = GetSceneObjects(sceneIndex);
+    public Vector3Int GetPlayerStartPosition(int environmentIndex) {
+        List<Entity> nonVoxelEntities = GetEnvEntities(environmentIndex);
         foreach (Entity nonVoxelEntity in nonVoxelEntities) {
             if (nonVoxelEntity.GetType() == typeof(PlayerCharacter)) {
                 return nonVoxelEntity.startPosition;
             }
         }
-        throw new KeyNotFoundException($"No player position for scene {sceneIndex} found.");
+        throw new KeyNotFoundException($"No player position for env {environmentIndex} found.");
     }
 
-    public List<Entity> GetSceneObjects(SceneIndex sceneIndex) {
-        return sceneObjects.GetValueOrDefault(sceneIndex, new List<Entity>());
+    public List<Entity> GetEnvEntities(int environmentIndex) {
+        return environmentObjects.GetValueOrDefault(environmentIndex, new List<Entity>());
     }
 }

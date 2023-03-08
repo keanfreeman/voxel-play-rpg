@@ -7,20 +7,19 @@ using UnityEngine.SceneManagement;
 namespace InstantiatedEntity {
     public class SceneExit : MonoBehaviour
     {
-        private SceneChanger sceneChanger;
+        private EnvironmentSceneManager worldManager;
         private Destination destination;
 
-        public void Init(SceneChanger sceneChanger, Destination destination) {
-            this.sceneChanger = sceneChanger;
+        public void Init(EnvironmentSceneManager worldManager, Destination destination) {
+            this.worldManager = worldManager;
             this.destination = destination;
         }
 
         private void OnTriggerEnter(Collider other) {
             if (other.gameObject.tag == "Player") {
-                SceneIndex currentScene = (SceneIndex)SceneManager.GetActiveScene().buildIndex;
-                //todo - if in same scene, tell the player manager to moveimmediate to coordinates
-                Debug.Log($"Entered cube from {currentScene} and going to {destination.destinationTile}, {destination.destinationScene}");
-                sceneChanger.LoadNextScene(currentScene, destination);
+                Debug.Log($"Entered cube going to {destination.destinationTile}, " +
+                    $"{destination.destinationEnv}");
+                worldManager.LoadNextScene(destination);
             }
         }
     }

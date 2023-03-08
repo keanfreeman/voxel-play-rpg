@@ -5,15 +5,18 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class InputManager
+public class InputManager : MonoBehaviour
 {
-    private PlayerInputActions playerInputActions;
+    [SerializeField] private EventSystem eventSystem;
 
+    private PlayerInputActions playerInputActions;
+    
     public SpriteMoveDirection moveDirection = SpriteMoveDirection.NONE;
 
-    public InputManager(PlayerInputActions playerInputActions) {
-        this.playerInputActions = playerInputActions;
+    private void Awake() {
+        DontDestroyOnLoad(gameObject);
 
+        playerInputActions = new PlayerInputActions();
         this.playerInputActions.Player.MoveUp.performed += MoveUp_performed;
         this.playerInputActions.Player.MoveDown.performed += MoveDown_performed;
         this.playerInputActions.Player.MoveLeft.performed += MoveLeft_performed;
@@ -23,16 +26,24 @@ public class InputManager
         this.playerInputActions.Player.MoveDown.canceled += MoveDown_canceled;
         this.playerInputActions.Player.MoveLeft.canceled += MoveLeft_canceled;
         this.playerInputActions.Player.MoveRight.canceled += MoveRight_canceled;
-    }
 
-    public void SwitchPlayerControlStateToDialogue() {
-        playerInputActions.Player.Disable();
-        playerInputActions.Dialogue.Enable();
-    }
-
-    public void SwitchDialogueToPlayerControlState() {
-        playerInputActions.Dialogue.Disable();
         playerInputActions.Player.Enable();
+    }
+
+    public bool IsInUIMode() {
+        return this.playerInputActions.UINavigation.enabled;
+    }
+
+    public void SwitchPlayerControlStateToUI() {
+        playerInputActions.Player.Disable();
+        playerInputActions.UINavigation.Enable();
+        eventSystem.sendNavigationEvents = true;
+    }
+
+    public void SwitchUIToPlayerControlState() {
+        playerInputActions.UINavigation.Disable();
+        playerInputActions.Player.Enable();
+        eventSystem.sendNavigationEvents = false;
     }
 
     public void SwitchPlayerToDetachedControlState() {
@@ -62,10 +73,18 @@ public class InputManager
     // DIALOGUE
 
     public bool WasContinueTriggered() {
-        return playerInputActions.Dialogue.Continue.triggered;
+        return playerInputActions.UINavigation.Submit.triggered;
+    }
+
+    public bool WasUICancelTriggered() {
+        return playerInputActions.UINavigation.Cancel.triggered;
     }
 
     // PLAYER
+
+    public bool WasOpenCombatBarTriggered() {
+        return playerInputActions.Player.OpenCombatBar.triggered;
+    }
 
     public bool WasInteractTriggered() {
         return playerInputActions.Player.Interact.triggered;

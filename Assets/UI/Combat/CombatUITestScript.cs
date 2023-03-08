@@ -40,15 +40,15 @@ public class CombatUITestScript : MonoBehaviour
 
     void Awake()
     {
-        InputManager inputManager = new InputManager(new PlayerInputActions());
-        inputManager.SwitchPlayerControlStateToDialogue();
-
-        ActionChoiceBar actionChoiceBar = uiDocument.rootVisualElement.Q<ActionChoiceBar>();
-        Button actionButton = uiDocument.rootVisualElement.Q<Button>(ComponentIds.ACTION_BUTTON);
-        Button bonusActionButton = 
-            uiDocument.rootVisualElement.Q<Button>(ComponentIds.BONUS_ACTION_BUTTON);
-        actionChoiceBar.PopulateBar(actions, bonusActions, actionButton, bonusActionButton);
-        actionButton.Focus();
+        //InputManager inputManager = new InputManager(new PlayerInputActions());
+        //inputManager.SwitchPlayerControlStateToUI();
+        //
+        //ActionChoiceBar actionChoiceBar = uiDocument.rootVisualElement.Q<ActionChoiceBar>();
+        //Button actionButton = uiDocument.rootVisualElement.Q<Button>(ComponentIds.ACTION_BUTTON);
+        //Button bonusActionButton = 
+        //    uiDocument.rootVisualElement.Q<Button>(ComponentIds.BONUS_ACTION_BUTTON);
+        //actionChoiceBar.PopulateBar(actions, bonusActions, actionButton, bonusActionButton);
+        //actionButton.Focus();
     }
 
     void Update()

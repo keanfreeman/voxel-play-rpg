@@ -25,6 +25,7 @@ public class DetachedCamera : MonoBehaviour
     private Vector3Int currVoxel;
 
     void Awake() {
+        DontDestroyOnLoad(gameObject);
         gameObject.SetActive(false);
     }
 

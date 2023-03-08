@@ -4,14 +4,15 @@ using UnityEngine;
 
 using VoxelPlay;
 
-public class VoxelWorld
+public class VoxelWorldManager : MonoBehaviour
 {
-    private VoxelPlayEnvironment environment;
-    private InteractableVoxels interactableVoxels;
+    [SerializeField] private EnvironmentSceneManager envSceneManager;
+    [SerializeField] private InteractableVoxels interactableVoxels;
 
-    public VoxelWorld(VoxelPlayEnvironment environment, InteractableVoxels interactableVoxels) {
-        this.environment = environment;
-        this.interactableVoxels = interactableVoxels;
+    public VoxelPlayEnvironment environment { get; set; }
+
+    private void Awake() {
+        DontDestroyOnLoad(this);
     }
 
     public Voxel GetVoxelFromPosition(Vector3d position) {

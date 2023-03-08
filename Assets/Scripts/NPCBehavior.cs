@@ -1,6 +1,7 @@
 using MovementDirection;
 using NonVoxel;
 using NonVoxelEntity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +16,7 @@ public class NPCBehavior : MonoBehaviour
     private const float NPC_MAX_IDLE_TIME = 5;
 
     private System.Random rng;
-    private VoxelPlayEnvironment environment;
+    private VoxelPlayEnvironment voxelPlayEnvironment;
     private NonVoxelWorld nonVoxelWorld;
     private SpriteMovement spriteMovement;
     private Transform childTransform;
@@ -32,11 +33,11 @@ public class NPCBehavior : MonoBehaviour
     public NPC npcInfo;
     public HashSet<NPCBehavior> teammates;
 
-    public void Start() {
+    void Awake() {
         childTransform = transform.GetChild(0);
     }
 
-    public void Update() {
+    void Update() {
         HandleCameraRotation();
     }
     
@@ -47,10 +48,10 @@ public class NPCBehavior : MonoBehaviour
     }
 
     public void Init(NonVoxelWorld nonVoxelWorld, SpriteMovement spriteMovement,
-        VoxelPlayEnvironment environment, System.Random rng, NPC npcInfo) {
+        VoxelPlayEnvironment voxelPlayEnvironment, System.Random rng, NPC npcInfo) {
         this.nonVoxelWorld = nonVoxelWorld;
         this.spriteMovement = spriteMovement;
-        this.environment = environment;
+        this.voxelPlayEnvironment = voxelPlayEnvironment;
         this.rng = rng;
         this.npcInfo = npcInfo;
     }
@@ -85,7 +86,7 @@ public class NPCBehavior : MonoBehaviour
         Vector3Int destinationCoordinate = actualCoordinate.GetValueOrDefault();
 
         if (!nonVoxelWorld.IsPositionOccupied(destinationCoordinate)
-            && environment.GetVoxel(destinationCoordinate).isEmpty) {
+            && voxelPlayEnvironment.GetVoxel(destinationCoordinate).isEmpty) {
             MoveSprite(destinationCoordinate);
         }
     }

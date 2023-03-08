@@ -13,11 +13,11 @@ namespace NonVoxelEntity {
     }
 
     public class Destination {
-        public SceneIndex destinationScene { get; private set; }
+        public int destinationEnv { get; private set; }
         public Vector3Int destinationTile { get; private set; }
 
-        public Destination(SceneIndex destinationScene, Vector3Int destinationTile) {
-            this.destinationScene = destinationScene;
+        public Destination(int destinationEnvironment, Vector3Int destinationTile) {
+            this.destinationEnv = destinationEnvironment;
             this.destinationTile = destinationTile;
         }
     }

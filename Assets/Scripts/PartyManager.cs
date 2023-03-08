@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PartyManager
+public class PartyManager : MonoBehaviour
 {
-    public PlayerCharacter playerCharacter;
+    [SerializeField] public PlayerCharacter playerCharacter;
     public List<PlayerCharacter> partyMembers;
 
-    public PartyManager(PlayerCharacter playerCharacter) {
-        this.playerCharacter = playerCharacter;
+    void Awake() {
+        DontDestroyOnLoad(gameObject);
         partyMembers = new List<PlayerCharacter>();
     }
 }

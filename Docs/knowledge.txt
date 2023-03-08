@@ -1,3 +1,13 @@
+Managers are responsible for the life cycle of things. 
+They do spawning/destroying, initialize the game, and communication between very 
+different systems.
+Controllers are responsible for the behavior of individual things while they're alive. 
+They do movement, ai, physics, etc. They respond to signals about what's going on from 
+their manager, and send signals back up to their manager so other systems can respond to 
+what they're doing.
+
+vpEnvironment.DisposeAll(); to stop vpenvironment after starting
+
 there are two layers to objects, the actual instantiated objects/creatures (monobehaviors) and the 
 information about them that's immutable, or predates their existence.
 

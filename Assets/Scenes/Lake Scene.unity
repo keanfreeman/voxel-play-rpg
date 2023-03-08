@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.7854401, g: 0.7527566, b: 0.8500957, a: 1}
+  m_IndirectSpecularColor: {r: 0.8039578, g: 0.7774757, b: 0.9176081, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -123,7 +123,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &582458976
+--- !u!1 &1141716947
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,161 +131,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 582458983}
-  - component: {fileID: 582458982}
-  - component: {fileID: 582458984}
-  - component: {fileID: 582458979}
-  - component: {fileID: 582458978}
-  - component: {fileID: 582458977}
+  - component: {fileID: 1141716949}
+  - component: {fileID: 1141716948}
   m_Layer: 0
-  m_Name: SceneBuilder
+  m_Name: Voxel Play Environment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &582458977
+--- !u!114 &1141716948
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582458976}
+  m_GameObject: {fileID: 1141716947}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cc2d8c584a2c2b44abf3b7f86bb0e42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactableVoxelsList:
-  - {fileID: 11400000, guid: 0336fcbf01695124bb8619a91042be65, type: 2}
-  - {fileID: 11400000, guid: ede27299da5e3014fa16220f24d1394b, type: 2}
---- !u!114 &582458978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582458976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79ecfc7c1d9c3e345ad012dbfc8e60e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NoResponseObjectInk: {fileID: 4900000, guid: 81791661c42cb764fb2b0cd93123d9f6, type: 3}
-  testInk: {fileID: 4900000, guid: 3fbd56f75b38391489c81164ff6ab45d, type: 3}
---- !u!114 &582458979
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582458976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 4d171ccee374ecd4394ddbb9770666f5, type: 3}
-  m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: f87b036c-bdce-4b6a-9262-0f902f2f3e77
-    m_ActionName: Player/Switch Input Type[/Keyboard/k]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 9627ebcf-8410-4f90-bdc4-43abb6d7d91f
-    m_ActionName: Player/Move Up[/Keyboard/w]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: fffff88c-8b75-494d-bf19-4267b30a5fd7
-    m_ActionName: Player/Move Down[/Keyboard/s]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 7315dfbc-ef8d-4a4d-8730-eb149f7a89ee
-    m_ActionName: Player/Move Left[/Keyboard/a]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: cacb10e0-2908-4fac-a068-62c0531ae84c
-    m_ActionName: Player/Move Right[/Keyboard/d]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 958e265a-cf5b-47ba-a6c6-3f8d3372a366
-    m_ActionName: Player/Interact[/Keyboard/enter]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 9563a973-e10e-4431-97d8-58558e9cc73d
-    m_ActionName: Dialogue/Continue[/Keyboard/enter]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 31fa9576-fc93-4f2a-965d-1d2f029958a9
-    m_ActionName: Dialogue/Move[/XInputControllerWindows/leftStick,/XInputControllerWindows/dpad,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 07377626-f1fd-470e-832e-3204d45f8bdb
-    m_ActionName: Detached/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: cc311897-409b-455a-a633-c03d2eb7f32c
-    m_ActionName: Detached/MoveVertical[/Keyboard/leftShift,/Keyboard/space]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 960a3911-73e7-4d9f-b384-8a440cb7c3de
-    m_ActionName: Detached/Switch Input Type[/Keyboard/k]
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
---- !u!114 &582458982
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582458976}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3cd911642bb8f24bb1da8b5dd623f9c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vpEnvironment: {fileID: 0}
-  parentSceneChanger: {fileID: 0}
-  playerInstance: {fileID: 0}
-  detachedCamera: {fileID: 0}
---- !u!4 &582458983
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582458976}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 520.112, y: 50.481716, z: 249.81}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &582458984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582458976}
-  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bb3935ca6053e4334983d3f7b819d537, type: 3}
   m_Name: 
@@ -298,7 +160,7 @@ MonoBehaviour:
   enableURP: 0
   debugLevel: 0
   world: {fileID: 11400000, guid: 80cf97423a1cf6b468a1f541d8ee234d, type: 2}
-  enableBuildMode: 1
+  enableBuildMode: 0
   enableGeneration: 1
   constructorMode: 0
   buildMode: 0
@@ -307,10 +169,10 @@ MonoBehaviour:
   renderInEditorDetail: 0
   renderInEditorAreaCenter: {x: 0, y: 0, z: 0}
   renderInEditorAreaSize: {x: 512, y: 64, z: 512}
-  enableConsole: 1
+  enableConsole: 0
   showConsole: 0
-  enableInventory: 1
-  enableDebugWindow: 1
+  enableInventory: 0
+  enableDebugWindow: 0
   showFPS: 0
   welcomeMessage: <color=green>Welcome to <color=white>Voxel Play</color>! Press<color=yellow>
     F1 </color>for console commands.</color>
@@ -321,12 +183,12 @@ MonoBehaviour:
   crosshairPrefab: {fileID: 1788417017974548, guid: 2671eb0d93c054491b765a9afa1c247b, type: 3}
   crosshairTexture: {fileID: 2800000, guid: 51075cdab4f044cae8efbec32eca28b1, type: 3}
   consoleBackgroundColor: {r: 0, g: 0, b: 0, a: 0.32156864}
-  enableStatusBar: 1
+  enableStatusBar: 0
   statusBarBackgroundColor: {r: 0, g: 0, b: 0, a: 0.7529412}
   layerParticles: 2
   layerVoxels: 1
   layerClouds: 1
-  enableLoadingPanel: 1
+  enableLoadingPanel: 0
   loadingText: Initializing...
   initialWaitTime: 0
   initialWaitText: Loading World...
@@ -411,3 +273,18 @@ MonoBehaviour:
   defaultVoxel: {fileID: 11400000, guid: 764590ab8f7e04785a8ac184f4ff675a, type: 2}
   defaultWaterVoxel: {fileID: 11400000, guid: f196cfea1816a4cb6b8e24bea23c4d60, type: 2}
   enableDetailGenerators: 1
+--- !u!4 &1141716949
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1141716947}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

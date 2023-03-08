@@ -4,13 +4,35 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace NonVoxel {
-    public class NonVoxelWorld {
+    public class NonVoxelWorld : MonoBehaviour {
+        [SerializeField] GameObject playerInstance;
+
         private Dictionary<GameObject, Vector3Int> objectToPosition
             = new Dictionary<GameObject, Vector3Int>();
         private Dictionary<Vector3Int, GameObject> positionToObject
             = new Dictionary<Vector3Int, GameObject>();
 
         public HashSet<MonoBehaviour> npcs = new HashSet<MonoBehaviour>();
+
+        void Awake() {
+            DontDestroyOnLoad(gameObject);
+        }
+
+        public void DestroyEntities() {
+            foreach (MonoBehaviour npc in npcs) {
+                npc.enabled = false;
+                Destroy(npc.gameObject);
+            }
+            npcs.Clear();
+
+            foreach (GameObject gameObject in objectToPosition.Keys) {
+                if (gameObject != playerInstance) {
+                    Destroy(gameObject);
+                }
+            }
+            objectToPosition.Clear();
+            positionToObject.Clear();
+        }
 
         public bool IsInWorld(GameObject gameObject) {
             return objectToPosition.ContainsKey(gameObject);
@@ -60,7 +82,8 @@ namespace NonVoxel {
                     for (int z = -1; z < 2; z++) {
                         Vector3Int checkPosition = currPosition + new Vector3Int(x, y, z);
                         if (checkPosition != currPosition && IsPositionOccupied(checkPosition)) {
-                            NPCBehavior npcBehavior = positionToObject[checkPosition].GetComponent<NPCBehavior>();
+                            NPCBehavior npcBehavior = 
+                                positionToObject[checkPosition].GetComponent<NPCBehavior>();
                             if (npcBehavior != null && npcBehavior.IsInteractable()) {
                                 occupiedVoxels.Add(checkPosition);
                             }

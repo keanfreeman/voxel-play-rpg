@@ -6,19 +6,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using VoxelPlay;
 
-public class SpriteMovement
+public class SpriteMovement : MonoBehaviour
 {
-    VoxelPlayEnvironment environment;
-
-    public SpriteMovement(VoxelPlayEnvironment voxelPlayEnvironment) {
-        this.environment = voxelPlayEnvironment;
-    }
+    [SerializeField] private VoxelWorldManager voxelWorldManager;
 
     // returns the direction to move after accounting for slopes, other terrain.
     // disallows movement if there are obstacles.
     // the player is always technically above slopes when traversing them.
     public Vector3Int? GetTerrainAdjustedCoordinate(
             Vector3Int requestedCoordinate, Vector3Int currCoordinate) {
+        VoxelPlayEnvironment environment = voxelWorldManager.environment;
+
         Voxel requestedVoxel = environment.GetVoxel(requestedCoordinate);
         if (requestedVoxel.isEmpty) {
             // check if player can move onto land
@@ -63,6 +61,8 @@ public class SpriteMovement
     }
 
     public bool IsSlope(Voxel voxel) {
+        VoxelPlayEnvironment environment = voxelWorldManager.environment;
+
         VoxelDefinition slopeVoxel = null;
         foreach (VoxelDefinition vd in environment.voxelDefinitions) {
             if (vd != null && vd.name == "SlopeVoxel") {

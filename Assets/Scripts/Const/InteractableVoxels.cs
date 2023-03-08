@@ -10,7 +10,7 @@ public class InteractableVoxels : MonoBehaviour
 
     public HashSet<VoxelDefinition> interactableVoxels { get; private set; }
 
-    public void Start() {
+    public void Awake() {
         this.interactableVoxels = new HashSet<VoxelDefinition>(interactableVoxelsList);
     }
 

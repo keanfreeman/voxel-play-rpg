@@ -11,8 +11,7 @@ public class MainGameUI : MonoBehaviour
     [SerializeField] CombatUI combatUI;
     [SerializeField] DialogueUI dialogueUI;
 
-    void Awake()
-    {
+    void Awake(){
         DontDestroyOnLoad(gameObject);
     }
 

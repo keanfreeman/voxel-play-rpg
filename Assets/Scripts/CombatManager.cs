@@ -3,25 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Combat
+public class CombatManager : MonoBehaviour
 {
-    public NPCBehavior firstCombatant;
-
-    private NonVoxelWorld nonVoxelWorld;
-    private System.Random rng;
-    private Dice dice;
-    private PartyManager partyManager;
-
+    [SerializeField] PartyManager partyManager;
+    [SerializeField] RandomManager randomManager;
+    
+    private NPCBehavior firstCombatant;
     private GameObject playerCombatants;
-
     List<KeyValuePair<int, MonoBehaviour>> initiatives;
 
-    public Combat(NonVoxelWorld nonVoxelWorld, System.Random rng, Dice dice,
-            PartyManager partyManager) {
-        this.nonVoxelWorld = nonVoxelWorld;
-        this.rng = rng;
-        this.dice = dice;
-        this.partyManager = partyManager;
+    private void Awake() {
+        DontDestroyOnLoad(this);
     }
 
     public void RunCombat() {
@@ -29,7 +21,11 @@ public class Combat
             SetCombatantsAndInitiativeOrder();
         }
 
+        // TODO
+    }
 
+    public void SetFirstCombatant(NPCBehavior firstCombatant) {
+        this.firstCombatant = firstCombatant;
     }
 
     private void SetCombatantsAndInitiativeOrder() {
@@ -37,14 +33,14 @@ public class Combat
 
         int playerModifier = StatModifiers.GetModifierForStat(
             partyManager.playerCharacter.stats.dexterity);
-        int playerInitiative = dice.Roll(1, 20, playerModifier);
+        int playerInitiative = randomManager.dice.Roll(1, 20, playerModifier);
         initiatives.Add(new KeyValuePair<int, MonoBehaviour>(playerInitiative,
             partyManager.playerCharacter));
 
         foreach (NPCBehavior npcBehavior in firstCombatant.teammates) {
             int modifier = StatModifiers.GetModifierForStat(
                 npcBehavior.npcInfo.stats.dexterity);
-            int initiative = dice.Roll(1, 20, modifier);
+            int initiative = randomManager.dice.Roll(1, 20, modifier);
             initiatives.Add(new KeyValuePair<int, MonoBehaviour>(initiative, npcBehavior));
         }
 

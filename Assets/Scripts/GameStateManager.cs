@@ -7,50 +7,39 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 using VoxelPlay;
 
-public class PlayerInputContextHandler
+public enum ControlState {
+    FIRST_PERSON,
+    SPRITE_NEUTRAL,
+    DETACHED,
+    DIALOGUE,
+    COMBAT,
+    LOADING
+}
+
+public class GameStateManager : MonoBehaviour
 {
-    public enum ControlState {
-        FIRST_PERSON,
-        SPRITE_NEUTRAL,
-        DETACHED,
-        DIALOGUE,
-        COMBAT,
-        SEQUENCE
+
+    [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private CombatManager combatManager;
+    [SerializeField] private CombatUI combatUI;
+    [SerializeField] private DetachedCamera detachedCamera;
+    [SerializeField] private DialogueUI dialogueUI;
+    [SerializeField] private InputManager inputManager;
+    [SerializeField] private NonVoxelWorld nonVoxelWorld;
+    [SerializeField] private ObjectInkMapping objectInkMapping;
+    [SerializeField] private VoxelWorldManager voxelWorldManager;
+
+    public ControlState controlState { get; set; }
+
+    void Awake() {
+        DontDestroyOnLoad(gameObject);
+        controlState = ControlState.LOADING;
     }
 
-    private ControlState controlState;
-    private PlayerMovement playerMovement;
-    private NonVoxelWorld nonVoxelWorld;
-    private DialogueUI dialogue;
-    private VoxelWorld voxelWorld;
-    private InputManager inputManager;
-    private ObjectInkMapping objectInkMapping;
-    private Combat combat;
-    private DetachedCamera detachedCamera;
-    PartyManager partyManager;
-
-    public PlayerInputContextHandler(PlayerMovement playerMovement, NonVoxelWorld nonVoxelWorld,
-            DialogueUI dialogue, VoxelWorld voxelWorld, InputManager inputManager,
-            ObjectInkMapping objectInkMapping, DetachedCamera detachedCamera,
-            PartyManager partyManager) {
-        this.playerMovement = playerMovement;
-        this.nonVoxelWorld = nonVoxelWorld;
-        this.dialogue = dialogue;
-        this.voxelWorld = voxelWorld;
-        this.inputManager = inputManager;
-        this.objectInkMapping = objectInkMapping;
-        this.detachedCamera = detachedCamera;
-        this.partyManager = partyManager;
-        controlState = ControlState.SPRITE_NEUTRAL;
-
-        System.Random rng = new System.Random();
-        combat = new Combat(nonVoxelWorld, rng, new Dice(rng), partyManager);
-    }
-
-    public void HandlePlayerInput() {
-
+    void Update() {
         switch (controlState) {
             case ControlState.FIRST_PERSON:
                 break;
@@ -59,7 +48,7 @@ public class PlayerInputContextHandler
                 if (!playerMovement.isMoving && !playerMovement.isRotating
                         && npcInCombat != null) {
                     controlState = ControlState.COMBAT;
-                    combat.firstCombatant = npcInCombat;
+                    combatManager.SetFirstCombatant(npcInCombat);
                     return;
                 }
                 bool isTransitioning = playerMovement.HandleMovementControls();
@@ -69,6 +58,7 @@ public class PlayerInputContextHandler
 
                 HandlePlayerPrimaryInput();
                 HandleSwitchInputMode();
+                HandleCombatBar();
                 break;
             case ControlState.DETACHED:
                 detachedCamera.HandleFrame();
@@ -76,16 +66,27 @@ public class PlayerInputContextHandler
                 break;
             case ControlState.DIALOGUE:
                 HandleDialogueContinue();
-                if (!dialogue.isDialogueActive) {
+                if (!dialogueUI.isDialogueActive) {
                     controlState = ControlState.SPRITE_NEUTRAL;
-                    inputManager.SwitchDialogueToPlayerControlState();
+                    inputManager.SwitchUIToPlayerControlState();
                 }
                 break;
             case ControlState.COMBAT:
-                combat.RunCombat();
+                combatManager.RunCombat();
                 break;
             default:
                 break;
+        }
+    }
+
+    private void HandleCombatBar() {
+        if (inputManager.WasOpenCombatBarTriggered()) {
+            inputManager.SwitchPlayerControlStateToUI();
+            combatUI.ApplyFocus();
+        }
+        else if (inputManager.IsInUIMode() && inputManager.WasUICancelTriggered()) {
+            combatUI.RemoveFocus();
+            inputManager.SwitchUIToPlayerControlState();
         }
     }
 
@@ -117,10 +118,6 @@ public class PlayerInputContextHandler
         return null;
     }
 
-    private void HandleNPCsCombat() {
-
-    }
-
     private void HandlePlayerPrimaryInput() {
         if (!inputManager.WasInteractTriggered()) {
             return;
@@ -137,10 +134,10 @@ public class PlayerInputContextHandler
         }
         else {
             List<Vector3d> interactableVoxels = 
-                voxelWorld.GetInteractableAdjacentVoxels(new Vector3d(currPosition));
+                voxelWorldManager.GetInteractableAdjacentVoxels(new Vector3d(currPosition));
             if (interactableVoxels.Count > 0) {
                 Vector3d firstItem = interactableVoxels.First();
-                story = objectInkMapping.GetStoryFromVoxel(voxelWorld.GetVoxelFromPosition(firstItem));
+                story = objectInkMapping.GetStoryFromVoxel(voxelWorldManager.GetVoxelFromPosition(firstItem));
             }
         }
 
@@ -151,9 +148,9 @@ public class PlayerInputContextHandler
 
         Debug.Log("Interactable thing near player.");
         controlState = ControlState.DIALOGUE;
-        inputManager.SwitchPlayerControlStateToDialogue();
+        inputManager.SwitchPlayerControlStateToUI();
 
-        dialogue.StartDialogue(story);
+        dialogueUI.StartDialogue(story);
     }
 
     private void HandleDialogueContinue() {
@@ -161,10 +158,10 @@ public class PlayerInputContextHandler
             return;
         }
 
-        dialogue.HandleInput();
-        if (!dialogue.isDialogueActive) {
+        dialogueUI.HandleInput();
+        if (!dialogueUI.isDialogueActive) {
             controlState = ControlState.SPRITE_NEUTRAL;
-            inputManager.SwitchDialogueToPlayerControlState();
+            inputManager.SwitchUIToPlayerControlState();
         }
     }
 }
