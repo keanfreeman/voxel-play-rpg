@@ -22,10 +22,12 @@ public class DetachedCamera : MonoBehaviour
     private const float ROTATION_SPEED = 100f;
     
     private Vector3Int currVoxel;
+    private Pathfinder pathfinder;
 
     void Awake() {
         DontDestroyOnLoad(gameObject);
         gameObject.SetActive(false);
+        pathfinder = new Pathfinder(spriteMovement);
     }
 
     // move to player, become visible, etc.
@@ -62,7 +64,6 @@ public class DetachedCamera : MonoBehaviour
             Vector3Int start = playerMovement.currVoxel;
             Node startNode = new Node(start);
             Node endNode = new Node(currVoxel);
-            Pathfinder pathfinder = new Pathfinder(spriteMovement);
             List<Vector3Int> path = pathfinder.FindPath(startNode, endNode);
             Debug.Log(path.Count);
             pathVisualizer.DrawPath(path);

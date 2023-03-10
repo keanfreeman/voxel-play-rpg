@@ -9,15 +9,42 @@ public class Pathfinder
     private SpriteMovement spriteMovement;
 
     private const int MAX_PATH_LENGTH = 1000;
+    private const int MAX_SAVED_NODES = 1000000;
 
-    PriorityQueue<Node, float> frontier = new PriorityQueue<Node, float>();
-    Dictionary<Vector3Int, Node> positionToNode = new Dictionary<Vector3Int, Node>();
+    private PriorityQueue<Node, float> frontier = new PriorityQueue<Node, float>();
+    private Dictionary<Vector3Int, Node> positionToNode = new Dictionary<Vector3Int, Node>();
     // keeps track of changed values since we can't update them directly in the priority queue
     private Dictionary<Node, float> changedNodes = new Dictionary<Node, float>();
-    List<Vector3Int> path = new List<Vector3Int>();
+    private List<Vector3Int> path = new List<Vector3Int>();
+    private Vector3Int? previousStartPoint = null;
 
     public Pathfinder(SpriteMovement spriteMovement) {
         this.spriteMovement = spriteMovement;
+    }
+
+    private void ResetStructures(Node start) {
+        if (!previousStartPoint.HasValue) {
+            return;
+        }
+        path.Clear();
+        changedNodes.Clear();
+        frontier.Clear();
+
+        // reuse old nodes so we can reuse their scores
+        if (positionToNode.Count > MAX_SAVED_NODES) {
+            positionToNode.Clear();
+        }
+        else if (previousStartPoint.Value == start.position) {
+            foreach (Node node in positionToNode.Values) {
+                node.visited = false;
+                node.heuristicScore = float.MaxValue;
+            }
+        }
+        else {
+            positionToNode.Clear();
+        }
+
+        Debug.Log($"Reusing {positionToNode.Count} nodes.");
     }
 
     public List<Vector3Int> FindPath(Node start, Node end) {
@@ -27,6 +54,9 @@ public class Pathfinder
             Debug.Log("End position isn't reachable.");
             return path;
         }
+
+        ResetStructures(start);
+        previousStartPoint = start.position;
 
         start.score = 0;
         start.heuristicScore = 0;
@@ -51,28 +81,35 @@ public class Pathfinder
             currNode.visited = true;
 
             // get neighbors of current node
-            foreach (Vector3Int coordinate in Coordinates.GetAdjacentCoordinates(currNode.position)) {
-                Node neighbor;
-                if (!positionToNode.ContainsKey(coordinate)) {
-                    neighbor = new Node(coordinate);
-                    positionToNode[coordinate] = neighbor;
+            if (currNode.neighbors.Count == 0) {
+                foreach (Vector3Int coordinate in Coordinates.GetAdjacentCoordinates(currNode.position)) {
+                    Node neighbor;
+                    if (!positionToNode.ContainsKey(coordinate)) {
+                        neighbor = new Node(coordinate);
+                        positionToNode[coordinate] = neighbor;
+                    }
+                    neighbor = positionToNode[coordinate];
+                    currNode.neighbors.Add(neighbor);
                 }
-                neighbor = positionToNode[coordinate];
-                currNode.neighbors.Add(neighbor);
+            }
 
-                // update neighbor costs
+            // update neighbor costs
+            foreach (Node neighbor in currNode.neighbors) {
                 if (!neighbor.visited) {
                     float newScore = CalculateDistance(currNode, neighbor) + currNode.score;
-                    if (newScore < neighbor.score) {
+                    if (newScore <= neighbor.score) {
+                        float oldScore = neighbor.score;
                         neighbor.score = newScore;
                         neighbor.heuristicScore = neighbor.score + CalculateDirectLineLength(neighbor, end);
                         neighbor.prevNode = currNode;
 
-                        // priority has changed
-                        if (!changedNodes.ContainsKey(neighbor)) {
-                            changedNodes[neighbor] = float.MaxValue;
+                        // update the value in the priority queue
+                        if (oldScore != newScore) {
+                            if (!changedNodes.ContainsKey(neighbor)) {
+                                changedNodes[neighbor] = float.MaxValue;
+                            }
+                            changedNodes[neighbor] = neighbor.heuristicScore;
                         }
-                        changedNodes[neighbor] = neighbor.heuristicScore;
                     }
                     frontier.Enqueue(neighbor, neighbor.heuristicScore);
                 }
