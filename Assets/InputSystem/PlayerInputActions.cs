@@ -331,6 +331,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Select"",
+                    ""type"": ""Button"",
+                    ""id"": ""b96f9336-3a42-4cde-ae15-40d6502f2d23"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -553,6 +562,28 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""RotateCamera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""92074e99-07b5-49bb-a110-dd9ae6d4941b"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f4f30f20-a611-4366-bd24-fdc023a8dd15"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -807,6 +838,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Detached_MoveVertical = m_Detached.FindAction("MoveVertical", throwIfNotFound: true);
         m_Detached_SwitchInputType = m_Detached.FindAction("Switch Input Type", throwIfNotFound: true);
         m_Detached_RotateCamera = m_Detached.FindAction("RotateCamera", throwIfNotFound: true);
+        m_Detached_Select = m_Detached.FindAction("Select", throwIfNotFound: true);
         // UINavigation
         m_UINavigation = asset.FindActionMap("UINavigation", throwIfNotFound: true);
         m_UINavigation_Navigate = m_UINavigation.FindAction("Navigate", throwIfNotFound: true);
@@ -956,6 +988,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Detached_MoveVertical;
     private readonly InputAction m_Detached_SwitchInputType;
     private readonly InputAction m_Detached_RotateCamera;
+    private readonly InputAction m_Detached_Select;
     public struct DetachedActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -964,6 +997,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @MoveVertical => m_Wrapper.m_Detached_MoveVertical;
         public InputAction @SwitchInputType => m_Wrapper.m_Detached_SwitchInputType;
         public InputAction @RotateCamera => m_Wrapper.m_Detached_RotateCamera;
+        public InputAction @Select => m_Wrapper.m_Detached_Select;
         public InputActionMap Get() { return m_Wrapper.m_Detached; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -985,6 +1019,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @RotateCamera.started -= m_Wrapper.m_DetachedActionsCallbackInterface.OnRotateCamera;
                 @RotateCamera.performed -= m_Wrapper.m_DetachedActionsCallbackInterface.OnRotateCamera;
                 @RotateCamera.canceled -= m_Wrapper.m_DetachedActionsCallbackInterface.OnRotateCamera;
+                @Select.started -= m_Wrapper.m_DetachedActionsCallbackInterface.OnSelect;
+                @Select.performed -= m_Wrapper.m_DetachedActionsCallbackInterface.OnSelect;
+                @Select.canceled -= m_Wrapper.m_DetachedActionsCallbackInterface.OnSelect;
             }
             m_Wrapper.m_DetachedActionsCallbackInterface = instance;
             if (instance != null)
@@ -1001,6 +1038,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @RotateCamera.started += instance.OnRotateCamera;
                 @RotateCamera.performed += instance.OnRotateCamera;
                 @RotateCamera.canceled += instance.OnRotateCamera;
+                @Select.started += instance.OnSelect;
+                @Select.performed += instance.OnSelect;
+                @Select.canceled += instance.OnSelect;
             }
         }
     }
@@ -1070,6 +1110,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnMoveVertical(InputAction.CallbackContext context);
         void OnSwitchInputType(InputAction.CallbackContext context);
         void OnRotateCamera(InputAction.CallbackContext context);
+        void OnSelect(InputAction.CallbackContext context);
     }
     public interface IUINavigationActions
     {

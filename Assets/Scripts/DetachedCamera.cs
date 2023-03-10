@@ -13,6 +13,7 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] private InputManager inputManager;
     [SerializeField] private VoxelWorldManager voxelWorldManager;
     [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private SpriteMovement spriteMovement;
 
     private const float SPEED_MULTIPLIER = 6.0f;
     private const float VOXEL_CHANGE_DISTANCE = 0.51f;
@@ -55,6 +56,16 @@ public class DetachedCamera : MonoBehaviour
         }
         RotateCursor();
         MoveCursor();
+
+        if (inputManager.WasSelectTriggered()) {
+            Vector3Int start = playerMovement.currVoxel;
+            Node startNode = new Node(start);
+            Node endNode = new Node(currVoxel);
+            Pathfinder pathfinder = new Pathfinder(voxelWorldManager.environment,
+                spriteMovement);
+            List<Vector3Int> path = pathfinder.FindPath(startNode, endNode);
+            Debug.Log(path.Count);
+        }
     }
 
     private void MoveCursor() {

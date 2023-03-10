@@ -70,6 +70,10 @@ public class InputManager : MonoBehaviour
         return playerInputActions.Detached.RotateCamera.ReadValue<Vector2>().x;
     }
 
+    public bool WasSelectTriggered() {
+        return playerInputActions.Detached.Select.triggered;
+    }
+
     // DIALOGUE
 
     public bool WasContinueTriggered() {
