@@ -6,7 +6,6 @@ using VoxelPlay;
 
 public class Pathfinder
 {
-    private VoxelPlayEnvironment environment;
     private SpriteMovement spriteMovement;
 
     private const int MAX_PATH_LENGTH = 1000;
@@ -17,8 +16,7 @@ public class Pathfinder
     private Dictionary<Node, float> changedNodes = new Dictionary<Node, float>();
     List<Vector3Int> path = new List<Vector3Int>();
 
-    public Pathfinder(VoxelPlayEnvironment environment, SpriteMovement spriteMovement) {
-        this.environment = environment;
+    public Pathfinder(SpriteMovement spriteMovement) {
         this.spriteMovement = spriteMovement;
     }
 
@@ -37,11 +35,13 @@ public class Pathfinder
         positionToNode[start.position] = start;
 
         Node currNode;
+        int numLoops = 0;
         while (true) {
-            if (frontier.Count > 10000) {
-                Debug.Log("Ran into infinite path");
+            if (numLoops > 10000) {
+                Debug.LogError("Ran into infinite loop");
                 return path;
             }
+            numLoops += 1;
 
             currNode = GetLowestHeuristicScoreUnvisited();
             if (currNode == null || currNode.score >= MAX_PATH_LENGTH) {
@@ -62,10 +62,10 @@ public class Pathfinder
 
                 // update neighbor costs
                 if (!neighbor.visited) {
-                    float distanceToNeighbor = CalculateScore(currNode, neighbor);
-                    if (distanceToNeighbor < neighbor.score) {
-                        neighbor.score = distanceToNeighbor;
-                        neighbor.heuristicScore = neighbor.score + CalculateHeuristicScore(neighbor, end);
+                    float newScore = CalculateDistance(currNode, neighbor) + currNode.score;
+                    if (newScore < neighbor.score) {
+                        neighbor.score = newScore;
+                        neighbor.heuristicScore = neighbor.score + CalculateDirectLineLength(neighbor, end);
                         neighbor.prevNode = currNode;
 
                         // priority has changed
@@ -91,14 +91,14 @@ public class Pathfinder
         }
     }
 
-    private float CalculateScore(Node node1, Node node2) {
+    private float CalculateDistance(Node node1, Node node2) {
         if (spriteMovement.IsATraversibleFromB(node2.position, node1.position)) {
-            return Mathf.Abs((node2.position - node1.position).magnitude);
+            return CalculateDirectLineLength(node2, node1);
         }
         return float.MaxValue;
     }
 
-    private float CalculateHeuristicScore(Node curr, Node end) {
+    private float CalculateDirectLineLength(Node curr, Node end) {
         return Mathf.Abs((end.position - curr.position).magnitude);
     }
 

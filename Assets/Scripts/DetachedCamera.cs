@@ -14,6 +14,7 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] private VoxelWorldManager voxelWorldManager;
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private SpriteMovement spriteMovement;
+    [SerializeField] private PathVisualizer pathVisualizer;
 
     private const float SPEED_MULTIPLIER = 6.0f;
     private const float VOXEL_CHANGE_DISTANCE = 0.51f;
@@ -61,10 +62,10 @@ public class DetachedCamera : MonoBehaviour
             Vector3Int start = playerMovement.currVoxel;
             Node startNode = new Node(start);
             Node endNode = new Node(currVoxel);
-            Pathfinder pathfinder = new Pathfinder(voxelWorldManager.environment,
-                spriteMovement);
+            Pathfinder pathfinder = new Pathfinder(spriteMovement);
             List<Vector3Int> path = pathfinder.FindPath(startNode, endNode);
             Debug.Log(path.Count);
+            pathVisualizer.DrawPath(path);
         }
     }
 
