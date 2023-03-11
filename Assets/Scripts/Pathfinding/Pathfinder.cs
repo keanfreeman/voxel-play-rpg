@@ -118,10 +118,10 @@ public class Pathfinder
             if (currNode.position == end.position) {
                 Debug.Log("Finished path");
                 while (true) {
-                    path.Add(currNode.position);
-                    if (currNode.prevNode == null) {
+                    if (currNode.position == start.position) {
                         return path;
                     }
+                    path.Add(currNode.position);
                     currNode = currNode.prevNode;
                 }
             }

@@ -53,7 +53,7 @@ public class PlayerMovement : MonoBehaviour {
     public void HaltMovement() {
         StopAllCoroutines();
         isMoving = false;
-        animator.SetBool("isMoving", isMoving);
+        SetMoveAnimation(isMoving);
     }
 
     public void SetCameraState(bool newState) {
@@ -80,7 +80,7 @@ public class PlayerMovement : MonoBehaviour {
         //}
         SpriteMoveDirection requestedDirection = inputManager.moveDirection;
         if (requestedDirection == SpriteMoveDirection.NONE) {
-            animator.SetBool("isMoving", isMoving);
+            SetMoveAnimation(isMoving);
             return;
         }
         //else if (Input.GetKey(KeyCode.Q)) {
@@ -112,14 +112,18 @@ public class PlayerMovement : MonoBehaviour {
         }
         Vector3Int destinationCoordinate = actualCoordinate.GetValueOrDefault();
 
-        if (nonVoxelWorld.IsPositionOccupied(destinationCoordinate)) {
+        TryMoveToPoint(destinationCoordinate);
+    }
+
+    public void TryMoveToPoint(Vector3Int point) {
+        if (nonVoxelWorld.IsPositionOccupied(point)) {
             Debug.Log("Tried to move into a non-voxel-occupied space.");
             return;
         }
-        nonVoxelWorld.SetPosition(gameObject, destinationCoordinate);
+        nonVoxelWorld.SetPosition(gameObject, point);
         moveStartPoint = currVoxel;
-        moveEndPoint = destinationCoordinate;
-        currVoxel = destinationCoordinate;
+        moveEndPoint = point;
+        currVoxel = point;
         isMoving = true;
         animator.SetBool("isMoving", isMoving);
         moveStartTimestamp = Time.time;
@@ -243,12 +247,16 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     // returns true when the transition is done
-    private bool IsMoveTransitionDone() {
+    public bool IsMoveTransitionDone() {
         float timeSinceMoveBegan = Time.time - moveStartTimestamp;
         float sprintMultiplier = isSprinting ? SPRINT_SPEEDUP : 1;
         float fractionOfMovementDone = timeSinceMoveBegan * sprintMultiplier / (TIME_TO_MOVE_A_TILE);
         float linearFriendlyFraction = Mathf.Min(fractionOfMovementDone, 1f);
         transform.position = Vector3.Lerp(moveStartPoint, moveEndPoint, linearFriendlyFraction);
         return linearFriendlyFraction >= 1f;
+    }
+
+    public void SetMoveAnimation(bool state) {
+        animator.SetBool("isMoving", state);
     }
 }

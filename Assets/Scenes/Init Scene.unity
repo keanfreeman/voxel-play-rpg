@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.8039578, g: 0.7774757, b: 0.9176081, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -128,6 +128,51 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8632896763368513787, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
   m_PrefabInstance: {fileID: 1860741821}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &104703754
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 104703755}
+  - component: {fileID: 104703756}
+  m_Layer: 0
+  m_Name: MovementManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &104703755
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104703754}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.5, y: 44.56, z: 85.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &104703756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104703754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2001cb588e9423349bc5f33cba8549da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pathVisualizer: {fileID: 2106943938}
 --- !u!1001 &230091286
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -553,6 +598,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1823400833}
     - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
+      propertyPath: movementManager
+      value: 
+      objectReference: {fileID: 104703756}
+    - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
       propertyPath: voxelWorldManager
       value: 
       objectReference: {fileID: 1568004907}
@@ -938,6 +987,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   voxelWorldManager: {fileID: 1568004907}
+  nonVoxelWorld: {fileID: 1135948956}
 --- !u!1001 &1860741821
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -9,48 +9,40 @@ using VoxelPlay;
 public class SpriteMovement : MonoBehaviour
 {
     [SerializeField] private VoxelWorldManager voxelWorldManager;
+    [SerializeField] private NonVoxelWorld nonVoxelWorld;
 
     // can the player walk on this voxel?
-    public bool IsWalkableVoxel(Voxel voxel) {
+    public bool IsWalkablePosition(Vector3Int position) {
+        Voxel voxel = voxelWorldManager.environment.GetVoxel(position);
         return !voxel.isEmpty && !voxel.hasWater;
     }
 
     // can the player walk through this voxel?
-    public bool IsTraversibleVoxel(Voxel voxel) {
-        return voxel.isEmpty || voxel.hasWater;
+    public bool IsTraversiblePosition(Vector3Int position) {
+        Voxel voxel = voxelWorldManager.environment.GetVoxel(position);
+        return (voxel.isEmpty || voxel.hasWater) && !nonVoxelWorld.IsPositionOccupied(position);
     }
 
     public bool IsReachablePosition(Vector3Int position) {
-        VoxelPlayEnvironment environment = voxelWorldManager.environment;
-        Voxel requestedVoxel = environment.GetVoxel(position);
-
         Vector3Int belowRequestedCoordinate = position + Vector3Int.down;
-        Voxel belowRequestedVoxel = environment.GetVoxel(belowRequestedCoordinate);
-        return IsTraversibleVoxel(requestedVoxel) && IsWalkableVoxel(belowRequestedVoxel);
+        return IsTraversiblePosition(position) && IsWalkablePosition(belowRequestedCoordinate);
     }
 
     // A must be 1 voxel from B
     public bool IsATraversibleFromB(Vector3Int requestedCoordinate, Vector3Int startCoordinate) {
-        VoxelPlayEnvironment environment = voxelWorldManager.environment;
-
-        Voxel requestedVoxel = environment.GetVoxel(requestedCoordinate);
-
         Vector3Int distance = requestedCoordinate - startCoordinate;
         Vector3Int belowRequestedCoordinate = requestedCoordinate + Vector3Int.down;
-        Voxel belowRequestedVoxel = environment.GetVoxel(belowRequestedCoordinate);
-        if (!IsTraversibleVoxel(requestedVoxel) || !IsWalkableVoxel(belowRequestedVoxel)) {
+        if (!IsTraversiblePosition(requestedCoordinate) || !IsWalkablePosition(belowRequestedCoordinate)) {
             return false;
         }
 
         if (distance.y == 1) {
             Vector3Int abovePlayerCoordinate = startCoordinate + Vector3Int.up;
-            Voxel abovePlayerVoxel = environment.GetVoxel(abovePlayerCoordinate);
-            return IsTraversibleVoxel(abovePlayerVoxel);
+            return IsTraversiblePosition(abovePlayerCoordinate);
         }
         else if (distance.y == -1) {
-            Vector3Int aboveRequestedVoxelCoordinate = requestedCoordinate + Vector3Int.up;
-            Voxel aboveRequestedVoxel = environment.GetVoxel(aboveRequestedVoxelCoordinate);
-            return IsTraversibleVoxel(aboveRequestedVoxel);
+            Vector3Int aboveRequestedCoordinate = requestedCoordinate + Vector3Int.up;
+            return IsTraversiblePosition(aboveRequestedCoordinate);
         }
         return true;
     }
@@ -63,27 +55,25 @@ public class SpriteMovement : MonoBehaviour
         VoxelPlayEnvironment environment = voxelWorldManager.environment;
 
         Voxel requestedVoxel = environment.GetVoxel(requestedCoordinate);
-        if (IsTraversibleVoxel(requestedVoxel)) {
+        if (IsTraversiblePosition(requestedCoordinate)) {
             // check if player can move onto land
             Vector3Int belowRequestedCoordinate = requestedCoordinate + Vector3Int.down;
-            Voxel belowRequestedVoxel = environment.GetVoxel(belowRequestedCoordinate);
-            if (IsWalkableVoxel(belowRequestedVoxel)) {
+            if (IsWalkablePosition(belowRequestedCoordinate)) {
                 return requestedCoordinate;
             }
 
             // check if player can move down slope to solid tile
             Voxel underfootVoxel = environment.GetVoxel(currCoordinate + Vector3Int.down);
-            Voxel twoBelowAheadVoxel = environment.GetVoxel(belowRequestedCoordinate
-                + Vector3Int.down);
             if (IsSlope(underfootVoxel)
                 && IsSlopeDownRelativeToSprite(requestedCoordinate, currCoordinate,
                     underfootVoxel.GetTextureRotation())
-                && IsWalkableVoxel(twoBelowAheadVoxel)) {
+                && IsWalkablePosition(belowRequestedCoordinate + Vector3Int.down)) {
                 return requestedCoordinate + Vector3Int.down;
             }
 
             // check if the player can jump down 1 tile
-            if (IsTraversibleVoxel(belowRequestedVoxel) && IsWalkableVoxel(twoBelowAheadVoxel)) {
+            if (IsTraversiblePosition(belowRequestedCoordinate)
+                    && IsWalkablePosition(belowRequestedCoordinate + Vector3Int.down)) {
                 return requestedCoordinate + Vector3Int.down;
             }
         }
@@ -96,8 +86,7 @@ public class SpriteMovement : MonoBehaviour
 
         // check if the player can jump up 1 tile
         Vector3Int aboveRequestedCoordinate = requestedCoordinate + Vector3Int.up;
-        Voxel aboveRequestedVoxel = environment.GetVoxel(aboveRequestedCoordinate);
-        if (IsWalkableVoxel(requestedVoxel) && IsTraversibleVoxel(aboveRequestedVoxel)) {
+        if (IsWalkablePosition(requestedCoordinate) && IsTraversiblePosition(aboveRequestedCoordinate)) {
             return requestedCoordinate + Vector3Int.up;
         }
 

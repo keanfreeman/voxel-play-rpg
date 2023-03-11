@@ -25,4 +25,13 @@ public class PathVisualizer : MonoBehaviour
             );
         }
     }
+
+    public void DestroyNearestMarker() {
+        if (pathMarkers.Count < 1) {
+            return;
+        }
+        int lastIndex = pathMarkers.Count - 1;
+        Destroy(pathMarkers[lastIndex]);
+        pathMarkers.RemoveAt(lastIndex);
+    }
 }

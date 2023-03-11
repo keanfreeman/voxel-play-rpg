@@ -15,6 +15,7 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private SpriteMovement spriteMovement;
     [SerializeField] private PathVisualizer pathVisualizer;
+    [SerializeField] private MovementManager movementManager;
 
     private const float SPEED_MULTIPLIER = 6.0f;
     private const float VOXEL_CHANGE_DISTANCE = 0.51f;
@@ -67,6 +68,8 @@ public class DetachedCamera : MonoBehaviour
             List<Vector3Int> path = pathfinder.FindPath(startNode, endNode);
             Debug.Log(path.Count);
             pathVisualizer.DrawPath(path);
+
+            movementManager.MoveAlongPath(playerMovement, path);
         }
     }
 
