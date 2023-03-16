@@ -8,7 +8,7 @@ using UnityEngine;
 using VoxelPlay;
 
 // moves around randomly
-public class NPCBehavior : MonoBehaviour
+public class NPCBehavior : Traveller
 {
     [SerializeField]
     const float TIME_TO_ROTATE = 0.5f;
@@ -17,7 +17,6 @@ public class NPCBehavior : MonoBehaviour
 
     private System.Random rng;
     private VoxelPlayEnvironment voxelPlayEnvironment;
-    private NonVoxelWorld nonVoxelWorld;
     private SpriteMovement spriteMovement;
     private Transform childTransform;
 
@@ -37,9 +36,9 @@ public class NPCBehavior : MonoBehaviour
         childTransform = transform.GetChild(0);
     }
 
-    void Update() {
-        HandleCameraRotation();
-    }
+    //void Update() {
+    //    HandleCameraRotation();
+    //}
     
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.tag == "Player") {
@@ -54,11 +53,8 @@ public class NPCBehavior : MonoBehaviour
         this.voxelPlayEnvironment = voxelPlayEnvironment;
         this.rng = rng;
         this.npcInfo = npcInfo;
-    }
 
-    private void MoveSprite(Vector3Int position) {
-        nonVoxelWorld.SetPosition(gameObject, position);
-        transform.position = position;
+        currVoxel = nonVoxelWorld.GetPosition(gameObject);
     }
 
     public Vector3Int GetRandomOneTileMovement() {
@@ -75,19 +71,17 @@ public class NPCBehavior : MonoBehaviour
         }
         lastMoveTime = Time.time;
 
-        Vector3Int currPosition = nonVoxelWorld.GetPosition(gameObject);
-        Vector3Int newPosition = nonVoxelWorld.GetPosition(gameObject)
-            + GetRandomOneTileMovement();
+        Vector3Int newPosition = currVoxel + GetRandomOneTileMovement();
         Vector3Int? actualCoordinate = spriteMovement.GetTerrainAdjustedCoordinate(
-            newPosition, currPosition);
+            newPosition, currVoxel);
         if (!actualCoordinate.HasValue) {
             return;
         }
         Vector3Int destinationCoordinate = actualCoordinate.GetValueOrDefault();
 
         if (!nonVoxelWorld.IsPositionOccupied(destinationCoordinate)
-            && voxelPlayEnvironment.GetVoxel(destinationCoordinate).isEmpty) {
-            MoveSprite(destinationCoordinate);
+                && spriteMovement.IsReachablePosition(destinationCoordinate)) {
+            MoveToPoint(destinationCoordinate);
         }
     }
 

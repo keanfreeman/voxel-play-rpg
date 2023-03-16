@@ -109,7 +109,6 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
-    // returns true if combat started
     private NPCBehavior HandleNPCsFreeMovement() {
         foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
             if (npc.encounteredPlayer) {

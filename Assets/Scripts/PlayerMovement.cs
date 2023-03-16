@@ -7,33 +7,22 @@ using MovementDirection;
 using UnityEngine.ProBuilder;
 using NonVoxel;
 using UnityEngine.InputSystem;
+using System.Drawing;
 
-public class PlayerMovement : MonoBehaviour {
+public class PlayerMovement : Traveller {
     // CONST
     [SerializeField]
     const float TIME_TO_ROTATE = 0.5f;
-    [SerializeField]
-    const float TIME_TO_MOVE_A_TILE = 0.2f;
-    [SerializeField]
-    const float SPRINT_SPEEDUP = 2f;
 
     [SerializeField] public Camera playerCamera;
     [SerializeField] public GameObject voxelHideTarget;
     [SerializeField] private Transform spriteChildTransform;
-    [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private NonVoxelWorld nonVoxelWorld;
     [SerializeField] private InputManager inputManager;
     [SerializeField] private SpriteMovement spriteMovement;
 
     // STATE
-    public bool isMoving = false;
     bool isFacingRight = false;
-    bool isSprinting = false;
-    float moveStartTimestamp;
-    Vector3 moveStartPoint;
-    Vector3 moveEndPoint;
-    public Vector3Int currVoxel { get; private set; }
 
     public bool isRotating;
     float rotateStartTimestamp;
@@ -44,10 +33,6 @@ public class PlayerMovement : MonoBehaviour {
     void Awake() {
         DontDestroyOnLoad(gameObject);
         moveStartTimestamp = Time.time;
-    }
-
-    public void SetCurrVoxel(Vector3Int currVoxel) {
-        this.currVoxel = currVoxel;
     }
 
     public void HaltMovement() {
@@ -69,26 +54,14 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     public void HandleMovement() {
-        if (isRotating || (isMoving && !IsMoveTransitionDone())) {
+        if (isMoving || isRotating) {
             return;
         }
-        isMoving = false;
-        isSprinting = false;
-
-        //if (Input.GetKey(KeyCode.LeftShift)) {
-        //    isSprinting = true;
-        //}
         SpriteMoveDirection requestedDirection = inputManager.moveDirection;
         if (requestedDirection == SpriteMoveDirection.NONE) {
             SetMoveAnimation(isMoving);
             return;
         }
-        //else if (Input.GetKey(KeyCode.Q)) {
-        //    requestedDirection = SpriteMoveDirection.UP;
-        //}
-        //else if (Input.GetKey(KeyCode.E)) {
-        //    requestedDirection = SpriteMoveDirection.DOWN;
-        //}
 
         // make player sprite face the direction they asked for
         if (requestedDirection == SpriteMoveDirection.RIGHT) {
@@ -111,22 +84,11 @@ public class PlayerMovement : MonoBehaviour {
             return;
         }
         Vector3Int destinationCoordinate = actualCoordinate.GetValueOrDefault();
-
-        TryMoveToPoint(destinationCoordinate);
-    }
-
-    public void TryMoveToPoint(Vector3Int point) {
-        if (nonVoxelWorld.IsPositionOccupied(point)) {
+        if (nonVoxelWorld.IsPositionOccupied(destinationCoordinate)) {
             Debug.Log("Tried to move into a non-voxel-occupied space.");
             return;
         }
-        nonVoxelWorld.SetPosition(gameObject, point);
-        moveStartPoint = currVoxel;
-        moveEndPoint = point;
-        currVoxel = point;
-        isMoving = true;
-        animator.SetBool("isMoving", isMoving);
-        moveStartTimestamp = Time.time;
+        MoveToPoint(destinationCoordinate);
     }
 
     private SpriteMoveDirection CameraAdjustedPlayerMove(SpriteMoveDirection moveDirection,
@@ -244,19 +206,5 @@ public class PlayerMovement : MonoBehaviour {
         spriteChildTransform.transform.rotation = Quaternion.Lerp(startRotation, endRotation, fractionRotationComplete);
 
         return fractionRotationComplete == 1;
-    }
-
-    // returns true when the transition is done
-    public bool IsMoveTransitionDone() {
-        float timeSinceMoveBegan = Time.time - moveStartTimestamp;
-        float sprintMultiplier = isSprinting ? SPRINT_SPEEDUP : 1;
-        float fractionOfMovementDone = timeSinceMoveBegan * sprintMultiplier / (TIME_TO_MOVE_A_TILE);
-        float linearFriendlyFraction = Mathf.Min(fractionOfMovementDone, 1f);
-        transform.position = Vector3.Lerp(moveStartPoint, moveEndPoint, linearFriendlyFraction);
-        return linearFriendlyFraction >= 1f;
-    }
-
-    public void SetMoveAnimation(bool state) {
-        animator.SetBool("isMoving", state);
     }
 }

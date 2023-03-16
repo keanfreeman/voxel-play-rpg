@@ -47,8 +47,10 @@ public class Pathfinder
         Debug.Log($"Reusing {positionToNode.Count} nodes.");
     }
 
-    public List<Vector3Int> FindPath(Node start, Node end) {
-        Debug.Log($"Finding path to {end.position}");
+    public List<Vector3Int> FindPath(Vector3Int startPosition, Vector3Int endPosition) {
+        Debug.Log($"Finding path to {endPosition}");
+        Node start = new Node(startPosition);
+        Node end = new Node(endPosition);
 
         if (!spriteMovement.IsReachablePosition(end.position)) {
             Debug.Log("End position isn't reachable.");

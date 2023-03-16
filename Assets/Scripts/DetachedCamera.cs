@@ -1,3 +1,4 @@
+using NonVoxel;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] private SpriteMovement spriteMovement;
     [SerializeField] private PathVisualizer pathVisualizer;
     [SerializeField] private MovementManager movementManager;
+    [SerializeField] private NonVoxelWorld nonVoxelWorld;
 
     private const float SPEED_MULTIPLIER = 6.0f;
     private const float VOXEL_CHANGE_DISTANCE = 0.51f;
@@ -24,11 +26,13 @@ public class DetachedCamera : MonoBehaviour
     
     private Vector3Int currVoxel;
     private Pathfinder pathfinder;
+    private Traveller currTraveller;
 
     void Awake() {
         DontDestroyOnLoad(gameObject);
         gameObject.SetActive(false);
         pathfinder = new Pathfinder(spriteMovement);
+        currTraveller = playerMovement;
     }
 
     // move to player, become visible, etc.
@@ -60,17 +64,7 @@ public class DetachedCamera : MonoBehaviour
         }
         RotateCursor();
         MoveCursor();
-
-        if (inputManager.WasSelectTriggered()) {
-            Vector3Int start = playerMovement.currVoxel;
-            Node startNode = new Node(start);
-            Node endNode = new Node(currVoxel);
-            List<Vector3Int> path = pathfinder.FindPath(startNode, endNode);
-            Debug.Log(path.Count);
-            pathVisualizer.DrawPath(path);
-
-            movementManager.MoveAlongPath(playerMovement, path);
-        }
+        HandleSelect();
     }
 
     private void MoveCursor() {
@@ -120,5 +114,26 @@ public class DetachedCamera : MonoBehaviour
             currVoxel += deviation.z > 0 ? Vector3Int.back : Vector3Int.forward;
         }
         return movedVoxels;
+    }
+
+    private void HandleSelect() {
+        if (!inputManager.WasSelectTriggered()) {
+            return;
+        }
+        if (nonVoxelWorld.IsPositionOccupied(currVoxel)) {
+            // select the entity
+            GameObject gameObject = nonVoxelWorld.GetObjectFromPosition(currVoxel);
+            Traveller traveller = gameObject.GetComponent<Traveller>();
+            if (traveller != null) {
+                currTraveller = traveller;
+                Debug.Log($"Selected traveller for the detached camera at {traveller.currVoxel}");
+            }
+        }
+        else {
+            // move currently selected to target
+            List<Vector3Int> path = pathfinder.FindPath(currTraveller.currVoxel, currVoxel);
+            pathVisualizer.DrawPath(path);
+            movementManager.MoveAlongPath(currTraveller, path);
+        }
     }
 }

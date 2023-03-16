@@ -6,7 +6,7 @@ public class MovementManager : MonoBehaviour
 {
     [SerializeField] PathVisualizer pathVisualizer;
 
-    private PlayerMovement movedEntity;
+    private Traveller traveller;
     private List<Vector3Int> path;
     private Vector3Int? currDestination = null;
 
@@ -14,9 +14,9 @@ public class MovementManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void MoveAlongPath(PlayerMovement monoBehaviour, List<Vector3Int> path) {
+    public void MoveAlongPath(Traveller traveller, List<Vector3Int> path) {
         // todo make generic so NPCs can move
-        movedEntity = monoBehaviour;
+        this.traveller = traveller;
         this.path = path;
         StartCoroutine(MoveEntity());
     }
@@ -29,19 +29,17 @@ public class MovementManager : MonoBehaviour
                 path.RemoveAt(lastIndex);
             }
 
-            if (!movedEntity.isMoving) {
-                movedEntity.TryMoveToPoint(currDestination.Value);
-                
+            if (!traveller.isMoving) {
+                traveller.MoveToPoint(currDestination.Value);
                 pathVisualizer.DestroyNearestMarker();
             }
 
-            while (!movedEntity.IsMoveTransitionDone()) {
+            while (traveller.isMoving) {
                 yield return null;
             }
-            movedEntity.isMoving = false;
             currDestination = null;
         }
 
-        movedEntity.SetMoveAnimation(false);
+        traveller.SetMoveAnimation(false);
     }
 }
