@@ -12,10 +12,6 @@ public class CombatManager : MonoBehaviour
     private GameObject playerCombatants;
     List<KeyValuePair<int, MonoBehaviour>> initiatives;
 
-    private void Awake() {
-        DontDestroyOnLoad(this);
-    }
-
     public void RunCombat() {
         if (initiatives == null) {
             SetCombatantsAndInitiativeOrder();

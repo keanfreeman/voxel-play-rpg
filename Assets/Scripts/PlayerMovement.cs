@@ -10,25 +10,17 @@ using UnityEngine.InputSystem;
 using System.Drawing;
 
 public class PlayerMovement : Traveller {
-    // CONST
-    [SerializeField]
-    const float TIME_TO_ROTATE = 0.5f;
-
-    [SerializeField] public Camera playerCamera;
     [SerializeField] public GameObject voxelHideTarget;
-    [SerializeField] private Transform spriteChildTransform;
+    [SerializeField] private Transform rotationTransform;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private InputManager inputManager;
     [SerializeField] private SpriteMovement spriteMovement;
+    [SerializeField] private CameraManager cameraManager;
 
     // STATE
     bool isFacingRight = false;
 
-    public bool isRotating;
-    float rotateStartTimestamp;
-    Quaternion startRotation;
-    Quaternion endRotation;
-    PlayerCameraDirection playerCameraDirection = PlayerCameraDirection.NORTH;
+    public PlayerCameraDirection playerCameraDirection = PlayerCameraDirection.NORTH;
 
     void Awake() {
         DontDestroyOnLoad(gameObject);
@@ -41,20 +33,15 @@ public class PlayerMovement : Traveller {
         SetMoveAnimation(isMoving);
     }
 
-    public void SetCameraState(bool newState) {
-        playerCamera.enabled = newState;
-    }
-
     // returns true if we need to freeze other controls while moving/rotating
     public bool HandleMovementControls() {
         HandleMovement();
-        HandleCameraRotation();
 
-        return isRotating || isMoving;
+        return isMoving || cameraManager.isRotating;
     }
 
     public void HandleMovement() {
-        if (isMoving || isRotating) {
+        if (isMoving || cameraManager.isRotating) {
             return;
         }
         SpriteMoveDirection requestedDirection = inputManager.moveDirection;
@@ -144,67 +131,54 @@ public class PlayerMovement : Traveller {
             || playerCameraDirection == PlayerCameraDirection.SOUTH && enumName.StartsWith("RIGHT");
     }
 
-    private void HandleCameraRotation() {
-        if (isMoving || (isRotating && !IsRotationDone())) {
-            return;
-        }
-        isRotating = false;
-        startRotation = spriteChildTransform.rotation;
-
-        KeyCode direction;
-        if (Input.GetKey(KeyCode.LeftArrow)) {
-            endRotation = Quaternion.Euler(startRotation.eulerAngles + (Vector3.up * 90f));
-            playerCameraDirection = GetNewCameraDirection(playerCameraDirection, true);
-            direction = KeyCode.LeftArrow;
-        }
-        else if (Input.GetKey(KeyCode.RightArrow)) {
-            endRotation = Quaternion.Euler(startRotation.eulerAngles + (Vector3.up * -90f));
-            playerCameraDirection = GetNewCameraDirection(playerCameraDirection, false);
-            direction = KeyCode.RightArrow;
-        }
-        else {
-            return;
-        }
-
-        nonVoxelWorld.RotateNonPlayerCreatures(direction);
-        isRotating = true;
-        rotateStartTimestamp = Time.time;
+    public void SetCameraDirection(PlayerCameraDirection direction) {
+        playerCameraDirection = direction;
     }
 
-    private PlayerCameraDirection GetNewCameraDirection(PlayerCameraDirection currentDirection, bool isLeft) {
-        if (isLeft) {
-            switch (currentDirection) {
+    public void RotateCameraDirection(float direction) {
+        if (direction > 0) {
+            switch (playerCameraDirection) {
                 case PlayerCameraDirection.NORTH:
-                    return PlayerCameraDirection.EAST;
+                    playerCameraDirection = PlayerCameraDirection.EAST;
+                    break;
                 case PlayerCameraDirection.EAST:
-                    return PlayerCameraDirection.SOUTH;
+                    playerCameraDirection = PlayerCameraDirection.SOUTH;
+                    break;
                 case PlayerCameraDirection.SOUTH:
-                    return PlayerCameraDirection.WEST;
+                    playerCameraDirection = PlayerCameraDirection.WEST;
+                    break;
                 case PlayerCameraDirection.WEST:
-                    return PlayerCameraDirection.NORTH;
+                    playerCameraDirection = PlayerCameraDirection.NORTH;
+                    break;
                 default:
                     throw new System.ArgumentException("Unexpected direction provided");
             }
         }
-        switch (currentDirection) {
-            case PlayerCameraDirection.NORTH:
-                return PlayerCameraDirection.WEST;
-            case PlayerCameraDirection.EAST:
-                return PlayerCameraDirection.NORTH;
-            case PlayerCameraDirection.SOUTH:
-                return PlayerCameraDirection.EAST;
-            case PlayerCameraDirection.WEST:
-                return PlayerCameraDirection.SOUTH;
-            default:
-                throw new System.ArgumentException("Unexpected direction provided");
+        else {
+            switch (playerCameraDirection) {
+                case PlayerCameraDirection.NORTH:
+                    playerCameraDirection = PlayerCameraDirection.WEST;
+                    break;
+                case PlayerCameraDirection.EAST:
+                    playerCameraDirection = PlayerCameraDirection.NORTH;
+                    break;
+                case PlayerCameraDirection.SOUTH:
+                    playerCameraDirection = PlayerCameraDirection.EAST;
+                    break;
+                case PlayerCameraDirection.WEST:
+                    playerCameraDirection = PlayerCameraDirection.SOUTH;
+                    break;
+                default:
+                    throw new System.ArgumentException("Unexpected direction provided");
+            }
         }
     }
 
-    private bool IsRotationDone() {
-        float timeSinceMoveBegan = Time.time - rotateStartTimestamp;
-        float fractionRotationComplete = Mathf.Min(timeSinceMoveBegan / TIME_TO_ROTATE, 1);
-        spriteChildTransform.transform.rotation = Quaternion.Lerp(startRotation, endRotation, fractionRotationComplete);
+    public override void RotateSprite(float degrees) {
+        rotationTransform.Rotate(Vector3.up, degrees);
+    }
 
-        return fractionRotationComplete == 1;
+    public override void SetSpriteRotation(Vector3 rotation) {
+        rotationTransform.rotation = Quaternion.Euler(rotation);
     }
 }

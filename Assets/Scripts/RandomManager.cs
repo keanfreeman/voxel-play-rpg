@@ -8,8 +8,6 @@ public class RandomManager : MonoBehaviour
     public Dice dice { get; private set; }
 
     void Awake() {
-        DontDestroyOnLoad(gameObject);
-
         rng = new System.Random();
         dice = new Dice(rng);
     }

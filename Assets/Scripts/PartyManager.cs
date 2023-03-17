@@ -11,7 +11,6 @@ public class PartyManager : MonoBehaviour
     public MonoBehaviour currSelected { get; set; }
 
     void Awake() {
-        DontDestroyOnLoad(gameObject);
         partyMembers = new List<PlayerCharacter>();
         currSelected = playerCharacter;
     }

@@ -22,6 +22,7 @@ public class NonVoxelManager : MonoBehaviour
     [SerializeField] private SpriteMovement spriteMovement;
     [SerializeField] private RandomManager randomManager;
     [SerializeField] private VoxelWorldManager voxelWorldManager;
+    [SerializeField] private CameraManager cameraManager;
 
     [SerializeField] private GameObject opossumPrefab;
     [SerializeField] private GameObject sceneExitPrefab;
@@ -33,8 +34,6 @@ public class NonVoxelManager : MonoBehaviour
     private List<Entity> nonVoxelEntities;
 
     private void Awake() {
-        DontDestroyOnLoad(gameObject);
-
         nonVoxelInitialization = new NonVoxelInitialization(playerPrefab,
             opossumPrefab, sceneExitPrefab);
     }
@@ -81,8 +80,8 @@ public class NonVoxelManager : MonoBehaviour
             if (nonVoxelEntity.GetType() == typeof(NPC)) {
                 NPC npcInfo = (NPC)nonVoxelEntity;
                 NPCBehavior npcBehavior = gameObject.GetComponent<NPCBehavior>();
-                npcBehavior.Init(nonVoxelWorld, spriteMovement,
-                    voxelWorldManager.environment, randomManager.rng, npcInfo);
+                npcBehavior.Init(nonVoxelWorld, spriteMovement, randomManager.rng, npcInfo,
+                    cameraManager);
                 nonVoxelWorld.npcs.Add(npcBehavior);
 
                 Guid battleGroupID = npcInfo.battleGroup.groupID;

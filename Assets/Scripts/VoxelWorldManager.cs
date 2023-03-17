@@ -9,10 +9,10 @@ public class VoxelWorldManager : MonoBehaviour
     [SerializeField] private EnvironmentSceneManager envSceneManager;
     [SerializeField] private InteractableVoxels interactableVoxels;
 
-    public VoxelPlayEnvironment environment { get; set; }
+    public VoxelPlayEnvironment environment { get; private set; }
 
-    private void Awake() {
-        DontDestroyOnLoad(this);
+    public void SetVoxelPlayEnvironment(VoxelPlayEnvironment environment) {
+        this.environment = environment;
     }
 
     public Voxel GetVoxelFromPosition(Vector3d position) {

@@ -8,14 +8,13 @@ using UnityEngine.InputSystem;
 public class InputManager : MonoBehaviour
 {
     [SerializeField] private EventSystem eventSystem;
+    [SerializeField] private CameraManager cameraManager;
 
     public PlayerInputActions playerInputActions;
     
     public SpriteMoveDirection moveDirection = SpriteMoveDirection.NONE;
 
     private void Awake() {
-        DontDestroyOnLoad(gameObject);
-
         playerInputActions = new PlayerInputActions();
         this.playerInputActions.Player.MoveUp.performed += MoveUp_performed;
         this.playerInputActions.Player.MoveDown.performed += MoveDown_performed;
@@ -26,6 +25,10 @@ public class InputManager : MonoBehaviour
         this.playerInputActions.Player.MoveDown.canceled += MoveDown_canceled;
         this.playerInputActions.Player.MoveLeft.canceled += MoveLeft_canceled;
         this.playerInputActions.Player.MoveRight.canceled += MoveRight_canceled;
+
+        this.playerInputActions.Player.RotateCamera.performed += cameraManager.Rotate90Degrees;
+        this.playerInputActions.Detached.RotateCamera.performed += cameraManager.RotateDetached;
+        this.playerInputActions.Detached.RotateCamera.canceled += cameraManager.StopRotatingDetached;
 
         playerInputActions.Player.Enable();
     }
@@ -64,10 +67,6 @@ public class InputManager : MonoBehaviour
 
     public float GetDetachedVerticalMove() {
         return playerInputActions.Detached.MoveVertical.ReadValue<float>();
-    }
-
-    public float GetDetachedRotation() {
-        return playerInputActions.Detached.RotateCamera.ReadValue<Vector2>().x;
     }
 
     public bool WasSelectTriggered() {

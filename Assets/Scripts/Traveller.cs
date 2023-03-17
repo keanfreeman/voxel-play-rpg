@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Traveller : MonoBehaviour
+public abstract class Traveller : MonoBehaviour
 {
     [SerializeField] protected NonVoxelWorld nonVoxelWorld;
     [SerializeField] protected Animator animator;
@@ -48,9 +48,9 @@ public class Traveller : MonoBehaviour
         moveStartPoint = currVoxel;
         moveEndPoint = point;
         currVoxel = point;
-        SetMoveAnimation(isMoving);
         moveStartTimestamp = Time.time;
         isMoving = true;
+        SetMoveAnimation(isMoving);
     }
 
     public void SetMoveAnimation(bool state) {
@@ -58,4 +58,8 @@ public class Traveller : MonoBehaviour
             animator.SetBool("isMoving", state);
         }
     }
+
+    public abstract void RotateSprite(float degrees);
+
+    public abstract void SetSpriteRotation(Vector3 rotation);
 }

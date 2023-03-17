@@ -45,11 +45,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b89c7f517561df43bf95f19f1019fb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detachedCamera: {fileID: 8737420444003553549}
-  audioListener: {fileID: 4460357039666098175}
-  detachedCameraBottomPrefab: {fileID: 161552250556516067, guid: 874745ef182559848a96ae759b288aca, type: 3}
+  audioListener: {fileID: 0}
+  detachedCameraBottom: {fileID: 0}
   rotationObject: {fileID: 8021330996344951237}
-  ROTATION_SPEED: 1
+  inputManager: {fileID: 0}
+  playerMovement: {fileID: 0}
+  spriteMovement: {fileID: 0}
+  pathVisualizer: {fileID: 0}
+  movementManager: {fileID: 0}
+  nonVoxelWorld: {fileID: 0}
+  cameraManager: {fileID: 0}
 --- !u!1 &2419309269461494499
 GameObject:
   m_ObjectHideFlags: 0
@@ -78,8 +83,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4853238603261070311}
+  m_Children: []
   m_Father: {fileID: 5396361269471903674}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
@@ -135,90 +139,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &7017737870449867393
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4853238603261070311}
-  - component: {fileID: 8737420444003553549}
-  - component: {fileID: 4460357039666098175}
-  m_Layer: 0
-  m_Name: DCamera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4853238603261070311
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7017737870449867393}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.71, z: -23.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3991347132477799439}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &8737420444003553549
-Camera:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7017737870449867393}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 0
-  orthographic size: 5
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
---- !u!81 &4460357039666098175
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7017737870449867393}
-  m_Enabled: 0
 --- !u!1 &8021330996344951237
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +149,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5396361269471903674}
   m_Layer: 0
-  m_Name: Rotator
+  m_Name: DetachedRotator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

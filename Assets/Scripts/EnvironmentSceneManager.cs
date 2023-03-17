@@ -13,14 +13,12 @@ public class EnvironmentSceneManager : MonoBehaviour
     [SerializeField] private GameStateManager gameStateManager;
     [SerializeField] private GameObject playerInstance;
     [SerializeField] private PlayerMovement playerMovement;
-    [SerializeField] private Camera playerCamera;
     [SerializeField] private GameObject playerSeeThroughTarget;
+    [SerializeField] private CameraManager cameraManager;
 
     private Destination destination;
 
     void Awake() {
-        DontDestroyOnLoad(gameObject);
-
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;
 
         destination = new Destination(3, Vector3Int.zero);
@@ -34,9 +32,9 @@ public class EnvironmentSceneManager : MonoBehaviour
             return;
         }
 
-        environment.cameraMain = playerCamera;
-        environment.seeThroughTarget = playerSeeThroughTarget;
-        voxelWorldManager.environment = environment;
+        voxelWorldManager.SetVoxelPlayEnvironment(environment);
+        environment.cameraMain = cameraManager.GetMainCamera();
+        cameraManager.AttachCameraToPlayer();
         
         nonVoxelManager.SetUpEntities(destination.destinationEnv);
         gameStateManager.controlState = ControlState.SPRITE_NEUTRAL;
@@ -46,7 +44,7 @@ public class EnvironmentSceneManager : MonoBehaviour
         gameStateManager.controlState = ControlState.LOADING;
         playerMovement.HaltMovement();
         this.destination = destination;
-        voxelWorldManager.environment = null;
+        voxelWorldManager.SetVoxelPlayEnvironment(null);
         nonVoxelManager.DestroyEntities();
         SceneManager.LoadScene(destination.destinationEnv);
     }

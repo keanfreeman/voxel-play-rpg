@@ -30,12 +30,9 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private NonVoxelWorld nonVoxelWorld;
     [SerializeField] private ObjectInkMapping objectInkMapping;
     [SerializeField] private VoxelWorldManager voxelWorldManager;
+    [SerializeField] private CameraManager cameraManager;
 
     public ControlState controlState { get; set; } = ControlState.LOADING;
-
-    void Awake() {
-        DontDestroyOnLoad(gameObject);
-    }
 
     void Update() {
         switch (controlState) {
@@ -97,14 +94,14 @@ public class GameStateManager : MonoBehaviour
             if (controlState == ControlState.SPRITE_NEUTRAL) {
                 controlState = ControlState.DETACHED;
                 inputManager.SwitchPlayerToDetachedControlState();
-                playerMovement.SetCameraState(false);
+                cameraManager.AttachCameraToDetached();
                 detachedCamera.BecomeActive();
             }
             else {
                 controlState = ControlState.SPRITE_NEUTRAL;
                 inputManager.SwitchDetachedToPlayerControlState();
                 detachedCamera.BecomeInactive();
-                playerMovement.SetCameraState(true);
+                cameraManager.AttachCameraToPlayer();
             }
         }
     }

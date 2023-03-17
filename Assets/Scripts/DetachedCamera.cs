@@ -7,22 +7,19 @@ using VoxelPlay;
 
 public class DetachedCamera : MonoBehaviour
 {
-    [SerializeField] private Camera detachedCamera;
     [SerializeField] private AudioListener audioListener;
     [SerializeField] private DetachedCameraBottom detachedCameraBottom;
-    [SerializeField] private GameObject rotationObject;
     [SerializeField] private InputManager inputManager;
-    [SerializeField] private VoxelWorldManager voxelWorldManager;
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private SpriteMovement spriteMovement;
     [SerializeField] private PathVisualizer pathVisualizer;
     [SerializeField] private MovementManager movementManager;
     [SerializeField] private NonVoxelWorld nonVoxelWorld;
+    [SerializeField] private CameraManager cameraManager;
 
     private const float SPEED_MULTIPLIER = 6.0f;
     private const float VOXEL_CHANGE_DISTANCE = 0.51f;
     private const float CURSOR_CENTER_SPEED = 1.5f;
-    private const float ROTATION_SPEED = 100f;
     
     private Vector3Int currVoxel;
     private Pathfinder pathfinder;
@@ -41,18 +38,13 @@ public class DetachedCamera : MonoBehaviour
         currVoxel = playerMovement.currVoxel;
 
         gameObject.SetActive(true);
-        voxelWorldManager.environment.cameraMain = detachedCamera;
 
         detachedCameraBottom.MoveImmediate(currVoxel);
         detachedCameraBottom.SetVisibility(true);
-        voxelWorldManager.environment.seeThroughTarget 
-            = detachedCameraBottom.seeThroughTarget;
     }
 
     // become invisible and take up no resources
     public void BecomeInactive() {
-        voxelWorldManager.environment.cameraMain = playerMovement.playerCamera;
-        voxelWorldManager.environment.seeThroughTarget = playerMovement.voxelHideTarget;
         gameObject.SetActive(false);
         detachedCameraBottom.SetVisibility(false);
     }
@@ -62,7 +54,6 @@ public class DetachedCamera : MonoBehaviour
         if (movedVoxels) {
             detachedCameraBottom.MoveAnimated(currVoxel);
         }
-        RotateCursor();
         MoveCursor();
         HandleSelect();
     }
@@ -84,17 +75,12 @@ public class DetachedCamera : MonoBehaviour
         }
 
         // move direction depends on current camera rotation
-        float rotationRadians = Mathf.Deg2Rad * rotationObject.transform.eulerAngles.y * -1;
+        Transform mainCameraTargetTransform = cameraManager.GetMainCameraTarget().transform;
+        float rotationRadians = Mathf.Deg2Rad * mainCameraTargetTransform.eulerAngles.y * -1;
         Vector2 moveWithRotation = VectorMath.rotate(move, rotationRadians);
         float moveSpeed = Time.deltaTime * SPEED_MULTIPLIER;
         transform.Translate(moveWithRotation.x * moveSpeed, verticalMove * moveSpeed,
             moveWithRotation.y * moveSpeed);
-    }
-
-    private void RotateCursor() {
-        float rotation = inputManager.GetDetachedRotation();
-        rotationObject.transform.Rotate(Vector3.up,
-            rotation * Time.deltaTime * ROTATION_SPEED);
     }
 
     // returns true if the voxel was changed

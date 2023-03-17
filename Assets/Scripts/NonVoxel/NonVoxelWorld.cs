@@ -12,11 +12,7 @@ namespace NonVoxel {
         private Dictionary<Vector3Int, GameObject> positionToObject
             = new Dictionary<Vector3Int, GameObject>();
 
-        public HashSet<MonoBehaviour> npcs = new HashSet<MonoBehaviour>();
-
-        void Awake() {
-            DontDestroyOnLoad(gameObject);
-        }
+        public HashSet<NPCBehavior> npcs = new HashSet<NPCBehavior>();
 
         public void DestroyEntities() {
             foreach (MonoBehaviour npc in npcs) {
@@ -67,12 +63,6 @@ namespace NonVoxel {
                 return false;
             }
             return true;
-        }
-
-        public void RotateNonPlayerCreatures(KeyCode rotationDirection) {
-            foreach (NPCBehavior npcBehavior in npcs) {
-                npcBehavior.rotationDirection = rotationDirection;
-            }
         }
 
         public List<Vector3Int> GetInteractableAdjacentObjects(Vector3Int currPosition) {
