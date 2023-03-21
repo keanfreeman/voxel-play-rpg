@@ -18,31 +18,37 @@ public class SpriteMovement : MonoBehaviour
     }
 
     // can the player walk through this voxel?
-    public bool IsTraversiblePosition(Vector3Int position) {
+    public bool IsTraversiblePosition(Vector3Int position, bool includeOccupiedCoordinates) {
         Voxel voxel = voxelWorldManager.environment.GetVoxel(position);
+        if (includeOccupiedCoordinates) {
+            return voxel.isEmpty || voxel.hasWater;
+        }
         return (voxel.isEmpty || voxel.hasWater) && !nonVoxelWorld.IsPositionOccupied(position);
     }
 
-    public bool IsReachablePosition(Vector3Int position) {
+    public bool IsReachablePosition(Vector3Int position, bool includeOccupiedCoordinates) {
         Vector3Int belowRequestedCoordinate = position + Vector3Int.down;
-        return IsTraversiblePosition(position) && IsWalkablePosition(belowRequestedCoordinate);
+        return IsTraversiblePosition(position, includeOccupiedCoordinates) 
+            && IsWalkablePosition(belowRequestedCoordinate);
     }
 
     // A must be 1 voxel from B
-    public bool IsATraversibleFromB(Vector3Int requestedCoordinate, Vector3Int startCoordinate) {
+    public bool IsATraversibleFromB(Vector3Int requestedCoordinate, Vector3Int startCoordinate,
+            bool includeOccupiedCoordinates) {
         Vector3Int distance = requestedCoordinate - startCoordinate;
         Vector3Int belowRequestedCoordinate = requestedCoordinate + Vector3Int.down;
-        if (!IsTraversiblePosition(requestedCoordinate) || !IsWalkablePosition(belowRequestedCoordinate)) {
+        if (!IsTraversiblePosition(requestedCoordinate, includeOccupiedCoordinates)
+                || !IsWalkablePosition(belowRequestedCoordinate)) {
             return false;
         }
 
         if (distance.y == 1) {
             Vector3Int abovePlayerCoordinate = startCoordinate + Vector3Int.up;
-            return IsTraversiblePosition(abovePlayerCoordinate);
+            return IsTraversiblePosition(abovePlayerCoordinate, includeOccupiedCoordinates);
         }
         else if (distance.y == -1) {
             Vector3Int aboveRequestedCoordinate = requestedCoordinate + Vector3Int.up;
-            return IsTraversiblePosition(aboveRequestedCoordinate);
+            return IsTraversiblePosition(aboveRequestedCoordinate, includeOccupiedCoordinates);
         }
         return true;
     }
@@ -55,7 +61,7 @@ public class SpriteMovement : MonoBehaviour
         VoxelPlayEnvironment environment = voxelWorldManager.environment;
 
         Voxel requestedVoxel = environment.GetVoxel(requestedCoordinate);
-        if (IsTraversiblePosition(requestedCoordinate)) {
+        if (IsTraversiblePosition(requestedCoordinate, true)) {
             // check if player can move onto land
             Vector3Int belowRequestedCoordinate = requestedCoordinate + Vector3Int.down;
             if (IsWalkablePosition(belowRequestedCoordinate)) {
@@ -72,7 +78,7 @@ public class SpriteMovement : MonoBehaviour
             }
 
             // check if the player can jump down 1 tile
-            if (IsTraversiblePosition(belowRequestedCoordinate)
+            if (IsTraversiblePosition(belowRequestedCoordinate, true)
                     && IsWalkablePosition(belowRequestedCoordinate + Vector3Int.down)) {
                 return requestedCoordinate + Vector3Int.down;
             }
@@ -86,7 +92,7 @@ public class SpriteMovement : MonoBehaviour
 
         // check if the player can jump up 1 tile
         Vector3Int aboveRequestedCoordinate = requestedCoordinate + Vector3Int.up;
-        if (IsWalkablePosition(requestedCoordinate) && IsTraversiblePosition(aboveRequestedCoordinate)) {
+        if (IsWalkablePosition(requestedCoordinate) && IsTraversiblePosition(aboveRequestedCoordinate, true)) {
             return requestedCoordinate + Vector3Int.up;
         }
 

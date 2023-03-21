@@ -72,7 +72,7 @@ public class NPCBehavior : Traveller
         Vector3Int destinationCoordinate = actualCoordinate.GetValueOrDefault();
 
         if (!nonVoxelWorld.IsPositionOccupied(destinationCoordinate)
-                && spriteMovement.IsReachablePosition(destinationCoordinate)) {
+                && spriteMovement.IsReachablePosition(destinationCoordinate, true)) {
             MoveToPoint(destinationCoordinate);
         }
     }

@@ -1095,6 +1095,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   partyManager: {fileID: 683280036}
   randomManager: {fileID: 983819852}
+  movementManager: {fileID: 104703756}
+  spriteMovement: {fileID: 1823400833}
+  playerMovement: {fileID: 1823400829}
 --- !u!4 &1613990518
 Transform:
   m_ObjectHideFlags: 0

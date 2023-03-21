@@ -6,36 +6,44 @@ public class MovementManager : MonoBehaviour
 {
     [SerializeField] PathVisualizer pathVisualizer;
 
-    private Traveller traveller;
-    private List<Vector3Int> path;
-    private Vector3Int? currDestination = null;
+    public Dictionary<Traveller, List<Vector3Int>> movingCreatures { get; private set; } 
+        = new Dictionary<Traveller, List<Vector3Int>>();
 
-    public void MoveAlongPath(Traveller traveller, List<Vector3Int> path) {
-        // todo make generic so NPCs can move
-        this.traveller = traveller;
-        this.path = path;
-        StartCoroutine(MoveEntity());
+    public bool IsMoving(Traveller traveller) {
+        return movingCreatures.ContainsKey(traveller);
     }
 
-    private IEnumerator MoveEntity() {
-        while (path.Count != 0) {
-            if (!currDestination.HasValue) {
-                int lastIndex = path.Count - 1;
-                currDestination = path[lastIndex];
-                path.RemoveAt(lastIndex);
-            }
+    public void MoveAlongPath(Traveller traveller, List<Vector3Int> path) {
+        // TODO handle if new path is requested when one is already running.
+        movingCreatures[traveller] = path;
+        StartCoroutine(MoveEntity(traveller));
+    }
 
-            if (!traveller.isMoving) {
-                traveller.MoveToPoint(currDestination.Value);
-                pathVisualizer.DestroyNearestMarker();
-            }
+    private IEnumerator MoveEntity(Traveller traveller) {
+        Vector3Int? currDestination = null;
+        List<Vector3Int> path = movingCreatures[traveller];
+        while (path.Count > 0) {
+            if (path.Count != 0) {
+                if (!currDestination.HasValue) {
+                    int lastIndex = path.Count - 1;
+                    currDestination = path[lastIndex];
+                    path.RemoveAt(lastIndex);
+                }
 
-            while (traveller.isMoving) {
-                yield return null;
+                if (!traveller.isMoving) {
+                    traveller.MoveToPoint(currDestination.Value);
+                    pathVisualizer.DestroyNearestMarker();
+                }
+
+                while (traveller.isMoving) {
+                    yield return null;
+                }
             }
             currDestination = null;
+            yield return null;
         }
 
         traveller.SetMoveAnimation(false);
+        movingCreatures.Remove(traveller);
     }
 }

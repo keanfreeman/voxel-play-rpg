@@ -47,12 +47,13 @@ public class Pathfinder
         Debug.Log($"Reusing {positionToNode.Count} nodes.");
     }
 
-    public List<Vector3Int> FindPath(Vector3Int startPosition, Vector3Int endPosition) {
+    public List<Vector3Int> FindPath(Vector3Int startPosition, Vector3Int endPosition,
+            bool includeFinalPosition) {
         Debug.Log($"Finding path to {endPosition}");
         Node start = new Node(startPosition);
         Node end = new Node(endPosition);
 
-        if (!spriteMovement.IsReachablePosition(end.position)) {
+        if (includeFinalPosition && !spriteMovement.IsReachablePosition(end.position, true)) {
             Debug.Log("End position isn't reachable.");
             return path;
         }
@@ -98,7 +99,8 @@ public class Pathfinder
             // update neighbor costs
             foreach (Node neighbor in currNode.neighbors) {
                 if (!neighbor.visited) {
-                    float newScore = CalculateDistance(currNode, neighbor) + currNode.score;
+                    bool includeOccupiedCoordinates = neighbor.position == endPosition && !includeFinalPosition;
+                    float newScore = CalculateDistance(currNode, neighbor, includeOccupiedCoordinates) + currNode.score;
                     if (newScore <= neighbor.score) {
                         float oldScore = neighbor.score;
                         neighbor.score = newScore;
@@ -119,6 +121,10 @@ public class Pathfinder
 
             if (currNode.position == end.position) {
                 Debug.Log("Finished path");
+                if (!includeFinalPosition) {
+                    currNode = currNode.prevNode;
+                }
+
                 while (true) {
                     if (currNode.position == start.position) {
                         return path;
@@ -130,8 +136,8 @@ public class Pathfinder
         }
     }
 
-    private float CalculateDistance(Node node1, Node node2) {
-        if (spriteMovement.IsATraversibleFromB(node2.position, node1.position)) {
+    private float CalculateDistance(Node node1, Node node2, bool includeOccupiedCoordinates) {
+        if (spriteMovement.IsATraversibleFromB(node2.position, node1.position, includeOccupiedCoordinates)) {
             return CalculateDirectLineLength(node2, node1);
         }
         return float.MaxValue;

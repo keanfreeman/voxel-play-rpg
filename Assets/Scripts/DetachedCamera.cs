@@ -117,7 +117,7 @@ public class DetachedCamera : MonoBehaviour
         }
         else {
             // move currently selected to target
-            List<Vector3Int> path = pathfinder.FindPath(currTraveller.currVoxel, currVoxel);
+            List<Vector3Int> path = pathfinder.FindPath(currTraveller.currVoxel, currVoxel, true);
             pathVisualizer.DrawPath(path);
             movementManager.MoveAlongPath(currTraveller, path);
         }
