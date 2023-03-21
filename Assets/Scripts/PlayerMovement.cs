@@ -12,15 +12,10 @@ using System.Drawing;
 public class PlayerMovement : Traveller {
     [SerializeField] public GameObject voxelHideTarget;
     [SerializeField] private Transform rotationTransform;
-    [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private InputManager inputManager;
     [SerializeField] private SpriteMovement spriteMovement;
-    [SerializeField] private CameraManager cameraManager;
 
-    // STATE
-    bool isFacingRight = false;
-
-    public PlayerCameraDirection playerCameraDirection = PlayerCameraDirection.NORTH;
+    private PlayerCameraDirection playerCameraDirection = PlayerCameraDirection.NORTH;
 
     void Awake() {
         DontDestroyOnLoad(gameObject);
@@ -33,49 +28,48 @@ public class PlayerMovement : Traveller {
         SetMoveAnimation(isMoving);
     }
 
-    // returns true if we need to freeze other controls while moving/rotating
-    public bool HandleMovementControls() {
-        HandleMovement();
+    public void HandleControllerMove(InputAction.CallbackContext obj) {
+        Vector2 stickValue = obj.ReadValue<Vector2>();
 
-        return isMoving || cameraManager.isRotating;
+        SpriteMoveDirection requestedDirection;
+        float angle = Vector2.SignedAngle(stickValue, Vector2.down);
+        if (angle > 45 && angle <= 135) {
+            requestedDirection = SpriteMoveDirection.LEFT;
+        }
+        else if (angle > -45 && angle <= 45) {
+            requestedDirection = SpriteMoveDirection.BACK;
+        }
+        else if (angle > -135 && angle <= -45) {
+            requestedDirection = SpriteMoveDirection.RIGHT;
+        }
+        else {
+            requestedDirection = SpriteMoveDirection.FORWARD;
+        }
+        permanentMoveDirection = requestedDirection;
     }
 
-    public void HandleMovement() {
-        if (isMoving || cameraManager.isRotating) {
-            return;
-        }
-        SpriteMoveDirection requestedDirection = inputManager.moveDirection;
-        if (requestedDirection == SpriteMoveDirection.NONE) {
-            SetMoveAnimation(isMoving);
-            return;
-        }
+    public void HandleControllerMoveCancel(InputAction.CallbackContext obj) {
+        permanentMoveDirection = SpriteMoveDirection.NONE;
+    }
 
-        // make player sprite face the direction they asked for
-        if (requestedDirection == SpriteMoveDirection.RIGHT) {
-            isFacingRight = true;
-        }
-        else if (requestedDirection == SpriteMoveDirection.LEFT) {
-            isFacingRight = false;
-        }
-        spriteRenderer.flipX = isFacingRight;
-        
-
+    protected override Vector3Int? GetDestinationFromDirection(SpriteMoveDirection direction) {
         SpriteMoveDirection cameraAdjustedPlayerMove = CameraAdjustedPlayerMove(
-            requestedDirection, playerCameraDirection);
+            direction, playerCameraDirection);
         Vector3Int desiredCoordinate = spriteMovement.GetSpriteDesiredCoordinate(
             currVoxel, cameraAdjustedPlayerMove);
         Vector3Int? actualCoordinate = spriteMovement.GetTerrainAdjustedCoordinate(
             desiredCoordinate, currVoxel);
         if (!actualCoordinate.HasValue) {
-            Debug.Log("Tried to move in an invalid way.");
-            return;
+            Debug.Log("Not a valid destination terrain-wise.");
+            return null;
         }
-        Vector3Int destinationCoordinate = actualCoordinate.GetValueOrDefault();
+        Vector3Int destinationCoordinate = actualCoordinate.Value;
         if (nonVoxelWorld.IsPositionOccupied(destinationCoordinate)) {
             Debug.Log("Tried to move into a non-voxel-occupied space.");
-            return;
+            return null;
         }
-        MoveToPoint(destinationCoordinate);
+
+        return destinationCoordinate;
     }
 
     private SpriteMoveDirection CameraAdjustedPlayerMove(SpriteMoveDirection moveDirection,
@@ -131,7 +125,7 @@ public class PlayerMovement : Traveller {
             || playerCameraDirection == PlayerCameraDirection.SOUTH && enumName.StartsWith("RIGHT");
     }
 
-    public void SetCameraDirection(PlayerCameraDirection direction) {
+    public void SetPlayerCameraDirection(PlayerCameraDirection direction) {
         playerCameraDirection = direction;
     }
 

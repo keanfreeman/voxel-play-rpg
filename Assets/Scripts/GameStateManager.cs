@@ -39,19 +39,16 @@ public class GameStateManager : MonoBehaviour
             case ControlState.FIRST_PERSON:
                 break;
             case ControlState.SPRITE_NEUTRAL:
-                bool isTransitioning = playerMovement.HandleMovementControls();
                 NPCBehavior npcInCombat = HandleNPCsFreeMovement();
                 if (npcInCombat != null) {
                     inputManager.playerInputActions.Player.Disable();
                     combatManager.SetFirstCombatant(npcInCombat);
-                    if (!isTransitioning) {
-                        controlState = ControlState.COMBAT;
-                        Debug.Log("Entered combat");
-                        inputManager.SwitchPlayerControlStateToUI();
-                    }
+                    controlState = ControlState.COMBAT;
+                    Debug.Log("Entered combat");
+                    inputManager.SwitchPlayerControlStateToUI();
                     return;
                 }
-                if (isTransitioning) {
+                if (playerMovement.isMoving || cameraManager.isRotating) {
                     return;
                 }
 

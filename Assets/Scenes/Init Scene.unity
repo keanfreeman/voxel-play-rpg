@@ -227,13 +227,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 104703754}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -2.5, y: 44.56, z: 85.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_Father: {fileID: 1341391871}
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &104703756
 MonoBehaviour:
@@ -936,6 +936,7 @@ Transform:
   - {fileID: 983819853}
   - {fileID: 683280037}
   - {fileID: 1785101422}
+  - {fileID: 104703755}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1390,7 +1391,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eventSystem: {fileID: 2066669308}
   cameraManager: {fileID: 1785101423}
-  moveDirection: 0
+  playerMovement: {fileID: 1823400829}
 --- !u!114 &2066669310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1420,22 +1421,6 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: f87b036c-bdce-4b6a-9262-0f902f2f3e77
     m_ActionName: Player/Switch Input Type[/Keyboard/k]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 9627ebcf-8410-4f90-bdc4-43abb6d7d91f
-    m_ActionName: Player/Move Up[/Keyboard/w]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: fffff88c-8b75-494d-bf19-4267b30a5fd7
-    m_ActionName: Player/Move Down[/Keyboard/s]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 7315dfbc-ef8d-4a4d-8730-eb149f7a89ee
-    m_ActionName: Player/Move Left[/Keyboard/a]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: cacb10e0-2908-4fac-a068-62c0531ae84c
-    m_ActionName: Player/Move Right[/Keyboard/d]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 958e265a-cf5b-47ba-a6c6-3f8d3372a366
@@ -1480,6 +1465,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: b96f9336-3a42-4cde-ae15-40d6502f2d23
     m_ActionName: Detached/Select[/Keyboard/enter,/XInputControllerWindows/buttonSouth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 50516686-912b-423f-a52d-4d1754f8e826
+    m_ActionName: Player/Move[/XInputControllerWindows/leftStick,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

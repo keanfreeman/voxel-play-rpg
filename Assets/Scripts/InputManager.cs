@@ -9,26 +9,19 @@ public class InputManager : MonoBehaviour
 {
     [SerializeField] private EventSystem eventSystem;
     [SerializeField] private CameraManager cameraManager;
+    [SerializeField] private PlayerMovement playerMovement;
 
     public PlayerInputActions playerInputActions;
     
-    public SpriteMoveDirection moveDirection = SpriteMoveDirection.NONE;
-
     private void Awake() {
         playerInputActions = new PlayerInputActions();
-        this.playerInputActions.Player.MoveUp.performed += MoveUp_performed;
-        this.playerInputActions.Player.MoveDown.performed += MoveDown_performed;
-        this.playerInputActions.Player.MoveLeft.performed += MoveLeft_performed;
-        this.playerInputActions.Player.MoveRight.performed += MoveRight_performed;
 
-        this.playerInputActions.Player.MoveUp.canceled += MoveUp_canceled;
-        this.playerInputActions.Player.MoveDown.canceled += MoveDown_canceled;
-        this.playerInputActions.Player.MoveLeft.canceled += MoveLeft_canceled;
-        this.playerInputActions.Player.MoveRight.canceled += MoveRight_canceled;
+        playerInputActions.Player.Move.performed += playerMovement.HandleControllerMove;
+        playerInputActions.Player.Move.canceled += playerMovement.HandleControllerMoveCancel;
 
-        this.playerInputActions.Player.RotateCamera.performed += cameraManager.Rotate90Degrees;
-        this.playerInputActions.Detached.RotateCamera.performed += cameraManager.RotateDetached;
-        this.playerInputActions.Detached.RotateCamera.canceled += cameraManager.StopRotatingDetached;
+        playerInputActions.Player.RotateCamera.performed += cameraManager.Rotate90Degrees;
+        playerInputActions.Detached.RotateCamera.performed += cameraManager.RotateDetached;
+        playerInputActions.Detached.RotateCamera.canceled += cameraManager.StopRotatingDetached;
 
         playerInputActions.Player.Enable();
     }
@@ -96,45 +89,5 @@ public class InputManager : MonoBehaviour
     public bool WasSwitchInputTypeTriggered() {
         return playerInputActions.Player.SwitchInputType.triggered
             || playerInputActions.Detached.SwitchInputType.triggered;
-    }
-
-    private void MoveRight_canceled(InputAction.CallbackContext obj) {
-        if (moveDirection == SpriteMoveDirection.RIGHT) {
-            moveDirection = SpriteMoveDirection.NONE;
-        }
-    }
-
-    private void MoveLeft_canceled(InputAction.CallbackContext obj) {
-        if (moveDirection == SpriteMoveDirection.LEFT) {
-            moveDirection = SpriteMoveDirection.NONE;
-        }
-    }
-
-    private void MoveDown_canceled(InputAction.CallbackContext obj) {
-        if (moveDirection == SpriteMoveDirection.BACK) {
-            moveDirection = SpriteMoveDirection.NONE;
-        }
-    }
-
-    private void MoveUp_canceled(InputAction.CallbackContext obj) {
-        if (moveDirection == SpriteMoveDirection.FORWARD) {
-            moveDirection = SpriteMoveDirection.NONE;
-        }
-    }
-
-    private void MoveRight_performed(InputAction.CallbackContext obj) {
-        moveDirection = SpriteMoveDirection.RIGHT;
-    }
-
-    private void MoveLeft_performed(InputAction.CallbackContext obj) {
-        moveDirection = SpriteMoveDirection.LEFT;
-    }
-
-    private void MoveDown_performed(InputAction.CallbackContext obj) {
-        moveDirection = SpriteMoveDirection.BACK;
-    }
-
-    private void MoveUp_performed(InputAction.CallbackContext obj) {
-        moveDirection = SpriteMoveDirection.FORWARD;
     }
 }

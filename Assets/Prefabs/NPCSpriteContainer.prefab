@@ -80,6 +80,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nonVoxelWorld: {fileID: 0}
   animator: {fileID: 0}
+  spriteRenderer: {fileID: 6944743724923771679}
   encounteredPlayer: 0
 --- !u!65 &509808264901212375
 BoxCollider:

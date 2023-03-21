@@ -43,19 +43,19 @@ public class CameraManager : MonoBehaviour {
         float yAngle = mainCameraTarget.transform.rotation.eulerAngles.y;
         float adjustedYAngle;
         if (yAngle > 45 && yAngle <= 135) {
-            playerMovement.playerCameraDirection = PlayerCameraDirection.EAST;
+            playerMovement.SetPlayerCameraDirection(PlayerCameraDirection.EAST);
             adjustedYAngle = 90;
         }
         else if (yAngle > 135 && yAngle <= 225) {
-            playerMovement.playerCameraDirection = PlayerCameraDirection.SOUTH;
+            playerMovement.SetPlayerCameraDirection(PlayerCameraDirection.SOUTH);
             adjustedYAngle = 180;
         }
         else if (yAngle > 225 && yAngle <= 315) {
-            playerMovement.playerCameraDirection = PlayerCameraDirection.WEST;
+            playerMovement.SetPlayerCameraDirection(PlayerCameraDirection.WEST);
             adjustedYAngle = 270;
         }
         else {
-            playerMovement.playerCameraDirection = PlayerCameraDirection.NORTH;
+            playerMovement.SetPlayerCameraDirection(PlayerCameraDirection.NORTH);
             adjustedYAngle = 0;
         }
 

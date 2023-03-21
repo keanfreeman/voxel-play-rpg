@@ -10,10 +10,6 @@ public class MovementManager : MonoBehaviour
     private List<Vector3Int> path;
     private Vector3Int? currDestination = null;
 
-    private void Awake() {
-        DontDestroyOnLoad(gameObject);
-    }
-
     public void MoveAlongPath(Traveller traveller, List<Vector3Int> path) {
         // todo make generic so NPCs can move
         this.traveller = traveller;

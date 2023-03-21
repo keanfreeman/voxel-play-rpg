@@ -187,13 +187,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nonVoxelWorld: {fileID: 0}
   animator: {fileID: 7546837740235280303}
+  spriteRenderer: {fileID: 7062049781447327524}
   voxelHideTarget: {fileID: 8632896763368513787}
   rotationTransform: {fileID: 3424683788296272995}
-  spriteRenderer: {fileID: 7062049781447327524}
   inputManager: {fileID: 0}
   spriteMovement: {fileID: 1823400833}
   cameraManager: {fileID: 0}
-  playerCameraDirection: 0
 --- !u!114 &2612271947872478894
 MonoBehaviour:
   m_ObjectHideFlags: 0

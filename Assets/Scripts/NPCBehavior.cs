@@ -16,7 +16,6 @@ public class NPCBehavior : Traveller
     private System.Random rng;
     private SpriteMovement spriteMovement;
     private Transform rotationTransform;
-    private CameraManager cameraManager;
 
     private float lastMoveTime = 0;
 
@@ -43,6 +42,11 @@ public class NPCBehavior : Traveller
         this.cameraManager = cameraManager;
 
         currVoxel = nonVoxelWorld.GetPosition(gameObject);
+    }
+
+    protected override Vector3Int? GetDestinationFromDirection(SpriteMoveDirection spriteMoveDirection) {
+        // only implemented for override purposes
+        return spriteMovement.GetTerrainAdjustedCoordinate(currVoxel, currVoxel + GetRandomOneTileMovement());
     }
 
     public Vector3Int GetRandomOneTileMovement() {
