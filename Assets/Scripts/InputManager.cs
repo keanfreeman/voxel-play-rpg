@@ -7,9 +7,11 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
-    [SerializeField] private EventSystem eventSystem;
-    [SerializeField] private CameraManager cameraManager;
-    [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] EventSystem eventSystem;
+    [SerializeField] CameraManager cameraManager;
+    [SerializeField] PlayerMovement playerMovement;
+    [SerializeField] DetachedCamera detachedCamera;
+    [SerializeField] CombatManager combatManager;
 
     public PlayerInputActions playerInputActions;
     
@@ -22,6 +24,9 @@ public class InputManager : MonoBehaviour
         playerInputActions.Player.RotateCamera.performed += cameraManager.Rotate90Degrees;
         playerInputActions.Detached.RotateCamera.performed += cameraManager.RotateDetached;
         playerInputActions.Detached.RotateCamera.canceled += cameraManager.StopRotatingDetached;
+
+        playerInputActions.Detached.Select.performed += combatManager.HandleDetachedSelect;
+        playerInputActions.Detached.Cancel.performed += combatManager.HandleDetachedCancel;
 
         playerInputActions.Player.Enable();
     }
@@ -45,11 +50,24 @@ public class InputManager : MonoBehaviour
     public void SwitchPlayerToDetachedControlState() {
         playerInputActions.Player.Disable();
         playerInputActions.Detached.Enable();
+
+        cameraManager.AttachCameraToDetached();
+        detachedCamera.BecomeActive();
     }
 
     public void SwitchDetachedToPlayerControlState() {
         playerInputActions.Player.Enable();
         playerInputActions.Detached.Disable();
+
+        detachedCamera.BecomeInactive();
+        cameraManager.AttachCameraToPlayer();
+    }
+
+    public void SwitchDetachedToWatchControlState() {
+        playerInputActions.Detached.Disable();
+
+        detachedCamera.BecomeInactive();
+        cameraManager.AttachCameraToPlayer();
     }
 
     // DETACHED

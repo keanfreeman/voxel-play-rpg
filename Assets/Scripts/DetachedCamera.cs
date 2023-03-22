@@ -1,27 +1,31 @@
+using Nito.Collections;
 using NonVoxel;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using VoxelPlay;
 
 public class DetachedCamera : MonoBehaviour
 {
-    [SerializeField] private AudioListener audioListener;
-    [SerializeField] private DetachedCameraBottom detachedCameraBottom;
-    [SerializeField] private InputManager inputManager;
-    [SerializeField] private PlayerMovement playerMovement;
-    [SerializeField] private SpriteMovement spriteMovement;
-    [SerializeField] private PathVisualizer pathVisualizer;
-    [SerializeField] private MovementManager movementManager;
-    [SerializeField] private NonVoxelWorld nonVoxelWorld;
-    [SerializeField] private CameraManager cameraManager;
+    [SerializeField] AudioListener audioListener;
+    [SerializeField] DetachedCameraBottom detachedCameraBottom;
+    [SerializeField] InputManager inputManager;
+    [SerializeField] PlayerMovement playerMovement;
+    [SerializeField] SpriteMovement spriteMovement;
+    [SerializeField] MovementManager movementManager;
+    [SerializeField] NonVoxelWorld nonVoxelWorld;
+    [SerializeField] CameraManager cameraManager;
+    [SerializeField] GameStateManager gameStateManager;
+
+    public Vector3Int currVoxel { get; private set; }
 
     private const float SPEED_MULTIPLIER = 6.0f;
     private const float VOXEL_CHANGE_DISTANCE = 0.51f;
     private const float CURSOR_CENTER_SPEED = 1.5f;
     
-    private Vector3Int currVoxel;
     private Pathfinder pathfinder;
     private Traveller currTraveller;
 
@@ -37,6 +41,7 @@ public class DetachedCamera : MonoBehaviour
         transform.position = playerMovement.currVoxel;
         currVoxel = playerMovement.currVoxel;
 
+        enabled = true;
         gameObject.SetActive(true);
 
         detachedCameraBottom.MoveImmediate(currVoxel);
@@ -45,11 +50,12 @@ public class DetachedCamera : MonoBehaviour
 
     // become invisible and take up no resources
     public void BecomeInactive() {
+        enabled = false;
         gameObject.SetActive(false);
         detachedCameraBottom.SetVisibility(false);
     }
 
-    public void HandleFrame() {
+    private void Update() {
         bool movedVoxels = UpdateCurrVoxel();
         if (movedVoxels) {
             detachedCameraBottom.MoveAnimated(currVoxel);
@@ -103,6 +109,10 @@ public class DetachedCamera : MonoBehaviour
     }
 
     private void HandleSelect() {
+        if (gameStateManager.controlState != ControlState.DETACHED) {
+            return;
+        }
+
         if (!inputManager.WasSelectTriggered()) {
             return;
         }
@@ -117,8 +127,7 @@ public class DetachedCamera : MonoBehaviour
         }
         else {
             // move currently selected to target
-            List<Vector3Int> path = pathfinder.FindPath(currTraveller.currVoxel, currVoxel, true);
-            pathVisualizer.DrawPath(path);
+            Deque<Vector3Int> path = pathfinder.FindPath(currTraveller.currVoxel, currVoxel, true);
             movementManager.MoveAlongPath(currTraveller, path);
         }
     }

@@ -15,6 +15,7 @@ namespace NonVoxelEntity {
         public string name { get; private set; }
         public int level { get; private set; }
 
+        // Speed in feet per 6 seconds
         public int baseSpeed { get; private set; }
         public int hitPoints { get; private set; }
 

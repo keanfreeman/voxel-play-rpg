@@ -691,6 +691,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 104703756}
     - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
+      propertyPath: gameStateManager
+      value: 
+      objectReference: {fileID: 955022268}
+    - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
       propertyPath: detachedCameraBottom
       value: 
       objectReference: {fileID: 1702908726}
@@ -1098,6 +1102,10 @@ MonoBehaviour:
   movementManager: {fileID: 104703756}
   spriteMovement: {fileID: 1823400833}
   playerMovement: {fileID: 1823400829}
+  inputManager: {fileID: 2066669309}
+  cameraManager: {fileID: 1785101423}
+  gameStateManager: {fileID: 955022268}
+  detachedCamera: {fileID: 848129494}
 --- !u!4 &1613990518
 Transform:
   m_ObjectHideFlags: 0
@@ -1395,6 +1403,8 @@ MonoBehaviour:
   eventSystem: {fileID: 2066669308}
   cameraManager: {fileID: 1785101423}
   playerMovement: {fileID: 1823400829}
+  detachedCamera: {fileID: 848129494}
+  combatManager: {fileID: 1613990517}
 --- !u!114 &2066669310
 MonoBehaviour:
   m_ObjectHideFlags: 0

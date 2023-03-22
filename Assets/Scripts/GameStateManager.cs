@@ -57,7 +57,6 @@ public class GameStateManager : MonoBehaviour
                 HandleCombatBar();
                 break;
             case ControlState.DETACHED:
-                detachedCamera.HandleFrame();
                 HandleSwitchInputMode();
                 break;
             case ControlState.DIALOGUE:
@@ -68,7 +67,7 @@ public class GameStateManager : MonoBehaviour
                 }
                 break;
             case ControlState.COMBAT:
-                combatManager.RunCombat();
+                combatManager.StartCombat();
                 break;
             default:
                 break;
@@ -91,14 +90,10 @@ public class GameStateManager : MonoBehaviour
             if (controlState == ControlState.SPRITE_NEUTRAL) {
                 controlState = ControlState.DETACHED;
                 inputManager.SwitchPlayerToDetachedControlState();
-                cameraManager.AttachCameraToDetached();
-                detachedCamera.BecomeActive();
             }
             else {
                 controlState = ControlState.SPRITE_NEUTRAL;
                 inputManager.SwitchDetachedToPlayerControlState();
-                detachedCamera.BecomeInactive();
-                cameraManager.AttachCameraToPlayer();
             }
         }
     }

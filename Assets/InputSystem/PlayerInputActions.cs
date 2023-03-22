@@ -311,6 +311,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cancel"",
+                    ""type"": ""Button"",
+                    ""id"": ""f7663e6a-b6a6-4e7c-a400-467ea10f86ba"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -553,6 +562,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4291b8dc-7f50-4cab-b030-9d5e8deff047"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -808,6 +828,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Detached_SwitchInputType = m_Detached.FindAction("Switch Input Type", throwIfNotFound: true);
         m_Detached_RotateCamera = m_Detached.FindAction("RotateCamera", throwIfNotFound: true);
         m_Detached_Select = m_Detached.FindAction("Select", throwIfNotFound: true);
+        m_Detached_Cancel = m_Detached.FindAction("Cancel", throwIfNotFound: true);
         // UINavigation
         m_UINavigation = asset.FindActionMap("UINavigation", throwIfNotFound: true);
         m_UINavigation_Navigate = m_UINavigation.FindAction("Navigate", throwIfNotFound: true);
@@ -957,6 +978,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Detached_SwitchInputType;
     private readonly InputAction m_Detached_RotateCamera;
     private readonly InputAction m_Detached_Select;
+    private readonly InputAction m_Detached_Cancel;
     public struct DetachedActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -966,6 +988,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @SwitchInputType => m_Wrapper.m_Detached_SwitchInputType;
         public InputAction @RotateCamera => m_Wrapper.m_Detached_RotateCamera;
         public InputAction @Select => m_Wrapper.m_Detached_Select;
+        public InputAction @Cancel => m_Wrapper.m_Detached_Cancel;
         public InputActionMap Get() { return m_Wrapper.m_Detached; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -990,6 +1013,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Select.started += instance.OnSelect;
             @Select.performed += instance.OnSelect;
             @Select.canceled += instance.OnSelect;
+            @Cancel.started += instance.OnCancel;
+            @Cancel.performed += instance.OnCancel;
+            @Cancel.canceled += instance.OnCancel;
         }
 
         private void UnregisterCallbacks(IDetachedActions instance)
@@ -1009,6 +1035,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Select.started -= instance.OnSelect;
             @Select.performed -= instance.OnSelect;
             @Select.canceled -= instance.OnSelect;
+            @Cancel.started -= instance.OnCancel;
+            @Cancel.performed -= instance.OnCancel;
+            @Cancel.canceled -= instance.OnCancel;
         }
 
         public void RemoveCallbacks(IDetachedActions instance)
@@ -1103,6 +1132,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnSwitchInputType(InputAction.CallbackContext context);
         void OnRotateCamera(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
+        void OnCancel(InputAction.CallbackContext context);
     }
     public interface IUINavigationActions
     {

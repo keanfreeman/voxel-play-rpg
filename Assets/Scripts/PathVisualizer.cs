@@ -1,3 +1,4 @@
+using Nito.Collections;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class PathVisualizer : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void DrawPath(List<Vector3Int> path) {
+    public void DrawPath(Deque<Vector3Int> path) {
         foreach (GameObject gameObject in pathMarkers) {
             Destroy(gameObject);
         }

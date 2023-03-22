@@ -1,3 +1,4 @@
+using Nito.Collections;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +16,7 @@ public class Pathfinder
     private Dictionary<Vector3Int, Node> positionToNode = new Dictionary<Vector3Int, Node>();
     // keeps track of changed values since we can't update them directly in the priority queue
     private Dictionary<Node, float> changedNodes = new Dictionary<Node, float>();
-    private List<Vector3Int> path = new List<Vector3Int>();
+    private Deque<Vector3Int> path = new Deque<Vector3Int>();
     private Vector3Int? previousStartPoint = null;
 
     public Pathfinder(SpriteMovement spriteMovement) {
@@ -47,7 +48,7 @@ public class Pathfinder
         Debug.Log($"Reusing {positionToNode.Count} nodes.");
     }
 
-    public List<Vector3Int> FindPath(Vector3Int startPosition, Vector3Int endPosition,
+    public Deque<Vector3Int> FindPath(Vector3Int startPosition, Vector3Int endPosition,
             bool includeFinalPosition) {
         Debug.Log($"Finding path to {endPosition}");
         Node start = new Node(startPosition);
@@ -125,13 +126,11 @@ public class Pathfinder
                     currNode = currNode.prevNode;
                 }
 
-                while (true) {
-                    if (currNode.position == start.position) {
-                        return path;
-                    }
-                    path.Add(currNode.position);
+                while (currNode != null && currNode.position != start.position) {
+                    path.AddToBack(currNode.position);
                     currNode = currNode.prevNode;
                 }
+                return path;
             }
         }
     }

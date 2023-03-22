@@ -1,7 +1,8 @@
-using NonVoxel;
+using Nito.Collections;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CombatManager : MonoBehaviour
 {
@@ -10,42 +11,90 @@ public class CombatManager : MonoBehaviour
     [SerializeField] MovementManager movementManager;
     [SerializeField] SpriteMovement spriteMovement;
     [SerializeField] PlayerMovement playerMovement;
+    [SerializeField] InputManager inputManager;
+    [SerializeField] CameraManager cameraManager;
+    [SerializeField] GameStateManager gameStateManager;
+    [SerializeField] DetachedCamera detachedCamera;
     
     Pathfinder pathfinder;
     NPCBehavior firstCombatant;
     GameObject playerCombatants;
     List<KeyValuePair<int, Traveller>> initiatives;
     int currInitiative = -1;
+    int remainingSpeed = -1;
+
+    private const int TILE_TO_FEET = 5;
 
     private void Awake() {
         pathfinder = new Pathfinder(spriteMovement);
     }
 
-    public void RunCombat() {
+    public void StartCombat() {
         if (initiatives == null) {
             SetCombatantsAndInitiativeOrder();
-        }
-
-        // decide what to do on turn
-        Traveller currCreature = initiatives[currInitiative].Value;
-        if (movementManager.IsMoving(currCreature)) {
-            return;
-        }
-        else {
-            IncrementInitiative();
-            currCreature = initiatives[currInitiative].Value;
-        }
-        if (currCreature.GetType() == typeof(NPCBehavior)) {
-            // move towards player
-            List<Vector3Int> path = pathfinder.FindPath(currCreature.currVoxel, playerMovement.currVoxel, false);
-            movementManager.MoveAlongPath(currCreature, path);
-        }
-        else {
-            // give player control
-            Debug.Log("Player turn");
+            StartCoroutine(RunTurn(currInitiative));
         }
     }
 
+    public IEnumerator RunTurn(int initiative) {
+        Traveller currCreature = initiatives[initiative].Value;
+        if (currCreature.GetType() == typeof(PlayerMovement)) {
+            remainingSpeed = partyManager.playerCharacter.stats.baseSpeed;
+            inputManager.SwitchPlayerToDetachedControlState();
+            yield break;
+        }
+
+        NPCBehavior creatureAsNPC = (NPCBehavior) currCreature;
+        remainingSpeed = creatureAsNPC.npcInfo.stats.speed;
+        inputManager.SwitchDetachedToWatchControlState();
+        Deque<Vector3Int> path = pathfinder.FindPath(currCreature.currVoxel, playerMovement.currVoxel, false);
+        while (path.Count * TILE_TO_FEET > remainingSpeed) {
+            path.RemoveFromFront();
+        }
+        yield return movementManager.MoveAlongPath(currCreature, path);
+
+        IncrementInitiative();
+        StartCoroutine(RunTurn(currInitiative));
+    }
+
+    public void HandleDetachedSelect(InputAction.CallbackContext obj) {
+        StartCoroutine(ExecuteDetachedSelect());
+    }
+
+    public IEnumerator ExecuteDetachedSelect() {
+        if (gameStateManager.controlState != ControlState.COMBAT) {
+            yield break;
+        }
+
+        Traveller currCreature = initiatives[currInitiative].Value;
+        if (currCreature.GetType() != typeof(PlayerMovement)) {
+            yield break;
+        }
+        if (movementManager.IsMoving(currCreature)) {
+            yield break;
+        }
+
+        Deque<Vector3Int> path = pathfinder.FindPath(currCreature.currVoxel, 
+            detachedCamera.currVoxel, true);
+        if (path.Count * TILE_TO_FEET > remainingSpeed) {
+            Debug.Log($"Tried to move further than remaining speed: {remainingSpeed}");
+            yield break;
+        }
+        remainingSpeed -= path.Count * TILE_TO_FEET;
+        yield return movementManager.MoveAlongPath(currCreature, path);
+
+        if (remainingSpeed <= 0) {
+            IncrementInitiative();
+            StartCoroutine(RunTurn(currInitiative));
+        }
+    }
+
+    public void HandleDetachedCancel(InputAction.CallbackContext obj) {
+        Debug.Log("Player ended turn.");
+        IncrementInitiative();
+        StartCoroutine(RunTurn(currInitiative));
+    }
+    
     public void SetFirstCombatant(NPCBehavior firstCombatant) {
         this.firstCombatant = firstCombatant;
     }
