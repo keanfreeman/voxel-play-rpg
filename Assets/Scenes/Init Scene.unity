@@ -1106,6 +1106,7 @@ MonoBehaviour:
   cameraManager: {fileID: 1785101423}
   gameStateManager: {fileID: 955022268}
   detachedCamera: {fileID: 848129494}
+  nonVoxelWorld: {fileID: 1135948956}
 --- !u!4 &1613990518
 Transform:
   m_ObjectHideFlags: 0
