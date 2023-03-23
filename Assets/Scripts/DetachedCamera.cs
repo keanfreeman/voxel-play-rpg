@@ -19,6 +19,14 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] NonVoxelWorld nonVoxelWorld;
     [SerializeField] CameraManager cameraManager;
     [SerializeField] GameStateManager gameStateManager;
+    [SerializeField] VoxelWorldManager voxelWorldManager;
+    [SerializeField] SpriteRenderer detachedModeSprite;
+
+    // sprites
+    [SerializeField] Sprite grabIcon;
+    [SerializeField] Sprite meleeAttackIcon;
+    [SerializeField] Sprite rangedAttackIcon;
+    [SerializeField] Sprite traverseIcon;
 
     public Vector3Int currVoxel { get; private set; }
 
@@ -59,9 +67,28 @@ public class DetachedCamera : MonoBehaviour
         bool movedVoxels = UpdateCurrVoxel();
         if (movedVoxels) {
             detachedCameraBottom.MoveAnimated(currVoxel);
+            UpdateCursorType();
         }
         MoveCursor();
         HandleSelect();
+    }
+
+    private void UpdateCursorType() {
+        if (nonVoxelWorld.IsPositionOccupied(currVoxel)) {
+            if (gameStateManager.controlState == ControlState.COMBAT 
+                    && currVoxel != playerMovement.currVoxel) {
+                detachedModeSprite.sprite = meleeAttackIcon;
+            }
+            else {
+                detachedModeSprite.sprite = grabIcon;
+            }
+            return;
+        }
+
+        if (spriteMovement.IsReachablePosition(currVoxel, true)) {
+            detachedModeSprite.sprite = traverseIcon;
+            return;
+        }
     }
 
     private void MoveCursor() {

@@ -31,9 +31,11 @@ namespace NonVoxelEntity {
         public int wisdom { get; private set; }
         public int charisma { get; private set; }
 
+        public List<GameMechanics.Action> actions { get; private set; }
+
         public NPCStats(string name, string challengeRating, int armorClass, int speed,
                 int hitPoints, int strength, int dexterity, int constitution, int intelligence,
-                int wisdom, int charisma) {
+                int wisdom, int charisma, List<GameMechanics.Action> actions) {
             this.name = name;
             this.challengeRating = challengeRating;
             this.armorClass = armorClass;
@@ -45,6 +47,7 @@ namespace NonVoxelEntity {
             this.intelligence = intelligence;
             this.wisdom = wisdom;
             this.charisma = charisma;
+            this.actions = actions;
         }
     }
 

@@ -1,4 +1,5 @@
 using Nito.Collections;
+using NonVoxel;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,7 @@ public class CombatManager : MonoBehaviour
     [SerializeField] CameraManager cameraManager;
     [SerializeField] GameStateManager gameStateManager;
     [SerializeField] DetachedCamera detachedCamera;
+    [SerializeField] NonVoxelWorld nonVoxelWorld;
     
     Pathfinder pathfinder;
     NPCBehavior firstCombatant;
@@ -67,10 +69,7 @@ public class CombatManager : MonoBehaviour
         }
 
         Traveller currCreature = initiatives[currInitiative].Value;
-        if (currCreature.GetType() != typeof(PlayerMovement)) {
-            yield break;
-        }
-        if (movementManager.IsMoving(currCreature)) {
+        if (currCreature.GetType() != typeof(PlayerMovement) || movementManager.IsMoving(currCreature)) {
             yield break;
         }
 
@@ -90,6 +89,10 @@ public class CombatManager : MonoBehaviour
     }
 
     public void HandleDetachedCancel(InputAction.CallbackContext obj) {
+        if (movementManager.IsMoving(playerMovement)) {
+            return;
+        }
+
         Debug.Log("Player ended turn.");
         IncrementInitiative();
         StartCoroutine(RunTurn(currInitiative));
@@ -102,16 +105,16 @@ public class CombatManager : MonoBehaviour
     private void SetCombatantsAndInitiativeOrder() {
         initiatives = new List<KeyValuePair<int, Traveller>>();
 
-        int playerModifier = StatModifiers.GetModifierForStat(
+        int playerDexModifier = StatModifiers.GetModifierForStat(
             partyManager.playerCharacter.stats.dexterity);
-        int playerInitiative = randomManager.dice.Roll(1, 20, playerModifier);
+        int playerInitiative = randomManager.Roll(1, 20, playerDexModifier);
         initiatives.Add(new KeyValuePair<int, Traveller>(playerInitiative,
             playerMovement));
 
         foreach (NPCBehavior npcBehavior in firstCombatant.teammates) {
-            int modifier = StatModifiers.GetModifierForStat(
+            int npcDexModifier = StatModifiers.GetModifierForStat(
                 npcBehavior.npcInfo.stats.dexterity);
-            int initiative = randomManager.dice.Roll(1, 20, modifier);
+            int initiative = randomManager.Roll(1, 20, npcDexModifier);
             initiatives.Add(new KeyValuePair<int, Traveller>(initiative, npcBehavior));
         }
 

@@ -675,10 +675,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1135948956}
     - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
-      propertyPath: pathVisualizer
-      value: 
-      objectReference: {fileID: 2106943938}
-    - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
       propertyPath: playerMovement
       value: 
       objectReference: {fileID: 1823400829}
@@ -694,6 +690,10 @@ PrefabInstance:
       propertyPath: gameStateManager
       value: 
       objectReference: {fileID: 955022268}
+    - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
+      propertyPath: voxelWorldManager
+      value: 
+      objectReference: {fileID: 1568004907}
     - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
       propertyPath: detachedCameraBottom
       value: 

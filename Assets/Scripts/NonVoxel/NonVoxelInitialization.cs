@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using NonVoxelEntity;
+using GameMechanics;
+using GameMechanics.Wolf;
 
 public class NonVoxelInitialization {
     private GameObject playerPrefab;
@@ -17,8 +19,14 @@ public class NonVoxelInitialization {
         this.opossumPrefab = opossumPrefab;
         this.sceneExitPrefab = sceneExitPrefab;
 
-        NPCStats wolfStats = new NPCStats("Wolf", "1/4", 13, 40, 11, 12, 15, 12, 3, 12, 6);
-        PlayerStats playerStats = new PlayerStats("Player1", 1, 30, 10, 10, 10, 10, 10, 10, 10);
+        List<Action> wolfActions = new List<Action> {
+            new Bite("Bite", new Dice(2, 4, 2), new Dice(1, 20, 4))
+        };
+        NPCStats wolfStats = new NPCStats("Wolf", "1/4", 13, 40, 11, 12, 15, 12, 3, 12, 6, wolfActions);
+        List<Action> playerActions = new List<Action> {
+            new Attack("Shortsword", new Dice(1, 6, 0), new Dice(1, 20, 5))
+        };
+        PlayerStats playerStats = new PlayerStats("Player1", 1, 30, 10, 10, 10, 10, 10, 10, 10, playerActions);
 
         BattleGroup battleGroup1 = new BattleGroup(new List<NPC> {
             new NPC(opossumPrefab, new Vector3Int(835, 29, 349), wolfStats),
