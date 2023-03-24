@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace InstantiatedEntity {
-    public class SceneExit : MonoBehaviour
+    public class SceneExit : InstantiatedNVE
     {
         private EnvironmentSceneManager worldManager;
         private Destination destination;

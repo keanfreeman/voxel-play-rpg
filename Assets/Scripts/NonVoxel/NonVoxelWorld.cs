@@ -7,10 +7,10 @@ namespace NonVoxel {
     public class NonVoxelWorld : MonoBehaviour {
         [SerializeField] GameObject playerInstance;
 
-        private Dictionary<GameObject, Vector3Int> objectToPosition
-            = new Dictionary<GameObject, Vector3Int>();
-        private Dictionary<Vector3Int, GameObject> positionToObject
-            = new Dictionary<Vector3Int, GameObject>();
+        private Dictionary<InstantiatedNVE, Vector3Int> behaviorToPosition
+            = new Dictionary<InstantiatedNVE, Vector3Int>();
+        private Dictionary<Vector3Int, InstantiatedNVE> positionToBehavior
+            = new Dictionary<Vector3Int, InstantiatedNVE>();
 
         public HashSet<NPCBehavior> npcs = new HashSet<NPCBehavior>();
 
@@ -21,45 +21,45 @@ namespace NonVoxel {
             }
             npcs.Clear();
 
-            foreach (GameObject gameObject in objectToPosition.Keys) {
-                if (gameObject != playerInstance) {
-                    Destroy(gameObject);
+            foreach (MonoBehaviour behavior in behaviorToPosition.Keys) {
+                if (behavior.GetType() != typeof(PlayerMovement)) {
+                    Destroy(behavior);
                 }
             }
-            objectToPosition.Clear();
-            positionToObject.Clear();
+            behaviorToPosition.Clear();
+            positionToBehavior.Clear();
         }
 
-        public bool IsInWorld(GameObject gameObject) {
-            return objectToPosition.ContainsKey(gameObject);
+        public bool IsInWorld(InstantiatedNVE behavior) {
+            return behaviorToPosition.ContainsKey(behavior);
         }
 
-        public Vector3Int GetPosition(GameObject gameObject) {
-            return objectToPosition[gameObject];
+        public Vector3Int GetPosition(InstantiatedNVE behavior) {
+            return behaviorToPosition[behavior];
         }
 
-        public void SetPosition(GameObject gameObject, Vector3Int position) {
-            if (objectToPosition.ContainsKey(gameObject)) {
-                Vector3Int oldPosition = objectToPosition[gameObject];
-                if (positionToObject.ContainsKey(oldPosition)) {
-                    positionToObject.Remove(oldPosition);
+        public void SetPosition(InstantiatedNVE behavior, Vector3Int position) {
+            if (behaviorToPosition.ContainsKey(behavior)) {
+                Vector3Int oldPosition = behaviorToPosition[behavior];
+                if (positionToBehavior.ContainsKey(oldPosition)) {
+                    positionToBehavior.Remove(oldPosition);
                 }
             }
 
-            objectToPosition[gameObject] = position;
-            positionToObject[position] = gameObject;
+            behaviorToPosition[behavior] = position;
+            positionToBehavior[position] = behavior;
         }
 
-        public GameObject GetObjectFromPosition(Vector3Int position) {
-            return positionToObject[position];
+        public MonoBehaviour GetNVEFromPosition(Vector3Int position) {
+            return positionToBehavior[position];
         }
 
         public bool IsPositionOccupied(Vector3Int position) {
-            GameObject gameObject = positionToObject.GetValueOrDefault(position, null);
-            if (gameObject == null) {
+            MonoBehaviour behavior = positionToBehavior.GetValueOrDefault(position, null);
+            if (behavior == null) {
                 return false;
             }
-            if (gameObject.GetComponent<SceneExit>() != null) {
+            if (behavior.GetComponent<SceneExit>() != null) {
                 return false;
             }
             return true;
@@ -73,7 +73,7 @@ namespace NonVoxel {
                         Vector3Int checkPosition = currPosition + new Vector3Int(x, y, z);
                         if (checkPosition != currPosition && IsPositionOccupied(checkPosition)) {
                             NPCBehavior npcBehavior = 
-                                positionToObject[checkPosition].GetComponent<NPCBehavior>();
+                                positionToBehavior[checkPosition].GetComponent<NPCBehavior>();
                             if (npcBehavior != null && npcBehavior.IsInteractable()) {
                                 occupiedVoxels.Add(checkPosition);
                             }

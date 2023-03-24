@@ -1,4 +1,5 @@
 using Ink.Runtime;
+using InstantiatedEntity;
 using NonVoxel;
 using System;
 using System.Collections;
@@ -116,11 +117,11 @@ public class GameStateManager : MonoBehaviour
         // check for interactable objects
         Story story = null;
 
-        Vector3Int currPosition = nonVoxelWorld.GetPosition(playerMovement.gameObject);
+        Vector3Int currPosition = nonVoxelWorld.GetPosition(playerMovement);
         List<Vector3Int> interactablePositions = nonVoxelWorld.GetInteractableAdjacentObjects(currPosition);
         if (interactablePositions.Count > 0) {
             Vector3Int firstItem = interactablePositions.First();
-            story = objectInkMapping.GetStoryFromObject(nonVoxelWorld.GetObjectFromPosition(firstItem));
+            story = objectInkMapping.GetStoryFromObject(nonVoxelWorld.GetNVEFromPosition(firstItem).gameObject);
         }
         else {
             List<Vector3d> interactableVoxels = 

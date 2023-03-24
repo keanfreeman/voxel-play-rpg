@@ -1,3 +1,4 @@
+using InstantiatedEntity;
 using Nito.Collections;
 using NonVoxel;
 using System;
@@ -145,8 +146,8 @@ public class DetachedCamera : MonoBehaviour
         }
         if (nonVoxelWorld.IsPositionOccupied(currVoxel)) {
             // select the entity
-            GameObject gameObject = nonVoxelWorld.GetObjectFromPosition(currVoxel);
-            Traveller traveller = gameObject.GetComponent<Traveller>();
+            MonoBehaviour behavior = nonVoxelWorld.GetNVEFromPosition(currVoxel);
+            Traveller traveller = behavior.GetComponent<Traveller>();
             if (traveller != null) {
                 currTraveller = traveller;
                 Debug.Log($"Selected traveller for the detached camera at {traveller.currVoxel}");

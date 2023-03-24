@@ -52,7 +52,7 @@ public class NonVoxelManager : MonoBehaviour
         Vector3Int playerStartPosition = nonVoxelInitialization.GetPlayerStartPosition(currEnvIndex);
         playerInstance.transform.position = playerStartPosition;
         playerMovement.SetCurrVoxel(playerStartPosition);
-        nonVoxelWorld.SetPosition(playerInstance, playerStartPosition);
+        nonVoxelWorld.SetPosition(playerMovement, playerStartPosition);
     }
 
     private void InitCreaturesAndWorld() {
@@ -69,7 +69,8 @@ public class NonVoxelManager : MonoBehaviour
 
             GameObject gameObject = Instantiate(nonVoxelEntity.prefab,
                 nonVoxelEntity.startPosition, Quaternion.identity);
-            nonVoxelWorld.SetPosition(gameObject, nonVoxelEntity.startPosition);
+            nonVoxelWorld.SetPosition(gameObject.GetComponent<InstantiatedNVE>(),
+                nonVoxelEntity.startPosition);
                 
             if (nonVoxelEntity.GetType() == typeof(SceneExitCube)) {
                 SceneExitCube sceneExitCube = (SceneExitCube)nonVoxelEntity;

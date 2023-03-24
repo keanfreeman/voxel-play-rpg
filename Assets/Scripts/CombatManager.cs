@@ -1,3 +1,4 @@
+using InstantiatedEntity;
 using Nito.Collections;
 using NonVoxel;
 using System.Collections;
@@ -72,6 +73,8 @@ public class CombatManager : MonoBehaviour
         if (currCreature.GetType() != typeof(PlayerMovement) || movementManager.IsMoving(currCreature)) {
             yield break;
         }
+
+        
 
         Deque<Vector3Int> path = pathfinder.FindPath(currCreature.currVoxel, 
             detachedCamera.currVoxel, true);
