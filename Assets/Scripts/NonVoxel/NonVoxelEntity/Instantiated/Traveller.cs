@@ -16,11 +16,16 @@ namespace InstantiatedEntity {
         public SpriteMoveDirection permanentMoveDirection { get; protected set; } = SpriteMoveDirection.NONE;
 
         public bool isMoving { get; protected set; }
+        public int currHP { get; protected set; }
 
         protected const float TIME_TO_MOVE_A_TILE = 0.2f;
 
         private void Update() {
             AnimateMove();
+        }
+
+        public void SetHP(int newValue) {
+            currHP = newValue;
         }
 
         private void AnimateMove() {

@@ -13,8 +13,11 @@ public class RandomManager : MonoBehaviour
     public int Roll(int numDice, int diceSize, int modifier) {
         int sum = 0;
         for (int i = 0; i < numDice; i++) {
-            sum += rng.Next(1, diceSize + 1);
+            int roll = rng.Next(1, diceSize + 1);
+            Debug.Log($"Rolled a {roll} on a d{diceSize}.");
+            sum += roll;
         }
+
         return sum + modifier;
     }
 

@@ -75,6 +75,11 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
+    public void ExitCombat() {
+        controlState = ControlState.SPRITE_NEUTRAL;
+        inputManager.SwitchDetachedToPlayerControlState();
+    }
+
     private void HandleCombatBar() {
         if (inputManager.WasOpenCombatBarTriggered()) {
             inputManager.SwitchPlayerControlStateToUI();

@@ -45,12 +45,12 @@ public class Pathfinder
             positionToNode.Clear();
         }
 
-        Debug.Log($"Reusing {positionToNode.Count} nodes.");
+        //Debug.Log($"Reusing {positionToNode.Count} nodes.");
     }
 
     public Deque<Vector3Int> FindPath(Vector3Int startPosition, Vector3Int endPosition,
             bool includeFinalPosition) {
-        Debug.Log($"Finding path to {endPosition}");
+        //Debug.Log($"Finding path to {endPosition}");
         Node start = new Node(startPosition);
         Node end = new Node(endPosition);
 
@@ -121,7 +121,7 @@ public class Pathfinder
             }
 
             if (currNode.position == end.position) {
-                Debug.Log("Finished path");
+                //Debug.Log("Finished path");
                 if (!includeFinalPosition) {
                     currNode = currNode.prevNode;
                 }

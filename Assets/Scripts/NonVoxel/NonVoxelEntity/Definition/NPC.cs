@@ -22,7 +22,7 @@ namespace NonVoxelEntity {
 
         public int armorClass { get; private set; }
         public int speed { get; private set; }
-        public int hitPoints { get; private set; }
+        public int hpMax { get; private set; }
 
         public int strength { get; private set; }
         public int dexterity { get; private set; }
@@ -34,13 +34,13 @@ namespace NonVoxelEntity {
         public List<GameMechanics.Action> actions { get; private set; }
 
         public NPCStats(string name, string challengeRating, int armorClass, int speed,
-                int hitPoints, int strength, int dexterity, int constitution, int intelligence,
+                int hpMax, int strength, int dexterity, int constitution, int intelligence,
                 int wisdom, int charisma, List<GameMechanics.Action> actions) {
             this.name = name;
             this.challengeRating = challengeRating;
             this.armorClass = armorClass;
             this.speed = speed;
-            this.hitPoints = hitPoints;
+            this.hpMax = hpMax;
             this.strength = strength;
             this.dexterity = dexterity;
             this.constitution = constitution;

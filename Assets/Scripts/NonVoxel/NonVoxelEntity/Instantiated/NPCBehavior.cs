@@ -39,6 +39,7 @@ namespace InstantiatedEntity {
             this.spriteMovement = spriteMovement;
             this.rng = rng;
             this.npcInfo = npcInfo;
+            currHP = npcInfo.stats.hpMax;
             this.cameraManager = cameraManager;
 
             currVoxel = nonVoxelWorld.GetPosition(this);

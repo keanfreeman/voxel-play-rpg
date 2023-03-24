@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameMechanics.Wolf {
-    public class Bite : GameMechanics.Attack
+    public class Bite : Attack
     {
         public Bite(string attackName, Dice attackRoll, Dice damageRoll) 
                 : base(attackName, attackRoll, damageRoll) {}

@@ -20,11 +20,11 @@ public class NonVoxelInitialization {
         this.sceneExitPrefab = sceneExitPrefab;
 
         List<Action> wolfActions = new List<Action> {
-            new Bite("Bite", new Dice(2, 4, 2), new Dice(1, 20, 4))
+            new Bite("Bite", new Dice(1, 20, 4), new Dice(2, 4, 2))
         };
         NPCStats wolfStats = new NPCStats("Wolf", "1/4", 13, 40, 11, 12, 15, 12, 3, 12, 6, wolfActions);
         List<Action> playerActions = new List<Action> {
-            new Attack("Shortsword", new Dice(1, 6, 0), new Dice(1, 20, 5))
+            new Attack("Shortsword", new Dice(1, 20, 5), new Dice(1, 6, 0))
         };
         PlayerStats playerStats = new PlayerStats("Player1", 1, 30, 10, 10, 10, 10, 10, 10, 10, playerActions);
 
