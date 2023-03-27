@@ -57,6 +57,23 @@ public class CombatManager : MonoBehaviour
         }
         yield return movementManager.MoveAlongPath(currCreature, path);
 
+        if (Coordinates.IsNextTo(creatureAsNPC.currVoxel, playerMovement.currVoxel)) {
+            // TODO use less brittle attack selection method
+            Attack npcAttack = (Attack)creatureAsNPC.npcInfo.stats.actions[0];
+            int attackRoll = randomManager.Roll(npcAttack.attackRoll);
+            Debug.Log($"NPC rolled {attackRoll} for their attack roll.");
+            if (attackRoll >= partyManager.playerCharacter.stats.GetArmorClass()) {
+                int damageRoll = randomManager.Roll(npcAttack.damageRoll);
+                Debug.Log($"NPC rolled {damageRoll} for their damage roll.");
+                int newHP = playerMovement.currHP - damageRoll;
+                playerMovement.SetHP(newHP);
+                if (newHP < 1) {
+                    // TODO - lose on death and no party members
+                    Debug.Log("Player ran out of HP.");
+                }
+            }
+        }
+
         ResetCombatResources(currCreature);
         IncrementInitiative();
         StartCoroutine(RunTurn(currInitiative));

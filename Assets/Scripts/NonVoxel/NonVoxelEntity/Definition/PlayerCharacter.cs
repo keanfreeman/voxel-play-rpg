@@ -44,5 +44,9 @@ namespace NonVoxelEntity {
             this.charisma = charisma;
             this.actions = actions;
         }
+
+        public int GetArmorClass() {
+            return 10 + StatModifiers.GetModifierForStat(dexterity);
+        }
     }
 }
