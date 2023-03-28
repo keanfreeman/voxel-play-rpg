@@ -2,17 +2,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
 
 namespace NonVoxelEntity {
     public class NPC : Entity {
         public BattleGroup battleGroup { get; set; }
         public NPCStats stats { get; private set; }
+        public SpriteLibraryAsset spriteLibraryAsset { get; set; }
+        public Vector3 spriteScale { get; private set; }
 
-        public NPC(GameObject prefab, Vector3Int startPosition, NPCStats stats)
+        public NPC(GameObject prefab, Vector3Int startPosition, NPCStats stats,
+                SpriteLibraryAsset spriteLibraryAsset, Vector3 spriteScale)
                 : base(prefab, startPosition) {
             this.prefab = prefab;
             this.startPosition = startPosition;
             this.stats = stats;
+            this.spriteLibraryAsset = spriteLibraryAsset;
+            this.spriteScale = spriteScale;
         }
     }
 

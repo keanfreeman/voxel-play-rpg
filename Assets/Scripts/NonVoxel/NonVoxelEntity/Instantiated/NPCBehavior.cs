@@ -5,13 +5,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
 using VoxelPlay;
 
 namespace InstantiatedEntity {
     // moves around randomly
     public class NPCBehavior : Traveller {
-        private const float NPC_MIN_IDLE_TIME = 1;
-        private const float NPC_MAX_IDLE_TIME = 5;
+        [SerializeField] SpriteLibrary spriteLibrary;
+        [SerializeField] Transform spriteObjectTransform;
 
         private System.Random rng;
         private SpriteMovement spriteMovement;
@@ -22,6 +23,9 @@ namespace InstantiatedEntity {
         public bool encounteredPlayer = false;
         public NPC npcInfo;
         public HashSet<NPCBehavior> teammates;
+
+        private const float NPC_MIN_IDLE_TIME = 1;
+        private const float NPC_MAX_IDLE_TIME = 5;
 
         void Awake() {
             rotationTransform = transform.GetChild(0);
@@ -41,7 +45,8 @@ namespace InstantiatedEntity {
             this.npcInfo = npcInfo;
             currHP = npcInfo.stats.hpMax;
             this.cameraManager = cameraManager;
-
+            this.spriteLibrary.spriteLibraryAsset = npcInfo.spriteLibraryAsset;
+            spriteObjectTransform.localScale = npcInfo.spriteScale;
             currVoxel = nonVoxelWorld.GetPosition(this);
         }
 

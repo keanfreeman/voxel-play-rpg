@@ -13,15 +13,21 @@ namespace InstantiatedEntity {
         protected Vector3Int moveStartPoint;
         protected Vector3Int moveEndPoint;
         protected float moveStartTimestamp;
+        private float moveFinishedTimestamp;
         public SpriteMoveDirection permanentMoveDirection { get; protected set; } = SpriteMoveDirection.NONE;
 
         public bool isMoving { get; protected set; }
         public int currHP { get; protected set; }
 
         protected const float TIME_TO_MOVE_A_TILE = 0.2f;
+        private const float ANIMATION_COOLDOWN_TIME = 0.1f;
 
         private void Update() {
             AnimateMove();
+            if (!isMoving && Time.time - moveFinishedTimestamp > ANIMATION_COOLDOWN_TIME) {
+                SetMoveAnimation(false);
+                moveFinishedTimestamp = float.MaxValue;
+            }
         }
 
         public void SetHP(int newValue) {
@@ -41,7 +47,7 @@ namespace InstantiatedEntity {
                 transform.position = Vector3.Lerp(moveStartPoint, moveEndPoint, fractionOfMovementDone);
 
                 if (fractionOfMovementDone >= 1f) {
-                    SetMoveAnimation(false);
+                    moveFinishedTimestamp = Time.time;
                     isMoving = false;
                 }
             }
@@ -62,9 +68,7 @@ namespace InstantiatedEntity {
         }
 
         public void SetMoveAnimation(bool state) {
-            if (animator != null) {
-                animator.SetBool("isMoving", state);
-            }
+            animator.SetBool("isMoving", state);
         }
 
         public abstract void RotateSprite(float degrees);

@@ -1,28 +1,7 @@
 fileFormatVersion: 2
-guid: f29ac931a227a8c4d894fd7a8204bd4f
+guid: b06f53a8df0540642bd009245d079620
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -2395915012264860623
-    second: fighterback0
-  - first:
-      213: -8400664740927844676
-    second: fighterback1
-  - first:
-      213: -6634168576637341269
-    second: fighterforward0
-  - first:
-      213: -4129831155367829575
-    second: fighterside0
-  - first:
-      213: -8638566481526460322
-    second: fighterforward1
-  - first:
-      213: 3834112824545117737
-    second: fighterside1
-  - first:
-      213: -7544341681760622511
-    second: fighterside2
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -84,7 +63,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
-  cookieLightType: 1
+  cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -111,18 +90,6 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
     buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -135,7 +102,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Windows Store Apps
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -150,148 +117,64 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: fighterback0
+      name: loreleiplaceholder_0
       rect:
         serializedVersion: 2
-        x: 3
-        y: 9
-        width: 98
-        height: 140
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1346ded8dffffbed0800000000000000
-      internalID: -2395915012264860623
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: fighterback1
-      rect:
-        serializedVersion: 2
-        x: 311
-        y: 9
+        x: 219
+        y: 16
         width: 105
         height: 140
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cbec8df3de7da6b80800000000000000
-      internalID: -8400664740927844676
+      spriteID: 4096ac5cf97d44346b6e5af4dcc8b7e7
+      internalID: 1836931208
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: fighterforward0
+      name: loreleiplaceholder_1
       rect:
         serializedVersion: 2
-        x: 108
-        y: 9
-        width: 98
-        height: 133
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ba1f87134d2bee3a0800000000000000
-      internalID: -6634168576637341269
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: fighterside0
-      rect:
-        serializedVersion: 2
-        x: 213
-        y: 9
-        width: 98
+        x: 541
+        y: 16
+        width: 105
         height: 140
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9bf95f9e174efa6c0800000000000000
-      internalID: -4129831155367829575
+      spriteID: a674dff4a14281a488c6ae869d1307df
+      internalID: 914121097
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: fighterforward1
+      name: loreleiplaceholder_2
       rect:
         serializedVersion: 2
-        x: 423
-        y: 9
-        width: 98
+        x: 653
+        y: 16
+        width: 105
         height: 140
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e50f40cdd85ad1880800000000000000
-      internalID: -8638566481526460322
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: fighterside1
-      rect:
-        serializedVersion: 2
-        x: 528
-        y: 9
-        width: 98
-        height: 133
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 92608c7cc41853530800000000000000
-      internalID: 3834112824545117737
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: fighterside2
-      rect:
-        serializedVersion: 2
-        x: 633
-        y: 9
-        width: 98
-        height: 133
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1582c7a463d1d4790800000000000000
-      internalID: -7544341681760622511
+      spriteID: 4dcd7a71b12da8343811bb0d79388837
+      internalID: -636036729
       vertices: []
       indices: 
       edges: []
@@ -299,7 +182,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e9b25917df989e4999e27899da2f5e7
+    spriteID: 0a537bc9c15307e42837bbe4a3fcf911
     internalID: 0
     vertices: []
     indices: 
@@ -307,13 +190,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      fighterback0: -2395915012264860623
-      fighterback1: -8400664740927844676
-      fighterforward0: -6634168576637341269
-      fighterforward1: -8638566481526460322
-      fighterside0: -4129831155367829575
-      fighterside1: 3834112824545117737
-      fighterside2: -7544341681760622511
+      loreleiplaceholder_0: 1836931208
+      loreleiplaceholder_1: 914121097
+      loreleiplaceholder_2: -636036729
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

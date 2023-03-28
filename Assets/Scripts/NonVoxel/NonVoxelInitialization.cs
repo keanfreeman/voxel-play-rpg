@@ -5,19 +5,25 @@ using UnityEngine;
 using NonVoxelEntity;
 using GameMechanics;
 using GameMechanics.Wolf;
+using UnityEngine.U2D.Animation;
 
 public class NonVoxelInitialization {
     private GameObject playerPrefab;
-    private GameObject opossumPrefab;
+    private GameObject npcPrefab;
     private GameObject sceneExitPrefab;
 
     public Dictionary<int, List<Entity>> environmentObjects;
 
-    public NonVoxelInitialization(GameObject playerPrefab, GameObject opossumPrefab,
+    public NonVoxelInitialization(GameObject playerPrefab, GameObject npcPrefab,
             GameObject sceneExitPrefab) {
         this.playerPrefab = playerPrefab;
-        this.opossumPrefab = opossumPrefab;
+        this.npcPrefab = npcPrefab;
         this.sceneExitPrefab = sceneExitPrefab;
+
+        SpriteLibraryAsset loreleiSpriteLibrary = 
+            Resources.Load<SpriteLibraryAsset>("Borrowed/Sprites/LoreleiSpriteLibrary");
+        SpriteLibraryAsset opossumSpriteLibrary =
+            Resources.Load<SpriteLibraryAsset>("Borrowed/Sprites/OpossumSpriteLibrary");
 
         List<Action> wolfActions = new List<Action> {
             new Bite("Bite", new Dice(1, 20, 4), new Dice(2, 4, 2))
@@ -29,15 +35,20 @@ public class NonVoxelInitialization {
         PlayerStats playerStats = new PlayerStats("Player1", 1, 30, 10, 10, 10, 10, 10, 10, 10, playerActions);
 
         BattleGroup battleGroup1 = new BattleGroup(new List<NPC> {
-            new NPC(opossumPrefab, new Vector3Int(835, 29, 349), wolfStats),
-            new NPC(opossumPrefab, new Vector3Int(835, 29, 347), wolfStats)
+            new NPC(npcPrefab, new Vector3Int(835, 29, 349), wolfStats, loreleiSpriteLibrary,
+                new Vector3(0.8f, 0.8f, 0.8f)),
+            new NPC(npcPrefab, new Vector3Int(835, 29, 347), wolfStats, opossumSpriteLibrary,
+                new Vector3(4.4f, 4.4f, 4.4f))
         });
         BattleGroup battleGroup2 = new BattleGroup(new List<NPC> {
-            new NPC(opossumPrefab, new Vector3Int(825, 31, 349), wolfStats),
-            new NPC(opossumPrefab, new Vector3Int(825, 31, 350), wolfStats)
+            new NPC(npcPrefab, new Vector3Int(825, 31, 349), wolfStats, opossumSpriteLibrary, 
+                new Vector3(4.4f, 4.4f, 4.4f)),
+            new NPC(npcPrefab, new Vector3Int(825, 31, 350), wolfStats, opossumSpriteLibrary, 
+                new Vector3(4.4f, 4.4f, 4.4f))
         });
         BattleGroup battleGroup3 = new BattleGroup(new List<NPC> {
-            new NPC(opossumPrefab, new Vector3Int(468, 26, -46), wolfStats)
+            new NPC(npcPrefab, new Vector3Int(468, 26, -46), wolfStats, opossumSpriteLibrary,
+                new Vector3(4.4f, 4.4f, 4.4f))
         });
 
         environmentObjects = new Dictionary<int, List<Entity>> {
