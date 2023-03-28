@@ -15,23 +15,24 @@ public class NonVoxelManager : MonoBehaviour
 {
     [SerializeField] InputManager inputManager;
     [SerializeField] EnvironmentSceneManager environmentSceneManager;
-    [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private GameObject playerInstance;
-    [SerializeField] private PlayerMovement playerMovement;
-    [SerializeField] private NonVoxelWorld nonVoxelWorld;
-    [SerializeField] private SpriteMovement spriteMovement;
-    [SerializeField] private RandomManager randomManager;
-    [SerializeField] private VoxelWorldManager voxelWorldManager;
-    [SerializeField] private CameraManager cameraManager;
+    [SerializeField] GameObject playerPrefab;
+    [SerializeField] GameObject playerInstance;
+    [SerializeField] PlayerMovement playerMovement;
+    [SerializeField] NonVoxelWorld nonVoxelWorld;
+    [SerializeField] SpriteMovement spriteMovement;
+    [SerializeField] RandomManager randomManager;
+    [SerializeField] VoxelWorldManager voxelWorldManager;
+    [SerializeField] CameraManager cameraManager;
+    [SerializeField] PartyManager partyManager;
 
-    [SerializeField] private GameObject opossumPrefab;
-    [SerializeField] private GameObject sceneExitPrefab;
-    [SerializeField] private GameObject detachedCameraPrefab;
+    [SerializeField] GameObject opossumPrefab;
+    [SerializeField] GameObject sceneExitPrefab;
+    [SerializeField] GameObject detachedCameraPrefab;
 
     private InstantiatedEntity.PlayerCharacter playerCharacter;
     private NonVoxelInitialization nonVoxelInitialization;
 
-    private List<Entity> nonVoxelEntities;
+    private List<Spawnable> nonVoxelEntities;
 
     private void Awake() {
         nonVoxelInitialization = new NonVoxelInitialization(playerPrefab,
@@ -58,32 +59,50 @@ public class NonVoxelManager : MonoBehaviour
     private void InitCreaturesAndWorld() {
         Dictionary<Guid, HashSet<NPCBehavior>> battleGroups = 
             new Dictionary<Guid, HashSet<NPCBehavior>>();
-        foreach (Entity nonVoxelEntity in nonVoxelEntities) {
-            if (nonVoxelEntity.GetType() == typeof(NonVoxelEntity.PlayerCharacter)) {
+        foreach (Spawnable nonVoxelSpawnable in nonVoxelEntities) {
+            if (nonVoxelSpawnable.GetType() == typeof(NonVoxelEntity.Party)) {
+                Party party = (Party)nonVoxelSpawnable;
+                NonVoxelEntity.PlayerCharacter entity = party.mainCharacter;
+                playerCharacter = playerInstance.GetComponent<InstantiatedEntity.PlayerCharacter>();
+                playerCharacter.Init(entity);
+
+                foreach (NPC npcInfo in party.members) {
+                    GameObject npcObject = Instantiate(npcInfo.prefab,
+                        npcInfo.startPosition, Quaternion.identity);
+                    NPCBehavior npcBehavior = npcObject.GetComponent<NPCBehavior>();
+                    nonVoxelWorld.SetPosition(npcBehavior, npcInfo.startPosition);
+                    npcBehavior.Init(nonVoxelWorld, spriteMovement, randomManager.rng, npcInfo,
+                        cameraManager);
+                }
+                continue;
+            }
+
+            if (nonVoxelSpawnable.GetType() == typeof(NonVoxelEntity.PlayerCharacter)) {
                 NonVoxelEntity.PlayerCharacter entity = 
-                    (NonVoxelEntity.PlayerCharacter)nonVoxelEntity;
+                    (NonVoxelEntity.PlayerCharacter)nonVoxelSpawnable;
                 playerCharacter = playerInstance.GetComponent<InstantiatedEntity.PlayerCharacter>();
                 playerCharacter.Init(entity);
                 continue;
             }
 
+            Entity nonVoxelEntity = (Entity)nonVoxelSpawnable;
             GameObject gameObject = Instantiate(nonVoxelEntity.prefab,
                 nonVoxelEntity.startPosition, Quaternion.identity);
             nonVoxelWorld.SetPosition(gameObject.GetComponent<InstantiatedNVE>(),
                 nonVoxelEntity.startPosition);
                 
-            if (nonVoxelEntity.GetType() == typeof(SceneExitCube)) {
-                SceneExitCube sceneExitCube = (SceneExitCube)nonVoxelEntity;
+            if (nonVoxelSpawnable.GetType() == typeof(SceneExitCube)) {
+                SceneExitCube sceneExitCube = (SceneExitCube)nonVoxelSpawnable;
                 SceneExit sceneExitComponent = gameObject.GetComponent<SceneExit>();
                 sceneExitComponent.Init(environmentSceneManager, sceneExitCube.destination);
             }
 
-            if (nonVoxelEntity.GetType() == typeof(NPC)) {
-                NPC npcInfo = (NPC)nonVoxelEntity;
+            if (nonVoxelSpawnable.GetType() == typeof(NPC)) {
+                NPC npcInfo = (NPC)nonVoxelSpawnable;
                 NPCBehavior npcBehavior = gameObject.GetComponent<NPCBehavior>();
                 npcBehavior.Init(nonVoxelWorld, spriteMovement, randomManager.rng, npcInfo,
                     cameraManager);
-                nonVoxelWorld.npcs.Add(npcBehavior);
+                nonVoxelWorld.enemyNPCs.Add(npcBehavior);
 
                 Guid battleGroupID = npcInfo.battleGroup.groupID;
                 if (!battleGroups.ContainsKey(battleGroupID)) {

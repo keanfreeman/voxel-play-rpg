@@ -105,7 +105,7 @@ public class GameStateManager : MonoBehaviour
     }
 
     private NPCBehavior HandleNPCsFreeMovement() {
-        foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
+        foreach (NPCBehavior npc in nonVoxelWorld.enemyNPCs) {
             if (npc.encounteredPlayer) {
                 return npc;
             }

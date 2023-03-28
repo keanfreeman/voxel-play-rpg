@@ -12,14 +12,14 @@ namespace NonVoxel {
         private Dictionary<Vector3Int, InstantiatedNVE> positionToEntity
             = new Dictionary<Vector3Int, InstantiatedNVE>();
 
-        public HashSet<NPCBehavior> npcs = new HashSet<NPCBehavior>();
+        public HashSet<NPCBehavior> enemyNPCs = new HashSet<NPCBehavior>();
 
         public void DestroyEntities() {
-            foreach (InstantiatedNVE npc in npcs) {
+            foreach (InstantiatedNVE npc in enemyNPCs) {
                 npc.enabled = false;
                 Destroy(npc.gameObject);
             }
-            npcs.Clear();
+            enemyNPCs.Clear();
 
             foreach (InstantiatedNVE behavior in entityToPosition.Keys) {
                 if (behavior.GetType() != typeof(PlayerMovement)) {
@@ -57,7 +57,7 @@ namespace NonVoxel {
         public void ResetPosition(Vector3Int position) {
             InstantiatedNVE entity = positionToEntity[position];
             if (entity.GetType() == typeof(NPCBehavior)) {
-                npcs.Remove((NPCBehavior)entity);
+                enemyNPCs.Remove((NPCBehavior)entity);
             }
             entityToPosition.Remove(entity);
             positionToEntity.Remove(position);

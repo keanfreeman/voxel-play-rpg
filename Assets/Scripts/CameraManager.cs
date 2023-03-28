@@ -103,7 +103,7 @@ public class CameraManager : MonoBehaviour {
 
             mainCameraTarget.transform.Rotate(Vector3.up, degreesToRotate);
             playerMovement.RotateSprite(degreesToRotate);
-            foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
+            foreach (NPCBehavior npc in nonVoxelWorld.enemyNPCs) {
                 npc.RotateSprite(degreesToRotate);
             }
 
@@ -133,7 +133,7 @@ public class CameraManager : MonoBehaviour {
             mainCameraTarget.transform.Rotate(Vector3.up, degrees);
             detachedModeSpriteRotator.Rotate(Vector3.up, degrees);
             playerMovement.RotateSprite(degrees);
-            foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
+            foreach (NPCBehavior npc in nonVoxelWorld.enemyNPCs) {
                 npc.RotateSprite(degrees);
             }
             yield return null;
@@ -146,7 +146,7 @@ public class CameraManager : MonoBehaviour {
         Vector3 rotation = new Vector3(0, yAngle, 0);
         detachedModeSpriteRotator.rotation = Quaternion.Euler(rotation);
         playerMovement.SetSpriteRotation(rotation);
-        foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
+        foreach (NPCBehavior npc in nonVoxelWorld.enemyNPCs) {
             npc.SetSpriteRotation(rotation);
         }
     }

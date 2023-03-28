@@ -32,7 +32,7 @@ namespace InstantiatedEntity {
         }
 
         private void OnTriggerEnter(Collider other) {
-            if (other.gameObject.tag == "Player") {
+            if (npcInfo.faction == Faction.ENEMY && other.gameObject.tag == "Player") {
                 encounteredPlayer = true;
             }
         }

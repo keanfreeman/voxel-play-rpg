@@ -12,7 +12,7 @@ public class NonVoxelInitialization {
     private GameObject npcPrefab;
     private GameObject sceneExitPrefab;
 
-    public Dictionary<int, List<Entity>> environmentObjects;
+    public Dictionary<int, List<Spawnable>> environmentObjects;
 
     public NonVoxelInitialization(GameObject playerPrefab, GameObject npcPrefab,
             GameObject sceneExitPrefab) {
@@ -25,36 +25,49 @@ public class NonVoxelInitialization {
         SpriteLibraryAsset opossumSpriteLibrary =
             Resources.Load<SpriteLibraryAsset>("Borrowed/Sprites/OpossumSpriteLibrary");
 
-        List<Action> wolfActions = new List<Action> {
-            new Bite("Bite", new Dice(1, 20, 4), new Dice(2, 4, 2))
-        };
-        NPCStats wolfStats = new NPCStats("Wolf", "1/4", 13, 40, 11, 12, 15, 12, 3, 12, 6, wolfActions);
         List<Action> playerActions = new List<Action> {
             new Attack("Shortsword", new Dice(1, 20, 5), new Dice(1, 6, 0))
         };
         PlayerStats playerStats = new PlayerStats("Player1", 1, 30, 10, 10, 10, 10, 10, 10, 10, playerActions);
+        List<Action> scoutActions = new List<Action> {
+            new Attack("Shortsword", new Dice(1, 20, 4), new Dice(1, 6, 2))
+        };
+        NPCStats scoutStats = new NPCStats("Scout", "1/2", 16, 30, 16, 11, 14, 12, 11, 13, 11, scoutActions);
+        Party party = new Party(
+            new PlayerCharacter(playerPrefab, new Vector3Int(864, 29, 348), playerStats),
+            new List<NPC> {
+                new NPC(npcPrefab, new Vector3Int(864, 29, 349), scoutStats, loreleiSpriteLibrary,
+                    new Vector3(0.8f, 0.8f, 0.8f), Faction.PLAYER)
+            }
+        );
 
+        List<Action> wolfActions = new List<Action> {
+            new Bite("Bite", new Dice(1, 20, 4), new Dice(2, 4, 2))
+        };
+        NPCStats wolfStats = new NPCStats("Wolf", "1/4", 13, 40, 11, 12, 15, 12, 3, 12, 6, wolfActions);
+
+        
         BattleGroup battleGroup1 = new BattleGroup(new List<NPC> {
-            new NPC(npcPrefab, new Vector3Int(835, 29, 349), wolfStats, loreleiSpriteLibrary,
-                new Vector3(0.8f, 0.8f, 0.8f)),
+            new NPC(npcPrefab, new Vector3Int(835, 29, 349), wolfStats, opossumSpriteLibrary,
+                new Vector3(4.4f, 4.4f, 4.4f), Faction.ENEMY),
             new NPC(npcPrefab, new Vector3Int(835, 29, 347), wolfStats, opossumSpriteLibrary,
-                new Vector3(4.4f, 4.4f, 4.4f))
+                new Vector3(4.4f, 4.4f, 4.4f), Faction.ENEMY)
         });
         BattleGroup battleGroup2 = new BattleGroup(new List<NPC> {
             new NPC(npcPrefab, new Vector3Int(825, 31, 349), wolfStats, opossumSpriteLibrary, 
-                new Vector3(4.4f, 4.4f, 4.4f)),
+                new Vector3(4.4f, 4.4f, 4.4f), Faction.ENEMY),
             new NPC(npcPrefab, new Vector3Int(825, 31, 350), wolfStats, opossumSpriteLibrary, 
-                new Vector3(4.4f, 4.4f, 4.4f))
+                new Vector3(4.4f, 4.4f, 4.4f), Faction.ENEMY)
         });
         BattleGroup battleGroup3 = new BattleGroup(new List<NPC> {
             new NPC(npcPrefab, new Vector3Int(468, 26, -46), wolfStats, opossumSpriteLibrary,
-                new Vector3(4.4f, 4.4f, 4.4f))
+                new Vector3(4.4f, 4.4f, 4.4f), Faction.ENEMY)
         });
 
-        environmentObjects = new Dictionary<int, List<Entity>> {
+        environmentObjects = new Dictionary<int, List<Spawnable>> {
             {
-                3, new List<Entity> {
-                    new PlayerCharacter(playerPrefab, new Vector3Int(864, 29, 348), playerStats),
+                3, new List<Spawnable> {
+                    party,
                     battleGroup1.combatants[0],
                     battleGroup1.combatants[1],
                     battleGroup2.combatants[0],
@@ -66,8 +79,8 @@ public class NonVoxelInitialization {
                 }
             },
             {
-                1, new List<Entity> {
-                    new PlayerCharacter(playerPrefab, new Vector3Int(466, 29, -46), playerStats),
+                1, new List<Spawnable> {
+                    party,
                     battleGroup3.combatants[0],
                     new SceneExitCube(
                         sceneExitPrefab,
@@ -76,8 +89,8 @@ public class NonVoxelInitialization {
                 }
             },
             {
-                2, new List<Entity> {
-                    new PlayerCharacter(playerPrefab, new Vector3Int(-3, 44, 85), playerStats),
+                2, new List<Spawnable> {
+                    party,
                     battleGroup3.combatants[0],
                     new SceneExitCube(
                         sceneExitPrefab,
@@ -89,16 +102,17 @@ public class NonVoxelInitialization {
     }
 
     public Vector3Int GetPlayerStartPosition(int environmentIndex) {
-        List<Entity> nonVoxelEntities = GetEnvEntities(environmentIndex);
-        foreach (Entity nonVoxelEntity in nonVoxelEntities) {
-            if (nonVoxelEntity.GetType() == typeof(PlayerCharacter)) {
-                return nonVoxelEntity.startPosition;
+        List<Spawnable> nonVoxelEntities = GetEnvEntities(environmentIndex);
+        foreach (Spawnable nonVoxelEntity in nonVoxelEntities) {
+            if (nonVoxelEntity.GetType() == typeof(Party)) {
+                Party party = (Party)nonVoxelEntity;
+                return party.mainCharacter.startPosition;
             }
         }
         throw new KeyNotFoundException($"No player position for env {environmentIndex} found.");
     }
 
-    public List<Entity> GetEnvEntities(int environmentIndex) {
-        return environmentObjects.GetValueOrDefault(environmentIndex, new List<Entity>());
+    public List<Spawnable> GetEnvEntities(int environmentIndex) {
+        return environmentObjects.GetValueOrDefault(environmentIndex, new List<Spawnable>());
     }
 }

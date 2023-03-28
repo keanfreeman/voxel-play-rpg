@@ -435,6 +435,7 @@ MonoBehaviour:
   randomManager: {fileID: 983819852}
   voxelWorldManager: {fileID: 1568004907}
   cameraManager: {fileID: 1785101423}
+  partyManager: {fileID: 683280036}
   opossumPrefab: {fileID: 6944743723035480207, guid: 8763f4ed44e10d446ba76d834eb2f67f, type: 3}
   sceneExitPrefab: {fileID: 440023488360116698, guid: 4242af01c09d0984f9c6587337ba132b, type: 3}
   detachedCameraPrefab: {fileID: 1275296119661960477, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
@@ -483,7 +484,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCharacter: {fileID: 1823400828}
-  partyMembers: []
 --- !u!4 &683280037
 Transform:
   m_ObjectHideFlags: 0
@@ -1255,12 +1255,20 @@ PrefabInstance:
       value: 0.009161512
       objectReference: {fileID: 0}
     - target: {fileID: 7062049781447327524, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
-      propertyPath: m_Sprite
-      value: 
+      propertyPath: m_Size.x
+      value: 0.98
       objectReference: {fileID: 0}
     - target: {fileID: 7062049781447327524, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
+      propertyPath: m_Size.y
+      value: 1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7062049781447327524, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -4129831155367829575, guid: f29ac931a227a8c4d894fd7a8204bd4f, type: 3}
+    - target: {fileID: 7062049781447327524, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
       propertyPath: m_WasSpriteAssigned
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7062049781447327525, guid: 74ba8a248367b1e4aaf7ec83309fa9bf, type: 3}
       propertyPath: m_LocalScale.x
