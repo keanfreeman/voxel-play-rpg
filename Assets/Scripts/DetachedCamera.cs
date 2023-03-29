@@ -14,7 +14,6 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] AudioListener audioListener;
     [SerializeField] DetachedCameraBottom detachedCameraBottom;
     [SerializeField] InputManager inputManager;
-    [SerializeField] PlayerMovement playerMovement;
     [SerializeField] SpriteMovement spriteMovement;
     [SerializeField] MovementManager movementManager;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
@@ -22,6 +21,7 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] GameStateManager gameStateManager;
     [SerializeField] VoxelWorldManager voxelWorldManager;
     [SerializeField] SpriteRenderer detachedModeSprite;
+    [SerializeField] PartyManager partyManager;
 
     // sprites
     [SerializeField] Sprite grabIcon;
@@ -36,19 +36,17 @@ public class DetachedCamera : MonoBehaviour
     private const float CURSOR_CENTER_SPEED = 1.5f;
     
     private Pathfinder pathfinder;
-    private Traveller currTraveller;
 
     void Awake() {
         DontDestroyOnLoad(gameObject);
         gameObject.SetActive(false);
         pathfinder = new Pathfinder(spriteMovement);
-        currTraveller = playerMovement;
     }
 
     // move to player, become visible, etc.
     public void BecomeActive() {
-        transform.position = playerMovement.currVoxel;
-        currVoxel = playerMovement.currVoxel;
+        transform.position = partyManager.currControlledCharacter.currVoxel;
+        currVoxel = partyManager.currControlledCharacter.currVoxel;
 
         enabled = true;
         gameObject.SetActive(true);
@@ -77,7 +75,7 @@ public class DetachedCamera : MonoBehaviour
     private void UpdateCursorType() {
         if (nonVoxelWorld.IsPositionOccupied(currVoxel)) {
             if (gameStateManager.controlState == ControlState.COMBAT 
-                    && currVoxel != playerMovement.currVoxel) {
+                    && currVoxel != partyManager.currControlledCharacter.currVoxel) {
                 detachedModeSprite.sprite = meleeAttackIcon;
             }
             else {
@@ -147,16 +145,17 @@ public class DetachedCamera : MonoBehaviour
         if (nonVoxelWorld.IsPositionOccupied(currVoxel)) {
             // select the entity
             MonoBehaviour behavior = nonVoxelWorld.GetNVEFromPosition(currVoxel);
-            Traveller traveller = behavior.GetComponent<Traveller>();
-            if (traveller != null) {
-                currTraveller = traveller;
-                Debug.Log($"Selected traveller for the detached camera at {traveller.currVoxel}");
+            PlayerMovement playerMovement = behavior.GetComponent<PlayerMovement>();
+            if (playerMovement != null) {
+                partyManager.SetCurrControlledCharacter(playerMovement);
+                Debug.Log($"Selected traveller for the detached camera at {playerMovement.currVoxel}");
             }
         }
         else {
             // move currently selected to target
-            Deque<Vector3Int> path = pathfinder.FindPath(currTraveller.currVoxel, currVoxel, true);
-            movementManager.MoveAlongPath(currTraveller, path);
+            Deque<Vector3Int> path = pathfinder.FindPath(partyManager.currControlledCharacter.currVoxel,
+                currVoxel, true);
+            movementManager.MoveAlongPath(partyManager.currControlledCharacter, path);
         }
     }
 }

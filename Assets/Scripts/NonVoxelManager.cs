@@ -16,8 +16,6 @@ public class NonVoxelManager : MonoBehaviour
     [SerializeField] InputManager inputManager;
     [SerializeField] EnvironmentSceneManager environmentSceneManager;
     [SerializeField] GameObject playerPrefab;
-    [SerializeField] GameObject playerInstance;
-    [SerializeField] PlayerMovement playerMovement;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
     [SerializeField] SpriteMovement spriteMovement;
     [SerializeField] RandomManager randomManager;
@@ -29,7 +27,6 @@ public class NonVoxelManager : MonoBehaviour
     [SerializeField] GameObject sceneExitPrefab;
     [SerializeField] GameObject detachedCameraPrefab;
 
-    private InstantiatedEntity.PlayerCharacter playerCharacter;
     private NonVoxelInitialization nonVoxelInitialization;
 
     private List<Spawnable> nonVoxelEntities;
@@ -45,43 +42,42 @@ public class NonVoxelManager : MonoBehaviour
 
     public void SetUpEntities(int environmentIndex) {
         nonVoxelEntities = nonVoxelInitialization.GetEnvEntities(environmentIndex);
-        SetUpPlayer(environmentIndex);
         InitCreaturesAndWorld();
-    }
-
-    public void SetUpPlayer(int currEnvIndex) {
-        Vector3Int playerStartPosition = nonVoxelInitialization.GetPlayerStartPosition(currEnvIndex);
-        playerInstance.transform.position = playerStartPosition;
-        playerMovement.SetCurrVoxel(playerStartPosition);
-        nonVoxelWorld.SetPosition(playerMovement, playerStartPosition);
     }
 
     private void InitCreaturesAndWorld() {
         Dictionary<Guid, HashSet<NPCBehavior>> battleGroups = 
             new Dictionary<Guid, HashSet<NPCBehavior>>();
         foreach (Spawnable nonVoxelSpawnable in nonVoxelEntities) {
-            if (nonVoxelSpawnable.GetType() == typeof(NonVoxelEntity.Party)) {
+            if (nonVoxelSpawnable.GetType() == typeof(Party)) {
                 Party party = (Party)nonVoxelSpawnable;
-                NonVoxelEntity.PlayerCharacter entity = party.mainCharacter;
-                playerCharacter = playerInstance.GetComponent<InstantiatedEntity.PlayerCharacter>();
-                playerCharacter.Init(entity);
 
-                foreach (NPC npcInfo in party.members) {
-                    GameObject npcObject = Instantiate(npcInfo.prefab,
-                        npcInfo.startPosition, Quaternion.identity);
-                    NPCBehavior npcBehavior = npcObject.GetComponent<NPCBehavior>();
-                    nonVoxelWorld.SetPosition(npcBehavior, npcInfo.startPosition);
-                    npcBehavior.Init(nonVoxelWorld, spriteMovement, randomManager.rng, npcInfo,
-                        cameraManager);
+                bool partyAlreadySpawned = false;
+                if (partyManager.partyMembers.Count > 0) {
+                    partyAlreadySpawned = true;
                 }
-                continue;
-            }
+                foreach (PlayerCharacter playerCharacter in party.members) {
+                    PlayerMovement playerMovement;
+                    if (partyAlreadySpawned) {
+                        playerMovement = partyManager.GetPlayerMovement(playerCharacter);
+                        playerMovement.transform.SetPositionAndRotation(playerCharacter.startPosition,
+                            Quaternion.identity);
+                    }
+                    else {
+                        GameObject playerObject = Instantiate(playerCharacter.prefab,
+                            playerCharacter.startPosition, Quaternion.identity);
 
-            if (nonVoxelSpawnable.GetType() == typeof(NonVoxelEntity.PlayerCharacter)) {
-                NonVoxelEntity.PlayerCharacter entity = 
-                    (NonVoxelEntity.PlayerCharacter)nonVoxelSpawnable;
-                playerCharacter = playerInstance.GetComponent<InstantiatedEntity.PlayerCharacter>();
-                playerCharacter.Init(entity);
+                        playerMovement = playerObject.GetComponent<PlayerMovement>();
+                        playerMovement.Init(spriteMovement, playerCharacter, nonVoxelWorld, cameraManager);
+                        playerMovement.spriteLibrary.spriteLibraryAsset = playerCharacter.spriteLibraryAsset;
+
+                        partyManager.SetMainCharacter(playerMovement);
+                        partyManager.partyMembers.Add(playerMovement);
+                    }
+                    nonVoxelWorld.SetPosition(playerMovement, playerCharacter.startPosition);
+                    playerMovement.SetCurrVoxel(playerCharacter.startPosition);
+                }
+
                 continue;
             }
 
@@ -102,7 +98,7 @@ public class NonVoxelManager : MonoBehaviour
                 NPCBehavior npcBehavior = gameObject.GetComponent<NPCBehavior>();
                 npcBehavior.Init(nonVoxelWorld, spriteMovement, randomManager.rng, npcInfo,
                     cameraManager);
-                nonVoxelWorld.enemyNPCs.Add(npcBehavior);
+                nonVoxelWorld.npcs.Add(npcBehavior);
 
                 Guid battleGroupID = npcInfo.battleGroup.groupID;
                 if (!battleGroups.ContainsKey(battleGroupID)) {

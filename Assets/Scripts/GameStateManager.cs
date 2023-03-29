@@ -22,16 +22,16 @@ public enum ControlState {
 
 public class GameStateManager : MonoBehaviour
 {
-    [SerializeField] private PlayerMovement playerMovement;
-    [SerializeField] private CombatManager combatManager;
-    [SerializeField] private CombatUI combatUI;
-    [SerializeField] private DetachedCamera detachedCamera;
-    [SerializeField] private DialogueUI dialogueUI;
-    [SerializeField] private InputManager inputManager;
-    [SerializeField] private NonVoxelWorld nonVoxelWorld;
-    [SerializeField] private ObjectInkMapping objectInkMapping;
-    [SerializeField] private VoxelWorldManager voxelWorldManager;
-    [SerializeField] private CameraManager cameraManager;
+    [SerializeField] CombatManager combatManager;
+    [SerializeField] CombatUI combatUI;
+    [SerializeField] DetachedCamera detachedCamera;
+    [SerializeField] DialogueUI dialogueUI;
+    [SerializeField] InputManager inputManager;
+    [SerializeField] NonVoxelWorld nonVoxelWorld;
+    [SerializeField] ObjectInkMapping objectInkMapping;
+    [SerializeField] VoxelWorldManager voxelWorldManager;
+    [SerializeField] CameraManager cameraManager;
+    [SerializeField] PartyManager partyManager;
 
     public ControlState controlState { get; set; } = ControlState.LOADING;
 
@@ -49,7 +49,7 @@ public class GameStateManager : MonoBehaviour
                     inputManager.SwitchPlayerControlStateToUI();
                     return;
                 }
-                if (playerMovement.isMoving || cameraManager.isRotating) {
+                if (partyManager.currControlledCharacter.isMoving || cameraManager.isRotating) {
                     return;
                 }
 
@@ -105,7 +105,7 @@ public class GameStateManager : MonoBehaviour
     }
 
     private NPCBehavior HandleNPCsFreeMovement() {
-        foreach (NPCBehavior npc in nonVoxelWorld.enemyNPCs) {
+        foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
             if (npc.encounteredPlayer) {
                 return npc;
             }
@@ -122,7 +122,7 @@ public class GameStateManager : MonoBehaviour
         // check for interactable objects
         Story story = null;
 
-        Vector3Int currPosition = nonVoxelWorld.GetPosition(playerMovement);
+        Vector3Int currPosition = partyManager.currControlledCharacter.currVoxel;
         List<Vector3Int> interactablePositions = nonVoxelWorld.GetInteractableAdjacentObjects(currPosition);
         if (interactablePositions.Count > 0) {
             Vector3Int firstItem = interactablePositions.First();

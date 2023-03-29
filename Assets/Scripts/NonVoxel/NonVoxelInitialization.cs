@@ -20,6 +20,8 @@ public class NonVoxelInitialization {
         this.npcPrefab = npcPrefab;
         this.sceneExitPrefab = sceneExitPrefab;
 
+        SpriteLibraryAsset playerSpriteLibrary =
+            Resources.Load<SpriteLibraryAsset>("Borrowed/Sprites/PlayerSpriteLibrary");
         SpriteLibraryAsset loreleiSpriteLibrary = 
             Resources.Load<SpriteLibraryAsset>("Borrowed/Sprites/LoreleiSpriteLibrary");
         SpriteLibraryAsset opossumSpriteLibrary =
@@ -28,25 +30,27 @@ public class NonVoxelInitialization {
         List<Action> playerActions = new List<Action> {
             new Attack("Shortsword", new Dice(1, 20, 5), new Dice(1, 6, 0))
         };
-        PlayerStats playerStats = new PlayerStats("Player1", 1, 30, 10, 10, 10, 10, 10, 10, 10, playerActions);
+        PlayerStats playerStats = new PlayerStats("Player1", 30, 10, 10, 10, 10, 10, 10, 10, playerActions, 1);
+        PlayerCharacter mainCharacter = new PlayerCharacter(playerPrefab, new Vector3Int(864, 29, 348), 
+            playerStats, playerSpriteLibrary, new Vector3(0.8f, 0.8f, 0.8f));
         List<Action> scoutActions = new List<Action> {
             new Attack("Shortsword", new Dice(1, 20, 4), new Dice(1, 6, 2))
         };
-        NPCStats scoutStats = new NPCStats("Scout", "1/2", 16, 30, 16, 11, 14, 12, 11, 13, 11, scoutActions);
+        NPCStats scoutStats = new NPCStats("Scout", 30, 16, 11, 14, 12, 11, 13, 11, scoutActions, "1/2", 16);
         Party party = new Party(
-            new PlayerCharacter(playerPrefab, new Vector3Int(864, 29, 348), playerStats),
-            new List<NPC> {
-                new NPC(npcPrefab, new Vector3Int(864, 29, 349), scoutStats, loreleiSpriteLibrary,
-                    new Vector3(0.8f, 0.8f, 0.8f), Faction.PLAYER)
+            mainCharacter,
+            new List<PlayerCharacter> {
+                mainCharacter,
+                new PlayerCharacter(playerPrefab, new Vector3Int(864, 29, 349), scoutStats,
+                    loreleiSpriteLibrary, new Vector3(0.8f, 0.8f, 0.8f))
             }
         );
 
         List<Action> wolfActions = new List<Action> {
             new Bite("Bite", new Dice(1, 20, 4), new Dice(2, 4, 2))
         };
-        NPCStats wolfStats = new NPCStats("Wolf", "1/4", 13, 40, 11, 12, 15, 12, 3, 12, 6, wolfActions);
+        NPCStats wolfStats = new NPCStats("Wolf", 40, 11, 12, 15, 12, 3, 12, 6, wolfActions, "1/4", 13);
 
-        
         BattleGroup battleGroup1 = new BattleGroup(new List<NPC> {
             new NPC(npcPrefab, new Vector3Int(835, 29, 349), wolfStats, opossumSpriteLibrary,
                 new Vector3(4.4f, 4.4f, 4.4f), Faction.ENEMY),

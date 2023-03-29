@@ -2,25 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using VoxelPlay;
 using MovementDirection;
-using UnityEngine.ProBuilder;
-using NonVoxel;
 using UnityEngine.InputSystem;
-using System.Drawing;
+using GameMechanics;
+using NonVoxel;
+using UnityEngine.U2D.Animation;
 
 namespace InstantiatedEntity {
     public class PlayerMovement : Traveller {
-        [SerializeField] public GameObject voxelHideTarget;
-        [SerializeField] private Transform rotationTransform;
-        [SerializeField] private InputManager inputManager;
-        [SerializeField] private SpriteMovement spriteMovement;
+        [SerializeField] public GameObject playerObject;
+        [SerializeField] public GameObject seeThroughTarget;
+        [SerializeField] public SpriteLibrary spriteLibrary;
+        [SerializeField] Transform rotationTransform;
+        [SerializeField] SpriteMovement spriteMovement;
+
+        public NonVoxelEntity.PlayerCharacter playerInfo { get; private set; }
 
         private PlayerCameraDirection playerCameraDirection = PlayerCameraDirection.NORTH;
 
+
         void Awake() {
-            DontDestroyOnLoad(gameObject);
             moveStartTimestamp = Time.time;
+        }
+
+        public void Init(SpriteMovement spriteMovement, NonVoxelEntity.PlayerCharacter playerInfo,
+                NonVoxelWorld nonVoxelWorld, CameraManager cameraManager) {
+            this.spriteMovement = spriteMovement;
+            this.playerInfo = playerInfo;
+            this.nonVoxelWorld = nonVoxelWorld;
+            this.cameraManager = cameraManager;
         }
 
         public void HaltMovement() {

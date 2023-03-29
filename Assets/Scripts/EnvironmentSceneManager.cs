@@ -9,13 +9,11 @@ using VoxelPlay;
 
 public class EnvironmentSceneManager : MonoBehaviour
 {
-    [SerializeField] private VoxelWorldManager voxelWorldManager;
-    [SerializeField] private NonVoxelManager nonVoxelManager;
-    [SerializeField] private GameStateManager gameStateManager;
-    [SerializeField] private GameObject playerInstance;
-    [SerializeField] private PlayerMovement playerMovement;
-    [SerializeField] private GameObject playerSeeThroughTarget;
-    [SerializeField] private CameraManager cameraManager;
+    [SerializeField] VoxelWorldManager voxelWorldManager;
+    [SerializeField] NonVoxelManager nonVoxelManager;
+    [SerializeField] GameStateManager gameStateManager;
+    [SerializeField] CameraManager cameraManager;
+    [SerializeField] PartyManager partyManager;
 
     private Destination destination;
 
@@ -34,16 +32,20 @@ public class EnvironmentSceneManager : MonoBehaviour
         }
 
         voxelWorldManager.SetVoxelPlayEnvironment(environment);
-        environment.cameraMain = cameraManager.GetMainCamera();
-        cameraManager.AttachCameraToPlayer();
-        
+
         nonVoxelManager.SetUpEntities(destination.destinationEnv);
+        
+        environment.cameraMain = cameraManager.GetMainCamera();
+        cameraManager.AttachCameraToPlayer(partyManager.mainCharacter);
+
+        partyManager.SetCurrControlledCharacter(partyManager.mainCharacter);
+        
         gameStateManager.controlState = ControlState.SPRITE_NEUTRAL;
     }
 
     public void LoadNextScene(Destination destination) {
         gameStateManager.controlState = ControlState.LOADING;
-        playerMovement.HaltMovement();
+        partyManager.currControlledCharacter.HaltMovement();
         this.destination = destination;
         voxelWorldManager.SetVoxelPlayEnvironment(null);
         nonVoxelManager.DestroyEntities();

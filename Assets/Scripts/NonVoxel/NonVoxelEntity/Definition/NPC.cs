@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
+using GameMechanics;
 
 namespace NonVoxelEntity {
     public class NPC : Entity {
@@ -22,41 +23,6 @@ namespace NonVoxelEntity {
             this.spriteLibraryAsset = spriteLibraryAsset;
             this.spriteScale = spriteScale;
             this.faction = faction;
-        }
-    }
-
-    public struct NPCStats {
-        public string name { get; private set; }
-        public string challengeRating { get; private set; }
-
-        public int armorClass { get; private set; }
-        public int speed { get; private set; }
-        public int hpMax { get; private set; }
-
-        public int strength { get; private set; }
-        public int dexterity { get; private set; }
-        public int constitution { get; private set; }
-        public int intelligence { get; private set; }
-        public int wisdom { get; private set; }
-        public int charisma { get; private set; }
-
-        public List<GameMechanics.Action> actions { get; private set; }
-
-        public NPCStats(string name, string challengeRating, int armorClass, int speed,
-                int hpMax, int strength, int dexterity, int constitution, int intelligence,
-                int wisdom, int charisma, List<GameMechanics.Action> actions) {
-            this.name = name;
-            this.challengeRating = challengeRating;
-            this.armorClass = armorClass;
-            this.speed = speed;
-            this.hpMax = hpMax;
-            this.strength = strength;
-            this.dexterity = dexterity;
-            this.constitution = constitution;
-            this.intelligence = intelligence;
-            this.wisdom = wisdom;
-            this.charisma = charisma;
-            this.actions = actions;
         }
     }
 

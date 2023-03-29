@@ -10,17 +10,14 @@ public class InputManager : MonoBehaviour
 {
     [SerializeField] EventSystem eventSystem;
     [SerializeField] CameraManager cameraManager;
-    [SerializeField] PlayerMovement playerMovement;
     [SerializeField] DetachedCamera detachedCamera;
     [SerializeField] CombatManager combatManager;
+    [SerializeField] PartyManager partyManager;
 
     public PlayerInputActions playerInputActions;
     
     private void Awake() {
         playerInputActions = new PlayerInputActions();
-
-        playerInputActions.Player.Move.performed += playerMovement.HandleControllerMove;
-        playerInputActions.Player.Move.canceled += playerMovement.HandleControllerMoveCancel;
 
         playerInputActions.Player.RotateCamera.performed += cameraManager.Rotate90Degrees;
         playerInputActions.Detached.RotateCamera.performed += cameraManager.RotateDetached;
@@ -30,6 +27,17 @@ public class InputManager : MonoBehaviour
         playerInputActions.Detached.Cancel.performed += combatManager.HandleDetachedCancel;
 
         playerInputActions.Player.Enable();
+    }
+
+    public void SetPlayerMovementControls(PlayerMovement oldPlayerMovement,
+            PlayerMovement newPlayerMovement) {
+        if (oldPlayerMovement != null) {
+            playerInputActions.Player.Move.performed -= oldPlayerMovement.HandleControllerMove;
+            playerInputActions.Player.Move.canceled -= oldPlayerMovement.HandleControllerMoveCancel;
+        }
+
+        playerInputActions.Player.Move.performed += newPlayerMovement.HandleControllerMove;
+        playerInputActions.Player.Move.canceled += newPlayerMovement.HandleControllerMoveCancel;
     }
 
     public bool IsInUIMode() {
@@ -61,14 +69,14 @@ public class InputManager : MonoBehaviour
         playerInputActions.Detached.Disable();
 
         detachedCamera.BecomeInactive();
-        cameraManager.AttachCameraToPlayer();
+        cameraManager.AttachCameraToPlayer(partyManager.currControlledCharacter);
     }
 
     public void SwitchDetachedToWatchControlState() {
         playerInputActions.Detached.Disable();
 
         detachedCamera.BecomeInactive();
-        cameraManager.AttachCameraToPlayer();
+        cameraManager.AttachCameraToPlayer(partyManager.currControlledCharacter);
     }
 
     // DETACHED

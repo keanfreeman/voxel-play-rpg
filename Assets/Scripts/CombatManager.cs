@@ -13,7 +13,6 @@ public class CombatManager : MonoBehaviour
     [SerializeField] RandomManager randomManager;
     [SerializeField] MovementManager movementManager;
     [SerializeField] SpriteMovement spriteMovement;
-    [SerializeField] PlayerMovement playerMovement;
     [SerializeField] InputManager inputManager;
     [SerializeField] CameraManager cameraManager;
     [SerializeField] GameStateManager gameStateManager;
@@ -22,7 +21,6 @@ public class CombatManager : MonoBehaviour
     
     Pathfinder pathfinder;
     NPCBehavior firstCombatant;
-    GameObject playerCombatants;
     List<KeyValuePair<int, Traveller>> initiatives;
     int currInitiative = -1;
     Dictionary<Traveller, CombatResources> usedResources = new Dictionary<Traveller, CombatResources>();
@@ -48,25 +46,30 @@ public class CombatManager : MonoBehaviour
             yield break;
         }
 
+        // find nearest enemy
+        PlayerMovement nearestPlayer = partyManager.FindNearestPlayer(currCreature.currVoxel);
+
+        // move towards enemy
         NPCBehavior creatureAsNPC = (NPCBehavior) currCreature;
-        int remainingSpeed = creatureAsNPC.npcInfo.stats.speed - usedResources[currCreature].consumedMovement;
+        int remainingSpeed = creatureAsNPC.npcInfo.stats.baseSpeed - usedResources[currCreature].consumedMovement;
         inputManager.SwitchDetachedToWatchControlState();
-        Deque<Vector3Int> path = pathfinder.FindPath(currCreature.currVoxel, playerMovement.currVoxel, false);
+        Deque<Vector3Int> path = pathfinder.FindPath(currCreature.currVoxel, nearestPlayer.currVoxel, false);
         while (path.Count * TILE_TO_FEET > remainingSpeed) {
             path.RemoveFromFront();
         }
         yield return movementManager.MoveAlongPath(currCreature, path);
 
-        if (Coordinates.IsNextTo(creatureAsNPC.currVoxel, playerMovement.currVoxel)) {
+        // attack enemy
+        if (Coordinates.IsNextTo(creatureAsNPC.currVoxel, nearestPlayer.currVoxel)) {
             // TODO use less brittle attack selection method
             Attack npcAttack = (Attack)creatureAsNPC.npcInfo.stats.actions[0];
             int attackRoll = randomManager.Roll(npcAttack.attackRoll);
             Debug.Log($"NPC rolled {attackRoll} for their attack roll.");
-            if (attackRoll >= partyManager.playerCharacter.stats.GetArmorClass()) {
+            if (attackRoll >= nearestPlayer.playerInfo.stats.CalculateArmorClass()) {
                 int damageRoll = randomManager.Roll(npcAttack.damageRoll);
                 Debug.Log($"NPC rolled {damageRoll} for their damage roll.");
-                int newHP = playerMovement.currHP - damageRoll;
-                playerMovement.SetHP(newHP);
+                int newHP = nearestPlayer.currHP - damageRoll;
+                nearestPlayer.SetHP(newHP);
                 if (newHP < 1) {
                     // TODO - lose on death and no party members
                     Debug.Log("Player ran out of HP.");
@@ -94,10 +97,12 @@ public class CombatManager : MonoBehaviour
             yield break;
         }
 
+        PlayerMovement playerMovement = (PlayerMovement)currCreature;
+
         InstantiatedNVE selectedEntity = nonVoxelWorld.GetNVEFromPosition(detachedCamera.currVoxel);
         if (selectedEntity != null
                 && selectedEntity.GetType() == typeof(NPCBehavior)
-                && Coordinates.IsNextTo(playerMovement.currVoxel, selectedEntity.currVoxel)) {
+                && Coordinates.IsNextTo(currCreature.currVoxel, selectedEntity.currVoxel)) {
             if (usedResources[currCreature].usedAction) {
                 Debug.Log("Player tried to use action twice.");
                 yield break;
@@ -105,10 +110,10 @@ public class CombatManager : MonoBehaviour
 
             NPCBehavior npcBehavior = (NPCBehavior)selectedEntity;
             // TODO - consider other actions (currently equipped weapon?)
-            Attack attack = (Attack)partyManager.playerCharacter.stats.actions[0];
+            Attack attack = (Attack)playerMovement.playerInfo.stats.actions[0];
             int attackRoll = randomManager.Roll(attack.attackRoll);
             Debug.Log($"Player rolled {attackRoll} for their attack roll.");
-            if (attackRoll >= npcBehavior.npcInfo.stats.armorClass) {
+            if (attackRoll >= npcBehavior.npcInfo.stats.CalculateArmorClass()) {
                 int damageRoll = randomManager.Roll(attack.damageRoll);
                 Debug.Log($"Player rolled {damageRoll} for their damage roll.");
                 int newHP = npcBehavior.currHP - damageRoll;
@@ -137,7 +142,7 @@ public class CombatManager : MonoBehaviour
         else {
             Deque<Vector3Int> path = pathfinder.FindPath(currCreature.currVoxel, 
                 detachedCamera.currVoxel, true);
-            int remainingSpeed = partyManager.playerCharacter.stats.baseSpeed 
+            int remainingSpeed = playerMovement.playerInfo.stats.baseSpeed 
                 - usedResources[currCreature].consumedMovement;
             if (path.Count * TILE_TO_FEET > remainingSpeed) {
                 Debug.Log($"Tried to move further than remaining speed: {remainingSpeed}");
@@ -155,12 +160,12 @@ public class CombatManager : MonoBehaviour
     }
 
     public void HandleDetachedCancel(InputAction.CallbackContext obj) {
-        if (movementManager.IsMoving(playerMovement)) {
+        Traveller currCreature = initiatives[currInitiative].Value;
+        if (movementManager.IsMoving(currCreature)) {
             return;
         }
 
         Debug.Log("Player ended turn.");
-        Traveller currCreature = initiatives[currInitiative].Value;
         ResetCombatResources(currCreature);
         IncrementInitiative();
         StartCoroutine(RunTurn(currInitiative));
@@ -173,12 +178,16 @@ public class CombatManager : MonoBehaviour
     private void SetCombatantsAndInitiativeOrder() {
         initiatives = new List<KeyValuePair<int, Traveller>>();
 
-        int playerDexModifier = StatModifiers.GetModifierForStat(
-            partyManager.playerCharacter.stats.dexterity);
-        int playerInitiative = randomManager.Roll(1, 20, playerDexModifier);
-        initiatives.Add(new KeyValuePair<int, Traveller>(playerInitiative,
-            playerMovement));
+        // add players
+        foreach (PlayerMovement playerMovement in partyManager.partyMembers) {
+            int playerDexModifier = StatModifiers.GetModifierForStat(
+                playerMovement.playerInfo.stats.dexterity);
+            int playerInitiative = randomManager.Roll(1, 20, playerDexModifier);
+            initiatives.Add(new KeyValuePair<int, Traveller>(playerInitiative,
+                playerMovement));
+        }
 
+        // add NPCs
         foreach (NPCBehavior npcBehavior in firstCombatant.teammates) {
             int npcDexModifier = StatModifiers.GetModifierForStat(
                 npcBehavior.npcInfo.stats.dexterity);

@@ -9,15 +9,12 @@ using UnityEngine.InputSystem;
 public class CameraManager : MonoBehaviour {
     [SerializeField] GameObject mainCameraTarget;
     [SerializeField] Camera mainCamera;
-    [SerializeField] PlayerMovement playerMovement;
-    [SerializeField] GameObject playerSpriteContainer;
-    [SerializeField] Transform playerSpriteTransform;
-    [SerializeField] GameObject playerSeeThroughTarget;
     [SerializeField] GameObject detachedModeContainer;
     [SerializeField] GameObject detachedModeSeeThroughTarget;
     [SerializeField] Transform detachedModeSpriteRotator;
     [SerializeField] VoxelWorldManager voxelWorldManager;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
+    [SerializeField] PartyManager partyManager;
 
     public bool isRotating { get; private set; }
     
@@ -38,8 +35,8 @@ public class CameraManager : MonoBehaviour {
         return mainCamera;
     }
 
-    public void AttachCameraToPlayer() {
-        mainCameraTarget.transform.parent = playerSpriteContainer.transform;
+    public void AttachCameraToPlayer(PlayerMovement playerMovement) {
+        mainCameraTarget.transform.parent = playerMovement.playerObject.transform;
         // need to jump to nearest 90 degree angle if coming from detached
         float yAngle = mainCameraTarget.transform.rotation.eulerAngles.y;
         float adjustedYAngle;
@@ -65,7 +62,7 @@ public class CameraManager : MonoBehaviour {
         SetAllSpriteRotations(adjustedYAngle);
         mainCamera.transform.SetLocalPositionAndRotation(new Vector3(0, 6, -6),
             Quaternion.Euler(45f, 0, 0));
-        voxelWorldManager.environment.seeThroughTarget = playerSeeThroughTarget;
+        voxelWorldManager.environment.seeThroughTarget = playerMovement.seeThroughTarget;
     }
 
     public void AttachCameraToDetached() {
@@ -85,7 +82,7 @@ public class CameraManager : MonoBehaviour {
             isRotating = true;
 
             direction = stickValue > 0 ? 1 : -1;
-            playerMovement.RotateCameraDirection(direction);
+            partyManager.currControlledCharacter.RotateCameraDirection(direction);
 
             rotateStartTimestamp = Time.time;
             previousRotateFraction = 0;
@@ -102,8 +99,10 @@ public class CameraManager : MonoBehaviour {
             previousRotateFraction = fractionRotationComplete;
 
             mainCameraTarget.transform.Rotate(Vector3.up, degreesToRotate);
-            playerMovement.RotateSprite(degreesToRotate);
-            foreach (NPCBehavior npc in nonVoxelWorld.enemyNPCs) {
+            foreach (PlayerMovement playerMovement in partyManager.partyMembers) {
+                playerMovement.RotateSprite(degreesToRotate);
+            }
+            foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
                 npc.RotateSprite(degreesToRotate);
             }
 
@@ -132,8 +131,10 @@ public class CameraManager : MonoBehaviour {
             float degrees = stickValue * Time.deltaTime * DETACHED_ROTATION_SPEED;
             mainCameraTarget.transform.Rotate(Vector3.up, degrees);
             detachedModeSpriteRotator.Rotate(Vector3.up, degrees);
-            playerMovement.RotateSprite(degrees);
-            foreach (NPCBehavior npc in nonVoxelWorld.enemyNPCs) {
+            foreach (PlayerMovement playerMovement in partyManager.partyMembers) {
+                playerMovement.RotateSprite(degrees);
+            }
+            foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
                 npc.RotateSprite(degrees);
             }
             yield return null;
@@ -145,8 +146,10 @@ public class CameraManager : MonoBehaviour {
     private void SetAllSpriteRotations(float yAngle) {
         Vector3 rotation = new Vector3(0, yAngle, 0);
         detachedModeSpriteRotator.rotation = Quaternion.Euler(rotation);
-        playerMovement.SetSpriteRotation(rotation);
-        foreach (NPCBehavior npc in nonVoxelWorld.enemyNPCs) {
+        foreach (PlayerMovement playerMovement in partyManager.partyMembers) {
+            playerMovement.SetSpriteRotation(rotation);
+        }
+        foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
             npc.SetSpriteRotation(rotation);
         }
     }

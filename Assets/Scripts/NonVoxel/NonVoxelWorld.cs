@@ -5,21 +5,19 @@ using UnityEngine;
 
 namespace NonVoxel {
     public class NonVoxelWorld : MonoBehaviour {
-        [SerializeField] GameObject playerInstance;
-
         private Dictionary<InstantiatedNVE, Vector3Int> entityToPosition
             = new Dictionary<InstantiatedNVE, Vector3Int>();
         private Dictionary<Vector3Int, InstantiatedNVE> positionToEntity
             = new Dictionary<Vector3Int, InstantiatedNVE>();
 
-        public HashSet<NPCBehavior> enemyNPCs = new HashSet<NPCBehavior>();
+        public HashSet<NPCBehavior> npcs = new HashSet<NPCBehavior>();
 
         public void DestroyEntities() {
-            foreach (InstantiatedNVE npc in enemyNPCs) {
+            foreach (InstantiatedNVE npc in npcs) {
                 npc.enabled = false;
                 Destroy(npc.gameObject);
             }
-            enemyNPCs.Clear();
+            npcs.Clear();
 
             foreach (InstantiatedNVE behavior in entityToPosition.Keys) {
                 if (behavior.GetType() != typeof(PlayerMovement)) {
@@ -57,7 +55,7 @@ namespace NonVoxel {
         public void ResetPosition(Vector3Int position) {
             InstantiatedNVE entity = positionToEntity[position];
             if (entity.GetType() == typeof(NPCBehavior)) {
-                enemyNPCs.Remove((NPCBehavior)entity);
+                npcs.Remove((NPCBehavior)entity);
             }
             entityToPosition.Remove(entity);
             positionToEntity.Remove(position);

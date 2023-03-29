@@ -53,10 +53,6 @@ namespace InstantiatedEntity {
             }
         }
 
-        public void SetCurrVoxel(Vector3Int currVoxel) {
-            this.currVoxel = currVoxel;
-        }
-
         public void MoveToPoint(Vector3Int point) {
             nonVoxelWorld.SetPosition(this, point);
             moveStartPoint = currVoxel;

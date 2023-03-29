@@ -43,7 +43,7 @@ namespace InstantiatedEntity {
             this.spriteMovement = spriteMovement;
             this.rng = rng;
             this.npcInfo = npcInfo;
-            currHP = npcInfo.stats.hpMax;
+            currHP = npcInfo.stats.hitPoints;
             this.cameraManager = cameraManager;
             this.spriteLibrary.spriteLibraryAsset = npcInfo.spriteLibraryAsset;
             spriteObjectTransform.localScale = npcInfo.spriteScale;
