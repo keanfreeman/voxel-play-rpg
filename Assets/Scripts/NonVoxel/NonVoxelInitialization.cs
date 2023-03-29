@@ -24,6 +24,8 @@ public class NonVoxelInitialization {
             Resources.Load<SpriteLibraryAsset>("Borrowed/Sprites/PlayerSpriteLibrary");
         SpriteLibraryAsset loreleiSpriteLibrary = 
             Resources.Load<SpriteLibraryAsset>("Borrowed/Sprites/LoreleiSpriteLibrary");
+        SpriteLibraryAsset yellowSpriteLibrary =
+            Resources.Load<SpriteLibraryAsset>("Borrowed/Sprites/YellowSpriteLibrary");
         SpriteLibraryAsset opossumSpriteLibrary =
             Resources.Load<SpriteLibraryAsset>("Borrowed/Sprites/OpossumSpriteLibrary");
 
@@ -42,7 +44,9 @@ public class NonVoxelInitialization {
             new List<PlayerCharacter> {
                 mainCharacter,
                 new PlayerCharacter(playerPrefab, new Vector3Int(864, 29, 349), scoutStats,
-                    loreleiSpriteLibrary, new Vector3(0.8f, 0.8f, 0.8f))
+                    loreleiSpriteLibrary, new Vector3(0.8f, 0.8f, 0.8f)),
+                new PlayerCharacter(playerPrefab, new Vector3Int(863, 29, 348), scoutStats,
+                    yellowSpriteLibrary, new Vector3(0.8f, 0.8f, 0.8f))
             }
         );
 
