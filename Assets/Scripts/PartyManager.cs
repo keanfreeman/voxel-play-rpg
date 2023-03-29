@@ -3,10 +3,13 @@ using NonVoxelEntity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PartyManager : MonoBehaviour
 {
     [SerializeField] InputManager inputManager;
+    [SerializeField] CameraManager cameraManager;
+    [SerializeField] GameStateManager gameStateManager;
     
     public PlayerMovement mainCharacter { get; private set; }
     public List<PlayerMovement> partyMembers { get; private set; } = new List<PlayerMovement>();
@@ -19,6 +22,18 @@ public class PartyManager : MonoBehaviour
     public void SetCurrControlledCharacter(PlayerMovement playerMovement) {
         inputManager.SetPlayerMovementControls(currControlledCharacter, playerMovement);
         currControlledCharacter = playerMovement;
+    }
+
+    public void SwitchToNextCharacter(InputAction.CallbackContext obj) {
+        int currCharacterPosition = partyMembers.FindIndex(0, 
+            (PlayerMovement iter) => iter == currControlledCharacter);
+        int nextCharacterPosition = currCharacterPosition == partyMembers.Count - 1 ?
+            0 : currCharacterPosition + 1;
+        SetCurrControlledCharacter(partyMembers[nextCharacterPosition]);
+
+        if (gameStateManager.controlState != ControlState.DETACHED) {
+            cameraManager.AttachCameraToPlayer(currControlledCharacter);
+        }
     }
 
     public PlayerMovement GetPlayerMovement(PlayerCharacter playerCharacter) {

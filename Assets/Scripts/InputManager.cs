@@ -23,8 +23,12 @@ public class InputManager : MonoBehaviour
         playerInputActions.Detached.RotateCamera.performed += cameraManager.RotateDetached;
         playerInputActions.Detached.RotateCamera.canceled += cameraManager.StopRotatingDetached;
 
+        // TODO - only hook these up to the combat manager when combat is active
         playerInputActions.Detached.Select.performed += combatManager.HandleDetachedSelect;
         playerInputActions.Detached.Cancel.performed += combatManager.HandleDetachedCancel;
+
+        playerInputActions.Player.SwitchCharacter.performed += partyManager.SwitchToNextCharacter;
+        playerInputActions.Detached.SwitchCharacter.performed += partyManager.SwitchToNextCharacter;
 
         playerInputActions.Player.Enable();
     }

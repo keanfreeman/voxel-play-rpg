@@ -475,6 +475,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputManager: {fileID: 2066669309}
+  cameraManager: {fileID: 1785101423}
+  gameStateManager: {fileID: 955022268}
 --- !u!4 &683280037
 Transform:
   m_ObjectHideFlags: 0

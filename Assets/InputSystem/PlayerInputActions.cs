@@ -71,6 +71,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Switch Character"",
+                    ""type"": ""Button"",
+                    ""id"": ""f85dadc1-0dd3-47a3-85c8-60e56f82ddfa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -260,6 +269,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0f19fa79-00b5-4f29-970c-e73914285f30"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Switch Character"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0f925c7c-730a-4934-836b-a17d87562b63"",
+                    ""path"": ""<Keyboard>/rightBracket"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Switch Character"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -316,6 +347,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""Cancel"",
                     ""type"": ""Button"",
                     ""id"": ""f7663e6a-b6a6-4e7c-a400-467ea10f86ba"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Switch Character"",
+                    ""type"": ""Button"",
+                    ""id"": ""e6a0b312-47fd-47d9-b31f-b7ec0e307773"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -575,6 +615,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""77f0772e-4385-4092-901f-e4a1d61dbfbc"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Switch Character"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -821,6 +872,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_OpenCombatBar = m_Player.FindAction("Open Combat Bar", throwIfNotFound: true);
         m_Player_RotateCamera = m_Player.FindAction("Rotate Camera", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
+        m_Player_SwitchCharacter = m_Player.FindAction("Switch Character", throwIfNotFound: true);
         // Detached
         m_Detached = asset.FindActionMap("Detached", throwIfNotFound: true);
         m_Detached_Move = m_Detached.FindAction("Move", throwIfNotFound: true);
@@ -829,6 +881,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Detached_RotateCamera = m_Detached.FindAction("RotateCamera", throwIfNotFound: true);
         m_Detached_Select = m_Detached.FindAction("Select", throwIfNotFound: true);
         m_Detached_Cancel = m_Detached.FindAction("Cancel", throwIfNotFound: true);
+        m_Detached_SwitchCharacter = m_Detached.FindAction("Switch Character", throwIfNotFound: true);
         // UINavigation
         m_UINavigation = asset.FindActionMap("UINavigation", throwIfNotFound: true);
         m_UINavigation_Navigate = m_UINavigation.FindAction("Navigate", throwIfNotFound: true);
@@ -900,6 +953,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_OpenCombatBar;
     private readonly InputAction m_Player_RotateCamera;
     private readonly InputAction m_Player_Move;
+    private readonly InputAction m_Player_SwitchCharacter;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -909,6 +963,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @OpenCombatBar => m_Wrapper.m_Player_OpenCombatBar;
         public InputAction @RotateCamera => m_Wrapper.m_Player_RotateCamera;
         public InputAction @Move => m_Wrapper.m_Player_Move;
+        public InputAction @SwitchCharacter => m_Wrapper.m_Player_SwitchCharacter;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -933,6 +988,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
+            @SwitchCharacter.started += instance.OnSwitchCharacter;
+            @SwitchCharacter.performed += instance.OnSwitchCharacter;
+            @SwitchCharacter.canceled += instance.OnSwitchCharacter;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -952,6 +1010,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
+            @SwitchCharacter.started -= instance.OnSwitchCharacter;
+            @SwitchCharacter.performed -= instance.OnSwitchCharacter;
+            @SwitchCharacter.canceled -= instance.OnSwitchCharacter;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -979,6 +1040,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Detached_RotateCamera;
     private readonly InputAction m_Detached_Select;
     private readonly InputAction m_Detached_Cancel;
+    private readonly InputAction m_Detached_SwitchCharacter;
     public struct DetachedActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -989,6 +1051,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @RotateCamera => m_Wrapper.m_Detached_RotateCamera;
         public InputAction @Select => m_Wrapper.m_Detached_Select;
         public InputAction @Cancel => m_Wrapper.m_Detached_Cancel;
+        public InputAction @SwitchCharacter => m_Wrapper.m_Detached_SwitchCharacter;
         public InputActionMap Get() { return m_Wrapper.m_Detached; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1016,6 +1079,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Cancel.started += instance.OnCancel;
             @Cancel.performed += instance.OnCancel;
             @Cancel.canceled += instance.OnCancel;
+            @SwitchCharacter.started += instance.OnSwitchCharacter;
+            @SwitchCharacter.performed += instance.OnSwitchCharacter;
+            @SwitchCharacter.canceled += instance.OnSwitchCharacter;
         }
 
         private void UnregisterCallbacks(IDetachedActions instance)
@@ -1038,6 +1104,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Cancel.started -= instance.OnCancel;
             @Cancel.performed -= instance.OnCancel;
             @Cancel.canceled -= instance.OnCancel;
+            @SwitchCharacter.started -= instance.OnSwitchCharacter;
+            @SwitchCharacter.performed -= instance.OnSwitchCharacter;
+            @SwitchCharacter.canceled -= instance.OnSwitchCharacter;
         }
 
         public void RemoveCallbacks(IDetachedActions instance)
@@ -1124,6 +1193,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnOpenCombatBar(InputAction.CallbackContext context);
         void OnRotateCamera(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
+        void OnSwitchCharacter(InputAction.CallbackContext context);
     }
     public interface IDetachedActions
     {
@@ -1133,6 +1203,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnRotateCamera(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
+        void OnSwitchCharacter(InputAction.CallbackContext context);
     }
     public interface IUINavigationActions
     {
