@@ -20,6 +20,7 @@ public class CombatManager : MonoBehaviour
     [SerializeField] DetachedCamera detachedCamera;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
     [SerializeField] Pathfinder pathfinder;
+    [SerializeField] EffectManager effectManager;
     
     NPCBehavior firstCombatant;
     List<KeyValuePair<int, Traveller>> initiatives;
@@ -74,9 +75,12 @@ public class CombatManager : MonoBehaviour
                     // TODO - lose on death and no party members
                     Debug.Log("Player ran out of HP.");
                 }
+
+                yield return effectManager.GenerateHitEffect(nearestPlayer.currVoxel);
             }
         }
 
+        inputManager.DisableWatchState();
         ResetCombatResources(currCreature);
         IncrementInitiative();
         StartCoroutine(RunTurn(currInitiative));
@@ -135,6 +139,8 @@ public class CombatManager : MonoBehaviour
                         }
                     }
                 }
+
+                yield return effectManager.GenerateHitEffect(npcBehavior.currVoxel);
             }
 
             usedResources[currCreature].usedAction = true;

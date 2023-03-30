@@ -310,6 +310,52 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+--- !u!1 &234026429
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 234026430}
+  - component: {fileID: 234026431}
+  m_Layer: 0
+  m_Name: EffectManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &234026430
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 234026429}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341391871}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &234026431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 234026429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fffd929eebab52f44aa3ddc2207a0421, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitParticleEffect: {fileID: 5024009746357069194, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
+  cameraManager: {fileID: 1785101423}
 --- !u!1 &331112263
 GameObject:
   m_ObjectHideFlags: 0
@@ -1036,6 +1082,7 @@ Transform:
   - {fileID: 1785101422}
   - {fileID: 104703755}
   - {fileID: 934307851}
+  - {fileID: 234026430}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1197,6 +1244,7 @@ MonoBehaviour:
   detachedCamera: {fileID: 848129494}
   nonVoxelWorld: {fileID: 1135948956}
   pathfinder: {fileID: 1169761465}
+  effectManager: {fileID: 234026431}
 --- !u!4 &1613990518
 Transform:
   m_ObjectHideFlags: 0

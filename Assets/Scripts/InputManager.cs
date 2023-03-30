@@ -88,6 +88,10 @@ public class InputManager : MonoBehaviour
         playerInputActions.Watch.Enable();
     }
 
+    public void DisableWatchState() {
+        playerInputActions.Watch.Disable();
+    }
+
     // DETACHED
 
     public Vector2 GetDetachedMove() {
