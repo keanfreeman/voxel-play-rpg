@@ -43,15 +43,20 @@ public class CombatManager : MonoBehaviour
             yield break;
         }
 
+        inputManager.SwitchDetachedToWatchControlState();
+        yield return cameraManager.MoveCameraToTargetCreature(currCreature);
+
         // find nearest enemy
         PlayerMovement nearestPlayer = partyManager.FindNearestPlayer(currCreature.currVoxel);
 
         // move towards enemy
         NPCBehavior creatureAsNPC = (NPCBehavior) currCreature;
         int remainingSpeed = creatureAsNPC.npcInfo.stats.baseSpeed - usedResources[currCreature].consumedMovement;
-        inputManager.SwitchDetachedToWatchControlState();
 
         Deque<Vector3Int> path = pathfinder.FindPath(currCreature.currVoxel, nearestPlayer.currVoxel, false);
+        while (path.Count * TILE_TO_FEET > remainingSpeed) {
+            path.RemoveFromFront();
+        }
         yield return movementManager.MoveAlongPath(currCreature, path);
 
         // attack enemy

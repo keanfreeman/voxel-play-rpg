@@ -36,7 +36,7 @@ public class MovementManager : MonoBehaviour
             if (!currDestination.HasValue) {
                 int lastIndex = path.Count - 1;
                 currDestination = path[lastIndex];
-                path.RemoveAt(lastIndex);
+                path.RemoveFromBack();
             }
 
             if (nonVoxelWorld.IsPositionOccupied(currDestination.Value)) {

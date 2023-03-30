@@ -24,8 +24,9 @@ public class CameraManager : MonoBehaviour {
 
     private float stickValue;
 
-    const float TIME_TO_ROTATE = 0.5f;
+    private const float TIME_TO_ROTATE = 0.5f;
     private const float DETACHED_ROTATION_SPEED = 100f;
+    private const float TIME_TO_MOVE_TO_NEW_TARGET = 1f;
 
     public GameObject GetMainCameraTarget() {
         return mainCameraTarget;
@@ -33,6 +34,24 @@ public class CameraManager : MonoBehaviour {
 
     public Camera GetMainCamera() {
         return mainCamera;
+    }
+
+    public IEnumerator MoveCameraToTargetCreature(Traveller traveller) {
+        mainCameraTarget.transform.parent = null;
+        Vector3 start = mainCameraTarget.transform.position;
+        Vector3 end = traveller.transform.position + new Vector3(0.5f, 0.5f, 0.5f);
+        float startTime = Time.time;
+
+        float fractionDone = 0f;
+        while (fractionDone < 1f) {
+            fractionDone = (Time.time - startTime) / TIME_TO_MOVE_TO_NEW_TARGET;
+            float smoothInterpolation = Mathf.SmoothStep(0f, 1f, fractionDone);
+            mainCameraTarget.transform.localPosition = Vector3.Lerp(start, end, smoothInterpolation);
+            yield return null;
+        }
+
+        mainCameraTarget.transform.parent = traveller.transform;
+        mainCameraTarget.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
     }
 
     public void AttachCameraToPlayer(PlayerMovement playerMovement) {

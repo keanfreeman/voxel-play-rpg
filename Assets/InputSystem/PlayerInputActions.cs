@@ -861,6 +861,89 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Watch"",
+            ""id"": ""e4a17b2f-63e3-4e45-9bc4-b31ed839141c"",
+            ""actions"": [
+                {
+                    ""name"": ""RotateCamera"",
+                    ""type"": ""Value"",
+                    ""id"": ""38c2f1d4-351e-4d35-8310-447612bebfc1"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""c6823b44-f77e-4957-bb42-fd409928459d"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone"",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""96d1b967-70ff-411a-b93e-4c6dcf363e7f"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""488f616a-78cb-4ba2-8125-fa60454dab96"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""0e91777f-b01f-40c0-86e4-c468e7f08fdc"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""7a9a3c2a-bd86-4ff7-bb44-7cc32e5a984b"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""a24bdee4-1808-4dc7-ab55-536550bc52e8"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -887,6 +970,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_UINavigation_Navigate = m_UINavigation.FindAction("Navigate", throwIfNotFound: true);
         m_UINavigation_Submit = m_UINavigation.FindAction("Submit", throwIfNotFound: true);
         m_UINavigation_Cancel = m_UINavigation.FindAction("Cancel", throwIfNotFound: true);
+        // Watch
+        m_Watch = asset.FindActionMap("Watch", throwIfNotFound: true);
+        m_Watch_RotateCamera = m_Watch.FindAction("RotateCamera", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1186,6 +1272,52 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public UINavigationActions @UINavigation => new UINavigationActions(this);
+
+    // Watch
+    private readonly InputActionMap m_Watch;
+    private List<IWatchActions> m_WatchActionsCallbackInterfaces = new List<IWatchActions>();
+    private readonly InputAction m_Watch_RotateCamera;
+    public struct WatchActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public WatchActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @RotateCamera => m_Wrapper.m_Watch_RotateCamera;
+        public InputActionMap Get() { return m_Wrapper.m_Watch; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(WatchActions set) { return set.Get(); }
+        public void AddCallbacks(IWatchActions instance)
+        {
+            if (instance == null || m_Wrapper.m_WatchActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_WatchActionsCallbackInterfaces.Add(instance);
+            @RotateCamera.started += instance.OnRotateCamera;
+            @RotateCamera.performed += instance.OnRotateCamera;
+            @RotateCamera.canceled += instance.OnRotateCamera;
+        }
+
+        private void UnregisterCallbacks(IWatchActions instance)
+        {
+            @RotateCamera.started -= instance.OnRotateCamera;
+            @RotateCamera.performed -= instance.OnRotateCamera;
+            @RotateCamera.canceled -= instance.OnRotateCamera;
+        }
+
+        public void RemoveCallbacks(IWatchActions instance)
+        {
+            if (m_Wrapper.m_WatchActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IWatchActions instance)
+        {
+            foreach (var item in m_Wrapper.m_WatchActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_WatchActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public WatchActions @Watch => new WatchActions(this);
     public interface IPlayerActions
     {
         void OnSwitchInputType(InputAction.CallbackContext context);
@@ -1210,5 +1342,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnNavigate(InputAction.CallbackContext context);
         void OnSubmit(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
+    }
+    public interface IWatchActions
+    {
+        void OnRotateCamera(InputAction.CallbackContext context);
     }
 }

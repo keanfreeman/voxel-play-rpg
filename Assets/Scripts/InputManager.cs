@@ -32,6 +32,9 @@ public class InputManager : MonoBehaviour
 
         playerInputActions.Detached.Select.performed += detachedCamera.HandleSelect;
 
+        playerInputActions.Watch.RotateCamera.performed += cameraManager.RotateDetached;
+        playerInputActions.Watch.RotateCamera.canceled += cameraManager.StopRotatingDetached;
+
         playerInputActions.Player.Enable();
     }
 
@@ -80,9 +83,9 @@ public class InputManager : MonoBehaviour
 
     public void SwitchDetachedToWatchControlState() {
         playerInputActions.Detached.Disable();
-
         detachedCamera.BecomeInactive();
-        cameraManager.AttachCameraToPlayer(partyManager.currControlledCharacter);
+
+        playerInputActions.Watch.Enable();
     }
 
     // DETACHED
