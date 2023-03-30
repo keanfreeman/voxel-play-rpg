@@ -68,7 +68,8 @@ public class NonVoxelManager : MonoBehaviour
                             playerCharacter.startPosition, Quaternion.identity);
 
                         playerMovement = playerObject.GetComponent<PlayerMovement>();
-                        playerMovement.Init(spriteMovement, playerCharacter, nonVoxelWorld, cameraManager);
+                        playerMovement.Init(spriteMovement, playerCharacter, nonVoxelWorld, cameraManager,
+                            partyManager);
                         playerMovement.spriteLibrary.spriteLibraryAsset = playerCharacter.spriteLibraryAsset;
 
                         partyManager.SetMainCharacter(playerMovement);
@@ -97,7 +98,7 @@ public class NonVoxelManager : MonoBehaviour
                 NPC npcInfo = (NPC)nonVoxelSpawnable;
                 NPCBehavior npcBehavior = gameObject.GetComponent<NPCBehavior>();
                 npcBehavior.Init(nonVoxelWorld, spriteMovement, randomManager.rng, npcInfo,
-                    cameraManager);
+                    cameraManager, partyManager);
                 nonVoxelWorld.npcs.Add(npcBehavior);
 
                 Guid battleGroupID = npcInfo.battleGroup.groupID;

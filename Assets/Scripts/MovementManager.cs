@@ -1,5 +1,6 @@
 using InstantiatedEntity;
 using Nito.Collections;
+using NonVoxel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using UnityEngine;
 public class MovementManager : MonoBehaviour
 {
     [SerializeField] PathVisualizer pathVisualizer;
+    [SerializeField] NonVoxelWorld nonVoxelWorld;
 
     public Dictionary<Traveller, Deque<Vector3Int>> movingCreatures { get; private set; } 
         = new Dictionary<Traveller, Deque<Vector3Int>>();
@@ -16,10 +18,14 @@ public class MovementManager : MonoBehaviour
         return movingCreatures.ContainsKey(traveller);
     }
 
-    public Coroutine MoveAlongPath(Traveller traveller, Deque<Vector3Int> path) {
+    public IEnumerator MoveAlongPath(Traveller traveller, Deque<Vector3Int> path) {
+        if (path.Count == 0) {
+            yield break;
+        }
+
         // TODO handle if new path is requested when one is already running.
         movingCreatures[traveller] = path;
-        return StartCoroutine(MoveEntity(traveller));
+        yield return MoveEntity(traveller);
     }
 
     public IEnumerator MoveEntity(Traveller traveller) {
@@ -31,6 +37,13 @@ public class MovementManager : MonoBehaviour
                 int lastIndex = path.Count - 1;
                 currDestination = path[lastIndex];
                 path.RemoveAt(lastIndex);
+            }
+
+            if (nonVoxelWorld.IsPositionOccupied(currDestination.Value)) {
+                Debug.Log("Movement was interrupted along path.");
+                traveller.SetMoveAnimation(false);
+                movingCreatures.Remove(traveller);
+                yield break;
             }
 
             if (!traveller.isMoving) {

@@ -66,7 +66,7 @@ namespace NonVoxel {
             if (behavior == null) {
                 return false;
             }
-            if (behavior.GetComponent<SceneExit>() != null) {
+            if (behavior.GetType() == typeof(SceneExit)) {
                 return false;
             }
             return true;

@@ -9,6 +9,7 @@ namespace InstantiatedEntity {
         [SerializeField] protected NonVoxelWorld nonVoxelWorld;
         [SerializeField] protected Animator animator;
         [SerializeField] protected CameraManager cameraManager;
+        [SerializeField] protected PartyManager partyManager;
 
         protected Vector3Int moveStartPoint;
         protected Vector3Int moveEndPoint;
@@ -54,6 +55,8 @@ namespace InstantiatedEntity {
         }
 
         public void MoveToPoint(Vector3Int point) {
+            Vector3Int oldPosition = currVoxel;
+
             nonVoxelWorld.SetPosition(this, point);
             moveStartPoint = currVoxel;
             moveEndPoint = point;
@@ -61,6 +64,11 @@ namespace InstantiatedEntity {
             moveStartTimestamp = Time.time;
             isMoving = true;
             SetMoveAnimation(isMoving);
+
+            // tell followers to move
+            if (partyManager.currControlledCharacter == this) {
+                partyManager.OnLeaderMoved(oldPosition);
+            }
         }
 
         public void SetMoveAnimation(bool state) {

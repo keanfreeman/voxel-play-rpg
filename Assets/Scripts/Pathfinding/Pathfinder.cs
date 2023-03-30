@@ -5,9 +5,9 @@ using UnityEngine;
 using Utils;
 using VoxelPlay;
 
-public class Pathfinder
+public class Pathfinder : MonoBehaviour
 {
-    private SpriteMovement spriteMovement;
+    [SerializeField] SpriteMovement spriteMovement;
 
     private const int MAX_PATH_LENGTH = 1000;
     private const int MAX_SAVED_NODES = 1000000;
@@ -18,10 +18,6 @@ public class Pathfinder
     private Dictionary<Node, float> changedNodes = new Dictionary<Node, float>();
     private Deque<Vector3Int> path = new Deque<Vector3Int>();
     private Vector3Int? previousStartPoint = null;
-
-    public Pathfinder(SpriteMovement spriteMovement) {
-        this.spriteMovement = spriteMovement;
-    }
 
     private void ResetStructures(Node start) {
         if (!previousStartPoint.HasValue) {

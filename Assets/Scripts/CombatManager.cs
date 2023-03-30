@@ -4,6 +4,7 @@ using Nito.Collections;
 using NonVoxel;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,18 +19,14 @@ public class CombatManager : MonoBehaviour
     [SerializeField] GameStateManager gameStateManager;
     [SerializeField] DetachedCamera detachedCamera;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
+    [SerializeField] Pathfinder pathfinder;
     
-    Pathfinder pathfinder;
     NPCBehavior firstCombatant;
     List<KeyValuePair<int, Traveller>> initiatives;
     int currInitiative = -1;
     Dictionary<Traveller, CombatResources> usedResources = new Dictionary<Traveller, CombatResources>();
 
     private const int TILE_TO_FEET = 5;
-
-    private void Awake() {
-        pathfinder = new Pathfinder(spriteMovement);
-    }
 
     public void StartCombat() {
         if (initiatives == null) {
@@ -42,7 +39,7 @@ public class CombatManager : MonoBehaviour
         Traveller currCreature = initiatives[initiative].Value;
         usedResources[currCreature] = new CombatResources();
         if (currCreature.GetType() == typeof(PlayerMovement)) {
-            inputManager.SwitchPlayerToDetachedControlState();
+            inputManager.SwitchPlayerToDetachedControlState(currCreature.currVoxel);
             yield break;
         }
 
@@ -53,10 +50,8 @@ public class CombatManager : MonoBehaviour
         NPCBehavior creatureAsNPC = (NPCBehavior) currCreature;
         int remainingSpeed = creatureAsNPC.npcInfo.stats.baseSpeed - usedResources[currCreature].consumedMovement;
         inputManager.SwitchDetachedToWatchControlState();
+
         Deque<Vector3Int> path = pathfinder.FindPath(currCreature.currVoxel, nearestPlayer.currVoxel, false);
-        while (path.Count * TILE_TO_FEET > remainingSpeed) {
-            path.RemoveFromFront();
-        }
         yield return movementManager.MoveAlongPath(currCreature, path);
 
         // attack enemy
@@ -140,8 +135,9 @@ public class CombatManager : MonoBehaviour
             usedResources[currCreature].usedAction = true;
         }
         else {
-            Deque<Vector3Int> path = pathfinder.FindPath(currCreature.currVoxel, 
-                detachedCamera.currVoxel, true);
+            Deque<Vector3Int> path = pathfinder.FindPath(currCreature.currVoxel, detachedCamera.currVoxel, 
+                true);
+
             int remainingSpeed = playerMovement.playerInfo.stats.baseSpeed 
                 - usedResources[currCreature].consumedMovement;
             if (path.Count * TILE_TO_FEET > remainingSpeed) {
@@ -153,7 +149,7 @@ public class CombatManager : MonoBehaviour
             yield return movementManager.MoveAlongPath(currCreature, path);
         }
 
-        if (initiatives.Count == 1) {
+        if (initiatives.Count == partyManager.partyMembers.Count) {
             initiatives = null;
             gameStateManager.ExitCombat();
         }

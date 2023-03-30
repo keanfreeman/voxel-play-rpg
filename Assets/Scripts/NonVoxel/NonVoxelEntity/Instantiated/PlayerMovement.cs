@@ -20,17 +20,17 @@ namespace InstantiatedEntity {
 
         private PlayerCameraDirection playerCameraDirection = PlayerCameraDirection.NORTH;
 
-
         void Awake() {
             moveStartTimestamp = Time.time;
         }
 
         public void Init(SpriteMovement spriteMovement, NonVoxelEntity.PlayerCharacter playerInfo,
-                NonVoxelWorld nonVoxelWorld, CameraManager cameraManager) {
+                NonVoxelWorld nonVoxelWorld, CameraManager cameraManager, PartyManager partyManager) {
             this.spriteMovement = spriteMovement;
             this.playerInfo = playerInfo;
             this.nonVoxelWorld = nonVoxelWorld;
             this.cameraManager = cameraManager;
+            this.partyManager = partyManager;
         }
 
         public void HaltMovement() {

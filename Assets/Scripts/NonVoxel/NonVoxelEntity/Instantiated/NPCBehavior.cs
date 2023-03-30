@@ -38,7 +38,8 @@ namespace InstantiatedEntity {
         }
 
         public void Init(NonVoxelWorld nonVoxelWorld, SpriteMovement spriteMovement,
-                System.Random rng, NPC npcInfo, CameraManager cameraManager) {
+                System.Random rng, NPC npcInfo, CameraManager cameraManager, 
+                PartyManager partyManager) {
             this.nonVoxelWorld = nonVoxelWorld;
             this.spriteMovement = spriteMovement;
             this.rng = rng;
@@ -48,6 +49,7 @@ namespace InstantiatedEntity {
             this.spriteLibrary.spriteLibraryAsset = npcInfo.spriteLibraryAsset;
             spriteObjectTransform.localScale = npcInfo.spriteScale;
             currVoxel = nonVoxelWorld.GetPosition(this);
+            this.partyManager = partyManager;
         }
 
         protected override Vector3Int? GetDestinationFromDirection(SpriteMoveDirection spriteMoveDirection) {

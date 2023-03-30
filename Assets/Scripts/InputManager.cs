@@ -30,6 +30,8 @@ public class InputManager : MonoBehaviour
         playerInputActions.Player.SwitchCharacter.performed += partyManager.SwitchToNextCharacter;
         playerInputActions.Detached.SwitchCharacter.performed += partyManager.SwitchToNextCharacter;
 
+        playerInputActions.Detached.Select.performed += detachedCamera.HandleSelect;
+
         playerInputActions.Player.Enable();
     }
 
@@ -60,12 +62,12 @@ public class InputManager : MonoBehaviour
         eventSystem.sendNavigationEvents = false;
     }
 
-    public void SwitchPlayerToDetachedControlState() {
+    public void SwitchPlayerToDetachedControlState(Vector3Int startPosition) {
         playerInputActions.Player.Disable();
         playerInputActions.Detached.Enable();
 
         cameraManager.AttachCameraToDetached();
-        detachedCamera.BecomeActive();
+        detachedCamera.BecomeActive(startPosition);
     }
 
     public void SwitchDetachedToPlayerControlState() {
@@ -91,10 +93,6 @@ public class InputManager : MonoBehaviour
 
     public float GetDetachedVerticalMove() {
         return playerInputActions.Detached.MoveVertical.ReadValue<float>();
-    }
-
-    public bool WasSelectTriggered() {
-        return playerInputActions.Detached.Select.triggered;
     }
 
     // DIALOGUE

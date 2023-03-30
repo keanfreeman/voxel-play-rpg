@@ -95,7 +95,8 @@ public class GameStateManager : MonoBehaviour
         if (inputManager.WasSwitchInputTypeTriggered()) {
             if (controlState == ControlState.SPRITE_NEUTRAL) {
                 controlState = ControlState.DETACHED;
-                inputManager.SwitchPlayerToDetachedControlState();
+                inputManager.SwitchPlayerToDetachedControlState(
+                    partyManager.currControlledCharacter.currVoxel);
             }
             else {
                 controlState = ControlState.SPRITE_NEUTRAL;

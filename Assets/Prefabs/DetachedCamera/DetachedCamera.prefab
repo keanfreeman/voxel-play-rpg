@@ -48,7 +48,6 @@ MonoBehaviour:
   audioListener: {fileID: 0}
   detachedCameraBottom: {fileID: 0}
   inputManager: {fileID: 0}
-  playerMovement: {fileID: 0}
   spriteMovement: {fileID: 0}
   movementManager: {fileID: 0}
   nonVoxelWorld: {fileID: 0}
@@ -56,6 +55,8 @@ MonoBehaviour:
   gameStateManager: {fileID: 0}
   voxelWorldManager: {fileID: 0}
   detachedModeSprite: {fileID: 3078302053648720225}
+  partyManager: {fileID: 0}
+  pathfinder: {fileID: 0}
   grabIcon: {fileID: 21300000, guid: 5ac6b91e791d5a34b8debc4b81738f89, type: 3}
   meleeAttackIcon: {fileID: 21300000, guid: 21d49bed1e4479f4693bd5dd6ed55245, type: 3}
   rangedAttackIcon: {fileID: 21300000, guid: 2fbba247470d00e4cb96c023d2c63381, type: 3}

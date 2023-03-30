@@ -22,6 +22,7 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] VoxelWorldManager voxelWorldManager;
     [SerializeField] SpriteRenderer detachedModeSprite;
     [SerializeField] PartyManager partyManager;
+    [SerializeField] Pathfinder pathfinder;
 
     // sprites
     [SerializeField] Sprite grabIcon;
@@ -35,18 +36,15 @@ public class DetachedCamera : MonoBehaviour
     private const float VOXEL_CHANGE_DISTANCE = 0.51f;
     private const float CURSOR_CENTER_SPEED = 1.5f;
     
-    private Pathfinder pathfinder;
-
     void Awake() {
         DontDestroyOnLoad(gameObject);
         gameObject.SetActive(false);
-        pathfinder = new Pathfinder(spriteMovement);
     }
 
     // move to player, become visible, etc.
-    public void BecomeActive() {
-        transform.position = partyManager.currControlledCharacter.currVoxel;
-        currVoxel = partyManager.currControlledCharacter.currVoxel;
+    public void BecomeActive(Vector3Int startPosition) {
+        transform.position = startPosition;
+        currVoxel = startPosition;
 
         enabled = true;
         gameObject.SetActive(true);
@@ -69,7 +67,6 @@ public class DetachedCamera : MonoBehaviour
             UpdateCursorType();
         }
         MoveCursor();
-        HandleSelect();
     }
 
     private void UpdateCursorType() {
@@ -134,14 +131,15 @@ public class DetachedCamera : MonoBehaviour
         return movedVoxels;
     }
 
-    private void HandleSelect() {
+    public void HandleSelect(InputAction.CallbackContext obj) {
         if (gameStateManager.controlState != ControlState.DETACHED) {
             return;
         }
 
-        if (!inputManager.WasSelectTriggered()) {
-            return;
-        }
+        StartCoroutine(ExecuteHandleSelect());
+    }
+
+    private IEnumerator ExecuteHandleSelect() {
         if (nonVoxelWorld.IsPositionOccupied(currVoxel)) {
             // select the entity
             MonoBehaviour behavior = nonVoxelWorld.GetNVEFromPosition(currVoxel);
@@ -155,7 +153,7 @@ public class DetachedCamera : MonoBehaviour
             // move currently selected to target
             Deque<Vector3Int> path = pathfinder.FindPath(partyManager.currControlledCharacter.currVoxel,
                 currVoxel, true);
-            movementManager.MoveAlongPath(partyManager.currControlledCharacter, path);
+            yield return movementManager.MoveAlongPath(partyManager.currControlledCharacter, path);
         }
     }
 }
