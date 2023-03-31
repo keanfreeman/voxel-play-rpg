@@ -35,10 +35,19 @@ public class NonVoxelInitialization {
         PlayerStats playerStats = new PlayerStats("Player1", 30, 10, 10, 10, 10, 10, 10, 10, playerActions, 1);
         PlayerCharacter mainCharacter = new PlayerCharacter(playerPrefab, new Vector3Int(864, 29, 348), 
             playerStats, playerSpriteLibrary, new Vector3(0.8f, 0.8f, 0.8f));
-        List<Action> scoutActions = new List<Action> {
-            new Attack("Shortsword", new Dice(1, 20, 4), new Dice(1, 6, 2))
+
+        Attack scoutShortswordAttack = new Attack("Shortsword", new Dice(1, 20, 4), new Dice(1, 6, 2));
+        Multiattack scoutMeleeMultiattack = new Multiattack(
+            new List<Attack> { scoutShortswordAttack, scoutShortswordAttack });
+        Attack scoutLongbowAttack = new Attack("Longbow", new Dice(1, 20, 4), new Dice(1, 8, 2), 150, 600);
+        Multiattack scoutRangedMultiattack = new Multiattack(
+            new List<Attack> { scoutLongbowAttack, scoutLongbowAttack });
+
+        List<GameMechanics.Action> scoutActions = new List<GameMechanics.Action> {
+            scoutMeleeMultiattack, scoutRangedMultiattack
         };
         NPCStats scoutStats = new NPCStats("Scout", 30, 16, 11, 14, 12, 11, 13, 11, scoutActions, "1/2", 16);
+
         Party party = new Party(
             mainCharacter,
             new List<PlayerCharacter> {

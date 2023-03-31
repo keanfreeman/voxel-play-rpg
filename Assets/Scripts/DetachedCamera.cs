@@ -1,3 +1,4 @@
+using GameMechanics;
 using InstantiatedEntity;
 using Nito.Collections;
 using NonVoxel;
@@ -71,9 +72,12 @@ public class DetachedCamera : MonoBehaviour
 
     private void UpdateCursorType() {
         if (nonVoxelWorld.IsPositionOccupied(currVoxel)) {
-            if (gameStateManager.controlState == ControlState.COMBAT 
-                    && currVoxel != partyManager.currControlledCharacter.currVoxel) {
-                detachedModeSprite.sprite = meleeAttackIcon;
+            InstantiatedNVE nvEntity = nonVoxelWorld.GetNVEFromPosition(currVoxel);
+            if (gameStateManager.controlState == ControlState.COMBAT
+                    && nvEntity.GetType() == typeof(NPCBehavior)) {
+                GameMechanics.Action rangedAction = StatInfo.GetRangedAction(
+                    partyManager.currControlledCharacter.playerInfo.stats);
+                detachedModeSprite.sprite = rangedAction == null ? meleeAttackIcon : rangedAttackIcon;
             }
             else {
                 detachedModeSprite.sprite = grabIcon;

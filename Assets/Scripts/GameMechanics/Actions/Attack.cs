@@ -7,6 +7,7 @@ namespace GameMechanics {
     {
         public Dice attackRoll { get; protected set; }
         public Dice damageRoll { get; protected set; }
+        public bool isRanged { get; protected set; } = false;
         public int shortRange { get; protected set; } = 0;
         public int longRange { get; protected set; } = 0;
 
@@ -18,6 +19,7 @@ namespace GameMechanics {
 
         public Attack(string attackName, Dice attackRoll, Dice damageRoll, int shortRange, 
                 int longRange) : this(attackName, attackRoll, damageRoll) {
+            this.isRanged = true;
             this.shortRange = shortRange;
             this.longRange = longRange;
         }

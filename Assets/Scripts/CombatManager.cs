@@ -1,10 +1,13 @@
 using GameMechanics;
+using Ink;
 using InstantiatedEntity;
 using Nito.Collections;
 using NonVoxel;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -105,44 +108,74 @@ public class CombatManager : MonoBehaviour
 
         PlayerMovement playerMovement = (PlayerMovement)currCreature;
 
+        // check if player wanted to attack
         InstantiatedNVE selectedEntity = nonVoxelWorld.GetNVEFromPosition(detachedCamera.currVoxel);
-        if (selectedEntity != null
-                && selectedEntity.GetType() == typeof(NPCBehavior)
-                && Coordinates.IsNextTo(currCreature.currVoxel, selectedEntity.currVoxel)) {
+        if (selectedEntity != null && selectedEntity.GetType() == typeof(NPCBehavior)) {
             if (usedResources[currCreature].usedAction) {
                 Debug.Log("Player tried to use action twice.");
                 yield break;
             }
-
             NPCBehavior npcBehavior = (NPCBehavior)selectedEntity;
-            // TODO - consider other actions (currently equipped weapon?)
-            Attack attack = (Attack)playerMovement.playerInfo.stats.actions[0];
-            int attackRoll = randomManager.Roll(attack.attackRoll);
-            Debug.Log($"Player rolled {attackRoll} for their attack roll.");
-            if (attackRoll >= npcBehavior.npcInfo.stats.CalculateArmorClass()) {
-                int damageRoll = randomManager.Roll(attack.damageRoll);
-                Debug.Log($"Player rolled {damageRoll} for their damage roll.");
-                int newHP = npcBehavior.currHP - damageRoll;
-                npcBehavior.SetHP(newHP);
-                if (newHP < 1) {
-                    Debug.Log("NPC defeated");
-                    foreach (KeyValuePair<int, Traveller> initiative in initiatives) {
-                        if (initiative.Value == selectedEntity) {
-                            // ensure initiative number is not incorrect after deleting item
-                            int currCreatureInitiative = initiatives[currInitiative].Key;
-                            if (initiative.Key > currCreatureInitiative) {
-                                currInitiative -= 1;
-                            }
 
-                            nonVoxelWorld.ResetPosition(npcBehavior.currVoxel);
-                            initiatives.Remove(initiative);
-                            Destroy(selectedEntity.gameObject);
-                            break;
+            GameMechanics.Action validAttackAction;
+            if (!Coordinates.IsNextTo(currCreature.currVoxel, npcBehavior.currVoxel)) {
+                // must have ranged option
+                validAttackAction = StatInfo.GetRangedAction(playerMovement.playerInfo.stats);
+                if (validAttackAction == null) {
+                    Debug.Log($"Creature {playerMovement.playerInfo.stats.name} " +
+                        "does not have a ranged attack.");
+                    yield break;
+                }
+            }
+            else {
+                validAttackAction = StatInfo.GetMeleeActionThenRanged(playerMovement.playerInfo.stats);
+            }
+
+            if (validAttackAction == null) {
+                Debug.Log("Player had no attack action they could use.");
+                yield break;
+            }
+
+            List<Attack> attacksToDo;
+            if (validAttackAction.GetType() == typeof(Multiattack)) {
+                attacksToDo = ((Multiattack)validAttackAction).attacks;
+            }
+            else {
+                attacksToDo = new List<Attack> { (Attack)validAttackAction };
+            }
+
+            foreach (Attack attack in attacksToDo) {
+                int attackRoll = randomManager.Roll(attack.attackRoll);
+                Debug.Log($"Player rolled {attackRoll} for their attack roll.");
+                if (attackRoll >= npcBehavior.npcInfo.stats.CalculateArmorClass()) {
+                    int damageRoll = randomManager.Roll(attack.damageRoll);
+                    Debug.Log($"Player rolled {damageRoll} for their damage roll.");
+                    int newHP = npcBehavior.currHP - damageRoll;
+                    npcBehavior.SetHP(newHP);
+                    if (newHP < 1) {
+                        Debug.Log("NPC defeated");
+                        foreach (KeyValuePair<int, Traveller> initiative in initiatives) {
+                            if (initiative.Value == selectedEntity) {
+                                // ensure initiative number is not incorrect after deleting item
+                                int currCreatureInitiative = initiatives[currInitiative].Key;
+                                if (initiative.Key > currCreatureInitiative) {
+                                    currInitiative -= 1;
+                                }
+
+                                nonVoxelWorld.ResetPosition(npcBehavior.currVoxel);
+                                initiatives.Remove(initiative);
+                                Destroy(selectedEntity.gameObject);
+                                break;
+                            }
                         }
                     }
-                }
 
-                yield return effectManager.GenerateHitEffect(npcBehavior.currVoxel);
+                    yield return effectManager.GenerateHitEffect(npcBehavior.currVoxel);
+                    if (newHP < 1) {
+                        // no more attacks to do
+                        break;
+                    }
+                }
             }
 
             usedResources[currCreature].usedAction = true;
