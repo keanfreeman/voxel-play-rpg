@@ -38,6 +38,8 @@ public class CombatManager : MonoBehaviour
 
     public IEnumerator RunTurn(int initiative) {
         Traveller currCreature = initiatives[initiative].Value;
+        yield return cameraManager.MoveCameraToTargetCreature(currCreature);
+
         usedResources[currCreature] = new CombatResources();
         if (currCreature.GetType() == typeof(PlayerMovement)) {
             inputManager.SwitchPlayerToDetachedControlState(currCreature.currVoxel);
@@ -45,7 +47,6 @@ public class CombatManager : MonoBehaviour
         }
 
         inputManager.SwitchDetachedToWatchControlState();
-        yield return cameraManager.MoveCameraToTargetCreature(currCreature);
 
         // find nearest enemy
         PlayerMovement nearestPlayer = partyManager.FindNearestPlayer(currCreature.currVoxel);
