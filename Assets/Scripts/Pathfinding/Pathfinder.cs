@@ -10,123 +10,160 @@ public class Pathfinder : MonoBehaviour
     [SerializeField] SpriteMovement spriteMovement;
 
     private const int MAX_PATH_LENGTH = 1000;
-    private const int MAX_SAVED_NODES = 1000000;
+    private const float MAX_SEARCH_TIME = 0.1f;
 
-    private PriorityQueue<Node, float> frontier = new PriorityQueue<Node, float>();
-    private Dictionary<Vector3Int, Node> positionToNode = new Dictionary<Vector3Int, Node>();
-    // keeps track of changed values since we can't update them directly in the priority queue
-    private Dictionary<Node, float> changedNodes = new Dictionary<Node, float>();
-    private Deque<Vector3Int> path = new Deque<Vector3Int>();
-    private Vector3Int? previousStartPoint = null;
+    public Deque<Vector3Int> result;
 
-    private void ResetStructures(Node start) {
-        if (!previousStartPoint.HasValue) {
-            return;
-        }
-        path.Clear();
-        changedNodes.Clear();
-        frontier.Clear();
-
-        // reuse old nodes so we can reuse their scores
-        if (positionToNode.Count > MAX_SAVED_NODES) {
-            positionToNode.Clear();
-        }
-        else if (previousStartPoint.Value == start.position) {
-            foreach (Node node in positionToNode.Values) {
-                node.visited = false;
-                node.heuristicScore = float.MaxValue;
-            }
-        }
-        else {
-            positionToNode.Clear();
-        }
-
-        //Debug.Log($"Reusing {positionToNode.Count} nodes.");
-    }
-
-    public Deque<Vector3Int> FindPath(Vector3Int startPosition, Vector3Int endPosition,
+    public IEnumerator FindPath(Vector3Int startPosition, Vector3Int endPosition,
             bool includeFinalPosition) {
-        //Debug.Log($"Finding path to {endPosition}");
-        Node start = new Node(startPosition);
-        Node end = new Node(endPosition);
+        result = new Deque<Vector3Int>();
 
-        if (includeFinalPosition && !spriteMovement.IsReachablePosition(end.position, true)) {
+        PriorityQueue<Node, float> frontier1 = new PriorityQueue<Node, float>();
+        Dictionary<Vector3Int, Node> positionToNode1 = new Dictionary<Vector3Int, Node>();
+        // keeps track of changed values since we can't update them directly in the priority queue
+        Dictionary<Node, KeyValuePair<float, float>> changedNodes1
+            = new Dictionary<Node, KeyValuePair<float, float>>();
+        PriorityQueue<Node, float> frontier2 = new PriorityQueue<Node, float>();
+        Dictionary<Vector3Int, Node> positionToNode2 = new Dictionary<Vector3Int, Node>();
+        Dictionary<Node, KeyValuePair<float, float>> changedNodes2
+            = new Dictionary<Node, KeyValuePair<float, float>>();
+
+        bool includeFinalPosition1 = includeFinalPosition;
+        bool includeFinalPosition2 = false;
+        Node start1 = new Node(startPosition);
+        Node end1 = new Node(endPosition);
+        Node start2 = new Node(endPosition);
+        Node end2 = new Node(startPosition);
+
+        if (includeFinalPosition && !spriteMovement.IsReachablePosition(end1.position, true)) {
             Debug.Log("End position isn't reachable.");
-            return path;
+            yield break;
         }
 
-        ResetStructures(start);
-        previousStartPoint = start.position;
+        start1.score = 0;
+        start1.heuristicScore = 0;
+        start2.score = 0;
+        start2.heuristicScore = 0;
 
-        start.score = 0;
-        start.heuristicScore = 0;
+        frontier1.Enqueue(start1, start1.heuristicScore);
+        positionToNode1[start1.position] = start1;
+        frontier2.Enqueue(start2, start2.heuristicScore);
+        positionToNode2[start2.position] = start2;
 
-        frontier.Enqueue(start, start.heuristicScore);
-        positionToNode[start.position] = start;
+        float searchStartTime = Time.realtimeSinceStartup;
 
-        Node currNode;
+        Node currNode1;
+        Node currNode2;
         int numLoops = 0;
         while (true) {
+            if (Time.realtimeSinceStartup - searchStartTime > MAX_SEARCH_TIME) {
+                // need to take a break to allow frames to be drawn
+                yield return null;
+                searchStartTime = Time.realtimeSinceStartup;
+            }
+
             if (numLoops > 10000) {
                 Debug.LogError("Ran into infinite loop");
-                return path;
+                yield break;
             }
             numLoops += 1;
 
-            currNode = GetLowestHeuristicScoreUnvisited();
-            if (currNode == null || currNode.score >= MAX_PATH_LENGTH) {
-                Debug.Log("Path would be too long, stopping search.");
-                return path;
+            currNode1 = GetLowestHeuristicScoreUnvisited(frontier1, changedNodes1);
+            currNode2 = GetLowestHeuristicScoreUnvisited(frontier2, changedNodes2);
+            if (currNode1.score >= float.MaxValue || currNode2.score >= float.MaxValue) {
+                Debug.Log("No possible path.");
+                yield break;
             }
-            currNode.visited = true;
+            if (currNode1.score >= MAX_PATH_LENGTH || currNode2.score >= MAX_PATH_LENGTH) {
+                Debug.Log("Path would be too long, stopping search.");
+                yield break;
+            }
+            currNode1.visited = true;
+            currNode2.visited = true;
 
             // get neighbors of current node
-            if (currNode.neighbors.Count == 0) {
-                foreach (Vector3Int coordinate in Coordinates.GetAdjacentCoordinates(currNode.position)) {
-                    Node neighbor;
-                    if (!positionToNode.ContainsKey(coordinate)) {
-                        neighbor = new Node(coordinate);
-                        positionToNode[coordinate] = neighbor;
-                    }
-                    neighbor = positionToNode[coordinate];
-                    currNode.neighbors.Add(neighbor);
+            foreach (Vector3Int coordinate in Coordinates.GetAdjacentCoordinates(currNode1.position)) {
+                Node neighbor;
+                if (!positionToNode1.ContainsKey(coordinate)) {
+                    neighbor = new Node(coordinate);
+                    positionToNode1[coordinate] = neighbor;
                 }
+                neighbor = positionToNode1[coordinate];
+                currNode1.neighbors.Add(neighbor);
+            }
+            foreach (Vector3Int coordinate in Coordinates.GetAdjacentCoordinates(currNode2.position)) {
+                Node neighbor;
+                if (!positionToNode2.ContainsKey(coordinate)) {
+                    neighbor = new Node(coordinate);
+                    positionToNode2[coordinate] = neighbor;
+                }
+                neighbor = positionToNode2[coordinate];
+                currNode2.neighbors.Add(neighbor);
             }
 
             // update neighbor costs
-            foreach (Node neighbor in currNode.neighbors) {
+            foreach (Node neighbor in currNode1.neighbors) {
                 if (!neighbor.visited) {
-                    bool includeOccupiedCoordinates = neighbor.position == endPosition && !includeFinalPosition;
-                    float newScore = CalculateDistance(currNode, neighbor, includeOccupiedCoordinates) + currNode.score;
+                    bool includeOccupiedCoordinates = neighbor.position == end1.position 
+                        && !includeFinalPosition1;
+                    float newScore = CalculateDistance(currNode1, neighbor, includeOccupiedCoordinates) 
+                        + currNode1.score;
                     if (newScore <= neighbor.score) {
                         float oldScore = neighbor.score;
                         neighbor.score = newScore;
-                        neighbor.heuristicScore = neighbor.score + CalculateDirectLineLength(neighbor, end);
-                        neighbor.prevNode = currNode;
+                        neighbor.heuristicScore = neighbor.score + CalculateDirectLineLength(neighbor, end1);
+                        neighbor.prevNode = currNode1;
 
-                        // update the value in the priority queue
                         if (oldScore != newScore) {
-                            if (!changedNodes.ContainsKey(neighbor)) {
-                                changedNodes[neighbor] = float.MaxValue;
-                            }
-                            changedNodes[neighbor] = neighbor.heuristicScore;
+                            changedNodes1[neighbor] = new KeyValuePair<float, float>(
+                                newScore, neighbor.heuristicScore);
                         }
                     }
-                    frontier.Enqueue(neighbor, neighbor.heuristicScore);
+                    frontier1.Enqueue(neighbor, neighbor.heuristicScore);
+                }
+            }
+            foreach (Node neighbor in currNode2.neighbors) {
+                if (!neighbor.visited) {
+                    bool includeOccupiedCoordinates = neighbor.position == end2.position 
+                        && !includeFinalPosition2;
+                    float newScore = CalculateDistance(currNode2, neighbor, includeOccupiedCoordinates) 
+                        + currNode2.score;
+                    if (newScore <= neighbor.score) {
+                        float oldScore = neighbor.score;
+                        neighbor.score = newScore;
+                        neighbor.heuristicScore = neighbor.score + CalculateDirectLineLength(neighbor, end2);
+                        neighbor.prevNode = currNode2;
+
+                        if (oldScore != newScore) {
+                            changedNodes1[neighbor] = new KeyValuePair<float, float>(
+                                newScore, neighbor.heuristicScore);
+                        }
+                    }
+                    frontier2.Enqueue(neighbor, neighbor.heuristicScore);
                 }
             }
 
-            if (currNode.position == end.position) {
-                //Debug.Log("Finished path");
-                if (!includeFinalPosition) {
-                    currNode = currNode.prevNode;
+            if (currNode1.position == end1.position) {
+                if (!includeFinalPosition1) {
+                    currNode1 = currNode1.prevNode;
                 }
 
-                while (currNode != null && currNode.position != start.position) {
-                    path.AddToBack(currNode.position);
-                    currNode = currNode.prevNode;
+                while (currNode1 != start1) {
+                    result.AddToBack(currNode1.position);
+                    currNode1 = currNode1.prevNode;
                 }
-                return path;
+                yield break;
+            }
+            else if (currNode2.position == end2.position) {
+                if (!includeFinalPosition2) {
+                    currNode2 = currNode2.prevNode;
+                }
+
+                while (currNode2 != null) {
+                    result.AddToFront(currNode2.position);
+                    currNode2 = currNode2.prevNode;
+                }
+                yield break;
             }
         }
     }
@@ -142,7 +179,8 @@ public class Pathfinder : MonoBehaviour
         return Mathf.Abs((end.position - curr.position).magnitude);
     }
 
-    private Node GetLowestHeuristicScoreUnvisited() {
+    private Node GetLowestHeuristicScoreUnvisited(PriorityQueue<Node, float> frontier,
+            Dictionary<Node, KeyValuePair<float, float>> changedNodes) {
         while (true) {
             if (frontier.Count == 0) {
                 return null;
@@ -154,9 +192,12 @@ public class Pathfinder : MonoBehaviour
                 frontier.Dequeue();
                 continue;
             }
-            if (changedNodes.ContainsKey(topNode) && changedNodes[topNode] < topNode.heuristicScore) {
+            if (changedNodes.ContainsKey(topNode) && changedNodes[topNode].Value < topNode.heuristicScore) {
                 frontier.Dequeue();
-                frontier.Enqueue(topNode, changedNodes[topNode]);
+                topNode.score = changedNodes[topNode].Key;
+                topNode.heuristicScore = changedNodes[topNode].Value;
+                changedNodes.Remove(topNode);
+                frontier.Enqueue(topNode, topNode.heuristicScore);
                 continue;
             }
             break;

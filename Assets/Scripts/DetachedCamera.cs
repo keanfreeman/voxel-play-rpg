@@ -151,9 +151,10 @@ public class DetachedCamera : MonoBehaviour
         }
         else {
             // move currently selected to target
-            Deque<Vector3Int> path = pathfinder.FindPath(partyManager.currControlledCharacter.currVoxel,
+            yield return pathfinder.FindPath(partyManager.currControlledCharacter.currVoxel,
                 currVoxel, true);
-            yield return movementManager.MoveAlongPath(partyManager.currControlledCharacter, path);
+            yield return movementManager.MoveAlongPath(partyManager.currControlledCharacter,
+                pathfinder.result);
         }
     }
 }
