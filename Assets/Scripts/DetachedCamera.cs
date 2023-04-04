@@ -25,6 +25,7 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] PartyManager partyManager;
     [SerializeField] Pathfinder pathfinder;
     [SerializeField] CombatManager combatManager;
+    [SerializeField] PathVisualizer pathVisualizer;
 
     // sprites
     [SerializeField] Sprite grabIcon;
@@ -34,10 +35,13 @@ public class DetachedCamera : MonoBehaviour
 
     public Vector3Int currVoxel { get; private set; }
 
+    private Coroutine drawPathCoroutine;
+
     private const float SPEED_MULTIPLIER = 6.0f;
     private const float VOXEL_CHANGE_DISTANCE = 0.51f;
     private const float CURSOR_CENTER_SPEED = 1.5f;
-    
+    private const int TILE_TO_FEET = 5;
+
     void Awake() {
         DontDestroyOnLoad(gameObject);
         gameObject.SetActive(false);
@@ -67,8 +71,54 @@ public class DetachedCamera : MonoBehaviour
         if (movedVoxels) {
             detachedCameraBottom.MoveAnimated(currVoxel);
             UpdateCursorType();
+            if (drawPathCoroutine == null) {
+                drawPathCoroutine = StartCoroutine(ShowPathToTarget());
+            }
         }
         MoveCursor();
+    }
+
+    private IEnumerator ShowPathToTarget() {
+        // do not try to draw paths to impossible-to-reach positions
+        if (!spriteMovement.IsReachablePosition(currVoxel, false)) {
+            drawPathCoroutine = null;
+            yield break;
+        }
+
+        // do not try to draw a path to a tile where another player is
+        InstantiatedNVE nve = nonVoxelWorld.GetNVEFromPosition(currVoxel);
+        if (nve != null && nve.GetType() == typeof(PlayerMovement)) {
+            drawPathCoroutine = null;
+            yield break;
+        }
+
+        // do not draw paths further than the player movement
+        PlayerMovement associatedCharacter = gameStateManager.controlState == ControlState.COMBAT
+            ? combatManager.GetCurrTurnPlayer() : partyManager.currControlledCharacter;
+        Vector3Int origin = associatedCharacter.currVoxel;
+        bool includeLastPosition = !nonVoxelWorld.IsPositionOccupied(currVoxel);
+        int numPoints = Coordinates.NumPointsBetween(origin, currVoxel);
+        if (!includeLastPosition) {
+            numPoints -= 1;
+        }
+        if (numPoints * TILE_TO_FEET > associatedCharacter.playerInfo.stats.baseSpeed) {
+            drawPathCoroutine = null;
+            yield break;
+        }
+
+        // do not draw empty paths
+        CoroutineWithData coroutineWithData = new CoroutineWithData(this, 
+            pathfinder.FindPath(origin, currVoxel, includeLastPosition));
+        yield return coroutineWithData.coroutine;
+        Deque<Vector3Int> path = (Deque<Vector3Int>)coroutineWithData.result;
+        if (path.Count == 0) {
+            drawPathCoroutine = null;
+            yield break;
+        }
+
+        pathVisualizer.DrawPath(path);
+
+        drawPathCoroutine = null;
     }
 
     private void UpdateCursorType() {
@@ -156,10 +206,11 @@ public class DetachedCamera : MonoBehaviour
         }
         else {
             // move currently selected to target
-            yield return pathfinder.FindPath(partyManager.currControlledCharacter.currVoxel,
-                currVoxel, true);
-            yield return movementManager.MoveAlongPath(partyManager.currControlledCharacter,
-                pathfinder.result);
+            CoroutineWithData coroutineWithData = new CoroutineWithData(this,
+                pathfinder.FindPath(partyManager.currControlledCharacter.currVoxel, currVoxel, true));
+            yield return coroutineWithData.coroutine;
+            Deque<Vector3Int> path = (Deque<Vector3Int>)coroutineWithData.result;
+            yield return movementManager.MoveAlongPath(partyManager.currControlledCharacter, path);
         }
     }
 }

@@ -9,52 +9,36 @@ public static class Coordinates
     public static int NumPointsBetween(Vector3Int a, Vector3Int b) {
         int distance = 0;
         Vector3Int c = a - b;
-        // three dimensions are same
-        if (c.x > 0 && c.y > 0 && c.z > 0) {
-            int min = Mathf.Min(c.x, c.y, c.z);
+        Vector3Int absolute = new Vector3Int(Mathf.Abs(c.x), Mathf.Abs(c.y), Mathf.Abs(c.z));
+
+        if (absolute.x != 0 && absolute.y != 0 && absolute.z != 0) {
+            int min = Mathf.Min(absolute.x, absolute.y, absolute.z);
             distance += min;
-            c -= new Vector3Int(min, min, min);
-        }
-        else if (c.x < 0 && c.y < 0 && c.z < 0) {
-            int max = Mathf.Max(c.x, c.y, c.z);
-            distance -= max;
-            c += new Vector3Int(max, max, max);
+            absolute.x -= min;
+            absolute.y -= min;
+            absolute.z -= min;
         }
 
-        // two dimensions are same
-        if (c.x > 0 && c.y > 0) {
-            int min = Mathf.Min(c.x, c.y);
+        if (absolute.x != 0 && absolute.y != 0) {
+            int min = Mathf.Min(absolute.x, absolute.y);
             distance += min;
-            c -= new Vector3Int(min, min, 0);
+            absolute.x -= min;
+            absolute.y -= min;
         }
-        else if (c.y > 0 && c.z > 0) {
-            int min = Mathf.Min(c.y, c.z);
+        else if (absolute.y != 0 && absolute.z != 0) {
+            int min = Mathf.Min(absolute.y, absolute.z);
             distance += min;
-            c -= new Vector3Int(0, min, min);
+            absolute.y -= min;
+            absolute.z -= min;
         }
-        else if(c.x > 0 && c.z > 0) {
-            int min = Mathf.Min(c.x, c.z);
+        else if (absolute.x != 0 && absolute.z != 0) {
+            int min = Mathf.Min(absolute.x, absolute.z);
             distance += min;
-            c -= new Vector3Int(min, 0, min);
-        }
-        else if (c.x < 0 && c.y < 0) {
-            int max = Mathf.Max(c.x, c.y);
-            distance -= max;
-            c += new Vector3Int(max, max, 0);
-        }
-        else if (c.y < 0 && c.z < 0) {
-            int max = Mathf.Max(c.y, c.z);
-            distance -= max;
-            c += new Vector3Int(0, max, max);
-        }
-        else if (c.x < 0 && c.z < 0) {
-            int max = Mathf.Max(c.x, c.z);
-            distance -= max;
-            c += new Vector3Int(max, 0, max);
+            absolute.x -= min;
+            absolute.z -= min;
         }
 
-        distance += Mathf.Abs(c.x) + Mathf.Abs(c.y) + Mathf.Abs(c.z);
-
+        distance += absolute.x + absolute.y + absolute.z;
         return distance;
     }
 

@@ -12,21 +12,29 @@ public class Pathfinder : MonoBehaviour
     private const int MAX_PATH_LENGTH = 1000;
     private const float MAX_SEARCH_TIME = 0.1f;
 
-    public Deque<Vector3Int> result;
+    PriorityQueue<Node, float> frontier1 = new PriorityQueue<Node, float>();
+    Dictionary<Vector3Int, Node> positionToNode1 = new Dictionary<Vector3Int, Node>();
+    // keeps track of changed values since we can't update them directly in the priority queue
+    Dictionary<Node, KeyValuePair<float, float>> changedNodes1
+        = new Dictionary<Node, KeyValuePair<float, float>>();
+    PriorityQueue<Node, float> frontier2 = new PriorityQueue<Node, float>();
+    Dictionary<Vector3Int, Node> positionToNode2 = new Dictionary<Vector3Int, Node>();
+    Dictionary<Node, KeyValuePair<float, float>> changedNodes2
+        = new Dictionary<Node, KeyValuePair<float, float>>();
+
+    private void ClearDataStructures() {
+        frontier1.Clear();
+        positionToNode1.Clear();
+        changedNodes1.Clear();
+        frontier2.Clear();
+        positionToNode2.Clear();
+        changedNodes2.Clear();
+    }
 
     public IEnumerator FindPath(Vector3Int startPosition, Vector3Int endPosition,
             bool includeFinalPosition) {
-        result = new Deque<Vector3Int>();
-
-        PriorityQueue<Node, float> frontier1 = new PriorityQueue<Node, float>();
-        Dictionary<Vector3Int, Node> positionToNode1 = new Dictionary<Vector3Int, Node>();
-        // keeps track of changed values since we can't update them directly in the priority queue
-        Dictionary<Node, KeyValuePair<float, float>> changedNodes1
-            = new Dictionary<Node, KeyValuePair<float, float>>();
-        PriorityQueue<Node, float> frontier2 = new PriorityQueue<Node, float>();
-        Dictionary<Vector3Int, Node> positionToNode2 = new Dictionary<Vector3Int, Node>();
-        Dictionary<Node, KeyValuePair<float, float>> changedNodes2
-            = new Dictionary<Node, KeyValuePair<float, float>>();
+        ClearDataStructures();
+        Deque<Vector3Int> result = new Deque<Vector3Int>();
 
         bool includeFinalPosition1 = includeFinalPosition;
         bool includeFinalPosition2 = false;
@@ -64,6 +72,7 @@ public class Pathfinder : MonoBehaviour
 
             if (numLoops > 10000) {
                 Debug.LogError("Ran into infinite loop");
+                yield return result;
                 yield break;
             }
             numLoops += 1;
@@ -72,10 +81,12 @@ public class Pathfinder : MonoBehaviour
             currNode2 = GetLowestHeuristicScoreUnvisited(frontier2, changedNodes2);
             if (currNode1.score >= float.MaxValue || currNode2.score >= float.MaxValue) {
                 Debug.Log("No possible path.");
+                yield return result;
                 yield break;
             }
             if (currNode1.score >= MAX_PATH_LENGTH || currNode2.score >= MAX_PATH_LENGTH) {
                 Debug.Log("Path would be too long, stopping search.");
+                yield return result;
                 yield break;
             }
             currNode1.visited = true;
@@ -152,6 +163,7 @@ public class Pathfinder : MonoBehaviour
                     result.AddToBack(currNode1.position);
                     currNode1 = currNode1.prevNode;
                 }
+                yield return result;
                 yield break;
             }
             else if (currNode2.position == end2.position) {
@@ -163,6 +175,7 @@ public class Pathfinder : MonoBehaviour
                     result.AddToFront(currNode2.position);
                     currNode2 = currNode2.prevNode;
                 }
+                yield return result;
                 yield break;
             }
         }

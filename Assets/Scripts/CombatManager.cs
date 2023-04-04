@@ -58,8 +58,10 @@ public class CombatManager : MonoBehaviour
         NPCBehavior creatureAsNPC = (NPCBehavior) currCreature;
         int remainingSpeed = creatureAsNPC.npcInfo.stats.baseSpeed - usedResources[currCreature].consumedMovement;
 
-        yield return pathfinder.FindPath(currCreature.currVoxel, nearestPlayer.currVoxel, false);
-        Deque<Vector3Int> path = pathfinder.result;
+        CoroutineWithData coroutineWithData = new CoroutineWithData(this,
+            pathfinder.FindPath(currCreature.currVoxel, nearestPlayer.currVoxel, false));
+        yield return coroutineWithData.coroutine;
+        Deque<Vector3Int> path = (Deque<Vector3Int>) coroutineWithData.result;
         while (path.Count * TILE_TO_FEET > remainingSpeed) {
             path.RemoveFromFront();
         }
@@ -213,9 +215,10 @@ public class CombatManager : MonoBehaviour
     }
 
     private IEnumerator TryMovePlayer(PlayerMovement playerMovement, bool includeFinalPosition) {
-        yield return pathfinder.FindPath(playerMovement.currVoxel, detachedCamera.currVoxel, 
-            includeFinalPosition);
-        Deque<Vector3Int> path = pathfinder.result;
+        CoroutineWithData coroutineWithData = new CoroutineWithData(this,
+            pathfinder.FindPath(playerMovement.currVoxel, detachedCamera.currVoxel, includeFinalPosition));
+        yield return coroutineWithData.coroutine;
+        Deque<Vector3Int> path = (Deque<Vector3Int>)coroutineWithData.result;
 
         int remainingSpeed = playerMovement.playerInfo.stats.baseSpeed
             - usedResources[playerMovement].consumedMovement;
