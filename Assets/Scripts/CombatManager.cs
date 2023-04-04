@@ -119,12 +119,18 @@ public class CombatManager : MonoBehaviour
 
             GameMechanics.Action validAttackAction;
             if (!Coordinates.IsNextTo(currCreature.currVoxel, npcBehavior.currVoxel)) {
-                // must have ranged option
                 validAttackAction = StatInfo.GetRangedAction(playerMovement.playerInfo.stats);
                 if (validAttackAction == null) {
-                    Debug.Log($"Creature {playerMovement.playerInfo.stats.name} " +
-                        "does not have a ranged attack.");
-                    yield break;
+                    // try moving towards the enemy, then attacking
+                    yield return TryMovePlayer(playerMovement, false);
+                    if (!Coordinates.IsNextTo(currCreature.currVoxel, npcBehavior.currVoxel)) {
+                        // couldn't move close enough
+                        Debug.Log("Couldn't get close enough to make a melee attack.");
+                        yield break;
+                    }
+                    else {
+                        validAttackAction = StatInfo.GetMeleeActionThenRanged(playerMovement.playerInfo.stats);
+                    }
                 }
             }
             else {
@@ -181,19 +187,7 @@ public class CombatManager : MonoBehaviour
             usedResources[currCreature].usedAction = true;
         }
         else {
-
-            yield return pathfinder.FindPath(currCreature.currVoxel, detachedCamera.currVoxel, true);
-            Deque<Vector3Int> path = pathfinder.result;
-
-            int remainingSpeed = playerMovement.playerInfo.stats.baseSpeed 
-                - usedResources[currCreature].consumedMovement;
-            if (path.Count * TILE_TO_FEET > remainingSpeed) {
-                Debug.Log($"Tried to move further than remaining speed: {remainingSpeed}");
-                yield break;
-            }
-
-            usedResources[currCreature].consumedMovement += path.Count * TILE_TO_FEET;
-            yield return movementManager.MoveAlongPath(currCreature, path);
+            yield return TryMovePlayer(playerMovement, true);
         }
 
         if (initiatives.Count == partyManager.partyMembers.Count) {
@@ -212,6 +206,26 @@ public class CombatManager : MonoBehaviour
         ResetCombatResources(currCreature);
         IncrementInitiative();
         StartCoroutine(RunTurn(currInitiative));
+    }
+
+    public PlayerMovement GetCurrTurnPlayer() {
+        return (PlayerMovement) initiatives[currInitiative].Value;
+    }
+
+    private IEnumerator TryMovePlayer(PlayerMovement playerMovement, bool includeFinalPosition) {
+        yield return pathfinder.FindPath(playerMovement.currVoxel, detachedCamera.currVoxel, 
+            includeFinalPosition);
+        Deque<Vector3Int> path = pathfinder.result;
+
+        int remainingSpeed = playerMovement.playerInfo.stats.baseSpeed
+            - usedResources[playerMovement].consumedMovement;
+        if (path.Count * TILE_TO_FEET > remainingSpeed) {
+            Debug.Log($"Tried to move further than remaining speed: {remainingSpeed}");
+            yield break;
+        }
+
+        usedResources[playerMovement].consumedMovement += path.Count * TILE_TO_FEET;
+        yield return movementManager.MoveAlongPath(playerMovement, path);
     }
     
     public void SetFirstCombatant(NPCBehavior firstCombatant) {

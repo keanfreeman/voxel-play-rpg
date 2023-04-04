@@ -24,6 +24,7 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] SpriteRenderer detachedModeSprite;
     [SerializeField] PartyManager partyManager;
     [SerializeField] Pathfinder pathfinder;
+    [SerializeField] CombatManager combatManager;
 
     // sprites
     [SerializeField] Sprite grabIcon;
@@ -76,7 +77,7 @@ public class DetachedCamera : MonoBehaviour
             if (gameStateManager.controlState == ControlState.COMBAT
                     && nvEntity.GetType() == typeof(NPCBehavior)) {
                 GameMechanics.Action rangedAction = StatInfo.GetRangedAction(
-                    partyManager.currControlledCharacter.playerInfo.stats);
+                    combatManager.GetCurrTurnPlayer().playerInfo.stats);
                 detachedModeSprite.sprite = rangedAction == null ? meleeAttackIcon : rangedAttackIcon;
             }
             else {
