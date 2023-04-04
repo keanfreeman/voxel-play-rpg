@@ -37,7 +37,7 @@ public class DetachedCamera : MonoBehaviour
 
     private Coroutine drawPathCoroutine;
 
-    private const float SPEED_MULTIPLIER = 6.0f;
+    private const float SPEED_MULTIPLIER = 8.0f;
     private const float VOXEL_CHANGE_DISTANCE = 0.51f;
     private const float CURSOR_CENTER_SPEED = 1.5f;
     private const int TILE_TO_FEET = 5;
