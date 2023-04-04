@@ -5,7 +5,7 @@ using VoxelPlay;
 
 public static class Coordinates
 {
-    // If diagonals are allowed
+    // Returns the number of coordinates from A to B in a direct path.
     public static int NumPointsBetween(Vector3Int a, Vector3Int b) {
         int distance = 0;
         Vector3Int c = a - b;
