@@ -1,8 +1,11 @@
+using InstantiatedEntity;
 using MovementDirection;
 using NonVoxel;
+using NonVoxelEntity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using VoxelPlay;
 
@@ -11,6 +14,8 @@ public class SpriteMovement : MonoBehaviour
     [SerializeField] private VoxelWorldManager voxelWorldManager;
     [SerializeField] private NonVoxelWorld nonVoxelWorld;
 
+    private const float FRACTION_WALKABLE_MINIMUM = 0.5f;
+
     // can the player walk on this voxel?
     public bool IsWalkablePosition(Vector3Int position) {
         Voxel voxel = voxelWorldManager.environment.GetVoxel(position);
@@ -18,85 +23,86 @@ public class SpriteMovement : MonoBehaviour
     }
 
     // can the player walk through this voxel?
-    public bool IsTraversiblePosition(Vector3Int position, bool includeOccupiedCoordinates) {
+    public bool IsTraversiblePosition(Vector3Int position,
+            ICollection<InstantiatedNVE> ignoredCreatures) {
         Voxel voxel = voxelWorldManager.environment.GetVoxel(position);
-        if (includeOccupiedCoordinates) {
-            return voxel.isEmpty || voxel.hasWater;
-        }
-        return (voxel.isEmpty || voxel.hasWater) && !nonVoxelWorld.IsPositionOccupied(position);
+        return (voxel.isEmpty || voxel.hasWater) && 
+            !nonVoxelWorld.IsPositionOccupied(position, ignoredCreatures);
     }
 
-    public bool IsReachablePosition(Vector3Int position, bool includeOccupiedCoordinates) {
-        Vector3Int belowRequestedCoordinate = position + Vector3Int.down;
-        return IsTraversiblePosition(position, includeOccupiedCoordinates) 
-            && IsWalkablePosition(belowRequestedCoordinate);
+    public bool IsReachablePosition(Vector3Int newOrigin, Traveller traveller,
+            ICollection<InstantiatedNVE> ignoredCreatures) {
+        HashSet<Vector3Int> newPositions = traveller.GetPositionsIfOriginAtPosition(newOrigin);
+        foreach (Vector3Int position in newPositions) {
+            if (!IsTraversiblePosition(position, ignoredCreatures)) {
+                return false;
+            }
+        }
+
+        List<Vector3Int> footPositions = Coordinates.GetFloorPositions(newPositions);
+        List<Vector3Int> below = footPositions.Select(x => x + Vector3Int.down).ToList();
+        int numWalkable = NumWalkable(below);
+        return IsNumWalkableAcceptable(numWalkable, below.Count);
     }
 
-    // A must be 1 voxel from B
-    public bool IsATraversibleFromB(Vector3Int requestedCoordinate, Vector3Int startCoordinate,
-            bool includeOccupiedCoordinates) {
-        Vector3Int distance = requestedCoordinate - startCoordinate;
-        Vector3Int belowRequestedCoordinate = requestedCoordinate + Vector3Int.down;
-        if (!IsTraversiblePosition(requestedCoordinate, includeOccupiedCoordinates)
-                || !IsWalkablePosition(belowRequestedCoordinate)) {
-            return false;
+    private bool IsNumWalkableAcceptable(int numWalkable, int containerCount) {
+        return (float)numWalkable / containerCount >= FRACTION_WALKABLE_MINIMUM;
+    }
+
+    public Vector3Int? GetTerrainAdjustedCoordinate(Vector3Int requestedCoordinate, Traveller traveller,
+            List<InstantiatedNVE> ignoredCreatures) {
+        VoxelPlayEnvironment environment = voxelWorldManager.environment;
+
+        HashSet<Vector3Int> requestedCoordinates = traveller.GetPositionsIfOriginAtPosition(requestedCoordinate);
+
+        // Allow movement forward onto flat land with at least one walkable tile beneath
+        List<Vector3Int> footCoordinates = Coordinates.GetFloorPositions(requestedCoordinates);
+        if (AllUnoccupied(requestedCoordinates, ignoredCreatures)) {
+            List<Vector3Int> belowRequested = footCoordinates.Select(x => x + Vector3Int.down).ToList();
+            int numWalkable = NumWalkable(belowRequested);
+            if (IsNumWalkableAcceptable(numWalkable, footCoordinates.Count)) {
+                return requestedCoordinate;
+            }
+
+            // Allow movement onto ground below if there's at least one walkable tile beneath
+            if (AllUnoccupied(belowRequested, ignoredCreatures)) {
+                List<Vector3Int> twoBelowRequested = belowRequested.Select(x => x + Vector3Int.down).ToList();
+                int numWalkable2 = NumWalkable(twoBelowRequested);
+                if (IsNumWalkableAcceptable(numWalkable2, twoBelowRequested.Count)) {
+                    return requestedCoordinate + Vector3Int.down;
+                }
+            }
         }
 
-        if (distance.y == 1) {
-            Vector3Int abovePlayerCoordinate = startCoordinate + Vector3Int.up;
-            return IsTraversiblePosition(abovePlayerCoordinate, includeOccupiedCoordinates);
+        // Allow movement up 1 tile
+        List<Vector3Int> aboveRequested = requestedCoordinates.Select(x => x + Vector3Int.up).ToList();
+        if (AllUnoccupied(aboveRequested, ignoredCreatures)) {
+            int numWalkable = NumWalkable(requestedCoordinates);
+            if (IsNumWalkableAcceptable(numWalkable, footCoordinates.Count)) {
+                // ensure there's headroom to move to that tile
+                List<Vector3Int> abovePlayer = traveller.occupiedPositions
+                    .Select(x => x + Vector3Int.up).ToList();
+                if (AllUnoccupied(abovePlayer, ignoredCreatures)) {
+                    return requestedCoordinate + Vector3Int.up;
+                }
+            }
         }
-        else if (distance.y == -1) {
-            Vector3Int aboveRequestedCoordinate = requestedCoordinate + Vector3Int.up;
-            return IsTraversiblePosition(aboveRequestedCoordinate, includeOccupiedCoordinates);
+
+        return null;
+    }
+
+    private bool AllUnoccupied(ICollection<Vector3Int> positions,
+            ICollection<InstantiatedNVE> ignoredCreatures) {
+        foreach (Vector3Int position in positions) {
+            if (!IsTraversiblePosition(position, ignoredCreatures)) {
+                return false;
+            }
         }
         return true;
     }
 
-    // returns the direction to move after accounting for slopes, other terrain.
-    // disallows movement if there are obstacles.
-    // the player is always technically above slopes when traversing them.
-    public Vector3Int? GetTerrainAdjustedCoordinate(
-            Vector3Int requestedCoordinate, Vector3Int currCoordinate) {
-        VoxelPlayEnvironment environment = voxelWorldManager.environment;
-
-        Voxel requestedVoxel = environment.GetVoxel(requestedCoordinate);
-        if (IsTraversiblePosition(requestedCoordinate, true)) {
-            // check if player can move onto land
-            Vector3Int belowRequestedCoordinate = requestedCoordinate + Vector3Int.down;
-            if (IsWalkablePosition(belowRequestedCoordinate)) {
-                return requestedCoordinate;
-            }
-
-            // check if player can move down slope to solid tile
-            Voxel underfootVoxel = environment.GetVoxel(currCoordinate + Vector3Int.down);
-            if (IsSlope(underfootVoxel)
-                && IsSlopeDownRelativeToSprite(requestedCoordinate, currCoordinate,
-                    underfootVoxel.GetTextureRotation())
-                && IsWalkablePosition(belowRequestedCoordinate + Vector3Int.down)) {
-                return requestedCoordinate + Vector3Int.down;
-            }
-
-            // check if the player can jump down 1 tile
-            if (IsTraversiblePosition(belowRequestedCoordinate, true)
-                    && IsWalkablePosition(belowRequestedCoordinate + Vector3Int.down)) {
-                return requestedCoordinate + Vector3Int.down;
-            }
-        }
-
-        // check if player can move up slope
-        if (IsSlope(requestedVoxel) && IsSlopeUpRelativeToSprite(requestedCoordinate, currCoordinate,
-                requestedVoxel.GetTextureRotation())) {
-            return requestedCoordinate + Vector3Int.up;
-        }
-
-        // check if the player can jump up 1 tile
-        Vector3Int aboveRequestedCoordinate = requestedCoordinate + Vector3Int.up;
-        if (IsWalkablePosition(requestedCoordinate) && IsTraversiblePosition(aboveRequestedCoordinate, true)) {
-            return requestedCoordinate + Vector3Int.up;
-        }
-
-        return null;
+    private int NumWalkable(ICollection<Vector3Int> positions) {
+        return positions.Count((Vector3Int position) => IsWalkablePosition(position));
     }
 
     public bool IsSlope(Voxel voxel) {
@@ -137,20 +143,22 @@ public class SpriteMovement : MonoBehaviour
             || slopeRotation == 1 && diff.x <= -1;
     }
 
-    public Vector3Int GetSpriteDesiredCoordinate(Vector3Int currPosition,
+    public Vector3Int GetSpriteDesiredCoordinate(InstantiatedNVE entity,
             SpriteMoveDirection moveDirection) {
         if (moveDirection == SpriteMoveDirection.FORWARD) {
-            return currPosition + Vector3Int.forward;
+            return entity.origin + Vector3Int.forward;
         }
         else if (moveDirection == SpriteMoveDirection.RIGHT) {
-            return currPosition + Vector3Int.right;
+            return entity.origin + Vector3Int.right;
         }
         else if (moveDirection == SpriteMoveDirection.BACK) {
-            return currPosition + Vector3Int.back;
+            return entity.origin + Vector3Int.back;
         }
         else if (moveDirection == SpriteMoveDirection.LEFT) {
-            return currPosition + Vector3Int.left;
+            return entity.origin + Vector3Int.left;
         }
-        throw new System.ArgumentException("Impossible direction provided.");
+        else {
+            throw new System.ArgumentException("Impossible direction provided.");
+        }
     }
 }

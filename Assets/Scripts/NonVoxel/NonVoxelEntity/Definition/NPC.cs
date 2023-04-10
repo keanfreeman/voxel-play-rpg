@@ -4,25 +4,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 using GameMechanics;
+using MovementDirection;
 
 namespace NonVoxelEntity {
     public class NPC : Entity {
         public BattleGroup battleGroup { get; set; }
         public NPCStats stats { get; private set; }
-        public SpriteLibraryAsset spriteLibraryAsset { get; set; }
-        public Vector3 spriteScale { get; private set; }
         public Faction faction { get; private set; }
 
-        public NPC(GameObject prefab, Vector3Int startPosition, NPCStats stats,
-                SpriteLibraryAsset spriteLibraryAsset, Vector3 spriteScale,
-                Faction faction)
-                : base(prefab, startPosition) {
-            this.prefab = prefab;
+        public NPC(Vector3Int startPosition, NPCStats stats,
+                EntityDisplay spriteDisplay)
+                : base(startPosition, stats.size, spriteDisplay) {
             this.startPosition = startPosition;
             this.stats = stats;
-            this.spriteLibraryAsset = spriteLibraryAsset;
-            this.spriteScale = spriteScale;
-            this.faction = faction;
+            this.faction = Faction.ENEMY;
         }
     }
 

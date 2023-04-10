@@ -58,16 +58,19 @@ public class PartyManager : MonoBehaviour
         PlayerMovement nearest = partyMembers[0];
         float nearestDistance = float.MaxValue;
         foreach (PlayerMovement playerMovement in partyMembers) {
-            float directDistance = (position - playerMovement.currVoxel).magnitude;
-            if (directDistance < nearestDistance) {
-                nearest = playerMovement;
-                nearestDistance = directDistance;
+            foreach (Vector3Int playerPosition in playerMovement.occupiedPositions) {
+                float directDistance = (position - playerPosition).magnitude;
+                if (directDistance < nearestDistance) {
+                    nearest = playerMovement;
+                    nearestDistance = directDistance;
+                }
             }
         }
         return nearest;
     }
 
     // TODO - handle cases where a party member is not directly next to the leader
+    // TODO - fix for large or bigger party members (size-agnostic)
     public void OnLeaderMoved(Vector3Int leaderOldPosition) {
         if (gameStateManager.controlState == ControlState.COMBAT) {
             return;
@@ -89,8 +92,8 @@ public class PartyManager : MonoBehaviour
         // order them to move towards their followTarget
         Vector3Int nextMove = leaderOldPosition;
         foreach (PlayerMovement playerMovement in orderedPartyList) {
-            Vector3Int temp = playerMovement.currVoxel;
-            playerMovement.MoveToPoint(nextMove);
+            Vector3Int temp = playerMovement.origin;
+            playerMovement.MoveOriginToPoint(nextMove);
             nextMove = temp;
         }
     }
@@ -99,7 +102,7 @@ public class PartyManager : MonoBehaviour
         PlayerMovement closest = candidates.GetEnumerator().Current;
         float distance = float.MaxValue;
         foreach (PlayerMovement playerMovement in candidates) {
-            int currDistance = Coordinates.NumPointsBetween(playerMovement.currVoxel, target.currVoxel);
+            int currDistance = Coordinates.NumPointsBetween(playerMovement.origin, target.origin);
             if (currDistance < distance) {
                 closest = playerMovement;
                 distance = currDistance;

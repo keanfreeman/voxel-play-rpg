@@ -1,13 +1,20 @@
+using InstantiatedEntity;
 using Nito.Collections;
+using NonVoxel;
+using NonVoxelEntity;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Utils;
 using VoxelPlay;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class Pathfinder : MonoBehaviour
 {
     [SerializeField] SpriteMovement spriteMovement;
+    [SerializeField] NonVoxelWorld nonVoxelWorld;
 
     private const int MAX_PATH_LENGTH = 1000;
     private const float MAX_SEARCH_TIME = 0.1f;
@@ -22,6 +29,8 @@ public class Pathfinder : MonoBehaviour
     Dictionary<Node, KeyValuePair<float, float>> changedNodes2
         = new Dictionary<Node, KeyValuePair<float, float>>();
 
+    private Deque<Vector3Int> EMPTY_RESULTS = new Deque<Vector3Int>(0);
+
     private void ClearDataStructures() {
         frontier1.Clear();
         positionToNode1.Clear();
@@ -31,20 +40,81 @@ public class Pathfinder : MonoBehaviour
         changedNodes2.Clear();
     }
 
-    public IEnumerator FindPath(Vector3Int startPosition, Vector3Int endPosition,
-            bool includeFinalPosition) {
+    public IEnumerator FindPath(Traveller traveller, Vector3Int endPosition,
+            int maxSearchDepth = MAX_PATH_LENGTH) {
+        // when the traveller is large or greater, we need to allow movement onto tiles occupied by itself
+        List<InstantiatedNVE> ignoredCreatures = new List<InstantiatedNVE> { traveller };
+
+        // check if any position in the target is occupied by someone else
+        HashSet<Vector3Int> endPositions = traveller.GetPositionsIfOriginAtPosition(endPosition);
+        InstantiatedNVE occupyingEntity = null;
+        foreach (Vector3Int position in endPositions) {
+            if (nonVoxelWorld.IsPositionOccupied(position, ignoredCreatures)) {
+                occupyingEntity = nonVoxelWorld.GetNVEFromPosition(position);
+                break;
+            }
+        }
+
+        if (occupyingEntity == null) {
+            CoroutineWithData coroutineWithData = new CoroutineWithData(this,
+                FindPathInternal(traveller.origin, endPosition, traveller, ignoredCreatures, maxSearchDepth));
+            yield return coroutineWithData.coroutine;
+            yield return coroutineWithData.result;
+            yield break;
+        }
+        // find reachable origins
+        Traveller target = (Traveller)occupyingEntity;
+        List<Vector3Int> reachableOriginsNextToTarget = Coordinates
+            .GetOriginPositionsWhereXIsNextToY(traveller, target)
+            .Where((Vector3Int position) => {
+                return spriteMovement.IsReachablePosition(position, traveller, ignoredCreatures);
+        }).ToList();
+        reachableOriginsNextToTarget.Sort((x, y) => {
+            return Coordinates.GetDirectLineLength(x, traveller.origin)
+            .CompareTo(Coordinates.GetDirectLineLength(y, traveller.origin));
+        });
+        if (reachableOriginsNextToTarget.Count == 0) {
+            Debug.Log("Found nowhere to put traveller next to selected target.");
+            yield return EMPTY_RESULTS;
+            yield break;
+        }
+
+        // find smallest path out of reachable origins
+        PriorityQueue<Deque<Vector3Int>, int> pathLengths = new PriorityQueue<Deque<Vector3Int>, int>();
+        foreach (Vector3Int targetOrigin in reachableOriginsNextToTarget) {
+            int newMaxSearch = pathLengths.Count > 0 ? pathLengths.Peek().Count : maxSearchDepth;
+            CoroutineWithData coroutineWithData = new CoroutineWithData(this,
+                FindPathInternal(traveller.origin, targetOrigin, traveller, ignoredCreatures,
+                newMaxSearch));
+            yield return coroutineWithData.coroutine;
+            Deque<Vector3Int> result = (Deque<Vector3Int>)coroutineWithData.result;
+            if (result.Count != 0) {
+                pathLengths.Enqueue(result, result.Count);
+            }
+        }
+        if (pathLengths.Count != 0) {
+            yield return pathLengths.Dequeue();
+            yield break;
+        }
+
+        Debug.Log($"Found no path to {reachableOriginsNextToTarget.Count}");
+        yield return EMPTY_RESULTS;
+    }
+
+    private IEnumerator FindPathInternal(Vector3Int startPosition, 
+            Vector3Int endPosition, Traveller traveller, List<InstantiatedNVE> ignoredCreatures,
+            int maxSearchDepth) {
         ClearDataStructures();
         Deque<Vector3Int> result = new Deque<Vector3Int>();
 
-        bool includeFinalPosition1 = includeFinalPosition;
-        bool includeFinalPosition2 = false;
         Node start1 = new Node(startPosition);
         Node end1 = new Node(endPosition);
         Node start2 = new Node(endPosition);
         Node end2 = new Node(startPosition);
 
-        if (includeFinalPosition && !spriteMovement.IsReachablePosition(end1.position, true)) {
+        if (!spriteMovement.IsReachablePosition(end1.origin, traveller, ignoredCreatures)) {
             Debug.Log("End position isn't reachable.");
+            yield return result;
             yield break;
         }
 
@@ -54,9 +124,9 @@ public class Pathfinder : MonoBehaviour
         start2.heuristicScore = 0;
 
         frontier1.Enqueue(start1, start1.heuristicScore);
-        positionToNode1[start1.position] = start1;
+        positionToNode1[start1.origin] = start1;
         frontier2.Enqueue(start2, start2.heuristicScore);
-        positionToNode2[start2.position] = start2;
+        positionToNode2[start2.origin] = start2;
 
         float searchStartTime = Time.realtimeSinceStartup;
 
@@ -84,8 +154,8 @@ public class Pathfinder : MonoBehaviour
                 yield return result;
                 yield break;
             }
-            if (currNode1.score >= MAX_PATH_LENGTH || currNode2.score >= MAX_PATH_LENGTH) {
-                Debug.Log("Path would be too long, stopping search.");
+            if (currNode1.score > maxSearchDepth || currNode2.score > maxSearchDepth) {
+                Debug.Log($"Path of score {currNode1.score} would be too long, stopping search.");
                 yield return result;
                 yield break;
             }
@@ -93,7 +163,7 @@ public class Pathfinder : MonoBehaviour
             currNode2.visited = true;
 
             // get neighbors of current node
-            foreach (Vector3Int coordinate in Coordinates.GetAdjacentCoordinates(currNode1.position)) {
+            foreach (Vector3Int coordinate in Coordinates.GetAdjacentCoordinates(currNode1.origin)) {
                 Node neighbor;
                 if (!positionToNode1.ContainsKey(coordinate)) {
                     neighbor = new Node(coordinate);
@@ -102,7 +172,7 @@ public class Pathfinder : MonoBehaviour
                 neighbor = positionToNode1[coordinate];
                 currNode1.neighbors.Add(neighbor);
             }
-            foreach (Vector3Int coordinate in Coordinates.GetAdjacentCoordinates(currNode2.position)) {
+            foreach (Vector3Int coordinate in Coordinates.GetAdjacentCoordinates(currNode2.origin)) {
                 Node neighbor;
                 if (!positionToNode2.ContainsKey(coordinate)) {
                     neighbor = new Node(coordinate);
@@ -115,14 +185,13 @@ public class Pathfinder : MonoBehaviour
             // update neighbor costs
             foreach (Node neighbor in currNode1.neighbors) {
                 if (!neighbor.visited) {
-                    bool includeOccupiedCoordinates = neighbor.position == end1.position 
-                        && !includeFinalPosition1;
-                    float newScore = CalculateDistance(currNode1, neighbor, includeOccupiedCoordinates) 
+                    float newScore = CalculateDistance(currNode1, neighbor, traveller, ignoredCreatures) 
                         + currNode1.score;
                     if (newScore <= neighbor.score) {
                         float oldScore = neighbor.score;
                         neighbor.score = newScore;
-                        neighbor.heuristicScore = neighbor.score + CalculateDirectLineLength(neighbor, end1);
+                        neighbor.heuristicScore = neighbor.score 
+                            + Coordinates.GetDirectLineLength(neighbor.origin, end1.origin);
                         neighbor.prevNode = currNode1;
 
                         if (oldScore != newScore) {
@@ -135,14 +204,13 @@ public class Pathfinder : MonoBehaviour
             }
             foreach (Node neighbor in currNode2.neighbors) {
                 if (!neighbor.visited) {
-                    bool includeOccupiedCoordinates = neighbor.position == end2.position 
-                        && !includeFinalPosition2;
-                    float newScore = CalculateDistance(currNode2, neighbor, includeOccupiedCoordinates) 
+                    float newScore = CalculateDistance(currNode2, neighbor, traveller, ignoredCreatures) 
                         + currNode2.score;
                     if (newScore <= neighbor.score) {
                         float oldScore = neighbor.score;
                         neighbor.score = newScore;
-                        neighbor.heuristicScore = neighbor.score + CalculateDirectLineLength(neighbor, end2);
+                        neighbor.heuristicScore = neighbor.score 
+                            + Coordinates.GetDirectLineLength(neighbor.origin, end2.origin);
                         neighbor.prevNode = currNode2;
 
                         if (oldScore != newScore) {
@@ -154,25 +222,17 @@ public class Pathfinder : MonoBehaviour
                 }
             }
 
-            if (currNode1.position == end1.position) {
-                if (!includeFinalPosition1) {
-                    currNode1 = currNode1.prevNode;
-                }
-
+            if (currNode1.origin == end1.origin) {
                 while (currNode1 != start1) {
-                    result.AddToBack(currNode1.position);
+                    result.AddToBack(currNode1.origin);
                     currNode1 = currNode1.prevNode;
                 }
                 yield return result;
                 yield break;
             }
-            else if (currNode2.position == end2.position) {
-                if (!includeFinalPosition2) {
-                    currNode2 = currNode2.prevNode;
-                }
-
+            else if (currNode2.origin == end2.origin) {
                 while (currNode2 != null) {
-                    result.AddToFront(currNode2.position);
+                    result.AddToFront(currNode2.origin);
                     currNode2 = currNode2.prevNode;
                 }
                 yield return result;
@@ -181,15 +241,15 @@ public class Pathfinder : MonoBehaviour
         }
     }
 
-    private float CalculateDistance(Node node1, Node node2, bool includeOccupiedCoordinates) {
-        if (spriteMovement.IsATraversibleFromB(node2.position, node1.position, includeOccupiedCoordinates)) {
-            return CalculateDirectLineLength(node2, node1);
+    private float CalculateDistance(Node start, Node destination, Traveller traveller,
+            List<InstantiatedNVE> ignoredCreatures) {
+        Vector3Int? terrainAdjustedCoordinate = spriteMovement.GetTerrainAdjustedCoordinate(
+            destination.origin, traveller, ignoredCreatures);
+        if (!terrainAdjustedCoordinate.HasValue || terrainAdjustedCoordinate.Value != destination.origin) {
+            return float.MaxValue;
         }
-        return float.MaxValue;
-    }
 
-    private float CalculateDirectLineLength(Node curr, Node end) {
-        return Mathf.Abs((end.position - curr.position).magnitude);
+        return Coordinates.GetDirectLineLength(destination.origin, start.origin);
     }
 
     private Node GetLowestHeuristicScoreUnvisited(PriorityQueue<Node, float> frontier,

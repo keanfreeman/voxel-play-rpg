@@ -39,7 +39,7 @@ public class MovementManager : MonoBehaviour
                 path.RemoveFromBack();
             }
 
-            if (nonVoxelWorld.IsPositionOccupied(currDestination.Value)) {
+            if (nonVoxelWorld.IsPositionOccupied(currDestination.Value, traveller)) {
                 Debug.Log("Movement was interrupted along path.");
                 traveller.SetMoveAnimation(false);
                 movingCreatures.Remove(traveller);
@@ -47,7 +47,7 @@ public class MovementManager : MonoBehaviour
             }
 
             if (!traveller.isMoving) {
-                traveller.MoveToPoint(currDestination.Value);
+                traveller.MoveOriginToPoint(currDestination.Value);
                 pathVisualizer.DestroyNearestMarker();
             }
 

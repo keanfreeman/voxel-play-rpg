@@ -1,3 +1,4 @@
+using GameMechanics;
 using MovementDirection;
 using NonVoxel;
 using NonVoxelEntity;
@@ -16,7 +17,6 @@ namespace InstantiatedEntity {
 
         private System.Random rng;
         private SpriteMovement spriteMovement;
-        private Transform rotationTransform;
 
         private float lastMoveTime = 0;
 
@@ -26,10 +26,6 @@ namespace InstantiatedEntity {
 
         private const float NPC_MIN_IDLE_TIME = 1;
         private const float NPC_MAX_IDLE_TIME = 5;
-
-        void Awake() {
-            rotationTransform = transform.GetChild(0);
-        }
 
         private void OnTriggerEnter(Collider other) {
             if (npcInfo.faction == Faction.ENEMY && other.gameObject.tag == "Player") {
@@ -46,15 +42,17 @@ namespace InstantiatedEntity {
             this.npcInfo = npcInfo;
             currHP = npcInfo.stats.hitPoints;
             this.cameraManager = cameraManager;
-            this.spriteLibrary.spriteLibraryAsset = npcInfo.spriteLibraryAsset;
-            spriteObjectTransform.localScale = npcInfo.spriteScale;
-            currVoxel = nonVoxelWorld.GetPosition(this);
+            this.spriteLibrary.spriteLibraryAsset = npcInfo.entityDisplay.spriteLibraryAsset;
+            spriteObjectTransform.localScale = npcInfo.entityDisplay.spriteScale;
+            rotationTransform.localPosition = npcInfo.entityDisplay.offset;
             this.partyManager = partyManager;
+            SetCurrPositions(npcInfo);
         }
 
         protected override Vector3Int? GetDestinationFromDirection(SpriteMoveDirection spriteMoveDirection) {
             // only implemented for override purposes
-            return spriteMovement.GetTerrainAdjustedCoordinate(currVoxel, currVoxel + GetRandomOneTileMovement());
+            return spriteMovement.GetTerrainAdjustedCoordinate(origin + GetRandomOneTileMovement(),
+                this, new List<InstantiatedNVE>{this});
         }
 
         public Vector3Int GetRandomOneTileMovement() {
@@ -71,21 +69,21 @@ namespace InstantiatedEntity {
             }
             lastMoveTime = Time.time;
 
-            Vector3Int newPosition = currVoxel + GetRandomOneTileMovement();
+            Vector3Int newPosition = origin + GetRandomOneTileMovement();
+            List<InstantiatedNVE> ignoredCreatures = new List<InstantiatedNVE> { this };
             Vector3Int? actualCoordinate = spriteMovement.GetTerrainAdjustedCoordinate(
-                newPosition, currVoxel);
+                newPosition, this, ignoredCreatures);
             if (!actualCoordinate.HasValue) {
                 return;
             }
             Vector3Int destinationCoordinate = actualCoordinate.GetValueOrDefault();
 
-            if (!nonVoxelWorld.IsPositionOccupied(destinationCoordinate)
-                    && spriteMovement.IsReachablePosition(destinationCoordinate, true)) {
-                MoveToPoint(destinationCoordinate);
+            if (spriteMovement.IsReachablePosition(destinationCoordinate, this, ignoredCreatures)) {
+                MoveOriginToPoint(destinationCoordinate);
             }
         }
 
-        public bool IsInteractable() {
+        public override bool IsInteractable() {
             return true;
         }
 
@@ -95,6 +93,10 @@ namespace InstantiatedEntity {
 
         public override void SetSpriteRotation(Vector3 rotation) {
             rotationTransform.rotation = Quaternion.Euler(rotation);
+        }
+
+        public override Stats GetStats() {
+            return npcInfo.stats;
         }
     }
 }

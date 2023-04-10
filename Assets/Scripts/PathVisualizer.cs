@@ -9,10 +9,6 @@ public class PathVisualizer : MonoBehaviour
 
     List<GameObject> pathMarkers = new List<GameObject>();
 
-    private void Awake() {
-        DontDestroyOnLoad(gameObject);
-    }
-
     public void DrawPath(Deque<Vector3Int> path) {
         foreach (GameObject gameObject in pathMarkers) {
             Destroy(gameObject);

@@ -96,7 +96,7 @@ public class GameStateManager : MonoBehaviour
             if (controlState == ControlState.SPRITE_NEUTRAL) {
                 controlState = ControlState.DETACHED;
                 inputManager.SwitchPlayerToDetachedControlState(
-                    partyManager.currControlledCharacter.currVoxel);
+                    partyManager.currControlledCharacter.origin);
             }
             else {
                 controlState = ControlState.SPRITE_NEUTRAL;
@@ -123,8 +123,9 @@ public class GameStateManager : MonoBehaviour
         // check for interactable objects
         Story story = null;
 
-        Vector3Int currPosition = partyManager.currControlledCharacter.currVoxel;
-        List<Vector3Int> interactablePositions = nonVoxelWorld.GetInteractableAdjacentObjects(currPosition);
+        Vector3Int currPosition = partyManager.currControlledCharacter.origin;
+        List<Vector3Int> interactablePositions = nonVoxelWorld.GetInteractableAdjacentObjects(currPosition,
+            partyManager.currControlledCharacter);
         if (interactablePositions.Count > 0) {
             Vector3Int firstItem = interactablePositions.First();
             story = objectInkMapping.GetStoryFromObject(nonVoxelWorld.GetNVEFromPosition(firstItem).gameObject);

@@ -10,9 +10,11 @@ namespace InstantiatedEntity {
         private EnvironmentSceneManager worldManager;
         private Destination destination;
 
-        public void Init(EnvironmentSceneManager worldManager, Destination destination) {
+        public void Init(EnvironmentSceneManager worldManager, Destination destination, 
+                SceneExitCube sceneExitCubeInfo) {
             this.worldManager = worldManager;
             this.destination = destination;
+            SetCurrPositions(sceneExitCubeInfo);
         }
 
         private void OnTriggerEnter(Collider other) {
@@ -21,6 +23,10 @@ namespace InstantiatedEntity {
                     $"{destination.destinationEnv}");
                 worldManager.LoadNextScene(destination);
             }
+        }
+
+        public override bool IsInteractable() {
+            return false;
         }
     }
 }

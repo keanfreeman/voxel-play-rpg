@@ -45,30 +45,31 @@ public class CombatManager : MonoBehaviour
 
         usedResources[currCreature] = new CombatResources();
         if (currCreature.GetType() == typeof(PlayerMovement)) {
-            inputManager.SwitchPlayerToDetachedControlState(currCreature.currVoxel);
+            inputManager.SwitchPlayerToDetachedControlState(currCreature.origin);
             yield break;
         }
 
         inputManager.SwitchDetachedToWatchControlState();
 
         // find nearest enemy
-        PlayerMovement nearestPlayer = partyManager.FindNearestPlayer(currCreature.currVoxel);
-
-        // move towards enemy
+        PlayerMovement nearestPlayer = partyManager.FindNearestPlayer(currCreature.origin);
         NPCBehavior creatureAsNPC = (NPCBehavior) currCreature;
-        int remainingSpeed = creatureAsNPC.npcInfo.stats.baseSpeed - usedResources[currCreature].consumedMovement;
+        if (!Coordinates.IsNextTo(creatureAsNPC, nearestPlayer)) {
+            // try move towards enemy
+            int maxSearchLength = (creatureAsNPC.npcInfo.stats.baseSpeed / TILE_TO_FEET) * 3;
 
-        CoroutineWithData coroutineWithData = new CoroutineWithData(this,
-            pathfinder.FindPath(currCreature.currVoxel, nearestPlayer.currVoxel, false));
-        yield return coroutineWithData.coroutine;
-        Deque<Vector3Int> path = (Deque<Vector3Int>) coroutineWithData.result;
-        while (path.Count * TILE_TO_FEET > remainingSpeed) {
-            path.RemoveFromFront();
+            CoroutineWithData coroutineWithData = new CoroutineWithData(this,
+                pathfinder.FindPath(currCreature, nearestPlayer.origin, maxSearchLength));
+            yield return coroutineWithData.coroutine;
+            Deque<Vector3Int> path = (Deque<Vector3Int>) coroutineWithData.result;
+            while (path.Count * TILE_TO_FEET > creatureAsNPC.npcInfo.stats.baseSpeed * TILE_TO_FEET) {
+                path.RemoveFromFront();
+            }
+            yield return movementManager.MoveAlongPath(currCreature, path);
         }
-        yield return movementManager.MoveAlongPath(currCreature, path);
 
         // attack enemy
-        if (Coordinates.IsNextTo(creatureAsNPC.currVoxel, nearestPlayer.currVoxel)) {
+        if (Coordinates.IsNextTo(creatureAsNPC, nearestPlayer)) {
             // TODO use less brittle attack selection method
             Attack npcAttack = (Attack)creatureAsNPC.npcInfo.stats.actions[0];
             int attackRoll = randomManager.Roll(npcAttack.attackRoll);
@@ -83,7 +84,7 @@ public class CombatManager : MonoBehaviour
                     Debug.Log("Player ran out of HP.");
                 }
 
-                yield return effectManager.GenerateHitEffect(nearestPlayer.currVoxel);
+                yield return effectManager.GenerateHitEffect(nearestPlayer.origin);
             }
         }
 
@@ -103,15 +104,15 @@ public class CombatManager : MonoBehaviour
         }
 
         Traveller currCreature = initiatives[currInitiative].Value;
+        InstantiatedNVE selectedEntity = nonVoxelWorld.GetNVEFromPosition(detachedCamera.currVoxel);
         if (currCreature.GetType() != typeof(PlayerMovement) || movementManager.IsMoving(currCreature)
-                || currCreature.currVoxel == detachedCamera.currVoxel) {
+                || (selectedEntity != null && selectedEntity.GetType() == typeof(PlayerMovement))) {
             yield break;
         }
 
         PlayerMovement playerMovement = (PlayerMovement)currCreature;
 
         // check if player wanted to attack
-        InstantiatedNVE selectedEntity = nonVoxelWorld.GetNVEFromPosition(detachedCamera.currVoxel);
         if (selectedEntity != null && selectedEntity.GetType() == typeof(NPCBehavior)) {
             if (usedResources[currCreature].usedAction) {
                 Debug.Log("Player tried to use action twice.");
@@ -120,12 +121,12 @@ public class CombatManager : MonoBehaviour
             NPCBehavior npcBehavior = (NPCBehavior)selectedEntity;
 
             GameMechanics.Action validAttackAction;
-            if (!Coordinates.IsNextTo(currCreature.currVoxel, npcBehavior.currVoxel)) {
+            if (!Coordinates.IsNextTo(currCreature, npcBehavior)) {
                 validAttackAction = StatInfo.GetRangedAction(playerMovement.playerInfo.stats);
                 if (validAttackAction == null) {
                     // try moving towards the enemy, then attacking
-                    yield return TryMovePlayer(playerMovement, false);
-                    if (!Coordinates.IsNextTo(currCreature.currVoxel, npcBehavior.currVoxel)) {
+                    yield return TryMovePlayer(playerMovement);
+                    if (!Coordinates.IsNextTo(currCreature, npcBehavior)) {
                         // couldn't move close enough
                         Debug.Log("Couldn't get close enough to make a melee attack.");
                         yield break;
@@ -170,7 +171,7 @@ public class CombatManager : MonoBehaviour
                                     currInitiative -= 1;
                                 }
 
-                                nonVoxelWorld.ResetPosition(npcBehavior.currVoxel);
+                                nonVoxelWorld.OnDeleteEntity(npcBehavior);
                                 initiatives.Remove(initiative);
                                 Destroy(selectedEntity.gameObject);
                                 break;
@@ -178,7 +179,7 @@ public class CombatManager : MonoBehaviour
                         }
                     }
 
-                    yield return effectManager.GenerateHitEffect(npcBehavior.currVoxel);
+                    yield return effectManager.GenerateHitEffect(npcBehavior.origin);
                     if (newHP < 1) {
                         // no more attacks to do
                         break;
@@ -189,7 +190,7 @@ public class CombatManager : MonoBehaviour
             usedResources[currCreature].usedAction = true;
         }
         else {
-            yield return TryMovePlayer(playerMovement, true);
+            yield return TryMovePlayer(playerMovement);
         }
 
         if (initiatives.Count == partyManager.partyMembers.Count) {
@@ -214,17 +215,17 @@ public class CombatManager : MonoBehaviour
         return (PlayerMovement) initiatives[currInitiative].Value;
     }
 
-    private IEnumerator TryMovePlayer(PlayerMovement playerMovement, bool includeFinalPosition) {
+    private IEnumerator TryMovePlayer(PlayerMovement playerMovement) {
+        int maxSearchLength = (playerMovement.playerInfo.stats.baseSpeed / TILE_TO_FEET) * 3;
         CoroutineWithData coroutineWithData = new CoroutineWithData(this,
-            pathfinder.FindPath(playerMovement.currVoxel, detachedCamera.currVoxel, includeFinalPosition));
+            pathfinder.FindPath(playerMovement, detachedCamera.currVoxel, maxSearchLength));
         yield return coroutineWithData.coroutine;
         Deque<Vector3Int> path = (Deque<Vector3Int>)coroutineWithData.result;
 
         int remainingSpeed = playerMovement.playerInfo.stats.baseSpeed
             - usedResources[playerMovement].consumedMovement;
-        if (path.Count * TILE_TO_FEET > remainingSpeed) {
-            Debug.Log($"Tried to move further than remaining speed: {remainingSpeed}");
-            yield break;
+        while (path.Count * TILE_TO_FEET > remainingSpeed) {
+            path.RemoveFromFront();
         }
 
         usedResources[playerMovement].consumedMovement += path.Count * TILE_TO_FEET;

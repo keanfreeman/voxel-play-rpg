@@ -64,39 +64,41 @@ public class NonVoxelManager : MonoBehaviour
                             Quaternion.identity);
                     }
                     else {
-                        GameObject playerObject = Instantiate(playerCharacter.prefab,
+                        GameObject playerObject = Instantiate(playerCharacter.entityDisplay.prefab,
                             playerCharacter.startPosition, Quaternion.identity);
 
                         playerMovement = playerObject.GetComponent<PlayerMovement>();
                         playerMovement.Init(spriteMovement, playerCharacter, nonVoxelWorld, cameraManager,
                             partyManager);
-                        playerMovement.spriteLibrary.spriteLibraryAsset = playerCharacter.spriteLibraryAsset;
-
-                        partyManager.SetMainCharacter(playerMovement);
+                        playerMovement.spriteLibrary.spriteLibraryAsset = 
+                            playerCharacter.entityDisplay.spriteLibraryAsset;
                         partyManager.partyMembers.Add(playerMovement);
+
+                        if (playerCharacter == party.mainCharacter) {
+                            partyManager.SetMainCharacter(playerMovement);
+                        }
                     }
-                    nonVoxelWorld.SetPosition(playerMovement, playerCharacter.startPosition);
-                    playerMovement.SetCurrVoxel(playerCharacter.startPosition);
+                    playerMovement.SetCurrPositions(playerCharacter);
+                    nonVoxelWorld.AddEntity(playerMovement);
                 }
 
                 continue;
             }
 
-            Entity nonVoxelEntity = (Entity)nonVoxelSpawnable;
-            GameObject gameObject = Instantiate(nonVoxelEntity.prefab,
-                nonVoxelEntity.startPosition, Quaternion.identity);
-            nonVoxelWorld.SetPosition(gameObject.GetComponent<InstantiatedNVE>(),
-                nonVoxelEntity.startPosition);
+            Entity entity = (Entity)nonVoxelSpawnable;
+            GameObject gameObject = Instantiate(entity.entityDisplay.prefab,
+                entity.startPosition, Quaternion.identity);
+            InstantiatedNVE nonVoxelEntity = gameObject.GetComponent<InstantiatedNVE>();
                 
             if (nonVoxelSpawnable.GetType() == typeof(SceneExitCube)) {
                 SceneExitCube sceneExitCube = (SceneExitCube)nonVoxelSpawnable;
-                SceneExit sceneExitComponent = gameObject.GetComponent<SceneExit>();
-                sceneExitComponent.Init(environmentSceneManager, sceneExitCube.destination);
+                SceneExit sceneExitComponent = (SceneExit)nonVoxelEntity;
+                sceneExitComponent.Init(environmentSceneManager, sceneExitCube.destination, sceneExitCube);
             }
 
             if (nonVoxelSpawnable.GetType() == typeof(NPC)) {
                 NPC npcInfo = (NPC)nonVoxelSpawnable;
-                NPCBehavior npcBehavior = gameObject.GetComponent<NPCBehavior>();
+                NPCBehavior npcBehavior = (NPCBehavior)nonVoxelEntity;
                 npcBehavior.Init(nonVoxelWorld, spriteMovement, randomManager.rng, npcInfo,
                     cameraManager, partyManager);
                 nonVoxelWorld.npcs.Add(npcBehavior);
@@ -108,6 +110,8 @@ public class NonVoxelManager : MonoBehaviour
                 battleGroups[battleGroupID].Add(npcBehavior);
                 npcBehavior.teammates = battleGroups[battleGroupID];
             }
+
+            nonVoxelWorld.AddEntity(nonVoxelEntity);
         }
     }
 }

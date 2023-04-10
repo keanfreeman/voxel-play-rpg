@@ -1,13 +1,16 @@
+using GameMechanics;
 using MovementDirection;
 using NonVoxel;
+using NonVoxelEntity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace InstantiatedEntity {
     public abstract class Traveller : InstantiatedNVE {
-        [SerializeField] protected NonVoxelWorld nonVoxelWorld;
         [SerializeField] protected Animator animator;
+        [SerializeField] protected SpriteRenderer spriteRenderer;
+        [SerializeField] protected Transform rotationTransform;
         [SerializeField] protected CameraManager cameraManager;
         [SerializeField] protected PartyManager partyManager;
 
@@ -39,7 +42,7 @@ namespace InstantiatedEntity {
             if (!isMoving && !cameraManager.isRotating && permanentMoveDirection != SpriteMoveDirection.NONE) {
                 Vector3Int? direction = GetDestinationFromDirection(permanentMoveDirection);
                 if (direction.HasValue) {
-                    MoveToPoint(direction.Value);
+                    MoveOriginToPoint(direction.Value);
                 }
             }
             if (isMoving) {
@@ -54,30 +57,47 @@ namespace InstantiatedEntity {
             }
         }
 
-        public void MoveToPoint(Vector3Int point) {
-            Vector3Int oldPosition = currVoxel;
-
-            nonVoxelWorld.SetPosition(this, point);
-            moveStartPoint = currVoxel;
+        public void MoveOriginToPoint(Vector3Int point) {
+            moveStartPoint = origin;
+            MoveAllPoints(point);
             moveEndPoint = point;
-            currVoxel = point;
+
             moveStartTimestamp = Time.time;
             isMoving = true;
             SetMoveAnimation(isMoving);
-
-            // tell followers to move
-            if (partyManager.currControlledCharacter == this) {
-                partyManager.OnLeaderMoved(oldPosition);
-            }
+            SetMoveDirectionRelativeToCamera();
         }
 
         public void SetMoveAnimation(bool state) {
             animator.SetBool("isMoving", state);
         }
 
+        private void SetMoveDirectionRelativeToCamera() {
+            Direction cameraDirection = cameraManager.GetCameraApproximateDirection();
+            Vector3Int diff = moveEndPoint - moveStartPoint;
+            Direction absoluteCreatureMove = diff.z > 0 ? Direction.NORTH :
+                diff.z < 0 ? Direction.SOUTH :
+                diff.x > 0 ? Direction.EAST :
+                Direction.WEST;
+            if ((cameraDirection == Direction.NORTH && absoluteCreatureMove == Direction.EAST)
+                    || (cameraDirection == Direction.EAST && absoluteCreatureMove == Direction.SOUTH)
+                    || (cameraDirection == Direction.SOUTH && absoluteCreatureMove == Direction.WEST)
+                    || (cameraDirection == Direction.WEST && absoluteCreatureMove == Direction.NORTH)) {
+                spriteRenderer.flipX = true;
+            }
+            else if ((cameraDirection == Direction.NORTH && absoluteCreatureMove == Direction.WEST)
+                    || (cameraDirection == Direction.EAST && absoluteCreatureMove == Direction.NORTH)
+                    || (cameraDirection == Direction.SOUTH && absoluteCreatureMove == Direction.EAST)
+                    || (cameraDirection == Direction.WEST && absoluteCreatureMove == Direction.SOUTH)) {
+                spriteRenderer.flipX = false;
+            }
+        }
+
         public abstract void RotateSprite(float degrees);
 
         public abstract void SetSpriteRotation(Vector3 rotation);
+
+        public abstract Stats GetStats();
 
         protected abstract Vector3Int? GetDestinationFromDirection(SpriteMoveDirection spriteMoveDirection);
     }

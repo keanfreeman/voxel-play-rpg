@@ -32,9 +32,11 @@ public class NonVoxelInitialization {
         List<Action> playerActions = new List<Action> {
             new Attack("Shortsword", new Dice(1, 20, 5), new Dice(1, 6, 0))
         };
-        PlayerStats playerStats = new PlayerStats("Player1", 30, 10, 10, 10, 10, 10, 10, 10, playerActions, 1);
-        PlayerCharacter mainCharacter = new PlayerCharacter(playerPrefab, new Vector3Int(864, 29, 348), 
-            playerStats, playerSpriteLibrary, new Vector3(0.8f, 0.8f, 0.8f));
+        PlayerStats playerStats = new PlayerStats("Player1", 30, 10, EntitySize.MEDIUM, 10, 10, 10, 10, 10, 
+            10, playerActions, 1);
+        PlayerCharacter mainCharacter = new PlayerCharacter(new Vector3Int(864, 29, 346), playerStats, 
+            new EntityDisplay(playerPrefab, playerSpriteLibrary, new Vector3(0.5f, 0.5f, 0.5f), 
+                new Vector3(0.8f, 0.8f, 0.8f)));
 
         Attack scoutShortswordAttack = new Attack("Shortsword", new Dice(1, 20, 4), new Dice(1, 6, 2));
         Multiattack scoutMeleeMultiattack = new Multiattack(
@@ -46,39 +48,40 @@ public class NonVoxelInitialization {
         List<GameMechanics.Action> scoutActions = new List<GameMechanics.Action> {
             scoutMeleeMultiattack, scoutRangedMultiattack
         };
-        NPCStats scoutStats = new NPCStats("Scout", 30, 16, 11, 14, 12, 11, 13, 11, scoutActions, "1/2", 16);
+        NPCStats scoutStats = new NPCStats("Scout", 30, 16, EntitySize.MEDIUM,
+            11, 14, 12, 11, 13, 11, scoutActions, "1/2", 16);
+        EntityDisplay scout1Display = new EntityDisplay(playerPrefab, loreleiSpriteLibrary, 
+            new Vector3(0.5f, 0.5f, 0.5f), new Vector3(0.8f, 0.8f, 0.8f));
+        EntityDisplay scout2Display = new EntityDisplay(playerPrefab, yellowSpriteLibrary,
+            new Vector3(0.5f, 0.5f, 0.5f), new Vector3(0.8f, 0.8f, 0.8f));
 
         Party party = new Party(
             mainCharacter,
             new List<PlayerCharacter> {
                 mainCharacter,
-                new PlayerCharacter(playerPrefab, new Vector3Int(864, 29, 349), scoutStats,
-                    loreleiSpriteLibrary, new Vector3(0.8f, 0.8f, 0.8f)),
-                new PlayerCharacter(playerPrefab, new Vector3Int(863, 29, 348), scoutStats,
-                    yellowSpriteLibrary, new Vector3(0.8f, 0.8f, 0.8f))
+                new PlayerCharacter(new Vector3Int(864, 29, 347), scoutStats, scout1Display),
+                new PlayerCharacter(new Vector3Int(864, 29, 348), scoutStats, scout2Display)
             }
         );
 
         List<Action> wolfActions = new List<Action> {
             new Bite("Bite", new Dice(1, 20, 4), new Dice(2, 4, 2))
         };
-        NPCStats wolfStats = new NPCStats("Wolf", 40, 11, 12, 15, 12, 3, 12, 6, wolfActions, "1/4", 13);
+        NPCStats wolfStats = new NPCStats("Wolf", 40, 11, EntitySize.LARGE, 12, 15, 12, 3, 12, 6, 
+            wolfActions, "1/4", 13);
+        EntityDisplay wolfDisplay = new EntityDisplay(npcPrefab, opossumSpriteLibrary, 
+            new Vector3(1f, 0.6f, 1f), new Vector3(6.5f, 6.5f, 6.5f));
 
         BattleGroup battleGroup1 = new BattleGroup(new List<NPC> {
-            new NPC(npcPrefab, new Vector3Int(835, 29, 349), wolfStats, opossumSpriteLibrary,
-                new Vector3(4.4f, 4.4f, 4.4f), Faction.ENEMY),
-            new NPC(npcPrefab, new Vector3Int(835, 29, 347), wolfStats, opossumSpriteLibrary,
-                new Vector3(4.4f, 4.4f, 4.4f), Faction.ENEMY)
+            new NPC(new Vector3Int(835, 29, 350), wolfStats, wolfDisplay),
+            new NPC(new Vector3Int(835, 29, 347), wolfStats, wolfDisplay)
         });
         BattleGroup battleGroup2 = new BattleGroup(new List<NPC> {
-            new NPC(npcPrefab, new Vector3Int(825, 31, 349), wolfStats, opossumSpriteLibrary, 
-                new Vector3(4.4f, 4.4f, 4.4f), Faction.ENEMY),
-            new NPC(npcPrefab, new Vector3Int(825, 31, 350), wolfStats, opossumSpriteLibrary, 
-                new Vector3(4.4f, 4.4f, 4.4f), Faction.ENEMY)
+            new NPC(new Vector3Int(825, 31, 348), wolfStats, wolfDisplay),
+            new NPC(new Vector3Int(825, 31, 350), wolfStats, wolfDisplay)
         });
         BattleGroup battleGroup3 = new BattleGroup(new List<NPC> {
-            new NPC(npcPrefab, new Vector3Int(468, 26, -46), wolfStats, opossumSpriteLibrary,
-                new Vector3(4.4f, 4.4f, 4.4f), Faction.ENEMY)
+            new NPC(new Vector3Int(468, 26, -46), wolfStats, wolfDisplay)
         });
 
         environmentObjects = new Dictionary<int, List<Spawnable>> {
@@ -90,9 +93,9 @@ public class NonVoxelInitialization {
                     battleGroup2.combatants[0],
                     battleGroup2.combatants[1],
                     new SceneExitCube(
-                        sceneExitPrefab,
                         new Vector3Int(864, 29, 351),
-                        new Destination(1, new Vector3Int(466, 29, -46)))
+                        new Destination(1, new Vector3Int(466, 29, -46)),
+                        new EntityDisplay(sceneExitPrefab))
                 }
             },
             {
@@ -100,9 +103,9 @@ public class NonVoxelInitialization {
                     party,
                     battleGroup3.combatants[0],
                     new SceneExitCube(
-                        sceneExitPrefab,
                         new Vector3Int(463, 29, -46),
-                        new Destination(2, new Vector3Int(864, 29, 348)))
+                        new Destination(2, new Vector3Int(864, 29, 348)),
+                        new EntityDisplay(sceneExitPrefab))
                 }
             },
             {
@@ -110,9 +113,9 @@ public class NonVoxelInitialization {
                     party,
                     battleGroup3.combatants[0],
                     new SceneExitCube(
-                        sceneExitPrefab,
                         new Vector3Int(-3, 44, 83),
-                        new Destination(3, new Vector3Int(864, 29, 348)))
+                        new Destination(3, new Vector3Int(864, 29, 348)),
+                        new EntityDisplay(sceneExitPrefab))
                 }
             }
         };

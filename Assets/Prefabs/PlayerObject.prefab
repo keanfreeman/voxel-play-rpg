@@ -217,11 +217,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nonVoxelWorld: {fileID: 0}
   animator: {fileID: 6602362568682605174}
+  spriteRenderer: {fileID: 6602362568682605161}
+  rotationTransform: {fileID: 6602362569037619163}
   cameraManager: {fileID: 0}
+  partyManager: {fileID: 0}
   playerObject: {fileID: 6602362568786100546}
   seeThroughTarget: {fileID: 6602362570467445622}
   spriteLibrary: {fileID: 6602362568682605175}
-  rotationTransform: {fileID: 6602362569037619163}
   spriteMovement: {fileID: 6602362568786100664}
 --- !u!114 &6602362568786100664
 MonoBehaviour:

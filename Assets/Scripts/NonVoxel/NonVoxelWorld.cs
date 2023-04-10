@@ -5,12 +5,34 @@ using UnityEngine;
 
 namespace NonVoxel {
     public class NonVoxelWorld : MonoBehaviour {
-        private Dictionary<InstantiatedNVE, Vector3Int> entityToPosition
-            = new Dictionary<InstantiatedNVE, Vector3Int>();
+        private HashSet<InstantiatedNVE> entities = new HashSet<InstantiatedNVE>();
         private Dictionary<Vector3Int, InstantiatedNVE> positionToEntity
             = new Dictionary<Vector3Int, InstantiatedNVE>();
 
         public HashSet<NPCBehavior> npcs = new HashSet<NPCBehavior>();
+
+        public void AddEntity(InstantiatedNVE entity) {
+            entities.Add(entity);
+            foreach (Vector3Int position in entity.occupiedPositions) {
+                if (positionToEntity.ContainsKey(position)) {
+                    Debug.LogError($"Adding an entity {entity.name} to a position that's " +
+                        $"already occupied by {positionToEntity[position].name}.");
+                }
+                positionToEntity[position] = entity;
+            }
+        }
+
+        public void SetPositions(InstantiatedNVE entity) {
+            foreach (Vector3Int position in entity.occupiedPositions) {
+                positionToEntity[position] = entity;
+            }
+        }
+
+        public void RemovePositions(InstantiatedNVE entity) {
+            foreach (Vector3Int position in entity.occupiedPositions) {
+                positionToEntity[position] = null;
+            }
+        }
 
         public void DestroyEntities() {
             foreach (InstantiatedNVE npc in npcs) {
@@ -19,69 +41,61 @@ namespace NonVoxel {
             }
             npcs.Clear();
 
-            foreach (InstantiatedNVE behavior in entityToPosition.Keys) {
+            foreach (InstantiatedNVE behavior in entities) {
                 if (behavior.GetType() != typeof(PlayerMovement)) {
                     Destroy(behavior);
                 }
             }
-            entityToPosition.Clear();
+            entities.Clear();
             positionToEntity.Clear();
-        }
-
-        public bool IsInWorld(InstantiatedNVE behavior) {
-            return entityToPosition.ContainsKey(behavior);
-        }
-
-        public Vector3Int GetPosition(InstantiatedNVE behavior) {
-            return entityToPosition[behavior];
-        }
-
-        public void SetPosition(InstantiatedNVE behavior, Vector3Int position) {
-            if (entityToPosition.ContainsKey(behavior)) {
-                Vector3Int oldPosition = entityToPosition[behavior];
-                if (positionToEntity.ContainsKey(oldPosition)) {
-                    positionToEntity.Remove(oldPosition);
-                }
-            }
-
-            entityToPosition[behavior] = position;
-            positionToEntity[position] = behavior;
         }
 
         public InstantiatedNVE GetNVEFromPosition(Vector3Int position) {
             return positionToEntity.GetValueOrDefault(position, null);
         }
 
-        public void ResetPosition(Vector3Int position) {
-            InstantiatedNVE entity = positionToEntity[position];
+        public void OnDeleteEntity(InstantiatedNVE entity) {
             if (entity.GetType() == typeof(NPCBehavior)) {
                 npcs.Remove((NPCBehavior)entity);
             }
-            entityToPosition.Remove(entity);
-            positionToEntity.Remove(position);
+            foreach (Vector3Int position in entity.occupiedPositions) {
+                positionToEntity[position] = null;
+            }
+            entities.Remove(entity);
         }
 
         public bool IsPositionOccupied(Vector3Int position) {
             InstantiatedNVE behavior = positionToEntity.GetValueOrDefault(position, null);
-            if (behavior == null) {
-                return false;
-            }
-            if (behavior.GetType() == typeof(SceneExit)) {
+            if (behavior == null || behavior.GetType() == typeof(SceneExit)) {
                 return false;
             }
             return true;
         }
 
-        public List<Vector3Int> GetInteractableAdjacentObjects(Vector3Int currPosition) {
+        public bool IsPositionOccupied(Vector3Int position, InstantiatedNVE ignoredCreature) {
+            return IsPositionOccupied(position, new List<InstantiatedNVE> { ignoredCreature });
+        }
+
+        public bool IsPositionOccupied(Vector3Int position, ICollection<InstantiatedNVE> ignoredCreatures) {
+            InstantiatedNVE behavior = positionToEntity.GetValueOrDefault(position, null);
+            if (behavior == null || ignoredCreatures.Contains(behavior) 
+                    || behavior.GetType() == typeof(SceneExit)) {
+                return false;
+            }
+            return true;
+        }
+
+        public List<Vector3Int> GetInteractableAdjacentObjects(Vector3Int currPosition, 
+                PlayerMovement playerMovement) {
             List<Vector3Int> occupiedVoxels = new List<Vector3Int>();
             for (int x = -1; x < 2; x++) {
                 for (int y = -1; y < 2; y++) {
                     for (int z = -1; z < 2; z++) {
                         Vector3Int checkPosition = currPosition + new Vector3Int(x, y, z);
-                        if (checkPosition != currPosition && IsPositionOccupied(checkPosition)) {
-                            NPCBehavior npcBehavior = 
-                                positionToEntity[checkPosition].GetComponent<NPCBehavior>();
-                            if (npcBehavior != null && npcBehavior.IsInteractable()) {
+                        if (checkPosition != currPosition 
+                                && IsPositionOccupied(checkPosition, playerMovement)) {
+                            InstantiatedNVE entity = positionToEntity[checkPosition];
+                            if (entity.GetType() == typeof(NPCBehavior) && entity.IsInteractable()) {
                                 occupiedVoxels.Add(checkPosition);
                             }
                         }

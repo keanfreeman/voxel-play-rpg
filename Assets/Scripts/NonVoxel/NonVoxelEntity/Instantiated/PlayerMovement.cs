@@ -13,16 +13,11 @@ namespace InstantiatedEntity {
         [SerializeField] public GameObject playerObject;
         [SerializeField] public GameObject seeThroughTarget;
         [SerializeField] public SpriteLibrary spriteLibrary;
-        [SerializeField] Transform rotationTransform;
         [SerializeField] SpriteMovement spriteMovement;
 
         public NonVoxelEntity.PlayerCharacter playerInfo { get; private set; }
 
-        private PlayerCameraDirection playerCameraDirection = PlayerCameraDirection.NORTH;
-
-        void Awake() {
-            moveStartTimestamp = Time.time;
-        }
+        private Direction playerCameraDirection = Direction.NORTH;
 
         public void Init(SpriteMovement spriteMovement, NonVoxelEntity.PlayerCharacter playerInfo,
                 NonVoxelWorld nonVoxelWorld, CameraManager cameraManager, PartyManager partyManager) {
@@ -67,15 +62,16 @@ namespace InstantiatedEntity {
             SpriteMoveDirection cameraAdjustedPlayerMove = CameraAdjustedPlayerMove(
                 direction, playerCameraDirection);
             Vector3Int desiredCoordinate = spriteMovement.GetSpriteDesiredCoordinate(
-                currVoxel, cameraAdjustedPlayerMove);
-            Vector3Int? actualCoordinate = spriteMovement.GetTerrainAdjustedCoordinate(
-                desiredCoordinate, currVoxel);
+                this, cameraAdjustedPlayerMove);
+            List<InstantiatedNVE> ignoredCreatures = new List<InstantiatedNVE> { this };
+            Vector3Int ? actualCoordinate = spriteMovement.GetTerrainAdjustedCoordinate(
+                desiredCoordinate, this, ignoredCreatures);
             if (!actualCoordinate.HasValue) {
                 Debug.Log("Not a valid destination terrain-wise.");
                 return null;
             }
             Vector3Int destinationCoordinate = actualCoordinate.Value;
-            if (nonVoxelWorld.IsPositionOccupied(destinationCoordinate)) {
+            if (nonVoxelWorld.IsPositionOccupied(destinationCoordinate, this)) {
                 Debug.Log("Tried to move into a non-voxel-occupied space.");
                 return null;
             }
@@ -84,7 +80,7 @@ namespace InstantiatedEntity {
         }
 
         private SpriteMoveDirection CameraAdjustedPlayerMove(SpriteMoveDirection moveDirection,
-                PlayerCameraDirection playerCameraDirection) {
+                Direction playerCameraDirection) {
             if (isMovingNorth(moveDirection, playerCameraDirection)) {
                 return SpriteMoveDirection.FORWARD;
             }
@@ -101,59 +97,59 @@ namespace InstantiatedEntity {
         }
 
         public bool isMovingNorth(SpriteMoveDirection moveDirection,
-                PlayerCameraDirection playerCameraDirection) {
+                Direction playerCameraDirection) {
             string enumName = moveDirection.ToString();
-            return playerCameraDirection == PlayerCameraDirection.NORTH && enumName.StartsWith("FORWARD")
-                || playerCameraDirection == PlayerCameraDirection.EAST && enumName.StartsWith("LEFT")
-                || playerCameraDirection == PlayerCameraDirection.SOUTH && enumName.StartsWith("BACK")
-                || playerCameraDirection == PlayerCameraDirection.WEST && enumName.StartsWith("RIGHT");
+            return playerCameraDirection == Direction.NORTH && enumName.StartsWith("FORWARD")
+                || playerCameraDirection == Direction.EAST && enumName.StartsWith("LEFT")
+                || playerCameraDirection == Direction.SOUTH && enumName.StartsWith("BACK")
+                || playerCameraDirection == Direction.WEST && enumName.StartsWith("RIGHT");
         }
 
         public bool isMovingEast(SpriteMoveDirection moveDirection,
-                PlayerCameraDirection playerCameraDirection) {
+                Direction playerCameraDirection) {
             string enumName = moveDirection.ToString();
-            return playerCameraDirection == PlayerCameraDirection.EAST && enumName.StartsWith("FORWARD")
-                || playerCameraDirection == PlayerCameraDirection.SOUTH && enumName.StartsWith("LEFT")
-                || playerCameraDirection == PlayerCameraDirection.WEST && enumName.StartsWith("BACK")
-                || playerCameraDirection == PlayerCameraDirection.NORTH && enumName.StartsWith("RIGHT");
+            return playerCameraDirection == Direction.EAST && enumName.StartsWith("FORWARD")
+                || playerCameraDirection == Direction.SOUTH && enumName.StartsWith("LEFT")
+                || playerCameraDirection == Direction.WEST && enumName.StartsWith("BACK")
+                || playerCameraDirection == Direction.NORTH && enumName.StartsWith("RIGHT");
         }
 
         public bool isMovingSouth(SpriteMoveDirection moveDirection,
-                PlayerCameraDirection playerCameraDirection) {
+                Direction playerCameraDirection) {
             string enumName = moveDirection.ToString();
-            return playerCameraDirection == PlayerCameraDirection.SOUTH && enumName.StartsWith("FORWARD")
-                || playerCameraDirection == PlayerCameraDirection.WEST && enumName.StartsWith("LEFT")
-                || playerCameraDirection == PlayerCameraDirection.NORTH && enumName.StartsWith("BACK")
-                || playerCameraDirection == PlayerCameraDirection.EAST && enumName.StartsWith("RIGHT");
+            return playerCameraDirection == Direction.SOUTH && enumName.StartsWith("FORWARD")
+                || playerCameraDirection == Direction.WEST && enumName.StartsWith("LEFT")
+                || playerCameraDirection == Direction.NORTH && enumName.StartsWith("BACK")
+                || playerCameraDirection == Direction.EAST && enumName.StartsWith("RIGHT");
         }
 
         public bool isMovingWest(SpriteMoveDirection moveDirection,
-                PlayerCameraDirection playerCameraDirection) {
+                Direction playerCameraDirection) {
             string enumName = moveDirection.ToString();
-            return playerCameraDirection == PlayerCameraDirection.WEST && enumName.StartsWith("FORWARD")
-                || playerCameraDirection == PlayerCameraDirection.NORTH && enumName.StartsWith("LEFT")
-                || playerCameraDirection == PlayerCameraDirection.EAST && enumName.StartsWith("BACK")
-                || playerCameraDirection == PlayerCameraDirection.SOUTH && enumName.StartsWith("RIGHT");
+            return playerCameraDirection == Direction.WEST && enumName.StartsWith("FORWARD")
+                || playerCameraDirection == Direction.NORTH && enumName.StartsWith("LEFT")
+                || playerCameraDirection == Direction.EAST && enumName.StartsWith("BACK")
+                || playerCameraDirection == Direction.SOUTH && enumName.StartsWith("RIGHT");
         }
 
-        public void SetPlayerCameraDirection(PlayerCameraDirection direction) {
+        public void SetPlayerCameraDirection(Direction direction) {
             playerCameraDirection = direction;
         }
 
         public void RotateCameraDirection(float direction) {
             if (direction > 0) {
                 switch (playerCameraDirection) {
-                    case PlayerCameraDirection.NORTH:
-                        playerCameraDirection = PlayerCameraDirection.EAST;
+                    case Direction.NORTH:
+                        playerCameraDirection = Direction.EAST;
                         break;
-                    case PlayerCameraDirection.EAST:
-                        playerCameraDirection = PlayerCameraDirection.SOUTH;
+                    case Direction.EAST:
+                        playerCameraDirection = Direction.SOUTH;
                         break;
-                    case PlayerCameraDirection.SOUTH:
-                        playerCameraDirection = PlayerCameraDirection.WEST;
+                    case Direction.SOUTH:
+                        playerCameraDirection = Direction.WEST;
                         break;
-                    case PlayerCameraDirection.WEST:
-                        playerCameraDirection = PlayerCameraDirection.NORTH;
+                    case Direction.WEST:
+                        playerCameraDirection = Direction.NORTH;
                         break;
                     default:
                         throw new System.ArgumentException("Unexpected direction provided");
@@ -161,17 +157,17 @@ namespace InstantiatedEntity {
             }
             else {
                 switch (playerCameraDirection) {
-                    case PlayerCameraDirection.NORTH:
-                        playerCameraDirection = PlayerCameraDirection.WEST;
+                    case Direction.NORTH:
+                        playerCameraDirection = Direction.WEST;
                         break;
-                    case PlayerCameraDirection.EAST:
-                        playerCameraDirection = PlayerCameraDirection.NORTH;
+                    case Direction.EAST:
+                        playerCameraDirection = Direction.NORTH;
                         break;
-                    case PlayerCameraDirection.SOUTH:
-                        playerCameraDirection = PlayerCameraDirection.EAST;
+                    case Direction.SOUTH:
+                        playerCameraDirection = Direction.EAST;
                         break;
-                    case PlayerCameraDirection.WEST:
-                        playerCameraDirection = PlayerCameraDirection.SOUTH;
+                    case Direction.WEST:
+                        playerCameraDirection = Direction.SOUTH;
                         break;
                     default:
                         throw new System.ArgumentException("Unexpected direction provided");
@@ -185,6 +181,14 @@ namespace InstantiatedEntity {
 
         public override void SetSpriteRotation(Vector3 rotation) {
             rotationTransform.rotation = Quaternion.Euler(rotation);
+        }
+
+        public override Stats GetStats() {
+            return playerInfo.stats;
+        }
+
+        public override bool IsInteractable() {
+            return false;
         }
     }
 }

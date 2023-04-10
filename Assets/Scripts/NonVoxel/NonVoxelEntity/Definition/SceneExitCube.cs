@@ -1,3 +1,4 @@
+using GameMechanics;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +7,8 @@ namespace NonVoxelEntity {
     public class SceneExitCube : Entity {
         public Destination destination { get; private set; }
 
-        public SceneExitCube(GameObject prefab, Vector3Int startPosition,
-                Destination destination) : base(prefab, startPosition) {
+        public SceneExitCube(Vector3Int startPosition,
+                Destination destination, EntityDisplay entityDisplay) : base(startPosition, entityDisplay) {
             this.destination = destination;
         }
     }

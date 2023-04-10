@@ -1,3 +1,5 @@
+if you want a coroutine with a return value, you need to use CoroutineWithData
+
 Managers are responsible for the life cycle of things. 
 They do spawning/destroying, initialize the game, and communication between very 
 different systems.

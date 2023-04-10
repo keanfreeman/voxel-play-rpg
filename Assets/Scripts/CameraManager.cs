@@ -54,26 +54,42 @@ public class CameraManager : MonoBehaviour {
         mainCameraTarget.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
     }
 
+    public Direction GetCameraApproximateDirection() {
+        float yAngle = mainCameraTarget.transform.rotation.eulerAngles.y;
+        if (yAngle > 45 && yAngle <= 135) {
+            return Direction.EAST;
+        }
+        else if (yAngle > 135 && yAngle <= 225) {
+            return Direction.SOUTH;
+        }
+        else if (yAngle > 225 && yAngle <= 315) {
+            return Direction.WEST;
+        }
+        else {
+            return Direction.NORTH;
+        }
+    }
+
     public void AttachCameraToPlayer(PlayerMovement playerMovement) {
         mainCameraTarget.transform.parent = playerMovement.playerObject.transform;
         // need to jump to nearest 90 degree angle if coming from detached
         float yAngle = mainCameraTarget.transform.rotation.eulerAngles.y;
         float adjustedYAngle;
-        if (yAngle > 45 && yAngle <= 135) {
-            playerMovement.SetPlayerCameraDirection(PlayerCameraDirection.EAST);
-            adjustedYAngle = 90;
-        }
-        else if (yAngle > 135 && yAngle <= 225) {
-            playerMovement.SetPlayerCameraDirection(PlayerCameraDirection.SOUTH);
-            adjustedYAngle = 180;
-        }
-        else if (yAngle > 225 && yAngle <= 315) {
-            playerMovement.SetPlayerCameraDirection(PlayerCameraDirection.WEST);
-            adjustedYAngle = 270;
-        }
-        else {
-            playerMovement.SetPlayerCameraDirection(PlayerCameraDirection.NORTH);
-            adjustedYAngle = 0;
+        Direction direction = GetCameraApproximateDirection();
+        playerMovement.SetPlayerCameraDirection(direction);
+        switch (direction) {
+            case Direction.EAST:
+                adjustedYAngle = 90;
+                break;
+            case Direction.SOUTH:
+                adjustedYAngle = 180;
+                break;
+            case Direction.WEST:
+                adjustedYAngle = 270;
+                break;
+            default:
+                adjustedYAngle = 0;
+                break;
         }
 
         mainCameraTarget.transform.SetLocalPositionAndRotation(new Vector3(0.5f, 0.5f, 0.5f),

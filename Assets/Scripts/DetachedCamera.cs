@@ -71,54 +71,8 @@ public class DetachedCamera : MonoBehaviour
         if (movedVoxels) {
             detachedCameraBottom.MoveAnimated(currVoxel);
             UpdateCursorType();
-            if (drawPathCoroutine == null) {
-                drawPathCoroutine = StartCoroutine(ShowPathToTarget());
-            }
         }
         MoveCursor();
-    }
-
-    private IEnumerator ShowPathToTarget() {
-        // do not try to draw paths to impossible-to-reach positions
-        if (!spriteMovement.IsReachablePosition(currVoxel, false)) {
-            drawPathCoroutine = null;
-            yield break;
-        }
-
-        // do not try to draw a path to a tile where another player is
-        InstantiatedNVE nve = nonVoxelWorld.GetNVEFromPosition(currVoxel);
-        if (nve != null && nve.GetType() == typeof(PlayerMovement)) {
-            drawPathCoroutine = null;
-            yield break;
-        }
-
-        // do not draw paths further than the player movement
-        PlayerMovement associatedCharacter = gameStateManager.controlState == ControlState.COMBAT
-            ? combatManager.GetCurrTurnPlayer() : partyManager.currControlledCharacter;
-        Vector3Int origin = associatedCharacter.currVoxel;
-        bool includeLastPosition = !nonVoxelWorld.IsPositionOccupied(currVoxel);
-        int numPoints = Coordinates.NumPointsBetween(origin, currVoxel);
-        if (!includeLastPosition) {
-            numPoints -= 1;
-        }
-        if (numPoints * TILE_TO_FEET > associatedCharacter.playerInfo.stats.baseSpeed) {
-            drawPathCoroutine = null;
-            yield break;
-        }
-
-        // do not draw empty paths
-        CoroutineWithData coroutineWithData = new CoroutineWithData(this, 
-            pathfinder.FindPath(origin, currVoxel, includeLastPosition));
-        yield return coroutineWithData.coroutine;
-        Deque<Vector3Int> path = (Deque<Vector3Int>)coroutineWithData.result;
-        if (path.Count == 0) {
-            drawPathCoroutine = null;
-            yield break;
-        }
-
-        pathVisualizer.DrawPath(path);
-
-        drawPathCoroutine = null;
     }
 
     private void UpdateCursorType() {
@@ -136,7 +90,10 @@ public class DetachedCamera : MonoBehaviour
             return;
         }
 
-        if (spriteMovement.IsReachablePosition(currVoxel, true)) {
+        List<InstantiatedNVE> ignoredEntities 
+            = new List<InstantiatedNVE> { partyManager.currControlledCharacter };
+        if (spriteMovement.IsReachablePosition(currVoxel, 
+                partyManager.currControlledCharacter, ignoredEntities)) {
             detachedModeSprite.sprite = traverseIcon;
             return;
         }
@@ -196,18 +153,13 @@ public class DetachedCamera : MonoBehaviour
 
     private IEnumerator ExecuteHandleSelect() {
         if (nonVoxelWorld.IsPositionOccupied(currVoxel)) {
-            // select the entity
-            MonoBehaviour behavior = nonVoxelWorld.GetNVEFromPosition(currVoxel);
-            PlayerMovement playerMovement = behavior.GetComponent<PlayerMovement>();
-            if (playerMovement != null) {
-                partyManager.SetCurrControlledCharacter(playerMovement);
-                Debug.Log($"Selected traveller for the detached camera at {playerMovement.currVoxel}");
-            }
+            // TODO - allow the party member to talk to other party members
+            Debug.Log("Not implemented.");
         }
         else {
             // move currently selected to target
             CoroutineWithData coroutineWithData = new CoroutineWithData(this,
-                pathfinder.FindPath(partyManager.currControlledCharacter.currVoxel, currVoxel, true));
+                pathfinder.FindPath(partyManager.currControlledCharacter, currVoxel));
             yield return coroutineWithData.coroutine;
             Deque<Vector3Int> path = (Deque<Vector3Int>)coroutineWithData.result;
             yield return movementManager.MoveAlongPath(partyManager.currControlledCharacter, path);
