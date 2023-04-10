@@ -8,13 +8,20 @@ namespace NonVoxelEntity {
     public abstract class Entity : Spawnable {
         public Vector3Int startPosition { get; protected set; }
         // all points occupied by this Entity, relative to the startPosition (for example, (0,0,0) and (1,0,0))
-        public List<Vector3Int> occupiedPositions { get; protected set; }
         public EntityDisplay entityDisplay { get; protected set; }
+        public List<Vector3Int> occupiedPositions { get; protected set; }
 
         public Entity(Vector3Int startPosition, EntityDisplay entityDisplay) {
             this.startPosition = startPosition;
             this.entityDisplay = entityDisplay;
             this.occupiedPositions = new List<Vector3Int> { Vector3Int.zero };
+        }
+
+        public Entity(Vector3Int startPosition, EntityDisplay entityDisplay, 
+                List<Vector3Int> occupiedPositions) {
+            this.startPosition = startPosition;
+            this.entityDisplay = entityDisplay;
+            this.occupiedPositions = occupiedPositions;
         }
 
         public Entity(Vector3Int startPosition, EntitySize entitySize, EntityDisplay entityDisplay) {

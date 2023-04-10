@@ -179,10 +179,6 @@ namespace InstantiatedEntity {
             rotationTransform.Rotate(Vector3.up, degrees);
         }
 
-        public override void SetSpriteRotation(Vector3 rotation) {
-            rotationTransform.rotation = Quaternion.Euler(rotation);
-        }
-
         public override Stats GetStats() {
             return playerInfo.stats;
         }

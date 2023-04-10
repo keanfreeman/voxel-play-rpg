@@ -10,7 +10,6 @@ namespace InstantiatedEntity {
     public abstract class Traveller : InstantiatedNVE {
         [SerializeField] protected Animator animator;
         [SerializeField] protected SpriteRenderer spriteRenderer;
-        [SerializeField] protected Transform rotationTransform;
         [SerializeField] protected CameraManager cameraManager;
         [SerializeField] protected PartyManager partyManager;
 
@@ -94,8 +93,6 @@ namespace InstantiatedEntity {
         }
 
         public abstract void RotateSprite(float degrees);
-
-        public abstract void SetSpriteRotation(Vector3 rotation);
 
         public abstract Stats GetStats();
 

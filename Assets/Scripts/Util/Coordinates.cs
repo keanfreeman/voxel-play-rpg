@@ -9,6 +9,11 @@ using VoxelPlay;
 
 public static class Coordinates
 {
+    public static Quaternion GetRotationFromAngle(float yAngle) {
+        Vector3 rotation = new Vector3(0, yAngle, 0);
+        return Quaternion.Euler(rotation);
+    }
+
     public static bool IsNextTo(Vector3Int a, Vector3Int b) {
         Vector3Int c = a - b;
         return Mathf.Abs(c.x) <= 1 && Mathf.Abs(c.y) <= 1 && Mathf.Abs(c.z) <= 1;
@@ -124,6 +129,11 @@ public static class Coordinates
 
     public static Vector3Int RotatePointCounterClockwiseAroundCenter(Vector3Int a, Vector3Int center, 
             int numRotations) {
+        int remainder = numRotations % 4;
+        if (remainder == 0) {
+            return a;
+        }
+
         // 1,1,1 becomes -1, 1, 1 becomes -1, 1, -1 becomes 1, 1, -1
         // 1, 0, 2 becomes -2, 0, 1 becomes -1, 0, -2 becomes 2, 0, -1
         // y is unchanged
@@ -131,15 +141,14 @@ public static class Coordinates
         // flipping 90 degrees swaps x and z. z's sign is swapped if numRotations is even,
         // otherwise swap x's sign
         Vector3Int difference = a - center;
-        int remainder = numRotations % 4;
 
         bool swapXZ = remainder == 1 || remainder == 3;
         if (swapXZ) {
             (difference.z, difference.x) = (difference.x, difference.z);
         }
 
-        bool flipXSign = numRotations == 1 || numRotations == 2;
-        bool flipZSign = numRotations == 2 || numRotations == 3;
+        bool flipXSign = remainder == 1 || remainder == 2;
+        bool flipZSign = remainder == 2 || remainder == 3;
         if (flipXSign) {
             difference.x *= -1;
         }

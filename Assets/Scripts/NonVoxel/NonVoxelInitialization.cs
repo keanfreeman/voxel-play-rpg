@@ -11,11 +11,12 @@ public class NonVoxelInitialization {
     private GameObject playerPrefab;
     private GameObject npcPrefab;
     private GameObject sceneExitPrefab;
+    private GameObject bedPrefab;
 
     public Dictionary<int, List<Spawnable>> environmentObjects;
 
     public NonVoxelInitialization(GameObject playerPrefab, GameObject npcPrefab,
-            GameObject sceneExitPrefab) {
+            GameObject sceneExitPrefab, GameObject bedPrefab) {
         this.playerPrefab = playerPrefab;
         this.npcPrefab = npcPrefab;
         this.sceneExitPrefab = sceneExitPrefab;
@@ -84,6 +85,12 @@ public class NonVoxelInitialization {
             new NPC(new Vector3Int(468, 26, -46), wolfStats, wolfDisplay)
         });
 
+        NonVoxelObject bed = new NonVoxelObject(new Vector3Int(857, 29, 350), 
+            new EntityDisplay(bedPrefab), 
+            new List<Vector3Int> { Vector3Int.zero, new Vector3Int(0, 0, 1), new Vector3Int(1, 0, 0),
+                new Vector3Int(1, 0, 1) },
+            MovementDirection.Direction.NORTH);
+
         environmentObjects = new Dictionary<int, List<Spawnable>> {
             {
                 3, new List<Spawnable> {
@@ -95,7 +102,8 @@ public class NonVoxelInitialization {
                     new SceneExitCube(
                         new Vector3Int(864, 29, 351),
                         new Destination(1, new Vector3Int(466, 29, -46)),
-                        new EntityDisplay(sceneExitPrefab))
+                        new EntityDisplay(sceneExitPrefab)),
+                    bed
                 }
             },
             {

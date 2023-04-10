@@ -476,6 +476,7 @@ MonoBehaviour:
   partyManager: {fileID: 683280036}
   opossumPrefab: {fileID: 6944743723035480207, guid: 8763f4ed44e10d446ba76d834eb2f67f, type: 3}
   sceneExitPrefab: {fileID: 440023488360116698, guid: 4242af01c09d0984f9c6587337ba132b, type: 3}
+  bedPrefab: {fileID: 100008, guid: 869877b757b54c64c8031c53a8ee3001, type: 3}
   detachedCameraPrefab: {fileID: 1275296119661960477, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
 --- !u!4 &582458983
 Transform:

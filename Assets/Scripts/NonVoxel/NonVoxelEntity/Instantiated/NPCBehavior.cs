@@ -43,7 +43,7 @@ namespace InstantiatedEntity {
             currHP = npcInfo.stats.hitPoints;
             this.cameraManager = cameraManager;
             this.spriteLibrary.spriteLibraryAsset = npcInfo.entityDisplay.spriteLibraryAsset;
-            spriteObjectTransform.localScale = npcInfo.entityDisplay.spriteScale;
+            spriteObjectTransform.localScale = npcInfo.entityDisplay.scale;
             rotationTransform.localPosition = npcInfo.entityDisplay.offset;
             this.partyManager = partyManager;
             SetCurrPositions(npcInfo);
@@ -89,10 +89,6 @@ namespace InstantiatedEntity {
 
         public override void RotateSprite(float degrees) {
             rotationTransform.Rotate(Vector3.up, degrees);
-        }
-
-        public override void SetSpriteRotation(Vector3 rotation) {
-            rotationTransform.rotation = Quaternion.Euler(rotation);
         }
 
         public override Stats GetStats() {

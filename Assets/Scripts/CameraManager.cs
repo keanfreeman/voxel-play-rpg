@@ -73,25 +73,10 @@ public class CameraManager : MonoBehaviour {
     public void AttachCameraToPlayer(PlayerMovement playerMovement) {
         mainCameraTarget.transform.parent = playerMovement.playerObject.transform;
         // need to jump to nearest 90 degree angle if coming from detached
-        float yAngle = mainCameraTarget.transform.rotation.eulerAngles.y;
-        float adjustedYAngle;
         Direction direction = GetCameraApproximateDirection();
         playerMovement.SetPlayerCameraDirection(direction);
-        switch (direction) {
-            case Direction.EAST:
-                adjustedYAngle = 90;
-                break;
-            case Direction.SOUTH:
-                adjustedYAngle = 180;
-                break;
-            case Direction.WEST:
-                adjustedYAngle = 270;
-                break;
-            default:
-                adjustedYAngle = 0;
-                break;
-        }
-
+        float adjustedYAngle = DirectionCalcs.GetDegreesFromDirection(direction);
+        
         mainCameraTarget.transform.SetLocalPositionAndRotation(new Vector3(0.5f, 0.5f, 0.5f),
             Quaternion.Euler(0, adjustedYAngle, 0));
         SetAllSpriteRotations(adjustedYAngle);
@@ -179,13 +164,13 @@ public class CameraManager : MonoBehaviour {
     }
 
     private void SetAllSpriteRotations(float yAngle) {
-        Vector3 rotation = new Vector3(0, yAngle, 0);
-        detachedModeSpriteRotator.rotation = Quaternion.Euler(rotation);
+        Quaternion rotation = Coordinates.GetRotationFromAngle(yAngle);
+        detachedModeSpriteRotator.rotation = rotation;
         foreach (PlayerMovement playerMovement in partyManager.partyMembers) {
-            playerMovement.SetSpriteRotation(rotation);
+            playerMovement.SetDisplayRotation(rotation);
         }
         foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
-            npc.SetSpriteRotation(rotation);
+            npc.SetDisplayRotation(rotation);
         }
     }
 }

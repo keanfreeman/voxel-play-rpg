@@ -25,6 +25,7 @@ public class NonVoxelManager : MonoBehaviour
 
     [SerializeField] GameObject opossumPrefab;
     [SerializeField] GameObject sceneExitPrefab;
+    [SerializeField] GameObject bedPrefab;
     [SerializeField] GameObject detachedCameraPrefab;
 
     private NonVoxelInitialization nonVoxelInitialization;
@@ -33,7 +34,7 @@ public class NonVoxelManager : MonoBehaviour
 
     private void Awake() {
         nonVoxelInitialization = new NonVoxelInitialization(playerPrefab,
-            opossumPrefab, sceneExitPrefab);
+            opossumPrefab, sceneExitPrefab, bedPrefab);
     }
 
     public void DestroyEntities() {
@@ -109,6 +110,12 @@ public class NonVoxelManager : MonoBehaviour
                 }
                 battleGroups[battleGroupID].Add(npcBehavior);
                 npcBehavior.teammates = battleGroups[battleGroupID];
+            }
+
+            if (nonVoxelSpawnable.GetType() == typeof(NonVoxelObject)) {
+                NonVoxelObject nonVoxelObject = (NonVoxelObject)nonVoxelSpawnable;
+                InstantiatedNVObject instantiatedNVObject = (InstantiatedNVObject)nonVoxelEntity;
+                instantiatedNVObject.Init(nonVoxelWorld, nonVoxelObject);
             }
 
             nonVoxelWorld.AddEntity(nonVoxelEntity);
