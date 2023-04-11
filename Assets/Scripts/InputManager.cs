@@ -13,6 +13,8 @@ public class InputManager : MonoBehaviour
     [SerializeField] DetachedCamera detachedCamera;
     [SerializeField] CombatManager combatManager;
     [SerializeField] PartyManager partyManager;
+    [SerializeField] GameStateManager gameStateManager;
+    [SerializeField] DialogueUI dialogueUI;
 
     public PlayerInputActions playerInputActions;
     
@@ -34,6 +36,16 @@ public class InputManager : MonoBehaviour
 
         playerInputActions.Watch.RotateCamera.performed += cameraManager.RotateDetached;
         playerInputActions.Watch.RotateCamera.canceled += cameraManager.StopRotatingDetached;
+
+        playerInputActions.Player.Interact.performed += gameStateManager.HandleControllerInteract;
+
+        playerInputActions.UINavigation.Submit.performed += dialogueUI.HandleSubmit;
+
+        playerInputActions.Player.SwitchInputType.performed += gameStateManager.HandleSwitchInputMode;
+        playerInputActions.Detached.SwitchInputType.performed += gameStateManager.HandleSwitchInputMode;
+
+        playerInputActions.Player.OpenCombatBar.performed += gameStateManager.HandleCombatBar;
+        playerInputActions.UINavigation.Cancel.performed += gameStateManager.HandleCombatBar;
 
         playerInputActions.Player.Enable();
     }

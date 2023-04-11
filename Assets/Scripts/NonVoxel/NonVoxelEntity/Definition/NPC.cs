@@ -13,11 +13,11 @@ namespace NonVoxelEntity {
         public Faction faction { get; private set; }
 
         public NPC(Vector3Int startPosition, NPCStats stats,
-                EntityDisplay entityDisplay)
+                EntityDisplay entityDisplay, Faction faction)
                 : base(startPosition, stats.size, entityDisplay) {
             this.startPosition = startPosition;
             this.stats = stats;
-            this.faction = Faction.ENEMY;
+            this.faction = faction;
         }
     }
 

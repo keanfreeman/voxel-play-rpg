@@ -1,3 +1,5 @@
+using InstantiatedEntity;
+using NonVoxelEntity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +15,18 @@ public class EffectManager : MonoBehaviour
         Vector3 particleLocation = location + CENTER_OFFSET;
         GameObject spawned = Instantiate(hitParticleEffect, particleLocation,
             cameraManager.GetMainCamera().transform.rotation);
+
+        while (spawned != null) {
+            yield return null;
+        }
+    }
+
+    public IEnumerator GenerateHitEffect(Traveller traveller) {
+        int creatureRadius = EntitySizeCalcs.GetRadius(traveller.GetStats().size);
+        Vector3 particleLocation = traveller.origin + CENTER_OFFSET * creatureRadius;
+        GameObject spawned = Instantiate(hitParticleEffect, particleLocation,
+            cameraManager.GetMainCamera().transform.rotation);
+        spawned.transform.localScale *= creatureRadius;
 
         while (spawned != null) {
             yield return null;

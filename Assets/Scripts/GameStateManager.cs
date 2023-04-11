@@ -33,46 +33,32 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] CameraManager cameraManager;
     [SerializeField] PartyManager partyManager;
 
-    public ControlState controlState { get; set; } = ControlState.LOADING;
+    public ControlState controlState { get; private set; } = ControlState.LOADING;
 
-    void Update() {
-        switch (controlState) {
-            case ControlState.FIRST_PERSON:
-                break;
-            case ControlState.SPRITE_NEUTRAL:
-                NPCBehavior npcInCombat = HandleNPCsFreeMovement();
-                if (npcInCombat != null) {
-                    inputManager.playerInputActions.Player.Disable();
-                    combatManager.SetFirstCombatant(npcInCombat);
-                    controlState = ControlState.COMBAT;
-                    Debug.Log("Entered combat");
-                    inputManager.SwitchPlayerControlStateToUI();
-                    return;
-                }
-                if (partyManager.currControlledCharacter.isMoving || cameraManager.isRotating) {
-                    return;
-                }
+    public void SetControlState(ControlState newState) {
+        controlState = newState;
+    }
 
-                HandlePlayerPrimaryInput();
-                HandleSwitchInputMode();
-                HandleCombatBar();
-                break;
-            case ControlState.DETACHED:
-                HandleSwitchInputMode();
-                break;
-            case ControlState.DIALOGUE:
-                HandleDialogueContinue();
-                if (!dialogueUI.isDialogueActive) {
-                    controlState = ControlState.SPRITE_NEUTRAL;
-                    inputManager.SwitchUIToPlayerControlState();
-                }
-                break;
-            case ControlState.COMBAT:
-                combatManager.StartCombat();
-                break;
-            default:
-                break;
-        }
+    public void EnterDialogue(Story story) {
+        controlState = ControlState.DIALOGUE;
+        inputManager.SwitchPlayerControlStateToUI();
+        combatUI.SetDisplayState(false);
+        dialogueUI.StartDialogue(story);
+    }
+
+    public void ExitDialogue() {
+        controlState = ControlState.SPRITE_NEUTRAL;
+        combatUI.SetDisplayState(true);
+        inputManager.SwitchUIToPlayerControlState();
+    }
+
+    public void EnterCombat(NPCBehavior npcInCombat) {
+        inputManager.playerInputActions.Player.Disable();
+        combatManager.SetFirstCombatant(npcInCombat);
+        controlState = ControlState.COMBAT;
+        Debug.Log("Entered combat");
+        inputManager.SwitchPlayerControlStateToUI();
+        combatManager.StartCombat();
     }
 
     public void ExitCombat() {
@@ -80,7 +66,12 @@ public class GameStateManager : MonoBehaviour
         inputManager.SwitchDetachedToPlayerControlState();
     }
 
-    private void HandleCombatBar() {
+    // TODO - fix dialogue/combat bar clashing
+    public void HandleCombatBar(InputAction.CallbackContext obj) {
+        if (controlState == ControlState.DIALOGUE) {
+            return;
+        }
+
         if (inputManager.WasOpenCombatBarTriggered()) {
             inputManager.SwitchPlayerControlStateToUI();
             combatUI.ApplyFocus();
@@ -91,75 +82,39 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
-    private void HandleSwitchInputMode() {
-        if (inputManager.WasSwitchInputTypeTriggered()) {
-            if (controlState == ControlState.SPRITE_NEUTRAL) {
-                controlState = ControlState.DETACHED;
-                inputManager.SwitchPlayerToDetachedControlState(
-                    partyManager.currControlledCharacter.origin);
-            }
-            else {
-                controlState = ControlState.SPRITE_NEUTRAL;
-                inputManager.SwitchDetachedToPlayerControlState();
-            }
-        }
-    }
-
-    private NPCBehavior HandleNPCsFreeMovement() {
-        foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
-            if (npc.encounteredPlayer) {
-                return npc;
-            }
-            npc.HandleRandomMovement();
-        }
-        return null;
-    }
-
-    private void HandlePlayerPrimaryInput() {
-        if (!inputManager.WasInteractTriggered()) {
-            return;
-        }
-
-        // check for interactable objects
-        Story story = null;
-
-        Vector3Int currPosition = partyManager.currControlledCharacter.origin;
-        List<Vector3Int> interactablePositions = nonVoxelWorld.GetInteractableAdjacentObjects(currPosition,
-            partyManager.currControlledCharacter);
-        if (interactablePositions.Count > 0) {
-            Vector3Int firstItem = interactablePositions.First();
-            story = objectInkMapping.GetStoryFromObject(nonVoxelWorld.GetNVEFromPosition(firstItem).gameObject);
+    public void HandleSwitchInputMode(InputAction.CallbackContext obj) {
+        if (controlState == ControlState.SPRITE_NEUTRAL) {
+            controlState = ControlState.DETACHED;
+            inputManager.SwitchPlayerToDetachedControlState(
+                partyManager.currControlledCharacter.origin);
         }
         else {
-            List<Vector3d> interactableVoxels = 
-                voxelWorldManager.GetInteractableAdjacentVoxels(new Vector3d(currPosition));
-            if (interactableVoxels.Count > 0) {
-                Vector3d firstItem = interactableVoxels.First();
-                story = objectInkMapping.GetStoryFromVoxel(voxelWorldManager.GetVoxelFromPosition(firstItem));
+            controlState = ControlState.SPRITE_NEUTRAL;
+            inputManager.SwitchDetachedToPlayerControlState();
+        }
+    }
+    
+    public void HandleControllerInteract(InputAction.CallbackContext obj) {
+        HashSet<Vector3Int> adjacentPositions = Coordinates.GetPositionsSurroundingTraveller(
+            partyManager.currControlledCharacter, 1);
+        InstantiatedNVE interactableEntity = null;
+        foreach (Vector3Int position in adjacentPositions) {
+            if (nonVoxelWorld.IsInteractable(position)) {
+                interactableEntity = nonVoxelWorld.GetNVEFromPosition(position);
+                break;
             }
         }
-
-        if (story == null) {
+        if (interactableEntity == null) {
             Debug.Log("No interactable object near player.");
             return;
         }
 
-        Debug.Log("Interactable thing near player.");
-        controlState = ControlState.DIALOGUE;
-        inputManager.SwitchPlayerControlStateToUI();
-
-        dialogueUI.StartDialogue(story);
-    }
-
-    private void HandleDialogueContinue() {
-        if (!inputManager.WasContinueTriggered()) {
+        Story story = objectInkMapping.GetStoryFromEntity(interactableEntity);
+        if (story == null) {
+            Debug.Log("No story for that entity.");
             return;
         }
 
-        dialogueUI.HandleInput();
-        if (!dialogueUI.isDialogueActive) {
-            controlState = ControlState.SPRITE_NEUTRAL;
-            inputManager.SwitchUIToPlayerControlState();
-        }
+        EnterDialogue(story);
     }
 }

@@ -85,25 +85,14 @@ namespace NonVoxel {
             return true;
         }
 
-        public List<Vector3Int> GetInteractableAdjacentObjects(Vector3Int currPosition, 
-                PlayerMovement playerMovement) {
-            List<Vector3Int> occupiedVoxels = new List<Vector3Int>();
-            for (int x = -1; x < 2; x++) {
-                for (int y = -1; y < 2; y++) {
-                    for (int z = -1; z < 2; z++) {
-                        Vector3Int checkPosition = currPosition + new Vector3Int(x, y, z);
-                        if (checkPosition != currPosition 
-                                && IsPositionOccupied(checkPosition, playerMovement)) {
-                            InstantiatedNVE entity = positionToEntity[checkPosition];
-                            if (entity.GetType() == typeof(NPCBehavior) && entity.IsInteractable()) {
-                                occupiedVoxels.Add(checkPosition);
-                            }
-                        }
-                    }
+        public bool IsInteractable(Vector3Int position) {
+            if (IsPositionOccupied(position)) {
+                InstantiatedNVE entity = positionToEntity[position];
+                if (entity.GetType() == typeof(NPCBehavior) && entity.IsInteractable()) {
+                    return true;
                 }
             }
-
-            return occupiedVoxels;
+            return false;
         }
     }
 }

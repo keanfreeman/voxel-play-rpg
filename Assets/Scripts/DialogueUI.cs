@@ -10,11 +10,11 @@ using UnityEngine.InputSystem;
 
 public class DialogueUI : MonoBehaviour {
     [SerializeField] UIDocument uiDocument;
+    [SerializeField] GameStateManager gameStateManager;
 
     private string currentLine;
     private Story currentStory;
     
-    public bool isDialogueActive = false;
     private bool inChoice = false;
 
     // UIDocument
@@ -41,7 +41,6 @@ public class DialogueUI : MonoBehaviour {
     }
 
     public void StartDialogue(Story story) {
-        isDialogueActive = true;
         dialogueText.text = string.Empty;
         SetDisplayState(true);
 
@@ -61,12 +60,12 @@ public class DialogueUI : MonoBehaviour {
         }
     }
 
-    public void HandleInput() {
-        // todo - remove this hack and only handle input through button presses
-        if (inChoice) {
+    public void HandleSubmit(InputAction.CallbackContext obj) {
+        if (gameStateManager.controlState != ControlState.DIALOGUE || inChoice) {
             return;
         }
 
+        // if done with text, continue
         if (dialogueText.text.Length == currentLine.Length) {
             // display next text
             if (currentStory.canContinue) {
@@ -76,11 +75,11 @@ public class DialogueUI : MonoBehaviour {
             }
 
             // end dialogue
-            isDialogueActive = false;
             SetDisplayState(false);
+            gameStateManager.ExitDialogue();
         }
 
-        // display remaining text
+        // skip dialogue display
         StopAllCoroutines();
         dialogueText.text = currentLine;
         DisplayChoices();
@@ -107,11 +106,6 @@ public class DialogueUI : MonoBehaviour {
     }
 
     private void HandleButtonClick(int choiceIndex) {
-        if (!isDialogueActive) {
-            Debug.LogError("Clicked a button when the dialogue was inactive.");
-            return;
-        }
-
         currentStory.ChooseChoiceIndex(choiceIndex);
         choiceHolder.Clear();
         if (currentStory.canContinue) {
@@ -120,7 +114,7 @@ public class DialogueUI : MonoBehaviour {
             StartCoroutine(TypeLine());
         }
         else {
-            isDialogueActive = false;
+            gameStateManager.ExitDialogue();
         }
         inChoice = false;
     }

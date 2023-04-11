@@ -4,14 +4,15 @@ using UnityEngine;
 
 using Ink.Runtime;
 using VoxelPlay;
+using InstantiatedEntity;
 
 public class ObjectInkMapping : MonoBehaviour
 {
     [SerializeField] private TextAsset NoResponseObjectInk;
     [SerializeField] private TextAsset testInk;
 
-    public Story GetStoryFromObject(GameObject objectIn) {
-        if (objectIn.tag == "NPC") {
+    public Story GetStoryFromEntity(InstantiatedNVE interactableEntity) {
+        if (interactableEntity.tag == "NPC") {
             return new Story(testInk.text);
         }
 

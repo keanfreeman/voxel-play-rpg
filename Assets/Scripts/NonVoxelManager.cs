@@ -22,6 +22,7 @@ public class NonVoxelManager : MonoBehaviour
     [SerializeField] VoxelWorldManager voxelWorldManager;
     [SerializeField] CameraManager cameraManager;
     [SerializeField] PartyManager partyManager;
+    [SerializeField] GameStateManager gameStateManager;
 
     [SerializeField] GameObject opossumPrefab;
     [SerializeField] GameObject sceneExitPrefab;
@@ -101,15 +102,17 @@ public class NonVoxelManager : MonoBehaviour
                 NPC npcInfo = (NPC)nonVoxelSpawnable;
                 NPCBehavior npcBehavior = (NPCBehavior)nonVoxelEntity;
                 npcBehavior.Init(nonVoxelWorld, spriteMovement, randomManager.rng, npcInfo,
-                    cameraManager, partyManager);
+                    cameraManager, partyManager, gameStateManager);
                 nonVoxelWorld.npcs.Add(npcBehavior);
 
-                Guid battleGroupID = npcInfo.battleGroup.groupID;
-                if (!battleGroups.ContainsKey(battleGroupID)) {
-                    battleGroups[battleGroupID] = new HashSet<NPCBehavior>();
+                if (npcInfo.battleGroup != null) {
+                    Guid battleGroupID = npcInfo.battleGroup.groupID;
+                    if (!battleGroups.ContainsKey(battleGroupID)) {
+                        battleGroups[battleGroupID] = new HashSet<NPCBehavior>();
+                    }
+                    battleGroups[battleGroupID].Add(npcBehavior);
+                    npcBehavior.teammates = battleGroups[battleGroupID];
                 }
-                battleGroups[battleGroupID].Add(npcBehavior);
-                npcBehavior.teammates = battleGroups[battleGroupID];
             }
 
             if (nonVoxelSpawnable.GetType() == typeof(NonVoxelObject)) {

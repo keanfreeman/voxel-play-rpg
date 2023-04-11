@@ -40,11 +40,11 @@ public class EnvironmentSceneManager : MonoBehaviour
 
         partyManager.SetCurrControlledCharacter(partyManager.mainCharacter);
         
-        gameStateManager.controlState = ControlState.SPRITE_NEUTRAL;
+        gameStateManager.SetControlState(ControlState.SPRITE_NEUTRAL);
     }
 
     public void LoadNextScene(Destination destination) {
-        gameStateManager.controlState = ControlState.LOADING;
+        gameStateManager.SetControlState(ControlState.LOADING);
         partyManager.currControlledCharacter.HaltMovement();
         this.destination = destination;
         voxelWorldManager.SetVoxelPlayEnvironment(null);

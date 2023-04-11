@@ -84,7 +84,7 @@ public class CombatManager : MonoBehaviour
                     Debug.Log("Player ran out of HP.");
                 }
 
-                yield return effectManager.GenerateHitEffect(nearestPlayer.origin);
+                yield return effectManager.GenerateHitEffect(nearestPlayer);
             }
         }
 
@@ -179,7 +179,7 @@ public class CombatManager : MonoBehaviour
                         }
                     }
 
-                    yield return effectManager.GenerateHitEffect(npcBehavior.origin);
+                    yield return effectManager.GenerateHitEffect(npcBehavior);
                     if (newHP < 1) {
                         // no more attacks to do
                         break;
@@ -250,6 +250,8 @@ public class CombatManager : MonoBehaviour
 
         // add NPCs
         foreach (NPCBehavior npcBehavior in firstCombatant.teammates) {
+            npcBehavior.inCombat = true;
+            
             int npcDexModifier = StatModifiers.GetModifierForStat(
                 npcBehavior.npcInfo.stats.dexterity);
             int initiative = randomManager.Roll(1, 20, npcDexModifier);

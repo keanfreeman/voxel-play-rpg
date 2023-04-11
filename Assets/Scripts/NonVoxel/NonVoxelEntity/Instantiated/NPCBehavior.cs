@@ -17,25 +17,24 @@ namespace InstantiatedEntity {
 
         private System.Random rng;
         private SpriteMovement spriteMovement;
+        private GameStateManager gameStateManager;
 
-        private float lastMoveTime = 0;
-
-        public bool encounteredPlayer = false;
         public NPC npcInfo;
         public HashSet<NPCBehavior> teammates;
+        public bool inCombat { get; set; } = false;
 
-        private const float NPC_MIN_IDLE_TIME = 1;
-        private const float NPC_MAX_IDLE_TIME = 5;
+        private const int NPC_MIN_IDLE_TIME = 1;
+        private const int NPC_MAX_IDLE_TIME = 3;
 
         private void OnTriggerEnter(Collider other) {
-            if (npcInfo.faction == Faction.ENEMY && other.gameObject.tag == "Player") {
-                encounteredPlayer = true;
+            if (other.gameObject.tag == "Player" && npcInfo.faction == Faction.ENEMY) {
+                gameStateManager.EnterCombat(this);
             }
         }
 
         public void Init(NonVoxelWorld nonVoxelWorld, SpriteMovement spriteMovement,
                 System.Random rng, NPC npcInfo, CameraManager cameraManager, 
-                PartyManager partyManager) {
+                PartyManager partyManager, GameStateManager gameStateManager) {
             this.nonVoxelWorld = nonVoxelWorld;
             this.spriteMovement = spriteMovement;
             this.rng = rng;
@@ -46,7 +45,36 @@ namespace InstantiatedEntity {
             spriteObjectTransform.localScale = npcInfo.entityDisplay.scale;
             rotationTransform.localPosition = npcInfo.entityDisplay.offset;
             this.partyManager = partyManager;
+            this.gameStateManager = gameStateManager;
             SetCurrPositions(npcInfo);
+
+            StartCoroutine(MoveCoroutine());
+        }
+
+        private IEnumerator MoveCoroutine() {
+            while (gameStateManager.controlState == ControlState.LOADING) {
+                yield return new WaitForSeconds(1);
+            }
+
+            while (true) {
+                if (inCombat) {
+                    yield break;
+                }
+
+                Vector3Int newPosition = origin + GetRandomOneTileMovement();
+                List<InstantiatedNVE> ignoredCreatures = new List<InstantiatedNVE> { this };
+                Vector3Int? actualCoordinate = spriteMovement.GetTerrainAdjustedCoordinate(
+                    newPosition, this, ignoredCreatures);
+                if (actualCoordinate.HasValue) {
+                    Vector3Int destinationCoordinate = actualCoordinate.GetValueOrDefault();
+                    if (spriteMovement.IsReachablePosition(destinationCoordinate, this, ignoredCreatures)) {
+                        MoveOriginToPoint(destinationCoordinate);
+                    }
+                }
+
+                double waitTime = (rng.NextDouble() * NPC_MAX_IDLE_TIME) + NPC_MIN_IDLE_TIME;
+                yield return new WaitForSeconds((float)waitTime);
+            }
         }
 
         protected override Vector3Int? GetDestinationFromDirection(SpriteMoveDirection spriteMoveDirection) {
@@ -61,26 +89,6 @@ namespace InstantiatedEntity {
                 return rng.Next(0, 2) == 0 ? Vector3Int.left : Vector3Int.right;
             }
             return rng.Next(0, 2) == 0 ? Vector3Int.forward : Vector3Int.back;
-        }
-
-        public void HandleRandomMovement() {
-            if (cameraManager.isRotating || Time.time - lastMoveTime < NPC_MIN_IDLE_TIME) {
-                return;
-            }
-            lastMoveTime = Time.time;
-
-            Vector3Int newPosition = origin + GetRandomOneTileMovement();
-            List<InstantiatedNVE> ignoredCreatures = new List<InstantiatedNVE> { this };
-            Vector3Int? actualCoordinate = spriteMovement.GetTerrainAdjustedCoordinate(
-                newPosition, this, ignoredCreatures);
-            if (!actualCoordinate.HasValue) {
-                return;
-            }
-            Vector3Int destinationCoordinate = actualCoordinate.GetValueOrDefault();
-
-            if (spriteMovement.IsReachablePosition(destinationCoordinate, this, ignoredCreatures)) {
-                MoveOriginToPoint(destinationCoordinate);
-            }
         }
 
         public override bool IsInteractable() {

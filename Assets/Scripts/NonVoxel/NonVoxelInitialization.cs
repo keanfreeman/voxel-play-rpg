@@ -51,19 +51,23 @@ public class NonVoxelInitialization {
         };
         NPCStats scoutStats = new NPCStats("Scout", 30, 16, EntitySize.MEDIUM,
             11, 14, 12, 11, 13, 11, scoutActions, "1/2", 16);
-        EntityDisplay scout1Display = new EntityDisplay(playerPrefab, loreleiSpriteLibrary, 
-            new Vector3(0.5f, 0.5f, 0.5f), new Vector3(0.8f, 0.8f, 0.8f));
-        EntityDisplay scout2Display = new EntityDisplay(playerPrefab, yellowSpriteLibrary,
+        EntityDisplay scoutDisplay = new EntityDisplay(playerPrefab, loreleiSpriteLibrary, 
             new Vector3(0.5f, 0.5f, 0.5f), new Vector3(0.8f, 0.8f, 0.8f));
 
         Party party = new Party(
             mainCharacter,
             new List<PlayerCharacter> {
                 mainCharacter,
-                new PlayerCharacter(new Vector3Int(864, 29, 347), scoutStats, scout1Display),
-                new PlayerCharacter(new Vector3Int(864, 29, 348), scoutStats, scout2Display)
+                new PlayerCharacter(new Vector3Int(864, 29, 347), scoutStats, scoutDisplay),
             }
         );
+
+        List<Action> commonerActions = new List<Action> { 
+            new Attack("Club", new Dice(1, 20, 2), new Dice(1, 4)) };
+        NPCStats commonerStats = new NPCStats("Commoner", 30, 4, EntitySize.MEDIUM, 10, 10, 10, 10, 10, 10,
+            commonerActions, "0", 10);
+        NPC commoner = new NPC(new Vector3Int(862, 29, 346), commonerStats, new EntityDisplay(npcPrefab, 
+            yellowSpriteLibrary, new Vector3(0.5f, 0.5f, 0.5f), new Vector3(0.8f, 0.8f, 0.8f)), Faction.PLAYER);
 
         List<Action> wolfActions = new List<Action> {
             new Bite("Bite", new Dice(1, 20, 4), new Dice(2, 4, 2))
@@ -74,15 +78,15 @@ public class NonVoxelInitialization {
             new Vector3(1f, 0.6f, 1f), new Vector3(6.5f, 6.5f, 6.5f));
 
         BattleGroup battleGroup1 = new BattleGroup(new List<NPC> {
-            new NPC(new Vector3Int(835, 29, 350), wolfStats, wolfDisplay),
-            new NPC(new Vector3Int(835, 29, 347), wolfStats, wolfDisplay)
+            new NPC(new Vector3Int(835, 29, 350), wolfStats, wolfDisplay, Faction.ENEMY),
+            new NPC(new Vector3Int(835, 29, 347), wolfStats, wolfDisplay, Faction.ENEMY)
         });
         BattleGroup battleGroup2 = new BattleGroup(new List<NPC> {
-            new NPC(new Vector3Int(825, 31, 348), wolfStats, wolfDisplay),
-            new NPC(new Vector3Int(825, 31, 350), wolfStats, wolfDisplay)
+            new NPC(new Vector3Int(825, 31, 348), wolfStats, wolfDisplay, Faction.ENEMY),
+            new NPC(new Vector3Int(825, 31, 350), wolfStats, wolfDisplay, Faction.ENEMY)
         });
         BattleGroup battleGroup3 = new BattleGroup(new List<NPC> {
-            new NPC(new Vector3Int(468, 26, -46), wolfStats, wolfDisplay)
+            new NPC(new Vector3Int(468, 26, -46), wolfStats, wolfDisplay, Faction.ENEMY)
         });
 
         NonVoxelObject bed = new NonVoxelObject(new Vector3Int(857, 29, 350), 
@@ -95,6 +99,7 @@ public class NonVoxelInitialization {
             {
                 3, new List<Spawnable> {
                     party,
+                    commoner,
                     battleGroup1.combatants[0],
                     battleGroup1.combatants[1],
                     battleGroup2.combatants[0],

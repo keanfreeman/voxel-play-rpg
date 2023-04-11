@@ -256,6 +256,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3839151276963773207, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+      propertyPath: gameStateManager
+      value: 
+      objectReference: {fileID: 955022268}
     - target: {fileID: 3839151277267300371, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
       propertyPath: dialogueUI
       value: 
@@ -474,6 +478,7 @@ MonoBehaviour:
   voxelWorldManager: {fileID: 1568004907}
   cameraManager: {fileID: 1785101423}
   partyManager: {fileID: 683280036}
+  gameStateManager: {fileID: 955022268}
   opossumPrefab: {fileID: 6944743723035480207, guid: 8763f4ed44e10d446ba76d834eb2f67f, type: 3}
   sceneExitPrefab: {fileID: 440023488360116698, guid: 4242af01c09d0984f9c6587337ba132b, type: 3}
   bedPrefab: {fileID: 100008, guid: 869877b757b54c64c8031c53a8ee3001, type: 3}
@@ -1442,6 +1447,8 @@ MonoBehaviour:
   detachedCamera: {fileID: 848129494}
   combatManager: {fileID: 1613990517}
   partyManager: {fileID: 683280036}
+  gameStateManager: {fileID: 955022268}
+  dialogueUI: {fileID: 2139012955}
 --- !u!114 &2066669310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1523,6 +1530,18 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: f7663e6a-b6a6-4e7c-a400-467ea10f86ba
     m_ActionName: Detached/Cancel
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f85dadc1-0dd3-47a3-85c8-60e56f82ddfa
+    m_ActionName: Player/Switch Character[/XInputControllerWindows/rightTrigger,/Keyboard/rightBracket]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e6a0b312-47fd-47d9-b31f-b7ec0e307773
+    m_ActionName: Detached/Switch Character[/XInputControllerWindows/rightTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 38c2f1d4-351e-4d35-8310-447612bebfc1
+    m_ActionName: Watch/RotateCamera[/XInputControllerWindows/rightStick,/Keyboard/leftArrow,/Keyboard/rightArrow]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
