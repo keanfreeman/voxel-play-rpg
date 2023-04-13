@@ -1,3 +1,7 @@
+* {
+    font-size: 64px;
+}
+
 Button {
     font-size: 32px;
 }
