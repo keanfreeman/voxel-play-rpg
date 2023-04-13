@@ -17,6 +17,7 @@ public enum ControlState {
     DETACHED,
     DIALOGUE,
     COMBAT,
+    FOLLOWING_ORDERS,
     LOADING
 }
 
@@ -32,24 +33,47 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] VoxelWorldManager voxelWorldManager;
     [SerializeField] CameraManager cameraManager;
     [SerializeField] PartyManager partyManager;
+    [SerializeField] MovementManager movementManager;
 
     public ControlState controlState { get; private set; } = ControlState.LOADING;
 
-    public void SetControlState(ControlState newState) {
+    public IEnumerator SetControlState(ControlState newState) {
+        if (newState == ControlState.FOLLOWING_ORDERS) {
+            inputManager.LockPlayerControls();
+
+            PlayerMovement playerMovement = partyManager.currControlledCharacter;
+            if (movementManager.IsMoving(playerMovement)) {
+                movementManager.CancelMovement(playerMovement);
+                while (playerMovement.isMoving) {
+                    yield return null;
+                }
+            }
+
+            if (controlState == ControlState.DETACHED) {
+                cameraManager.AttachCameraToPlayer(playerMovement);
+            }
+
+            combatUI.SetDisplayState(false);
+        }
+        else if (controlState == ControlState.FOLLOWING_ORDERS) {
+            combatUI.SetDisplayState(true);
+            inputManager.UnlockPlayerControls();
+        }
+
         controlState = newState;
     }
 
     public void EnterDialogue(Story story) {
+        inputManager.LockPlayerControls();
         controlState = ControlState.DIALOGUE;
-        inputManager.SwitchPlayerControlStateToUI();
         combatUI.SetDisplayState(false);
-        dialogueUI.StartDialogue(story);
+        dialogueUI.StartDialogue(story, ExitDialogue);
     }
 
     public void ExitDialogue() {
         controlState = ControlState.SPRITE_NEUTRAL;
         combatUI.SetDisplayState(true);
-        inputManager.SwitchUIToPlayerControlState();
+        inputManager.UnlockPlayerControls();
     }
 
     public void EnterCombat(NPCBehavior npcInCombat) {
@@ -66,7 +90,6 @@ public class GameStateManager : MonoBehaviour
         inputManager.SwitchDetachedToPlayerControlState();
     }
 
-    // TODO - fix dialogue/combat bar clashing
     public void HandleCombatBar(InputAction.CallbackContext obj) {
         if (controlState == ControlState.DIALOGUE) {
             return;

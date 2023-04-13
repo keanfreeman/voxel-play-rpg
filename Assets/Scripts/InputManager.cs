@@ -50,6 +50,23 @@ public class InputManager : MonoBehaviour
         playerInputActions.Player.Enable();
     }
 
+    public void LockPlayerControls() {
+        playerInputActions.Player.Disable();
+        playerInputActions.Detached.Disable();
+    }
+
+    public void UnlockPlayerControls() {
+        playerInputActions.Player.Enable();
+    }
+
+    public void LockUIControls() {
+        playerInputActions.UINavigation.Disable();
+    }
+
+    public void UnlockUIControls() {
+        playerInputActions.UINavigation.Enable();
+    }
+
     public void SetPlayerMovementControls(PlayerMovement oldPlayerMovement,
             PlayerMovement newPlayerMovement) {
         if (oldPlayerMovement != null) {

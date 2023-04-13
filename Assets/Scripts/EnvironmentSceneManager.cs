@@ -40,7 +40,7 @@ public class EnvironmentSceneManager : MonoBehaviour
 
         partyManager.SetCurrControlledCharacter(partyManager.mainCharacter);
         
-        gameStateManager.SetControlState(ControlState.SPRITE_NEUTRAL);
+        StartCoroutine(gameStateManager.SetControlState(ControlState.SPRITE_NEUTRAL));
     }
 
     public void LoadNextScene(Destination destination) {

@@ -257,6 +257,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3839151276963773207, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+      propertyPath: combatUI
+      value: 
+      objectReference: {fileID: 829311307}
+    - target: {fileID: 3839151276963773207, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+      propertyPath: inputManager
+      value: 
+      objectReference: {fileID: 2066669309}
+    - target: {fileID: 3839151276963773207, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
       propertyPath: gameStateManager
       value: 
       objectReference: {fileID: 955022268}
@@ -360,6 +368,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitParticleEffect: {fileID: 5024009746357069194, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
   cameraManager: {fileID: 1785101423}
+  exclaimEffect: {fileID: 4012364991793221845, guid: a0a10e86ca257e741ad47e9103605718, type: 3}
 --- !u!1 &331112263
 GameObject:
   m_ObjectHideFlags: 0
@@ -409,6 +418,58 @@ Transform:
   m_Father: {fileID: 1341391871}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &341726106
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 341726107}
+  - component: {fileID: 341726108}
+  m_Layer: 0
+  m_Name: OrderManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &341726107
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 341726106}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341391871}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &341726108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 341726106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ead19c02a712a7e47aba5d7d0246f407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nonVoxelWorld: {fileID: 1135948956}
+  cameraManager: {fileID: 1785101423}
+  partyManager: {fileID: 683280036}
+  movementManager: {fileID: 104703756}
+  pathfinder: {fileID: 1169761465}
+  effectManager: {fileID: 234026431}
+  gameStateManager: {fileID: 955022268}
+  dialogueUI: {fileID: 2139012955}
 --- !u!1 &582458976
 GameObject:
   m_ObjectHideFlags: 0
@@ -479,10 +540,14 @@ MonoBehaviour:
   cameraManager: {fileID: 1785101423}
   partyManager: {fileID: 683280036}
   gameStateManager: {fileID: 955022268}
+  orderManager: {fileID: 341726108}
   opossumPrefab: {fileID: 6944743723035480207, guid: 8763f4ed44e10d446ba76d834eb2f67f, type: 3}
   sceneExitPrefab: {fileID: 440023488360116698, guid: 4242af01c09d0984f9c6587337ba132b, type: 3}
   bedPrefab: {fileID: 100008, guid: 869877b757b54c64c8031c53a8ee3001, type: 3}
   detachedCameraPrefab: {fileID: 1275296119661960477, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
+  storyEventCubePrefab: {fileID: 440023488360116698, guid: fdcc5270671822a4981fb62ffa96d63e, type: 3}
+  getAttention: {fileID: 4900000, guid: b86cc2d817bbfba4fb3823337db5549c, type: 3}
+  friendDialogue: {fileID: 4900000, guid: f6e75214fd7d776488cd3aa73424fa2a, type: 3}
 --- !u!4 &582458983
 Transform:
   m_ObjectHideFlags: 0
@@ -879,6 +944,7 @@ MonoBehaviour:
   voxelWorldManager: {fileID: 1568004907}
   cameraManager: {fileID: 1785101423}
   partyManager: {fileID: 683280036}
+  movementManager: {fileID: 104703756}
 --- !u!4 &955022269
 Transform:
   m_ObjectHideFlags: 0
@@ -1104,6 +1170,7 @@ Transform:
   - {fileID: 234026430}
   - {fileID: 1169761464}
   - {fileID: 2106943939}
+  - {fileID: 341726107}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1345,6 +1412,7 @@ MonoBehaviour:
   voxelWorldManager: {fileID: 1568004907}
   nonVoxelWorld: {fileID: 1135948956}
   partyManager: {fileID: 683280036}
+  detachedCamera: {fileID: 848129494}
 --- !u!4 &1896033296 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5396361269471903674, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}

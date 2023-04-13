@@ -8,6 +8,7 @@ public class EffectManager : MonoBehaviour
 {
     [SerializeField] GameObject hitParticleEffect;
     [SerializeField] CameraManager cameraManager;
+    [SerializeField] GameObject exclaimEffect;
 
     Vector3 CENTER_OFFSET = new Vector3(0.5f, 0.5f, 0.5f);
 
@@ -25,6 +26,18 @@ public class EffectManager : MonoBehaviour
         int creatureRadius = EntitySizeCalcs.GetRadius(traveller.GetStats().size);
         Vector3 particleLocation = traveller.origin + CENTER_OFFSET * creatureRadius;
         GameObject spawned = Instantiate(hitParticleEffect, particleLocation,
+            cameraManager.GetMainCamera().transform.rotation);
+        spawned.transform.localScale *= creatureRadius;
+
+        while (spawned != null) {
+            yield return null;
+        }
+    }
+
+    public IEnumerator GenerateExclaimEffect(Traveller traveller) {
+        int creatureRadius = EntitySizeCalcs.GetRadius(traveller.GetStats().size);
+        Vector3 effectLocation = traveller.origin + CENTER_OFFSET * creatureRadius + Vector3.up;
+        GameObject spawned = Instantiate(exclaimEffect, effectLocation,
             cameraManager.GetMainCamera().transform.rotation);
         spawned.transform.localScale *= creatureRadius;
 

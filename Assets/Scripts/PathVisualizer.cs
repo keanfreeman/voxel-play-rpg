@@ -31,4 +31,10 @@ public class PathVisualizer : MonoBehaviour
         Destroy(pathMarkers[lastIndex]);
         pathMarkers.RemoveAt(lastIndex);
     }
+
+    public void EraseAll() {
+        while (pathMarkers.Count > 0) {
+            DestroyNearestMarker();
+        }
+    }
 }

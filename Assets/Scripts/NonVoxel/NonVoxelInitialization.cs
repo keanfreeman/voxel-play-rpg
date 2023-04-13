@@ -6,21 +6,14 @@ using NonVoxelEntity;
 using GameMechanics;
 using GameMechanics.Wolf;
 using UnityEngine.U2D.Animation;
+using Orders;
 
 public class NonVoxelInitialization {
-    private GameObject playerPrefab;
-    private GameObject npcPrefab;
-    private GameObject sceneExitPrefab;
-    private GameObject bedPrefab;
-
     public Dictionary<int, List<Spawnable>> environmentObjects;
 
     public NonVoxelInitialization(GameObject playerPrefab, GameObject npcPrefab,
-            GameObject sceneExitPrefab, GameObject bedPrefab) {
-        this.playerPrefab = playerPrefab;
-        this.npcPrefab = npcPrefab;
-        this.sceneExitPrefab = sceneExitPrefab;
-
+            GameObject sceneExitPrefab, GameObject bedPrefab, GameObject storyEventCubePrefab,
+            TextAsset getAttention, TextAsset friendDialogue) {
         SpriteLibraryAsset playerSpriteLibrary =
             Resources.Load<SpriteLibraryAsset>("Borrowed/Sprites/PlayerSpriteLibrary");
         SpriteLibraryAsset loreleiSpriteLibrary = 
@@ -35,7 +28,7 @@ public class NonVoxelInitialization {
         };
         PlayerStats playerStats = new PlayerStats("Player1", 30, 10, EntitySize.MEDIUM, 10, 10, 10, 10, 10, 
             10, playerActions, 1);
-        PlayerCharacter mainCharacter = new PlayerCharacter(new Vector3Int(864, 29, 346), playerStats, 
+        PlayerCharacter mainCharacter = new PlayerCharacter(new Vector3Int(859, 37, 347), playerStats, 
             new EntityDisplay(playerPrefab, playerSpriteLibrary, new Vector3(0.5f, 0.5f, 0.5f), 
                 new Vector3(0.8f, 0.8f, 0.8f)));
 
@@ -108,6 +101,16 @@ public class NonVoxelInitialization {
                         new Vector3Int(864, 29, 351),
                         new Destination(1, new Vector3Int(466, 29, -46)),
                         new EntityDisplay(sceneExitPrefab)),
+                    new StoryEventCube(
+                        new Vector3Int(856, 36, 350), 1, new EntityDisplay(storyEventCubePrefab),
+                        new OrderGroup(true, new List<Order>{
+                            new DialogueOrder(getAttention, "???"),
+                            new ExclaimOrder(mainCharacter),
+                            new MoveOrder(new Vector3Int(859, 37, 347), mainCharacter),
+                            new CameraFocusOrder(commoner),
+                            new DialogueOrder(friendDialogue, "Corey")
+                        })
+                    ),
                     bed
                 }
             },

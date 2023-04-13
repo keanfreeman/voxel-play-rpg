@@ -11,11 +11,18 @@ public class MovementManager : MonoBehaviour
     [SerializeField] PathVisualizer pathVisualizer;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
 
-    public Dictionary<Traveller, Deque<Vector3Int>> movingCreatures { get; private set; } 
+    public Dictionary<Traveller, Deque<Vector3Int>> creaturePaths { get; private set; } 
         = new Dictionary<Traveller, Deque<Vector3Int>>();
 
     public bool IsMoving(Traveller traveller) {
-        return movingCreatures.ContainsKey(traveller);
+        return creaturePaths.ContainsKey(traveller);
+    }
+
+    public void CancelMovement(Traveller traveller) {
+        if (IsMoving(traveller)) {
+            creaturePaths[traveller] = null;
+            pathVisualizer.EraseAll();
+        }
     }
 
     public IEnumerator MoveAlongPath(Traveller traveller, Deque<Vector3Int> path) {
@@ -24,25 +31,24 @@ public class MovementManager : MonoBehaviour
         }
 
         // TODO handle if new path is requested when one is already running.
-        movingCreatures[traveller] = path;
+        creaturePaths[traveller] = path;
         yield return MoveEntity(traveller);
     }
 
     public IEnumerator MoveEntity(Traveller traveller) {
         Vector3Int? currDestination = null;
-        Deque<Vector3Int> path = movingCreatures[traveller];
-        pathVisualizer.DrawPath(path);
-        while (path.Count > 0) {
+        pathVisualizer.DrawPath(creaturePaths[traveller]);
+        while (creaturePaths[traveller] != null && creaturePaths[traveller].Count > 0) {
             if (!currDestination.HasValue) {
-                int lastIndex = path.Count - 1;
-                currDestination = path[lastIndex];
-                path.RemoveFromBack();
+                int lastIndex = creaturePaths[traveller].Count - 1;
+                currDestination = creaturePaths[traveller][lastIndex];
+                creaturePaths[traveller].RemoveFromBack();
             }
 
             if (nonVoxelWorld.IsPositionOccupied(currDestination.Value, traveller)) {
                 Debug.Log("Movement was interrupted along path.");
                 traveller.SetMoveAnimation(false);
-                movingCreatures.Remove(traveller);
+                creaturePaths.Remove(traveller);
                 yield break;
             }
 
@@ -58,6 +64,6 @@ public class MovementManager : MonoBehaviour
         }
 
         traveller.SetMoveAnimation(false);
-        movingCreatures.Remove(traveller);
+        creaturePaths.Remove(traveller);
     }
 }

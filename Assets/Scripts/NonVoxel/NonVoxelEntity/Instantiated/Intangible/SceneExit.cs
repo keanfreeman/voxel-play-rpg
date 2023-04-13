@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace InstantiatedEntity {
-    public class SceneExit : InstantiatedNVE
+    public class SceneExit : IntangibleEntity
     {
         private EnvironmentSceneManager worldManager;
         private Destination destination;
@@ -14,7 +14,6 @@ namespace InstantiatedEntity {
                 SceneExitCube sceneExitCubeInfo) {
             this.worldManager = worldManager;
             this.destination = destination;
-            SetCurrPositions(sceneExitCubeInfo);
         }
 
         private void OnTriggerEnter(Collider other) {
@@ -23,10 +22,6 @@ namespace InstantiatedEntity {
                     $"{destination.destinationEnv}");
                 worldManager.LoadNextScene(destination);
             }
-        }
-
-        public override bool IsInteractable() {
-            return false;
         }
     }
 }

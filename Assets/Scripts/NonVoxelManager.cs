@@ -23,11 +23,15 @@ public class NonVoxelManager : MonoBehaviour
     [SerializeField] CameraManager cameraManager;
     [SerializeField] PartyManager partyManager;
     [SerializeField] GameStateManager gameStateManager;
+    [SerializeField] OrderManager orderManager;
 
     [SerializeField] GameObject opossumPrefab;
     [SerializeField] GameObject sceneExitPrefab;
     [SerializeField] GameObject bedPrefab;
     [SerializeField] GameObject detachedCameraPrefab;
+    [SerializeField] GameObject storyEventCubePrefab;
+    [SerializeField] TextAsset getAttention;
+    [SerializeField] TextAsset friendDialogue;
 
     private NonVoxelInitialization nonVoxelInitialization;
 
@@ -35,7 +39,8 @@ public class NonVoxelManager : MonoBehaviour
 
     private void Awake() {
         nonVoxelInitialization = new NonVoxelInitialization(playerPrefab,
-            opossumPrefab, sceneExitPrefab, bedPrefab);
+            opossumPrefab, sceneExitPrefab, bedPrefab, storyEventCubePrefab,
+            getAttention, friendDialogue);
     }
 
     public void DestroyEntities() {
@@ -90,17 +95,10 @@ public class NonVoxelManager : MonoBehaviour
             Entity entity = (Entity)nonVoxelSpawnable;
             GameObject gameObject = Instantiate(entity.entityDisplay.prefab,
                 entity.startPosition, Quaternion.identity);
-            InstantiatedNVE nonVoxelEntity = gameObject.GetComponent<InstantiatedNVE>();
-                
-            if (nonVoxelSpawnable.GetType() == typeof(SceneExitCube)) {
-                SceneExitCube sceneExitCube = (SceneExitCube)nonVoxelSpawnable;
-                SceneExit sceneExitComponent = (SceneExit)nonVoxelEntity;
-                sceneExitComponent.Init(environmentSceneManager, sceneExitCube.destination, sceneExitCube);
-            }
 
             if (nonVoxelSpawnable.GetType() == typeof(NPC)) {
                 NPC npcInfo = (NPC)nonVoxelSpawnable;
-                NPCBehavior npcBehavior = (NPCBehavior)nonVoxelEntity;
+                NPCBehavior npcBehavior = gameObject.GetComponent<NPCBehavior>();
                 npcBehavior.Init(nonVoxelWorld, spriteMovement, randomManager.rng, npcInfo,
                     cameraManager, partyManager, gameStateManager);
                 nonVoxelWorld.npcs.Add(npcBehavior);
@@ -113,15 +111,28 @@ public class NonVoxelManager : MonoBehaviour
                     battleGroups[battleGroupID].Add(npcBehavior);
                     npcBehavior.teammates = battleGroups[battleGroupID];
                 }
+                nonVoxelWorld.AddEntity(npcBehavior);
             }
 
             if (nonVoxelSpawnable.GetType() == typeof(NonVoxelObject)) {
                 NonVoxelObject nonVoxelObject = (NonVoxelObject)nonVoxelSpawnable;
-                InstantiatedNVObject instantiatedNVObject = (InstantiatedNVObject)nonVoxelEntity;
+                InstantiatedNVObject instantiatedNVObject = gameObject.GetComponent<InstantiatedNVObject>();
                 instantiatedNVObject.Init(nonVoxelWorld, nonVoxelObject);
+                nonVoxelWorld.AddEntity(instantiatedNVObject);
             }
 
-            nonVoxelWorld.AddEntity(nonVoxelEntity);
+            if (nonVoxelSpawnable.GetType() == typeof(NonVoxelEntity.StoryEventCube)) {
+                NonVoxelEntity.StoryEventCube definition = (NonVoxelEntity.StoryEventCube)nonVoxelSpawnable;
+                InstantiatedEntity.StoryEventCube storyEventCube 
+                    = gameObject.GetComponent<InstantiatedEntity.StoryEventCube>();
+                storyEventCube.Init(definition, orderManager);
+            }
+
+            if (nonVoxelSpawnable.GetType() == typeof(SceneExitCube)) {
+                SceneExitCube sceneExitCube = (SceneExitCube)nonVoxelSpawnable;
+                SceneExit sceneExitComponent = gameObject.GetComponent<SceneExit>();
+                sceneExitComponent.Init(environmentSceneManager, sceneExitCube.destination, sceneExitCube);
+            }
         }
     }
 }

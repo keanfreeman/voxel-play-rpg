@@ -15,6 +15,7 @@ public class CameraManager : MonoBehaviour {
     [SerializeField] VoxelWorldManager voxelWorldManager;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
     [SerializeField] PartyManager partyManager;
+    [SerializeField] DetachedCamera detachedCamera;
 
     public bool isRotating { get; private set; }
     
@@ -70,6 +71,7 @@ public class CameraManager : MonoBehaviour {
         }
     }
 
+    // todo make gradual animation
     public void AttachCameraToPlayer(PlayerMovement playerMovement) {
         mainCameraTarget.transform.parent = playerMovement.playerObject.transform;
         // need to jump to nearest 90 degree angle if coming from detached
@@ -83,6 +85,8 @@ public class CameraManager : MonoBehaviour {
         mainCamera.transform.SetLocalPositionAndRotation(new Vector3(0, 6, -6),
             Quaternion.Euler(45f, 0, 0));
         voxelWorldManager.environment.seeThroughTarget = playerMovement.seeThroughTarget;
+
+        detachedCamera.BecomeInactive();
     }
 
     public void AttachCameraToDetached() {
