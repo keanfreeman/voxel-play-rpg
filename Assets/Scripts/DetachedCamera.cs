@@ -1,5 +1,5 @@
 using GameMechanics;
-using InstantiatedEntity;
+using Instantiated;
 using Nito.Collections;
 using NonVoxel;
 using System;
@@ -77,9 +77,9 @@ public class DetachedCamera : MonoBehaviour
 
     private void UpdateCursorType() {
         if (nonVoxelWorld.IsPositionOccupied(currVoxel)) {
-            InstantiatedNVE nvEntity = nonVoxelWorld.GetNVEFromPosition(currVoxel);
+            TangibleEntity nvEntity = nonVoxelWorld.GetEntityFromPosition(currVoxel);
             if (gameStateManager.controlState == ControlState.COMBAT
-                    && nvEntity.GetType() == typeof(NPCBehavior)) {
+                    && nvEntity.GetType() == typeof(NPC)) {
                 GameMechanics.Action rangedAction = StatInfo.GetRangedAction(
                     combatManager.GetCurrTurnPlayer().playerInfo.stats);
                 detachedModeSprite.sprite = rangedAction == null ? meleeAttackIcon : rangedAttackIcon;
@@ -90,8 +90,8 @@ public class DetachedCamera : MonoBehaviour
             return;
         }
 
-        List<InstantiatedNVE> ignoredEntities 
-            = new List<InstantiatedNVE> { partyManager.currControlledCharacter };
+        List<TangibleEntity> ignoredEntities 
+            = new List<TangibleEntity> { partyManager.currControlledCharacter };
         if (spriteMovement.IsReachablePosition(currVoxel, 
                 partyManager.currControlledCharacter, ignoredEntities)) {
             detachedModeSprite.sprite = traverseIcon;

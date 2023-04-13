@@ -1,4 +1,4 @@
-using InstantiatedEntity;
+using Instantiated;
 using MovementDirection;
 using NonVoxelEntity;
 using System.Collections;
@@ -19,7 +19,7 @@ public static class Coordinates
         return Mathf.Abs(c.x) <= 1 && Mathf.Abs(c.y) <= 1 && Mathf.Abs(c.z) <= 1;
     }
 
-    public static bool IsNextTo(Traveller traveller1, InstantiatedNVE traveller2) {
+    public static bool IsNextTo(Traveller traveller1, TangibleEntity traveller2) {
         HashSet<Vector3Int> adjacentPositions = GetPositionsSurroundingTraveller(traveller1, 1);
         foreach (Vector3Int position in traveller2.occupiedPositions) {
             if (adjacentPositions.Contains(position)) {

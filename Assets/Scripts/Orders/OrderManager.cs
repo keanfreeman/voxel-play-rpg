@@ -1,4 +1,4 @@
-using InstantiatedEntity;
+using Instantiated;
 using Nito.Collections;
 using NonVoxel;
 using Orders;
@@ -37,51 +37,39 @@ public class OrderManager : MonoBehaviour
 
             if (type == typeof(ExclaimOrder)) {
                 ExclaimOrder exclaimOrder = (ExclaimOrder)order;
-                PlayerMovement exclaimingPlayer = null;
-                foreach (PlayerMovement player in partyManager.partyMembers) {
-                    if (player.playerInfo == exclaimOrder.exclaimingEntity) {
-                        exclaimingPlayer = player;
-                        break;
-                    }
-                }
-                if (exclaimingPlayer == null) {
+                InstantiatedEntity exclaimer = nonVoxelWorld.GetEntityFromDefinition(
+                    exclaimOrder.exclaimingEntity);
+                if (exclaimer == null || !TypeUtil.IsSameTypeOrSubclass(exclaimer, typeof(Traveller))) {
                     continue;
                 }
-                yield return effectManager.GenerateExclaimEffect(exclaimingPlayer);
+
+                Traveller traveller = (Traveller)exclaimer;
+                yield return effectManager.GenerateExclaimEffect(traveller);
             }
             else if (type == typeof(MoveOrder)) {
                 MoveOrder moveOrder = (MoveOrder)order;
-                PlayerMovement movingPlayer = null;
-                foreach (PlayerMovement player in partyManager.partyMembers) {
-                    if (player.playerInfo == moveOrder.player) {
-                        movingPlayer = player;
-                        break;
-                    }
-                }
-                if (movingPlayer == null) {
+                InstantiatedEntity mover = nonVoxelWorld.GetEntityFromDefinition(moveOrder.player);
+                if (mover == null || !TypeUtil.IsSameTypeOrSubclass(mover, typeof(Traveller))) {
                     continue;
                 }
 
+                Traveller traveller = (Traveller)mover;
                 CoroutineWithData coroutineWithData = new CoroutineWithData(this,
-                    pathfinder.FindPath(movingPlayer, moveOrder.destination));
+                    pathfinder.FindPath(traveller, moveOrder.destination));
                 yield return coroutineWithData.coroutine;
                 Deque<Vector3Int> path = (Deque<Vector3Int>)coroutineWithData.result;
-                yield return movementManager.MoveAlongPath(movingPlayer, path);
+                yield return movementManager.MoveAlongPath(traveller, path);
             }
             else if (type == typeof(CameraFocusOrder)) {
                 CameraFocusOrder cameraFocusOrder = (CameraFocusOrder)order;
-                NPCBehavior focused = null;
-                foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
-                    if (npc.npcInfo == cameraFocusOrder.focusTarget) {
-                        focused = npc;
-                        break;
-                    }
-                }
-                if (focused == null) {
+                InstantiatedEntity focused = nonVoxelWorld.GetEntityFromDefinition(
+                    cameraFocusOrder.focusTarget);
+                if (focused == null || !TypeUtil.IsSameTypeOrSubclass(focused, typeof(Traveller))) {
                     continue;
                 }
 
-                yield return cameraManager.MoveCameraToTargetCreature(focused);
+                Traveller traveller = (Traveller)focused;
+                yield return cameraManager.MoveCameraToTargetCreature(traveller);
             }
             else if (type == typeof(DialogueOrder)) {
                 DialogueOrder dialogueOrder = (DialogueOrder)order;

@@ -1,7 +1,7 @@
 using GameMechanics;
 using MovementDirection;
 using NonVoxel;
-using NonVoxelEntity;
+using EntityDefinition;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,9 +9,8 @@ using UnityEngine;
 using UnityEngine.U2D.Animation;
 using VoxelPlay;
 
-namespace InstantiatedEntity {
-    // moves around randomly
-    public class NPCBehavior : Traveller {
+namespace Instantiated {
+    public class NPC : Traveller {
         [SerializeField] SpriteLibrary spriteLibrary;
         [SerializeField] Transform spriteObjectTransform;
 
@@ -19,26 +18,25 @@ namespace InstantiatedEntity {
         private SpriteMovement spriteMovement;
         private GameStateManager gameStateManager;
 
-        public NPC npcInfo;
-        public HashSet<NPCBehavior> teammates;
+        public HashSet<NPC> teammates;
         public bool inCombat { get; set; } = false;
 
         private const int NPC_MIN_IDLE_TIME = 1;
         private const int NPC_MAX_IDLE_TIME = 3;
 
         private void OnTriggerEnter(Collider other) {
-            if (other.gameObject.tag == "Player" && npcInfo.faction == Faction.ENEMY) {
+            if (other.gameObject.tag == "Player" && GetEntity().faction == Faction.ENEMY) {
                 gameStateManager.EnterCombat(this);
             }
         }
 
         public void Init(NonVoxelWorld nonVoxelWorld, SpriteMovement spriteMovement,
-                System.Random rng, NPC npcInfo, CameraManager cameraManager, 
+                System.Random rng, EntityDefinition.NPC npcInfo, CameraManager cameraManager, 
                 PartyManager partyManager, GameStateManager gameStateManager) {
             this.nonVoxelWorld = nonVoxelWorld;
             this.spriteMovement = spriteMovement;
             this.rng = rng;
-            this.npcInfo = npcInfo;
+            this.entity = npcInfo;
             currHP = npcInfo.stats.hitPoints;
             this.cameraManager = cameraManager;
             this.spriteLibrary.spriteLibraryAsset = npcInfo.entityDisplay.spriteLibraryAsset;
@@ -48,7 +46,9 @@ namespace InstantiatedEntity {
             this.gameStateManager = gameStateManager;
             SetCurrPositions(npcInfo);
 
-            StartCoroutine(MoveCoroutine());
+            if (GetEntity().idleBehavior == IdleBehavior.WANDER) {
+                StartCoroutine(MoveCoroutine());
+            }
         }
 
         private IEnumerator MoveCoroutine() {
@@ -62,7 +62,7 @@ namespace InstantiatedEntity {
                 }
 
                 Vector3Int newPosition = origin + GetRandomOneTileMovement();
-                List<InstantiatedNVE> ignoredCreatures = new List<InstantiatedNVE> { this };
+                List<TangibleEntity> ignoredCreatures = new List<TangibleEntity> { this };
                 Vector3Int? actualCoordinate = spriteMovement.GetTerrainAdjustedCoordinate(
                     newPosition, this, ignoredCreatures);
                 if (actualCoordinate.HasValue) {
@@ -80,7 +80,7 @@ namespace InstantiatedEntity {
         protected override Vector3Int? GetDestinationFromDirection(SpriteMoveDirection spriteMoveDirection) {
             // only implemented for override purposes
             return spriteMovement.GetTerrainAdjustedCoordinate(origin + GetRandomOneTileMovement(),
-                this, new List<InstantiatedNVE>{this});
+                this, new List<TangibleEntity>{this});
         }
 
         public Vector3Int GetRandomOneTileMovement() {
@@ -100,7 +100,11 @@ namespace InstantiatedEntity {
         }
 
         public override Stats GetStats() {
-            return npcInfo.stats;
+            return GetEntity().stats;
+        }
+
+        public new EntityDefinition.NPC GetEntity() {
+            return (EntityDefinition.NPC)entity;
         }
     }
 }

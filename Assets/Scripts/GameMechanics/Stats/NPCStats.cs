@@ -1,3 +1,4 @@
+using EntityDefinition;
 using NonVoxelEntity;
 using System.Collections;
 using System.Collections.Generic;

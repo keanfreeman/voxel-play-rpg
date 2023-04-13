@@ -1,5 +1,5 @@
-using InstantiatedEntity;
-using NonVoxelEntity;
+using Instantiated;
+using EntityDefinition;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,12 +15,12 @@ public class EnvironmentSceneManager : MonoBehaviour
     [SerializeField] CameraManager cameraManager;
     [SerializeField] PartyManager partyManager;
 
-    private Destination destination;
+    private EnvChangeDestination destination;
 
     void Awake() {
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;
 
-        destination = new Destination(3, Vector3Int.zero);
+        destination = new EnvChangeDestination(3, Vector3Int.zero);
     }
 
     private void SceneManager_sceneLoaded(Scene loadedScene, LoadSceneMode loadedSceneMode) {
@@ -43,7 +43,7 @@ public class EnvironmentSceneManager : MonoBehaviour
         StartCoroutine(gameStateManager.SetControlState(ControlState.SPRITE_NEUTRAL));
     }
 
-    public void LoadNextScene(Destination destination) {
+    public void LoadNextScene(EnvChangeDestination destination) {
         gameStateManager.SetControlState(ControlState.LOADING);
         partyManager.currControlledCharacter.HaltMovement();
         this.destination = destination;

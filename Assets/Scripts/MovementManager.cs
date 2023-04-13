@@ -1,4 +1,4 @@
-using InstantiatedEntity;
+using Instantiated;
 using Nito.Collections;
 using NonVoxel;
 using System;

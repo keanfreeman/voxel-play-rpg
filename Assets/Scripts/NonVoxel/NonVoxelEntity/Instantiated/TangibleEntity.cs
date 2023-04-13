@@ -1,14 +1,14 @@
 using MovementDirection;
 using NonVoxel;
-using NonVoxelEntity;
+using EntityDefinition;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace InstantiatedEntity {
-    public abstract class InstantiatedNVE : MonoBehaviour {
+namespace Instantiated {
+    public abstract class TangibleEntity : InstantiatedEntity {
         [SerializeField] protected NonVoxelWorld nonVoxelWorld;
         [SerializeField] protected Transform rotationTransform;
 
@@ -16,11 +16,11 @@ namespace InstantiatedEntity {
         public Vector3Int origin { get; protected set; }
         public List<Vector3Int> occupiedPositions { get; protected set; }
 
-        public void SetCurrPositions(Entity entityInfo) {
+        public void SetCurrPositions(EntityDefinition.TangibleEntity entityInfo) {
             SetCurrPositions(entityInfo, Direction.NORTH);
         }
 
-        public void SetCurrPositions(Entity entityInfo, Direction rotation) {
+        public void SetCurrPositions(EntityDefinition.TangibleEntity entityInfo, Direction rotation) {
             this.origin = entityInfo.startPosition;
 
             int numRotations = rotation == Direction.NORTH ? 0

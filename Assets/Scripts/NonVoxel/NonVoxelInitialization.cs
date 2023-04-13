@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using NonVoxelEntity;
+using EntityDefinition;
 using GameMechanics;
 using GameMechanics.Wolf;
 using UnityEngine.U2D.Animation;
 using Orders;
+using NonVoxelEntity;
 
 public class NonVoxelInitialization {
     public Dictionary<int, List<Spawnable>> environmentObjects;
@@ -71,18 +72,18 @@ public class NonVoxelInitialization {
             new Vector3(1f, 0.6f, 1f), new Vector3(6.5f, 6.5f, 6.5f));
 
         BattleGroup battleGroup1 = new BattleGroup(new List<NPC> {
-            new NPC(new Vector3Int(835, 29, 350), wolfStats, wolfDisplay, Faction.ENEMY),
-            new NPC(new Vector3Int(835, 29, 347), wolfStats, wolfDisplay, Faction.ENEMY)
+            new NPC(new Vector3Int(835, 29, 350), wolfStats, wolfDisplay, Faction.ENEMY, IdleBehavior.WANDER),
+            new NPC(new Vector3Int(835, 29, 347), wolfStats, wolfDisplay, Faction.ENEMY, IdleBehavior.WANDER)
         });
         BattleGroup battleGroup2 = new BattleGroup(new List<NPC> {
-            new NPC(new Vector3Int(825, 31, 348), wolfStats, wolfDisplay, Faction.ENEMY),
-            new NPC(new Vector3Int(825, 31, 350), wolfStats, wolfDisplay, Faction.ENEMY)
+            new NPC(new Vector3Int(825, 31, 348), wolfStats, wolfDisplay, Faction.ENEMY, IdleBehavior.WANDER),
+            new NPC(new Vector3Int(825, 31, 350), wolfStats, wolfDisplay, Faction.ENEMY, IdleBehavior.WANDER)
         });
         BattleGroup battleGroup3 = new BattleGroup(new List<NPC> {
-            new NPC(new Vector3Int(468, 26, -46), wolfStats, wolfDisplay, Faction.ENEMY)
+            new NPC(new Vector3Int(468, 26, -46), wolfStats, wolfDisplay, Faction.ENEMY, IdleBehavior.WANDER)
         });
 
-        NonVoxelObject bed = new NonVoxelObject(new Vector3Int(857, 29, 350), 
+        TangibleObject bed = new TangibleObject(new Vector3Int(857, 29, 350), 
             new EntityDisplay(bedPrefab), 
             new List<Vector3Int> { Vector3Int.zero, new Vector3Int(0, 0, 1), new Vector3Int(1, 0, 0),
                 new Vector3Int(1, 0, 1) },
@@ -99,10 +100,10 @@ public class NonVoxelInitialization {
                     battleGroup2.combatants[1],
                     new SceneExitCube(
                         new Vector3Int(864, 29, 351),
-                        new Destination(1, new Vector3Int(466, 29, -46)),
-                        new EntityDisplay(sceneExitPrefab)),
+                        new EnvChangeDestination(1, new Vector3Int(466, 29, -46)),
+                        sceneExitPrefab),
                     new StoryEventCube(
-                        new Vector3Int(856, 36, 350), 1, new EntityDisplay(storyEventCubePrefab),
+                        new Vector3Int(856, 36, 350), 1, storyEventCubePrefab,
                         new OrderGroup(true, new List<Order>{
                             new DialogueOrder(getAttention, "???"),
                             new ExclaimOrder(mainCharacter),
@@ -120,8 +121,8 @@ public class NonVoxelInitialization {
                     battleGroup3.combatants[0],
                     new SceneExitCube(
                         new Vector3Int(463, 29, -46),
-                        new Destination(2, new Vector3Int(864, 29, 348)),
-                        new EntityDisplay(sceneExitPrefab))
+                        new EnvChangeDestination(2, new Vector3Int(864, 29, 348)),
+                        sceneExitPrefab)
                 }
             },
             {
@@ -130,8 +131,8 @@ public class NonVoxelInitialization {
                     battleGroup3.combatants[0],
                     new SceneExitCube(
                         new Vector3Int(-3, 44, 83),
-                        new Destination(3, new Vector3Int(864, 29, 348)),
-                        new EntityDisplay(sceneExitPrefab))
+                        new EnvChangeDestination(3, new Vector3Int(864, 29, 348)),
+                        sceneExitPrefab)
                 }
             }
         };

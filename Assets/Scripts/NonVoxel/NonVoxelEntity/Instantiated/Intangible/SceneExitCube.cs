@@ -1,19 +1,20 @@
-using NonVoxelEntity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace InstantiatedEntity {
-    public class SceneExit : IntangibleEntity
+namespace Instantiated {
+    public class SceneExitCube : IntangibleEntity
     {
         private EnvironmentSceneManager worldManager;
-        private Destination destination;
+        private EntityDefinition.EnvChangeDestination destination;
 
-        public void Init(EnvironmentSceneManager worldManager, Destination destination, 
-                SceneExitCube sceneExitCubeInfo) {
+        public void Init(EnvironmentSceneManager worldManager, 
+                EntityDefinition.EnvChangeDestination destination, 
+                EntityDefinition.SceneExitCube sceneExitCubeInfo) {
             this.worldManager = worldManager;
             this.destination = destination;
+            this.entity = sceneExitCubeInfo;
         }
 
         private void OnTriggerEnter(Collider other) {

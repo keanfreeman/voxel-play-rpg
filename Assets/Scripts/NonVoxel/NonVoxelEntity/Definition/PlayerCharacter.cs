@@ -5,8 +5,8 @@ using UnityEngine.U2D.Animation;
 using GameMechanics;
 using MovementDirection;
 
-namespace NonVoxelEntity {
-    public class PlayerCharacter : Entity {
+namespace EntityDefinition {
+    public class PlayerCharacter : Traveller {
         public Stats stats;
 
         public PlayerCharacter(Vector3Int startPosition,

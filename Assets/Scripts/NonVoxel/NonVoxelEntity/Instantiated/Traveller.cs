@@ -1,13 +1,12 @@
 using GameMechanics;
 using MovementDirection;
 using NonVoxel;
-using NonVoxelEntity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace InstantiatedEntity {
-    public abstract class Traveller : InstantiatedNVE {
+namespace Instantiated {
+    public abstract class Traveller : TangibleEntity {
         [SerializeField] protected Animator animator;
         [SerializeField] protected SpriteRenderer spriteRenderer;
         [SerializeField] protected CameraManager cameraManager;

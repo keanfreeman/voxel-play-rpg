@@ -1,4 +1,4 @@
-using InstantiatedEntity;
+using Instantiated;
 using MovementDirection;
 using NonVoxel;
 using System.Collections;
@@ -72,7 +72,7 @@ public class CameraManager : MonoBehaviour {
     }
 
     // todo make gradual animation
-    public void AttachCameraToPlayer(PlayerMovement playerMovement) {
+    public void AttachCameraToPlayer(PlayerCharacter playerMovement) {
         mainCameraTarget.transform.parent = playerMovement.playerObject.transform;
         // need to jump to nearest 90 degree angle if coming from detached
         Direction direction = GetCameraApproximateDirection();
@@ -123,10 +123,10 @@ public class CameraManager : MonoBehaviour {
             previousRotateFraction = fractionRotationComplete;
 
             mainCameraTarget.transform.Rotate(Vector3.up, degreesToRotate);
-            foreach (PlayerMovement playerMovement in partyManager.partyMembers) {
+            foreach (PlayerCharacter playerMovement in partyManager.partyMembers) {
                 playerMovement.RotateSprite(degreesToRotate);
             }
-            foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
+            foreach (NPC npc in nonVoxelWorld.npcs) {
                 npc.RotateSprite(degreesToRotate);
             }
 
@@ -155,10 +155,10 @@ public class CameraManager : MonoBehaviour {
             float degrees = stickValue * Time.deltaTime * DETACHED_ROTATION_SPEED;
             mainCameraTarget.transform.Rotate(Vector3.up, degrees);
             detachedModeSpriteRotator.Rotate(Vector3.up, degrees);
-            foreach (PlayerMovement playerMovement in partyManager.partyMembers) {
+            foreach (PlayerCharacter playerMovement in partyManager.partyMembers) {
                 playerMovement.RotateSprite(degrees);
             }
-            foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
+            foreach (NPC npc in nonVoxelWorld.npcs) {
                 npc.RotateSprite(degrees);
             }
             yield return null;
@@ -170,10 +170,10 @@ public class CameraManager : MonoBehaviour {
     private void SetAllSpriteRotations(float yAngle) {
         Quaternion rotation = Coordinates.GetRotationFromAngle(yAngle);
         detachedModeSpriteRotator.rotation = rotation;
-        foreach (PlayerMovement playerMovement in partyManager.partyMembers) {
+        foreach (PlayerCharacter playerMovement in partyManager.partyMembers) {
             playerMovement.SetDisplayRotation(rotation);
         }
-        foreach (NPCBehavior npc in nonVoxelWorld.npcs) {
+        foreach (NPC npc in nonVoxelWorld.npcs) {
             npc.SetDisplayRotation(rotation);
         }
     }

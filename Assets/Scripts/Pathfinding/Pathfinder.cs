@@ -1,7 +1,6 @@
-using InstantiatedEntity;
+using Instantiated;
 using Nito.Collections;
 using NonVoxel;
-using NonVoxelEntity;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,14 +42,14 @@ public class Pathfinder : MonoBehaviour
     public IEnumerator FindPath(Traveller traveller, Vector3Int endPosition,
             int maxSearchDepth = MAX_PATH_LENGTH) {
         // when the traveller is large or greater, we need to allow movement onto tiles occupied by itself
-        List<InstantiatedNVE> ignoredCreatures = new List<InstantiatedNVE> { traveller };
+        List<TangibleEntity> ignoredCreatures = new List<TangibleEntity> { traveller };
 
         // check if any position in the target is occupied by someone else
         HashSet<Vector3Int> endPositions = traveller.GetPositionsIfOriginAtPosition(endPosition);
-        InstantiatedNVE occupyingEntity = null;
+        TangibleEntity occupyingEntity = null;
         foreach (Vector3Int position in endPositions) {
             if (nonVoxelWorld.IsPositionOccupied(position, ignoredCreatures)) {
-                occupyingEntity = nonVoxelWorld.GetNVEFromPosition(position);
+                occupyingEntity = nonVoxelWorld.GetEntityFromPosition(position);
                 break;
             }
         }
@@ -102,7 +101,7 @@ public class Pathfinder : MonoBehaviour
     }
 
     private IEnumerator FindPathInternal(Vector3Int startPosition, 
-            Vector3Int endPosition, Traveller traveller, List<InstantiatedNVE> ignoredCreatures,
+            Vector3Int endPosition, Traveller traveller, List<TangibleEntity> ignoredCreatures,
             int maxSearchDepth) {
         ClearDataStructures();
         Deque<Vector3Int> result = new Deque<Vector3Int>();
@@ -242,7 +241,7 @@ public class Pathfinder : MonoBehaviour
     }
 
     private float CalculateDistance(Node start, Node destination, Traveller traveller,
-            List<InstantiatedNVE> ignoredCreatures) {
+            List<TangibleEntity> ignoredCreatures) {
         Vector3Int? terrainAdjustedCoordinate = spriteMovement.GetTerrainAdjustedCoordinate(
             destination.origin, traveller, ignoredCreatures);
         if (!terrainAdjustedCoordinate.HasValue || terrainAdjustedCoordinate.Value != destination.origin) {

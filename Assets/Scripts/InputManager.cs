@@ -1,4 +1,4 @@
-using InstantiatedEntity;
+using Instantiated;
 using MovementDirection;
 using System.Collections;
 using System.Collections.Generic;
@@ -67,8 +67,8 @@ public class InputManager : MonoBehaviour
         playerInputActions.UINavigation.Enable();
     }
 
-    public void SetPlayerMovementControls(PlayerMovement oldPlayerMovement,
-            PlayerMovement newPlayerMovement) {
+    public void SetPlayerMovementControls(PlayerCharacter oldPlayerMovement,
+            PlayerCharacter newPlayerMovement) {
         if (oldPlayerMovement != null) {
             playerInputActions.Player.Move.performed -= oldPlayerMovement.HandleControllerMove;
             playerInputActions.Player.Move.canceled -= oldPlayerMovement.HandleControllerMoveCancel;

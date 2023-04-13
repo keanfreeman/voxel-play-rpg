@@ -1,8 +1,9 @@
+using EntityDefinition;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IntangibleEntity : MonoBehaviour
-{
-
+namespace Instantiated {
+    public class IntangibleEntity : InstantiatedEntity {
+    }
 }

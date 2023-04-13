@@ -1,17 +1,17 @@
 using GameMechanics;
-using NonVoxelEntity;
+using EntityDefinition;
 using Orders;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NonVoxelEntity {
-    public class StoryEventCube : Entity {
+namespace EntityDefinition {
+    public class StoryEventCube : IntangibleEntity {
         public OrderGroup orderGroup { get; private set; }
         public int cubeRadius { get; private set; }
 
-        public StoryEventCube(Vector3Int startPosition, int cubeRadius, EntityDisplay entityDisplay,
-                OrderGroup orderGroup) : base(startPosition, entityDisplay) {
+        public StoryEventCube(Vector3Int startPosition, int cubeRadius, GameObject prefab,
+                OrderGroup orderGroup) : base(startPosition, prefab) {
             this.orderGroup = orderGroup;
             this.cubeRadius = cubeRadius;
         }

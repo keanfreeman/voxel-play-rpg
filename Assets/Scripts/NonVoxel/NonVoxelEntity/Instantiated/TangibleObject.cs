@@ -1,14 +1,14 @@
 using NonVoxel;
-using NonVoxelEntity;
+using EntityDefinition;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace InstantiatedEntity {
-    public class InstantiatedNVObject : InstantiatedNVE {
-        public NonVoxelObject objectInfo { get; private set; }
+namespace Instantiated {
+    public class TangibleObject : TangibleEntity {
+        public EntityDefinition.TangibleObject objectInfo { get; private set; }
 
-        public void Init(NonVoxelWorld nonVoxelWorld, NonVoxelObject nonVoxelObject) {
+        public void Init(NonVoxelWorld nonVoxelWorld, EntityDefinition.TangibleObject nonVoxelObject) {
             this.nonVoxelWorld = nonVoxelWorld;
             objectInfo = nonVoxelObject;
             SetCurrPositions(nonVoxelObject, nonVoxelObject.startRotation);

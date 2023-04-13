@@ -1,5 +1,5 @@
 using Ink.Runtime;
-using InstantiatedEntity;
+using Instantiated;
 using NonVoxel;
 using System;
 using System.Collections;
@@ -41,7 +41,7 @@ public class GameStateManager : MonoBehaviour
         if (newState == ControlState.FOLLOWING_ORDERS) {
             inputManager.LockPlayerControls();
 
-            PlayerMovement playerMovement = partyManager.currControlledCharacter;
+            PlayerCharacter playerMovement = partyManager.currControlledCharacter;
             if (movementManager.IsMoving(playerMovement)) {
                 movementManager.CancelMovement(playerMovement);
                 while (playerMovement.isMoving) {
@@ -76,7 +76,7 @@ public class GameStateManager : MonoBehaviour
         inputManager.UnlockPlayerControls();
     }
 
-    public void EnterCombat(NPCBehavior npcInCombat) {
+    public void EnterCombat(NPC npcInCombat) {
         inputManager.playerInputActions.Player.Disable();
         combatManager.SetFirstCombatant(npcInCombat);
         controlState = ControlState.COMBAT;
@@ -120,10 +120,10 @@ public class GameStateManager : MonoBehaviour
     public void HandleControllerInteract(InputAction.CallbackContext obj) {
         HashSet<Vector3Int> adjacentPositions = Coordinates.GetPositionsSurroundingTraveller(
             partyManager.currControlledCharacter, 1);
-        InstantiatedNVE interactableEntity = null;
+        TangibleEntity interactableEntity = null;
         foreach (Vector3Int position in adjacentPositions) {
             if (nonVoxelWorld.IsInteractable(position)) {
-                interactableEntity = nonVoxelWorld.GetNVEFromPosition(position);
+                interactableEntity = nonVoxelWorld.GetEntityFromPosition(position);
                 break;
             }
         }

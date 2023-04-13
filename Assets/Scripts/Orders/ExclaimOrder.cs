@@ -1,4 +1,4 @@
-using NonVoxelEntity;
+using EntityDefinition;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,9 +6,9 @@ using UnityEngine;
 namespace Orders {
     public class ExclaimOrder : Order
     {
-        public Entity exclaimingEntity { get; private set; }
+        public TangibleEntity exclaimingEntity { get; private set; }
 
-        public ExclaimOrder(Entity exclaimingEntity) {
+        public ExclaimOrder(TangibleEntity exclaimingEntity) {
             this.exclaimingEntity = exclaimingEntity;
         }
     }

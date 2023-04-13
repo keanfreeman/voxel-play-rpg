@@ -1,6 +1,6 @@
 using GameMechanics;
 using Ink;
-using InstantiatedEntity;
+using Instantiated;
 using Nito.Collections;
 using NonVoxel;
 using System;
@@ -25,7 +25,7 @@ public class CombatManager : MonoBehaviour
     [SerializeField] Pathfinder pathfinder;
     [SerializeField] EffectManager effectManager;
     
-    NPCBehavior firstCombatant;
+    NPC firstCombatant;
     List<KeyValuePair<int, Traveller>> initiatives;
     int currInitiative = -1;
     Dictionary<Traveller, CombatResources> usedResources = new Dictionary<Traveller, CombatResources>();
@@ -44,7 +44,7 @@ public class CombatManager : MonoBehaviour
         yield return cameraManager.MoveCameraToTargetCreature(currCreature);
 
         usedResources[currCreature] = new CombatResources();
-        if (currCreature.GetType() == typeof(PlayerMovement)) {
+        if (currCreature.GetType() == typeof(PlayerCharacter)) {
             inputManager.SwitchPlayerToDetachedControlState(currCreature.origin);
             yield break;
         }
@@ -52,17 +52,17 @@ public class CombatManager : MonoBehaviour
         inputManager.SwitchDetachedToWatchControlState();
 
         // find nearest enemy
-        PlayerMovement nearestPlayer = partyManager.FindNearestPlayer(currCreature.origin);
-        NPCBehavior creatureAsNPC = (NPCBehavior) currCreature;
+        PlayerCharacter nearestPlayer = partyManager.FindNearestPlayer(currCreature.origin);
+        NPC creatureAsNPC = (NPC) currCreature;
         if (!Coordinates.IsNextTo(creatureAsNPC, nearestPlayer)) {
             // try move towards enemy
-            int maxSearchLength = (creatureAsNPC.npcInfo.stats.baseSpeed / TILE_TO_FEET) * 3;
+            int maxSearchLength = (creatureAsNPC.GetEntity().stats.baseSpeed / TILE_TO_FEET) * 3;
 
             CoroutineWithData coroutineWithData = new CoroutineWithData(this,
                 pathfinder.FindPath(currCreature, nearestPlayer.origin, maxSearchLength));
             yield return coroutineWithData.coroutine;
             Deque<Vector3Int> path = (Deque<Vector3Int>) coroutineWithData.result;
-            while (path.Count * TILE_TO_FEET > creatureAsNPC.npcInfo.stats.baseSpeed * TILE_TO_FEET) {
+            while (path.Count * TILE_TO_FEET > creatureAsNPC.GetEntity().stats.baseSpeed * TILE_TO_FEET) {
                 path.RemoveFromFront();
             }
             yield return movementManager.MoveAlongPath(currCreature, path);
@@ -71,7 +71,7 @@ public class CombatManager : MonoBehaviour
         // attack enemy
         if (Coordinates.IsNextTo(creatureAsNPC, nearestPlayer)) {
             // TODO use less brittle attack selection method
-            Attack npcAttack = (Attack)creatureAsNPC.npcInfo.stats.actions[0];
+            Attack npcAttack = (Attack)creatureAsNPC.GetEntity().stats.actions[0];
             int attackRoll = randomManager.Roll(npcAttack.attackRoll);
             Debug.Log($"NPC rolled {attackRoll} for their attack roll.");
             if (attackRoll >= nearestPlayer.playerInfo.stats.CalculateArmorClass()) {
@@ -104,21 +104,21 @@ public class CombatManager : MonoBehaviour
         }
 
         Traveller currCreature = initiatives[currInitiative].Value;
-        InstantiatedNVE selectedEntity = nonVoxelWorld.GetNVEFromPosition(detachedCamera.currVoxel);
-        if (currCreature.GetType() != typeof(PlayerMovement) || movementManager.IsMoving(currCreature)
-                || (selectedEntity != null && selectedEntity.GetType() == typeof(PlayerMovement))) {
+        TangibleEntity selectedEntity = nonVoxelWorld.GetEntityFromPosition(detachedCamera.currVoxel);
+        if (currCreature.GetType() != typeof(PlayerCharacter) || movementManager.IsMoving(currCreature)
+                || (selectedEntity != null && selectedEntity.GetType() == typeof(PlayerCharacter))) {
             yield break;
         }
 
-        PlayerMovement playerMovement = (PlayerMovement)currCreature;
+        PlayerCharacter playerMovement = (PlayerCharacter)currCreature;
 
         // check if player wanted to attack
-        if (selectedEntity != null && selectedEntity.GetType() == typeof(NPCBehavior)) {
+        if (selectedEntity != null && selectedEntity.GetType() == typeof(NPC)) {
             if (usedResources[currCreature].usedAction) {
                 Debug.Log("Player tried to use action twice.");
                 yield break;
             }
-            NPCBehavior npcBehavior = (NPCBehavior)selectedEntity;
+            NPC npcBehavior = (NPC)selectedEntity;
 
             GameMechanics.Action validAttackAction;
             if (!Coordinates.IsNextTo(currCreature, npcBehavior)) {
@@ -156,7 +156,7 @@ public class CombatManager : MonoBehaviour
             foreach (Attack attack in attacksToDo) {
                 int attackRoll = randomManager.Roll(attack.attackRoll);
                 Debug.Log($"Player rolled {attackRoll} for their attack roll.");
-                if (attackRoll >= npcBehavior.npcInfo.stats.CalculateArmorClass()) {
+                if (attackRoll >= npcBehavior.GetEntity().stats.CalculateArmorClass()) {
                     int damageRoll = randomManager.Roll(attack.damageRoll);
                     Debug.Log($"Player rolled {damageRoll} for their damage roll.");
                     int newHP = npcBehavior.currHP - damageRoll;
@@ -211,11 +211,11 @@ public class CombatManager : MonoBehaviour
         StartCoroutine(RunTurn(currInitiative));
     }
 
-    public PlayerMovement GetCurrTurnPlayer() {
-        return (PlayerMovement) initiatives[currInitiative].Value;
+    public PlayerCharacter GetCurrTurnPlayer() {
+        return (PlayerCharacter) initiatives[currInitiative].Value;
     }
 
-    private IEnumerator TryMovePlayer(PlayerMovement playerMovement) {
+    private IEnumerator TryMovePlayer(PlayerCharacter playerMovement) {
         int maxSearchLength = (playerMovement.playerInfo.stats.baseSpeed / TILE_TO_FEET) * 3;
         CoroutineWithData coroutineWithData = new CoroutineWithData(this,
             pathfinder.FindPath(playerMovement, detachedCamera.currVoxel, maxSearchLength));
@@ -232,7 +232,7 @@ public class CombatManager : MonoBehaviour
         yield return movementManager.MoveAlongPath(playerMovement, path);
     }
     
-    public void SetFirstCombatant(NPCBehavior firstCombatant) {
+    public void SetFirstCombatant(NPC firstCombatant) {
         this.firstCombatant = firstCombatant;
     }
 
@@ -240,7 +240,7 @@ public class CombatManager : MonoBehaviour
         initiatives = new List<KeyValuePair<int, Traveller>>();
 
         // add players
-        foreach (PlayerMovement playerMovement in partyManager.partyMembers) {
+        foreach (PlayerCharacter playerMovement in partyManager.partyMembers) {
             int playerDexModifier = StatModifiers.GetModifierForStat(
                 playerMovement.playerInfo.stats.dexterity);
             int playerInitiative = randomManager.Roll(1, 20, playerDexModifier);
@@ -249,11 +249,11 @@ public class CombatManager : MonoBehaviour
         }
 
         // add NPCs
-        foreach (NPCBehavior npcBehavior in firstCombatant.teammates) {
+        foreach (NPC npcBehavior in firstCombatant.teammates) {
             npcBehavior.inCombat = true;
             
             int npcDexModifier = StatModifiers.GetModifierForStat(
-                npcBehavior.npcInfo.stats.dexterity);
+                npcBehavior.GetEntity().stats.dexterity);
             int initiative = randomManager.Roll(1, 20, npcDexModifier);
             initiatives.Add(new KeyValuePair<int, Traveller>(initiative, npcBehavior));
         }

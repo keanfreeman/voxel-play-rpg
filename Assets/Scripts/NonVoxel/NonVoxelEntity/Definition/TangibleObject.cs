@@ -1,15 +1,15 @@
 using GameMechanics;
 using MovementDirection;
-using NonVoxelEntity;
+using EntityDefinition;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NonVoxelEntity {
-    public class NonVoxelObject : Entity {
+namespace EntityDefinition {
+    public class TangibleObject : TangibleEntity {
         public Direction startRotation { get; protected set; }
 
-        public NonVoxelObject(Vector3Int startPosition, EntityDisplay entityDisplay,
+        public TangibleObject(Vector3Int startPosition, EntityDisplay entityDisplay,
                 List<Vector3Int> occupiedPositions, Direction startRotation) 
                 : base(startPosition, entityDisplay, occupiedPositions) {
             this.startRotation = startRotation;

@@ -1,6 +1,6 @@
-using InstantiatedEntity;
+using Instantiated;
 using Nito.Collections;
-using NonVoxelEntity;
+using EntityDefinition;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,15 +15,15 @@ public class PartyManager : MonoBehaviour
     [SerializeField] Pathfinder pathfinder;
     [SerializeField] MovementManager movementManager;
     
-    public PlayerMovement mainCharacter { get; private set; }
-    public List<PlayerMovement> partyMembers { get; private set; } = new List<PlayerMovement>();
-    public PlayerMovement currControlledCharacter { get; private set; }
+    public Instantiated.PlayerCharacter mainCharacter { get; private set; }
+    public List<Instantiated.PlayerCharacter> partyMembers { get; private set; } = new List<Instantiated.PlayerCharacter>();
+    public Instantiated.PlayerCharacter currControlledCharacter { get; private set; }
 
-    public void SetMainCharacter(PlayerMovement playerMovement) {
+    public void SetMainCharacter(Instantiated.PlayerCharacter playerMovement) {
         mainCharacter = playerMovement;
     }
 
-    public void SetCurrControlledCharacter(PlayerMovement playerMovement) {
+    public void SetCurrControlledCharacter(Instantiated.PlayerCharacter playerMovement) {
         inputManager.SetPlayerMovementControls(currControlledCharacter, playerMovement);
         currControlledCharacter = playerMovement;
     }
@@ -34,7 +34,7 @@ public class PartyManager : MonoBehaviour
         }
 
         int currCharacterPosition = partyMembers.FindIndex(0, 
-            (PlayerMovement iter) => iter == currControlledCharacter);
+            (Instantiated.PlayerCharacter iter) => iter == currControlledCharacter);
         int nextCharacterPosition = currCharacterPosition == partyMembers.Count - 1 ?
             0 : currCharacterPosition + 1;
         SetCurrControlledCharacter(partyMembers[nextCharacterPosition]);
@@ -44,8 +44,8 @@ public class PartyManager : MonoBehaviour
         }
     }
 
-    public PlayerMovement GetPlayerMovement(PlayerCharacter playerCharacter) {
-        foreach (PlayerMovement playerMovement in partyMembers) {
+    public Instantiated.PlayerCharacter GetPlayerMovement(EntityDefinition.PlayerCharacter playerCharacter) {
+        foreach (Instantiated.PlayerCharacter playerMovement in partyMembers) {
             if (playerMovement.playerInfo == playerCharacter) {
                 return playerMovement;
             }
@@ -54,10 +54,10 @@ public class PartyManager : MonoBehaviour
     }
 
     // TODO - use actual path to calculate distance
-    public PlayerMovement FindNearestPlayer(Vector3Int position) {
-        PlayerMovement nearest = partyMembers[0];
+    public Instantiated.PlayerCharacter FindNearestPlayer(Vector3Int position) {
+        Instantiated.PlayerCharacter nearest = partyMembers[0];
         float nearestDistance = float.MaxValue;
-        foreach (PlayerMovement playerMovement in partyMembers) {
+        foreach (Instantiated.PlayerCharacter playerMovement in partyMembers) {
             foreach (Vector3Int playerPosition in playerMovement.occupiedPositions) {
                 float directDistance = (position - playerPosition).magnitude;
                 if (directDistance < nearestDistance) {
@@ -77,13 +77,13 @@ public class PartyManager : MonoBehaviour
         }
 
         // figure out who's following who
-        List<PlayerMovement> orderedPartyList = new List<PlayerMovement>();
-        HashSet<PlayerMovement> closenessList = new HashSet<PlayerMovement>(partyMembers);
+        List<Instantiated.PlayerCharacter> orderedPartyList = new List<Instantiated.PlayerCharacter>();
+        HashSet<Instantiated.PlayerCharacter> closenessList = new HashSet<Instantiated.PlayerCharacter>(partyMembers);
         closenessList.Remove(currControlledCharacter);
 
-        PlayerMovement followTarget = currControlledCharacter;
+        Instantiated.PlayerCharacter followTarget = currControlledCharacter;
         while (closenessList.Count > 0) {
-            PlayerMovement closest = FindClosestTo(closenessList, followTarget);
+            Instantiated.PlayerCharacter closest = FindClosestTo(closenessList, followTarget);
             orderedPartyList.Add(closest);
             closenessList.Remove(closest);
             followTarget = closest;
@@ -91,17 +91,17 @@ public class PartyManager : MonoBehaviour
 
         // order them to move towards their followTarget
         Vector3Int nextMove = leaderOldPosition;
-        foreach (PlayerMovement playerMovement in orderedPartyList) {
+        foreach (Instantiated.PlayerCharacter playerMovement in orderedPartyList) {
             Vector3Int temp = playerMovement.origin;
             playerMovement.MoveOriginToPoint(nextMove);
             nextMove = temp;
         }
     }
 
-    private PlayerMovement FindClosestTo(HashSet<PlayerMovement> candidates, PlayerMovement target) {
-        PlayerMovement closest = candidates.GetEnumerator().Current;
+    private Instantiated.PlayerCharacter FindClosestTo(HashSet<Instantiated.PlayerCharacter> candidates, Instantiated.PlayerCharacter target) {
+        Instantiated.PlayerCharacter closest = candidates.GetEnumerator().Current;
         float distance = float.MaxValue;
-        foreach (PlayerMovement playerMovement in candidates) {
+        foreach (Instantiated.PlayerCharacter playerMovement in candidates) {
             int currDistance = Coordinates.NumPointsBetween(playerMovement.origin, target.origin);
             if (currDistance < distance) {
                 closest = playerMovement;

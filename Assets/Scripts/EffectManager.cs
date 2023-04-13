@@ -1,4 +1,4 @@
-using InstantiatedEntity;
+using Instantiated;
 using NonVoxelEntity;
 using System.Collections;
 using System.Collections.Generic;

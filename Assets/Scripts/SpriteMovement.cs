@@ -1,7 +1,6 @@
-using InstantiatedEntity;
+using Instantiated;
 using MovementDirection;
 using NonVoxel;
-using NonVoxelEntity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,14 +23,14 @@ public class SpriteMovement : MonoBehaviour
 
     // can the player walk through this voxel?
     public bool IsTraversiblePosition(Vector3Int position,
-            ICollection<InstantiatedNVE> ignoredCreatures) {
+            ICollection<TangibleEntity> ignoredCreatures) {
         Voxel voxel = voxelWorldManager.environment.GetVoxel(position);
         return (voxel.isEmpty || voxel.hasWater) && 
             !nonVoxelWorld.IsPositionOccupied(position, ignoredCreatures);
     }
 
     public bool IsReachablePosition(Vector3Int newOrigin, Traveller traveller,
-            ICollection<InstantiatedNVE> ignoredCreatures) {
+            ICollection<TangibleEntity> ignoredCreatures) {
         HashSet<Vector3Int> newPositions = traveller.GetPositionsIfOriginAtPosition(newOrigin);
         foreach (Vector3Int position in newPositions) {
             if (!IsTraversiblePosition(position, ignoredCreatures)) {
@@ -50,7 +49,7 @@ public class SpriteMovement : MonoBehaviour
     }
 
     public Vector3Int? GetTerrainAdjustedCoordinate(Vector3Int requestedCoordinate, Traveller traveller,
-            List<InstantiatedNVE> ignoredCreatures) {
+            List<TangibleEntity> ignoredCreatures) {
         VoxelPlayEnvironment environment = voxelWorldManager.environment;
 
         HashSet<Vector3Int> requestedCoordinates = traveller.GetPositionsIfOriginAtPosition(requestedCoordinate);
@@ -92,7 +91,7 @@ public class SpriteMovement : MonoBehaviour
     }
 
     private bool AllUnoccupied(ICollection<Vector3Int> positions,
-            ICollection<InstantiatedNVE> ignoredCreatures) {
+            ICollection<TangibleEntity> ignoredCreatures) {
         foreach (Vector3Int position in positions) {
             if (!IsTraversiblePosition(position, ignoredCreatures)) {
                 return false;
@@ -143,7 +142,7 @@ public class SpriteMovement : MonoBehaviour
             || slopeRotation == 1 && diff.x <= -1;
     }
 
-    public Vector3Int GetSpriteDesiredCoordinate(InstantiatedNVE entity,
+    public Vector3Int GetSpriteDesiredCoordinate(TangibleEntity entity,
             SpriteMoveDirection moveDirection) {
         if (moveDirection == SpriteMoveDirection.FORWARD) {
             return entity.origin + Vector3Int.forward;

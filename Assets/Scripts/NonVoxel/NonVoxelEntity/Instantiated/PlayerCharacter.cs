@@ -12,18 +12,18 @@ using VoxelPlay;
 using UnityEditorInternal.VersionControl;
 using Ink.Runtime;
 
-namespace InstantiatedEntity {
-    public class PlayerMovement : Traveller {
+namespace Instantiated {
+    public class PlayerCharacter : Traveller {
         [SerializeField] public GameObject playerObject;
         [SerializeField] public GameObject seeThroughTarget;
         [SerializeField] public SpriteLibrary spriteLibrary;
         [SerializeField] SpriteMovement spriteMovement;
 
-        public NonVoxelEntity.PlayerCharacter playerInfo { get; private set; }
+        public EntityDefinition.PlayerCharacter playerInfo { get; private set; }
 
         private Direction playerCameraDirection = Direction.NORTH;
 
-        public void Init(SpriteMovement spriteMovement, NonVoxelEntity.PlayerCharacter playerInfo,
+        public void Init(SpriteMovement spriteMovement, EntityDefinition.PlayerCharacter playerInfo,
                 NonVoxelWorld nonVoxelWorld, CameraManager cameraManager, PartyManager partyManager) {
             this.spriteMovement = spriteMovement;
             this.playerInfo = playerInfo;
@@ -67,7 +67,7 @@ namespace InstantiatedEntity {
                 direction, playerCameraDirection);
             Vector3Int desiredCoordinate = spriteMovement.GetSpriteDesiredCoordinate(
                 this, cameraAdjustedPlayerMove);
-            List<InstantiatedNVE> ignoredCreatures = new List<InstantiatedNVE> { this };
+            List<TangibleEntity> ignoredCreatures = new List<TangibleEntity> { this };
             Vector3Int ? actualCoordinate = spriteMovement.GetTerrainAdjustedCoordinate(
                 desiredCoordinate, this, ignoredCreatures);
             if (!actualCoordinate.HasValue) {
@@ -119,6 +119,10 @@ namespace InstantiatedEntity {
 
         public override bool IsInteractable() {
             return false;
+        }
+
+        public new EntityDefinition.PlayerCharacter GetEntity() {
+            return (EntityDefinition.PlayerCharacter)entity;
         }
     }
 }
