@@ -157,7 +157,7 @@ MonoBehaviour:
   fxRoot: {fileID: 0}
   particlePoolSize: 1000
   voxelDefinitionsCount: 34
-  enableURP: 0
+  enableURP: 1
   debugLevel: 0
   world: {fileID: 11400000, guid: 80cf97423a1cf6b468a1f541d8ee234d, type: 2}
   enableBuildMode: 0
@@ -232,9 +232,9 @@ MonoBehaviour:
   seeThroughRadius: 5
   seeThroughAlpha: 0.1
   _seeThroughHeightOffset: 0
-  enableBrightPointLights: 0
+  enableBrightPointLights: 1
   brightPointsMaxDistance: 10000
-  enableURPNativeLights: 0
+  enableURPNativeLights: 1
   _visibleChunksDistance: 5
   forceChunkDistance: 5
   unloadFarChunks: 0
