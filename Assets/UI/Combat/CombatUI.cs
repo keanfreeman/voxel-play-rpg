@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
-public class CombatUI : MonoBehaviour {
+public class CombatUI : UIHandler {
     [SerializeField] UIDocument uiDocument;
+    [SerializeField] GameStateManager gameStateManager;
     public const string COMBAT_UI_ROOT = "CombatUI";
     public const string ACTION_BUTTON = "ActionButton";
 
@@ -16,15 +18,23 @@ public class CombatUI : MonoBehaviour {
         actionButton = combatUIRoot.Q<Button>(ACTION_BUTTON);
     }
 
-    public void ApplyFocus() {
+    public void SetFocus() {
         actionButton.Focus();
     }
 
-    public void RemoveFocus() {
-        uiDocument.rootVisualElement.focusController.focusedElement.Blur();
+    public override void SetDisplayState(bool isVisible) {
+        if (isVisible) {
+            combatUIRoot.style.display = DisplayStyle.Flex;
+        }
+        else {
+            combatUIRoot.style.display = DisplayStyle.None;
+        }
     }
 
-    public void SetDisplayState(bool display) {
-        combatUIRoot.style.display = display ? DisplayStyle.Flex : DisplayStyle.None;
+    public override void HandleNavigate(InputAction.CallbackContext obj) { }
+    public override void HandleCancelNavigate(InputAction.CallbackContext obj) { }
+    public override void HandleSubmit(InputAction.CallbackContext obj) { }
+    public override void HandleCancel(InputAction.CallbackContext obj) {
+        gameStateManager.CloseCombatBar();
     }
 }

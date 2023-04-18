@@ -1,10 +1,13 @@
+using GameMechanics;
 using Instantiated;
 using MovementDirection;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class InputManager : MonoBehaviour
 {
@@ -15,8 +18,12 @@ public class InputManager : MonoBehaviour
     [SerializeField] PartyManager partyManager;
     [SerializeField] GameStateManager gameStateManager;
     [SerializeField] DialogueUI dialogueUI;
+    [SerializeField] ConstructionUI constructionUI;
+    [SerializeField] UIDocument uiDocument;
 
     public PlayerInputActions playerInputActions;
+
+    private UIHandler currUIHandler;
     
     private void Awake() {
         playerInputActions = new PlayerInputActions();
@@ -39,15 +46,33 @@ public class InputManager : MonoBehaviour
 
         playerInputActions.Player.Interact.performed += gameStateManager.HandleControllerInteract;
 
-        playerInputActions.UINavigation.Submit.performed += dialogueUI.HandleSubmit;
-
         playerInputActions.Player.SwitchInputType.performed += gameStateManager.HandleSwitchInputMode;
         playerInputActions.Detached.SwitchInputType.performed += gameStateManager.HandleSwitchInputMode;
 
         playerInputActions.Player.OpenCombatBar.performed += gameStateManager.HandleCombatBar;
-        playerInputActions.UINavigation.Cancel.performed += gameStateManager.HandleCombatBar;
+
+        playerInputActions.Detached.ToggleBuildMode.performed += detachedCamera.HandleToggleBuildMode;
+        
+        playerInputActions.Detached.SwitchToUI.performed += detachedCamera.HandleSwitchToUI;
 
         playerInputActions.Player.Enable();
+        eventSystem.sendNavigationEvents = false;
+    }
+
+    private void SetUIHandlers(UIHandler uiHandler) {
+        if (currUIHandler != null) {
+            playerInputActions.UINavigation.Navigate.performed -= currUIHandler.HandleNavigate;
+            playerInputActions.UINavigation.Navigate.canceled -= currUIHandler.HandleCancelNavigate;
+            playerInputActions.UINavigation.Submit.performed -= currUIHandler.HandleSubmit;
+            playerInputActions.UINavigation.Cancel.performed -= currUIHandler.HandleCancel;
+        }
+        currUIHandler = uiHandler;
+        if (uiHandler != null) {
+            playerInputActions.UINavigation.Navigate.performed += uiHandler.HandleNavigate;
+            playerInputActions.UINavigation.Navigate.canceled += uiHandler.HandleCancelNavigate;
+            playerInputActions.UINavigation.Submit.performed += uiHandler.HandleSubmit;
+            playerInputActions.UINavigation.Cancel.performed += uiHandler.HandleCancel;
+        }
     }
 
     public void LockPlayerControls() {
@@ -61,10 +86,22 @@ public class InputManager : MonoBehaviour
 
     public void LockUIControls() {
         playerInputActions.UINavigation.Disable();
+        Focusable focusable = uiDocument.rootVisualElement.focusController.focusedElement;
+        if (focusable != null) {
+            focusable.Blur();
+        }
+        eventSystem.sendNavigationEvents = false;
+        SetUIHandlers(null);
     }
 
-    public void UnlockUIControls() {
+    public void UnlockUIControls(UIHandler uiHandler) {
         playerInputActions.UINavigation.Enable();
+        eventSystem.sendNavigationEvents = true;
+        SetUIHandlers(uiHandler);
+    }
+
+    public void UnlockDetachedControls() {
+        playerInputActions.Detached.Enable();
     }
 
     public void SetPlayerMovementControls(PlayerCharacter oldPlayerMovement,
@@ -80,18 +117,6 @@ public class InputManager : MonoBehaviour
 
     public bool IsInUIMode() {
         return this.playerInputActions.UINavigation.enabled;
-    }
-
-    public void SwitchPlayerControlStateToUI() {
-        playerInputActions.Player.Disable();
-        playerInputActions.UINavigation.Enable();
-        eventSystem.sendNavigationEvents = true;
-    }
-
-    public void SwitchUIToPlayerControlState() {
-        playerInputActions.UINavigation.Disable();
-        playerInputActions.Player.Enable();
-        eventSystem.sendNavigationEvents = false;
     }
 
     public void SwitchPlayerToDetachedControlState(Vector3Int startPosition) {

@@ -8,7 +8,7 @@ using System.Linq;
 using System;
 using UnityEngine.InputSystem;
 
-public class DialogueUI : MonoBehaviour {
+public class DialogueUI : UIHandler {
     [SerializeField] UIDocument uiDocument;
     [SerializeField] CombatUI combatUI;
     [SerializeField] InputManager inputManager;
@@ -43,10 +43,6 @@ public class DialogueUI : MonoBehaviour {
         return dialogueRoot.style.display.value != DisplayStyle.None;
     }
 
-    private void SetDisplayState(bool isVisible) {
-        dialogueRoot.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
-    }
-
     public void StartDialogue(Story story, Action callback = null) {
         this.callback = callback;
         dialogueText.text = string.Empty;
@@ -56,7 +52,7 @@ public class DialogueUI : MonoBehaviour {
         currentLine = currentStory.Continue();
 
         StartCoroutine(TypeLine());
-        inputManager.UnlockUIControls();
+        inputManager.UnlockUIControls(this);
     }
 
     public void StopDialogue() {
@@ -75,30 +71,6 @@ public class DialogueUI : MonoBehaviour {
             yield return new WaitForSeconds(
                 punctuation.Contains(c) ? PUNCTUATION_WAIT_SPEED : TEXT_WAIT_SPEED
             );
-        }
-    }
-
-    public void HandleSubmit(InputAction.CallbackContext obj) {
-        if (inChoice) {
-            return;
-        }
-
-        // if done with text, continue
-        if (dialogueText.text.Length == currentLine.Length) {
-            if (currentStory.canContinue) {
-                dialogueText.text = string.Empty;
-                currentLine = currentStory.Continue();
-                StartCoroutine(TypeLine());
-            }
-            else {
-                StopDialogue();
-            }
-        }
-        else {
-            // skip dialogue display
-            StopAllCoroutines();
-            dialogueText.text = currentLine;
-            DisplayChoices();
         }
     }
 
@@ -135,4 +107,40 @@ public class DialogueUI : MonoBehaviour {
         }
         inChoice = false;
     }
+
+    public override void SetDisplayState(bool isVisible) {
+        if (isVisible) {
+            dialogueRoot.style.display = DisplayStyle.Flex;
+        }
+        else {
+            dialogueRoot.style.display = DisplayStyle.None;
+        }
+    }
+
+    public override void HandleNavigate(InputAction.CallbackContext obj) { }
+    public override void HandleCancelNavigate(InputAction.CallbackContext obj) { }
+    public override void HandleSubmit(InputAction.CallbackContext obj) {
+        if (inChoice) {
+            return;
+        }
+
+        // if done with text, continue
+        if (dialogueText.text.Length == currentLine.Length) {
+            if (currentStory.canContinue) {
+                dialogueText.text = string.Empty;
+                currentLine = currentStory.Continue();
+                StartCoroutine(TypeLine());
+            }
+            else {
+                StopDialogue();
+            }
+        }
+        else {
+            // skip dialogue display
+            StopAllCoroutines();
+            dialogueText.text = currentLine;
+            DisplayChoices();
+        }
+    }
+    public override void HandleCancel(InputAction.CallbackContext obj) { }
 }

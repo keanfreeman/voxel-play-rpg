@@ -347,6 +347,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Switch To UI",
+                    "type": "Button",
+                    "id": "0f817a95-a268-4af7-a0c7-ad3ae964fff5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -622,6 +631,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Toggle Build Mode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1a5c488e-475d-4a8b-8539-43f12c980eea",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Switch To UI",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -12,7 +12,6 @@ using VoxelPlay;
 
 public class DetachedCamera : MonoBehaviour
 {
-    [SerializeField] AudioListener audioListener;
     [SerializeField] DetachedCameraBottom detachedCameraBottom;
     [SerializeField] InputManager inputManager;
     [SerializeField] SpriteMovement spriteMovement;
@@ -26,6 +25,8 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] Pathfinder pathfinder;
     [SerializeField] CombatManager combatManager;
     [SerializeField] PathVisualizer pathVisualizer;
+    [SerializeField] CombatUI combatUI;
+    [SerializeField] ConstructionUI constructionUI;
 
     // sprites
     [SerializeField] Sprite grabIcon;
@@ -35,7 +36,7 @@ public class DetachedCamera : MonoBehaviour
 
     public Vector3Int currVoxel { get; private set; }
 
-    private Coroutine drawPathCoroutine;
+    public bool isBuildMode { get; private set; } = false;
 
     private const float SPEED_MULTIPLIER = 8.0f;
     private const float VOXEL_CHANGE_DISTANCE = 0.51f;
@@ -143,12 +144,31 @@ public class DetachedCamera : MonoBehaviour
         return movedVoxels;
     }
 
+    // TODO - handle multiple button presses gracefully
     public void HandleSelect(InputAction.CallbackContext obj) {
         if (gameStateManager.controlState != ControlState.DETACHED) {
             return;
         }
 
         StartCoroutine(ExecuteHandleSelect());
+    }
+
+    public void HandleToggleBuildMode(InputAction.CallbackContext obj) {
+        Debug.Log("Toggling build mode.");
+        isBuildMode = !isBuildMode;
+        combatUI.SetDisplayState(!isBuildMode);
+        constructionUI.SetDisplayState(isBuildMode);
+    }
+
+    public void HandleSwitchToUI(InputAction.CallbackContext obj) {
+        inputManager.LockPlayerControls();
+        inputManager.UnlockUIControls(constructionUI);
+        constructionUI.ApplyFocus();
+    }
+
+    public void HandleSwitchFromUIToDetached() {
+        inputManager.LockUIControls();
+        inputManager.UnlockDetachedControls();
     }
 
     private IEnumerator ExecuteHandleSelect() {

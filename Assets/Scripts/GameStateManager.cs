@@ -77,11 +77,10 @@ public class GameStateManager : MonoBehaviour
     }
 
     public void EnterCombat(NPC npcInCombat) {
-        inputManager.playerInputActions.Player.Disable();
+        inputManager.LockPlayerControls();
         combatManager.SetFirstCombatant(npcInCombat);
         controlState = ControlState.COMBAT;
         Debug.Log("Entered combat");
-        inputManager.SwitchPlayerControlStateToUI();
         combatManager.StartCombat();
     }
 
@@ -91,18 +90,14 @@ public class GameStateManager : MonoBehaviour
     }
 
     public void HandleCombatBar(InputAction.CallbackContext obj) {
-        if (controlState == ControlState.DIALOGUE) {
-            return;
-        }
+        inputManager.LockPlayerControls();
+        combatUI.SetFocus();
+        inputManager.UnlockUIControls(combatUI);
+    }
 
-        if (inputManager.WasOpenCombatBarTriggered()) {
-            inputManager.SwitchPlayerControlStateToUI();
-            combatUI.ApplyFocus();
-        }
-        else if (inputManager.IsInUIMode() && inputManager.WasUICancelTriggered()) {
-            combatUI.RemoveFocus();
-            inputManager.SwitchUIToPlayerControlState();
-        }
+    public void CloseCombatBar() {
+        inputManager.LockUIControls();
+        inputManager.UnlockPlayerControls();
     }
 
     public void HandleSwitchInputMode(InputAction.CallbackContext obj) {

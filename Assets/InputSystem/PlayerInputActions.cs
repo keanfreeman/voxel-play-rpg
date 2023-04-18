@@ -369,6 +369,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Switch To UI"",
+                    ""type"": ""Button"",
+                    ""id"": ""0f817a95-a268-4af7-a0c7-ad3ae964fff5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -644,6 +653,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Toggle Build Mode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1a5c488e-475d-4a8b-8539-43f12c980eea"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Switch To UI"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -986,6 +1006,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Detached_Cancel = m_Detached.FindAction("Cancel", throwIfNotFound: true);
         m_Detached_SwitchCharacter = m_Detached.FindAction("Switch Character", throwIfNotFound: true);
         m_Detached_ToggleBuildMode = m_Detached.FindAction("Toggle Build Mode", throwIfNotFound: true);
+        m_Detached_SwitchToUI = m_Detached.FindAction("Switch To UI", throwIfNotFound: true);
         // UINavigation
         m_UINavigation = asset.FindActionMap("UINavigation", throwIfNotFound: true);
         m_UINavigation_Navigate = m_UINavigation.FindAction("Navigate", throwIfNotFound: true);
@@ -1149,6 +1170,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Detached_Cancel;
     private readonly InputAction m_Detached_SwitchCharacter;
     private readonly InputAction m_Detached_ToggleBuildMode;
+    private readonly InputAction m_Detached_SwitchToUI;
     public struct DetachedActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1161,6 +1183,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Cancel => m_Wrapper.m_Detached_Cancel;
         public InputAction @SwitchCharacter => m_Wrapper.m_Detached_SwitchCharacter;
         public InputAction @ToggleBuildMode => m_Wrapper.m_Detached_ToggleBuildMode;
+        public InputAction @SwitchToUI => m_Wrapper.m_Detached_SwitchToUI;
         public InputActionMap Get() { return m_Wrapper.m_Detached; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1194,6 +1217,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ToggleBuildMode.started += instance.OnToggleBuildMode;
             @ToggleBuildMode.performed += instance.OnToggleBuildMode;
             @ToggleBuildMode.canceled += instance.OnToggleBuildMode;
+            @SwitchToUI.started += instance.OnSwitchToUI;
+            @SwitchToUI.performed += instance.OnSwitchToUI;
+            @SwitchToUI.canceled += instance.OnSwitchToUI;
         }
 
         private void UnregisterCallbacks(IDetachedActions instance)
@@ -1222,6 +1248,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ToggleBuildMode.started -= instance.OnToggleBuildMode;
             @ToggleBuildMode.performed -= instance.OnToggleBuildMode;
             @ToggleBuildMode.canceled -= instance.OnToggleBuildMode;
+            @SwitchToUI.started -= instance.OnSwitchToUI;
+            @SwitchToUI.performed -= instance.OnSwitchToUI;
+            @SwitchToUI.canceled -= instance.OnSwitchToUI;
         }
 
         public void RemoveCallbacks(IDetachedActions instance)
@@ -1366,6 +1395,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnCancel(InputAction.CallbackContext context);
         void OnSwitchCharacter(InputAction.CallbackContext context);
         void OnToggleBuildMode(InputAction.CallbackContext context);
+        void OnSwitchToUI(InputAction.CallbackContext context);
     }
     public interface IUINavigationActions
     {

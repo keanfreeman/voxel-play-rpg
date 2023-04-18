@@ -256,22 +256,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3839151276963773207, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
-      propertyPath: combatUI
+    - target: {fileID: 1861321071, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+      propertyPath: inputManager
       value: 
-      objectReference: {fileID: 829311307}
+      objectReference: {fileID: 2066669309}
+    - target: {fileID: 1861321071, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+      propertyPath: detachedCamera
+      value: 
+      objectReference: {fileID: 848129494}
+    - target: {fileID: 3839151275677363832, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+      propertyPath: gameStateManager
+      value: 
+      objectReference: {fileID: 955022268}
     - target: {fileID: 3839151276963773207, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
       propertyPath: inputManager
       value: 
       objectReference: {fileID: 2066669309}
-    - target: {fileID: 3839151276963773207, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
-      propertyPath: gameStateManager
-      value: 
-      objectReference: {fileID: 955022268}
-    - target: {fileID: 3839151277267300371, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
-      propertyPath: dialogueUI
-      value: 
-      objectReference: {fileID: 2139012955}
     - target: {fileID: 3839151277267300372, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -322,6 +322,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+--- !u!114 &230091288 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3839151277267300375, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+  m_PrefabInstance: {fileID: 230091286}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &234026429
 GameObject:
   m_ObjectHideFlags: 0
@@ -628,6 +639,7 @@ GameObject:
   - component: {fileID: 705507995}
   - component: {fileID: 705507994}
   - component: {fileID: 705507996}
+  - component: {fileID: 705507997}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -724,6 +736,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90c3f577fc080344ab0f3a0a11ecfce7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &705507997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705507993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1001 &787438939
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -776,6 +808,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
+      propertyPath: combatUI
+      value: 
+      objectReference: {fileID: 829311307}
+    - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
       propertyPath: pathfinder
       value: 
       objectReference: {fileID: 1169761465}
@@ -803,6 +839,10 @@ PrefabInstance:
       propertyPath: combbatManager
       value: 
       objectReference: {fileID: 1613990517}
+    - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
+      propertyPath: constructionUI
+      value: 
+      objectReference: {fileID: 1861321071}
     - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
       propertyPath: pathVisualizer
       value: 
@@ -1413,6 +1453,17 @@ MonoBehaviour:
   nonVoxelWorld: {fileID: 1135948956}
   partyManager: {fileID: 683280036}
   detachedCamera: {fileID: 848129494}
+--- !u!114 &1861321071 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1861321071, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+  m_PrefabInstance: {fileID: 230091286}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d646ba81180f47b42b895528fb7e12d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1896033296 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5396361269471903674, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
@@ -1517,6 +1568,8 @@ MonoBehaviour:
   partyManager: {fileID: 683280036}
   gameStateManager: {fileID: 955022268}
   dialogueUI: {fileID: 2139012955}
+  constructionUI: {fileID: 1861321071}
+  uiDocument: {fileID: 230091288}
 --- !u!114 &2066669310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1610,6 +1663,14 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 38c2f1d4-351e-4d35-8310-447612bebfc1
     m_ActionName: Watch/RotateCamera[/XInputControllerWindows/rightStick,/Keyboard/leftArrow,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4be59cfa-79e9-41ae-ac9d-97c8434d0892
+    m_ActionName: Detached/Toggle Build Mode
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0f817a95-a268-4af7-a0c7-ad3ae964fff5
+    m_ActionName: Detached/Switch To UI[/XInputControllerWindows/buttonNorth]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
