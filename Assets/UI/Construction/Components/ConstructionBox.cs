@@ -1,4 +1,5 @@
 using CustomComponents;
+using EntityDefinition;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,17 +48,17 @@ public class ConstructionOptions {
 
     public List<VoxelDefinition> voxelOptions { get; private set; }
     private int voxelOptionsIterator = 0;
-    public List<GameObject> objectOptions { get; private set; }
+    public List<TangibleObject> objectOptions { get; private set; }
     private int objectOptionsIterator = 0;
 
     public ConstructionOptions() {
         voxelOptions = new List<VoxelDefinition>();
-        objectOptions = new List<GameObject>();
+        objectOptions = new List<TangibleObject>();
     }
 
-    public ConstructionOptions(List<VoxelDefinition> vds, List<GameObject> gos) {
+    public ConstructionOptions(List<VoxelDefinition> vds, List<TangibleObject> objects) {
         voxelOptions = vds;
-        objectOptions = gos;
+        objectOptions = objects;
     }
 
     public BuildOption GetCurrBuildOption() {
@@ -71,7 +72,7 @@ public class ConstructionOptions {
         return voxelOptions[voxelOptionsIterator];
     }
 
-    public GameObject GetCurrObjectPrefab() {
+    public TangibleObject GetCurrObject() {
         if (objectOptions.Count == 0) {
             return null;
         }
@@ -84,8 +85,9 @@ public class ConstructionOptions {
             return vd == null ? "No Voxel Definitions available" : vd.name;
         }
         else {
-            GameObject go = GetCurrObjectPrefab();
-            return go == null ? "No Objects available" : go.name;
+            TangibleObject tangibleObject = GetCurrObject();
+            return tangibleObject == null ? "No Objects available" 
+                : tangibleObject.entityDisplay.prefab.name;
         }
     }
 

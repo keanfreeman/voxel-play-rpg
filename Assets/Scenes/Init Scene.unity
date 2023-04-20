@@ -244,6 +244,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathVisualizer: {fileID: 2106943938}
   nonVoxelWorld: {fileID: 1135948956}
+--- !u!1 &157599780 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 161552250556516067, guid: 874745ef182559848a96ae759b288aca, type: 3}
+  m_PrefabInstance: {fileID: 1562076875}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &193780269 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1275296119661960477, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
@@ -257,9 +262,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1861321071, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+      propertyPath: buildShadow
+      value: 
+      objectReference: {fileID: 1702908728}
+    - target: {fileID: 1861321071, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
       propertyPath: inputManager
       value: 
       objectReference: {fileID: 2066669309}
+    - target: {fileID: 1861321071, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+      propertyPath: nonVoxelWorld
+      value: 
+      objectReference: {fileID: 1135948956}
     - target: {fileID: 1861321071, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
       propertyPath: detachedCamera
       value: 
@@ -820,6 +833,10 @@ PrefabInstance:
       propertyPath: pathfinder
       value: 
       objectReference: {fileID: 1169761465}
+    - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
+      propertyPath: buildShadow
+      value: 
+      objectReference: {fileID: 1702908728}
     - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
       propertyPath: inputManager
       value: 
@@ -1414,12 +1431,29 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2893097453921135557, guid: 874745ef182559848a96ae759b288aca, type: 3}
   m_PrefabInstance: {fileID: 1562076875}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 157599780}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9395764123d5d674a8dd6dbd2e252415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1702908728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 157599780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1332e4563b3e5c488c13773e9f95abf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detachedCamera: {fileID: 848129494}
+  detachedCameraBottom: {fileID: 1702908726}
+  voxelWorldManager: {fileID: 1568004907}
+  constructionUI: {fileID: 1861321071}
+  nonVoxelWorld: {fileID: 1135948956}
 --- !u!1 &1785101421
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,3 +1,5 @@
+using EntityDefinition;
+using NonVoxel;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,8 @@ public class ConstructionUI : UIHandler
     [SerializeField] DetachedCamera detachedCamera;
     [SerializeField] InputManager inputManager;
     [SerializeField] VoxelWorldManager voxelWorldManager;
+    [SerializeField] NonVoxelWorld nonVoxelWorld;
+    [SerializeField] BuildShadow buildShadow;
 
     public ConstructionOptions constructionOptions { get; private set; }
 
@@ -29,7 +33,14 @@ public class ConstructionUI : UIHandler
 
     public void OnEnvInitialized() {
         List<VoxelDefinition> voxelDefinitions = voxelWorldManager.GetEnvironment().voxelDefinitions.ToList();
-        constructionOptions = new ConstructionOptions(voxelDefinitions, new List<GameObject>());
+
+        List<TangibleObject> objects = new List<TangibleObject>();
+        foreach (Spawnable spawnable in nonVoxelWorld.instantiationMap.Keys) {
+            if (spawnable.GetType() == typeof(TangibleObject)) {
+                objects.Add((TangibleObject)spawnable);
+            }
+        }
+        constructionOptions = new ConstructionOptions(voxelDefinitions, objects);
         constructionBox.RenderOptions(constructionOptions);
     }
 
@@ -80,6 +91,7 @@ public class ConstructionUI : UIHandler
                 constructionOptions.IterateBottom(isRight);
             }
             constructionBox.RenderOptions(constructionOptions);
+            buildShadow.DrawBuildModeShadow();
 
             yield return new WaitForSeconds(0.25f);
         }

@@ -1,5 +1,5 @@
+using EntityDefinition;
 using GameMechanics;
-using Instantiated;
 using Nito.Collections;
 using NonVoxel;
 using System;
@@ -27,6 +27,7 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] PathVisualizer pathVisualizer;
     [SerializeField] CombatUI combatUI;
     [SerializeField] ConstructionUI constructionUI;
+    [SerializeField] BuildShadow buildShadow;
 
     // sprites
     [SerializeField] Sprite grabIcon;
@@ -36,8 +37,6 @@ public class DetachedCamera : MonoBehaviour
 
     public Vector3Int currVoxel { get; private set; }
     public bool isBuildMode { get; private set; } = false;
-
-    private Vector3Int? drawStart;
 
     private const float SPEED_MULTIPLIER = 8.0f;
     private const float VOXEL_CHANGE_DISTANCE = 0.51f;
@@ -73,9 +72,8 @@ public class DetachedCamera : MonoBehaviour
         if (movedVoxels) {
             detachedCameraBottom.MoveAnimated(currVoxel);
             UpdateCursorType();
-            if (drawStart.HasValue) {
-                VoxelDefinition currVD = constructionUI.constructionOptions.GetCurrVoxelDefinition();
-                detachedCameraBottom.DrawModel(currVD, drawStart.Value, currVoxel);
+            if (isBuildMode) {
+                buildShadow.DrawBuildModeShadow();
             }
         }
         MoveCursor();
@@ -83,7 +81,7 @@ public class DetachedCamera : MonoBehaviour
 
     private void UpdateCursorType() {
         if (nonVoxelWorld.IsPositionOccupied(currVoxel)) {
-            TangibleEntity nvEntity = nonVoxelWorld.GetEntityFromPosition(currVoxel);
+            Instantiated.TangibleEntity nvEntity = nonVoxelWorld.GetEntityFromPosition(currVoxel);
             if (gameStateManager.controlState == ControlState.COMBAT
                     && nvEntity.GetType() == typeof(NPC)) {
                 GameMechanics.Action rangedAction = StatInfo.GetRangedAction(
@@ -96,8 +94,8 @@ public class DetachedCamera : MonoBehaviour
             return;
         }
 
-        List<TangibleEntity> ignoredEntities 
-            = new List<TangibleEntity> { partyManager.currControlledCharacter };
+        List<Instantiated.TangibleEntity> ignoredEntities 
+            = new List<Instantiated.TangibleEntity> { partyManager.currControlledCharacter };
         if (spriteMovement.IsReachablePosition(currVoxel, 
                 partyManager.currControlledCharacter, ignoredEntities)) {
             detachedModeSprite.sprite = traverseIcon;
@@ -157,20 +155,7 @@ public class DetachedCamera : MonoBehaviour
         }
 
         if (isBuildMode) {
-            VoxelDefinition currVD = constructionUI.constructionOptions.GetCurrVoxelDefinition();
-            if (drawStart.HasValue) {
-                detachedCameraBottom.StopDrawingModel();
-                List<Vector3Int> points = Coordinates.GetPointsInCuboid(drawStart.Value, currVoxel);
-                foreach (Vector3Int point in points) {
-                    voxelWorldManager.GetEnvironment().VoxelPlace(point, currVD);
-                }
-
-                drawStart = null;
-                return;
-            }
-
-            drawStart = currVoxel;
-            detachedCameraBottom.DrawModel(currVD, drawStart.Value, drawStart.Value);
+            buildShadow.HandleBuildSelect();
             return;
         }
 
@@ -181,6 +166,12 @@ public class DetachedCamera : MonoBehaviour
         isBuildMode = !isBuildMode;
         combatUI.SetDisplayState(!isBuildMode);
         constructionUI.SetDisplayState(isBuildMode);
+        if (isBuildMode) {
+            buildShadow.DrawBuildModeShadow();
+        }
+        else {
+            buildShadow.StopDrawingShadow();
+        }
     }
 
     public void HandleSwitchToUI(InputAction.CallbackContext obj) {
