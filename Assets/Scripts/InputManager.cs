@@ -20,6 +20,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] DialogueUI dialogueUI;
     [SerializeField] ConstructionUI constructionUI;
     [SerializeField] UIDocument uiDocument;
+    [SerializeField] BuildShadow buildShadow;
 
     public PlayerInputActions playerInputActions;
 
@@ -54,6 +55,8 @@ public class InputManager : MonoBehaviour
         playerInputActions.Detached.ToggleBuildMode.performed += detachedCamera.HandleToggleBuildMode;
         
         playerInputActions.Detached.SwitchToUI.performed += detachedCamera.HandleSwitchToUI;
+        playerInputActions.Detached.RotateObject.performed += buildShadow.HandleRotateObject;
+        playerInputActions.Detached.RotateObject.canceled += buildShadow.HandleCancelRotateObject;
 
         playerInputActions.Player.Enable();
         eventSystem.sendNavigationEvents = false;

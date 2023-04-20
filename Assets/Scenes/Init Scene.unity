@@ -1625,6 +1625,7 @@ MonoBehaviour:
   dialogueUI: {fileID: 2139012955}
   constructionUI: {fileID: 1861321071}
   uiDocument: {fileID: 230091288}
+  buildShadow: {fileID: 1702908728}
 --- !u!114 &2066669310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1726,6 +1727,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 0f817a95-a268-4af7-a0c7-ad3ae964fff5
     m_ActionName: Detached/Switch To UI[/XInputControllerWindows/buttonNorth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6c4703ae-3135-4ef0-93d5-85ad249cf082
+    m_ActionName: Detached/RotateObject
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

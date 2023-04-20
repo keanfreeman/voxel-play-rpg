@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 namespace Instantiated {
     public abstract class TangibleEntity : InstantiatedEntity {
         [SerializeField] protected NonVoxelWorld nonVoxelWorld;
-        [SerializeField] protected Transform rotationTransform;
+        [SerializeField] public Transform rotationTransform;
 
         // is the bottom-left point
         public Vector3Int origin { get; protected set; }
@@ -24,7 +24,7 @@ namespace Instantiated {
             this.origin = entityInfo.startPosition;
 
             int numRotations = rotation == Direction.NORTH ? 0
-                : rotation == Direction.EAST ? 1
+                : rotation == Direction.WEST ? 1
                 : rotation == Direction.SOUTH ? 2
                 : 3;
             occupiedPositions = new List<Vector3Int>(entityInfo.occupiedPositions.Count);

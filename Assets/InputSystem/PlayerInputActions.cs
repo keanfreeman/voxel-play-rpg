@@ -378,6 +378,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotateObject"",
+                    ""type"": ""Value"",
+                    ""id"": ""6c4703ae-3135-4ef0-93d5-85ad249cf082"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -666,6 +675,39 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Switch To UI"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""771138e1-83b5-4073-9905-7e31e90207aa"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateObject"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""7e89d75c-07b6-439b-9476-398eab23a0cd"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateObject"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""6835e55e-7e17-45c6-ac18-50346e746cb3"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateObject"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -1007,6 +1049,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Detached_SwitchCharacter = m_Detached.FindAction("Switch Character", throwIfNotFound: true);
         m_Detached_ToggleBuildMode = m_Detached.FindAction("Toggle Build Mode", throwIfNotFound: true);
         m_Detached_SwitchToUI = m_Detached.FindAction("Switch To UI", throwIfNotFound: true);
+        m_Detached_RotateObject = m_Detached.FindAction("RotateObject", throwIfNotFound: true);
         // UINavigation
         m_UINavigation = asset.FindActionMap("UINavigation", throwIfNotFound: true);
         m_UINavigation_Navigate = m_UINavigation.FindAction("Navigate", throwIfNotFound: true);
@@ -1171,6 +1214,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Detached_SwitchCharacter;
     private readonly InputAction m_Detached_ToggleBuildMode;
     private readonly InputAction m_Detached_SwitchToUI;
+    private readonly InputAction m_Detached_RotateObject;
     public struct DetachedActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1184,6 +1228,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @SwitchCharacter => m_Wrapper.m_Detached_SwitchCharacter;
         public InputAction @ToggleBuildMode => m_Wrapper.m_Detached_ToggleBuildMode;
         public InputAction @SwitchToUI => m_Wrapper.m_Detached_SwitchToUI;
+        public InputAction @RotateObject => m_Wrapper.m_Detached_RotateObject;
         public InputActionMap Get() { return m_Wrapper.m_Detached; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1220,6 +1265,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @SwitchToUI.started += instance.OnSwitchToUI;
             @SwitchToUI.performed += instance.OnSwitchToUI;
             @SwitchToUI.canceled += instance.OnSwitchToUI;
+            @RotateObject.started += instance.OnRotateObject;
+            @RotateObject.performed += instance.OnRotateObject;
+            @RotateObject.canceled += instance.OnRotateObject;
         }
 
         private void UnregisterCallbacks(IDetachedActions instance)
@@ -1251,6 +1299,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @SwitchToUI.started -= instance.OnSwitchToUI;
             @SwitchToUI.performed -= instance.OnSwitchToUI;
             @SwitchToUI.canceled -= instance.OnSwitchToUI;
+            @RotateObject.started -= instance.OnRotateObject;
+            @RotateObject.performed -= instance.OnRotateObject;
+            @RotateObject.canceled -= instance.OnRotateObject;
         }
 
         public void RemoveCallbacks(IDetachedActions instance)
@@ -1396,6 +1447,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnSwitchCharacter(InputAction.CallbackContext context);
         void OnToggleBuildMode(InputAction.CallbackContext context);
         void OnSwitchToUI(InputAction.CallbackContext context);
+        void OnRotateObject(InputAction.CallbackContext context);
     }
     public interface IUINavigationActions
     {

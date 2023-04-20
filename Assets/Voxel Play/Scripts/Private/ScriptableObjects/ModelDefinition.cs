@@ -15,12 +15,12 @@ namespace VoxelPlay {
         [Tooltip("The rotation for this voxels. Allowed rotations are 0, 90, 180 or 270 degrees.")]
         public float rotation;
 
-        public ModelBit(int voxelIndex, VoxelDefinition voxelDefinition) {
+        public ModelBit(int voxelIndex, VoxelDefinition voxelDefinition, float rotation) {
             this.voxelIndex = voxelIndex;
             this.voxelDefinition = voxelDefinition;
             this.isEmpty = false;
             this.color = Color.clear;
-            this.rotation = 0;
+            this.rotation = rotation;
             this.finalColor = Color.clear;
         }
 

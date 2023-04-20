@@ -1,9 +1,13 @@
 using EntityDefinition;
+using MovementDirection;
 using NonVoxel;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using VoxelPlay;
+using static ConstructionOptions;
 
 public class BuildShadow : MonoBehaviour
 {
@@ -16,25 +20,28 @@ public class BuildShadow : MonoBehaviour
     private Vector3Int? drawStart;
     private GameObject currVoxelModelShadow;
     private GameObject objectShadow;
+    private Direction rotation = Direction.NORTH;
+    private int dPadRotationDirection = 0;
+    private Coroutine rotateObjectCoroutine;
 
     public void HandleBuildSelect() {
         ConstructionOptions constructionOptions = constructionUI.constructionOptions;
         Vector3Int currVoxel = detachedCamera.currVoxel;
-        if (constructionOptions.GetCurrBuildOption() == ConstructionOptions.BuildOption.Voxels) {
+        if (constructionOptions.GetCurrBuildOption() == BuildOption.Voxels) {
             VoxelDefinition currVD = constructionOptions.GetCurrVoxelDefinition();
             if (drawStart.HasValue) {
-                StopDrawingShadow();
                 List<Vector3Int> points = Coordinates.GetPointsInCuboid(drawStart.Value, currVoxel);
                 foreach (Vector3Int point in points) {
+                    // TODO - rotate custom voxels, like the slope
                     voxelWorldManager.GetEnvironment().VoxelPlace(point, currVD);
                 }
 
-                drawStart = null;
+                StopDrawingVoxel();
                 return;
             }
 
             drawStart = currVoxel;
-            DrawVoxelShadow(currVD, drawStart.Value, drawStart.Value);
+            DrawVoxelShadow(currVD, drawStart.Value, drawStart.Value, rotation);
         }
         else {
             objectShadow.transform.parent = null;
@@ -43,7 +50,7 @@ public class BuildShadow : MonoBehaviour
 
             TangibleObject entityDefinition = constructionOptions.GetCurrObject();
             TangibleObject clone = new TangibleObject(currVoxel, entityDefinition.entityDisplay,
-                entityDefinition.occupiedPositions, MovementDirection.Direction.NORTH);
+                entityDefinition.occupiedPositions, rotation);
             script.Init(nonVoxelWorld, clone);
             nonVoxelWorld.instantiationMap[clone] = script;
             nonVoxelWorld.AddEntity(script);
@@ -56,26 +63,33 @@ public class BuildShadow : MonoBehaviour
 
     public void DrawBuildModeShadow() {
         ConstructionOptions options = constructionUI.constructionOptions;
-        if (options.GetCurrBuildOption() == ConstructionOptions.BuildOption.Voxels && drawStart.HasValue) {
-            VoxelDefinition currVD = constructionUI.constructionOptions.GetCurrVoxelDefinition();
-            DrawVoxelShadow(currVD, drawStart.Value, detachedCamera.currVoxel);
+        if (options.GetCurrBuildOption() == BuildOption.Voxels) {
+            StopDrawingObject();
+            if (drawStart.HasValue) {
+                VoxelDefinition currVD = constructionUI.constructionOptions.GetCurrVoxelDefinition();
+                DrawVoxelShadow(currVD, drawStart.Value, detachedCamera.currVoxel, rotation);
+            }
         }
-        else if (options.GetCurrBuildOption() == ConstructionOptions.BuildOption.Objects) {
-            if (objectShadow != null) {
-                return;
+        else if (options.GetCurrBuildOption() == BuildOption.Objects) {
+            StopDrawingVoxel();
+
+            if (objectShadow == null) {
+                TangibleObject tangibleObject = options.GetCurrObject();
+                objectShadow = Instantiate(tangibleObject.entityDisplay.prefab, transform);
             }
 
-            TangibleObject tangibleObject = options.GetCurrObject();
-            objectShadow = Instantiate(tangibleObject.entityDisplay.prefab, transform);
+            Quaternion rotationQ = Coordinates.GetRotationFromAngle(
+                DirectionCalcs.GetDegreesFromDirection(rotation));
+            objectShadow.GetComponent<Instantiated.TangibleObject>().rotationTransform.rotation = rotationQ;
         }
     }
 
-    public void DrawVoxelShadow(VoxelDefinition vd, Vector3Int start, Vector3Int end) {
+    public void DrawVoxelShadow(VoxelDefinition vd, Vector3Int start, Vector3Int end, Direction rotation) {
         if (currVoxelModelShadow != null) {
             Destroy(currVoxelModelShadow);
         }
 
-        ModelDefinition md = SetUpModelDefinition(vd, start, end);
+        ModelDefinition md = SetUpModelDefinition(vd, start, end, rotation);
 
         Vector3Int diff = end - start;
         VoxelPlayEnvironment env = voxelWorldManager.GetEnvironment();
@@ -87,7 +101,8 @@ public class BuildShadow : MonoBehaviour
         }
     }
 
-    private ModelDefinition SetUpModelDefinition(VoxelDefinition vd, Vector3Int start, Vector3Int end) {
+    private ModelDefinition SetUpModelDefinition(VoxelDefinition vd, Vector3Int start, Vector3Int end,
+            Direction rotation) {
         Vector3Int diff = start - end;
         int sizeX = Mathf.Abs(diff.x) + 1;
         int sizeY = Mathf.Abs(diff.y) + 1;
@@ -106,7 +121,8 @@ public class BuildShadow : MonoBehaviour
         for (int x = 0; x < Mathf.Abs(diff.x) + 1; x++) {
             for (int y = 0; y < Mathf.Abs(diff.y) + 1; y++) {
                 for (int z = 0; z < Mathf.Abs(diff.z) + 1; z++) {
-                    md.bits[iterator] = new ModelBit(md.GetVoxelIndex(x, y, z), vd);
+                    md.bits[iterator] = new ModelBit(md.GetVoxelIndex(x, y, z), vd,
+                        DirectionCalcs.GetDegreesFromDirection(rotation));
                     iterator += 1;
                 }
             }
@@ -120,18 +136,74 @@ public class BuildShadow : MonoBehaviour
 
     public void StopDrawingShadow() {
         ConstructionOptions constructionOptions = constructionUI.constructionOptions;
-        if (constructionOptions.GetCurrBuildOption() == ConstructionOptions.BuildOption.Voxels) {
-            if (drawStart.HasValue) {
-                drawStart = null;
-                Destroy(currVoxelModelShadow);
-                currVoxelModelShadow = null;
-            }
+        if (constructionOptions.GetCurrBuildOption() == BuildOption.Voxels) {
+            StopDrawingVoxel();
         }
         else {
-            if (objectShadow != null) {
-                Destroy(objectShadow);
-                objectShadow = null;
+            StopDrawingObject();
+        }
+    }
+
+    private void StopDrawingVoxel() {
+        if (drawStart.HasValue) {
+            drawStart = null;
+            Destroy(currVoxelModelShadow);
+            currVoxelModelShadow = null;
+        }
+    }
+
+    private void StopDrawingObject() {
+        if (objectShadow != null) {
+            Destroy(objectShadow);
+            objectShadow = null;
+        }
+    }
+
+    public void HandleRotateObject(InputAction.CallbackContext obj) {
+        if (!detachedCamera.isBuildMode) return;
+
+        float direction = obj.ReadValue<float>();
+        dPadRotationDirection = direction == 0 ? 0 
+            : direction < 0 ? -1 
+            : 1;
+        if (dPadRotationDirection == 0) {
+            StopRotation();
+            return;
+        }
+
+        if (rotateObjectCoroutine == null) {
+            rotateObjectCoroutine = StartCoroutine(ExecuteRotate());
+        }
+    }
+
+    public IEnumerator ExecuteRotate() {
+        while (dPadRotationDirection != 0) {
+            int newRotation = (int)rotation + dPadRotationDirection;
+            int enumNumOptions = Enum.GetNames(typeof(Direction)).Length;
+            if (newRotation >= enumNumOptions) {
+                newRotation = 0;
             }
+            else if (newRotation < 0) {
+                newRotation = enumNumOptions - 1;
+            }
+
+            rotation = (Direction)newRotation;
+            DrawBuildModeShadow();
+            yield return new WaitForSeconds(0.3f);
+        }
+
+        rotateObjectCoroutine = null;
+    }
+
+    public void HandleCancelRotateObject(InputAction.CallbackContext obj) {
+        StopRotation();
+    }
+
+    private void StopRotation() {
+        if (rotateObjectCoroutine != null) {
+            StopCoroutine(rotateObjectCoroutine);
+            rotateObjectCoroutine = null;
+            dPadRotationDirection = 0;
         }
     }
 }
