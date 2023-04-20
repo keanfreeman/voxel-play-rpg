@@ -14,6 +14,7 @@ public class EnvironmentSceneManager : MonoBehaviour
     [SerializeField] GameStateManager gameStateManager;
     [SerializeField] CameraManager cameraManager;
     [SerializeField] PartyManager partyManager;
+    [SerializeField] ConstructionUI constructionUI;
 
     private EnvChangeDestination destination;
 
@@ -32,6 +33,7 @@ public class EnvironmentSceneManager : MonoBehaviour
         }
 
         voxelWorldManager.SetVoxelPlayEnvironment(environment);
+        voxelWorldManager.AssignEvent(constructionUI.OnEnvInitialized);
 
         nonVoxelManager.SetUpEntities(destination.destinationEnv);
         

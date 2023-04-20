@@ -9,6 +9,62 @@ using VoxelPlay;
 
 public static class Coordinates
 {
+    public static int GetNumPointsInCuboid(Vector3Int start, Vector3Int end) {
+        Vector3Int diff = end - start;
+        int numPoints = (Mathf.Abs(diff.x) + 1) * (Mathf.Abs(diff.y) + 1) * (Mathf.Abs(diff.z) + 1);
+        return numPoints;
+    }
+
+    public static List<Vector3Int> GetPointsInCuboid(Vector3Int start, Vector3Int end) {
+        if (start == end) return new List<Vector3Int> { start };
+
+        int numPoints = GetNumPointsInCuboid(start, end);
+        List<Vector3Int> points = new(numPoints);
+
+        int xIterator;
+        int xTarget;
+        if (start.x <= end.x) {
+            xIterator = 1;
+            xTarget = end.x + 1;
+        }
+        else {
+            xIterator = -1;
+            xTarget = end.x - 1;
+        }
+
+        int yIterator;
+        int yTarget;
+        if (start.y <= end.y) {
+            yIterator = 1;
+            yTarget = end.y + 1;
+        }
+        else {
+            yIterator = -1;
+            yTarget = end.y - 1;
+        }
+
+        int zIterator;
+        int zTarget;
+        if (start.z <= end.z) {
+            zIterator = 1;
+            zTarget = end.z + 1;
+        }
+        else {
+            zIterator = -1;
+            zTarget = end.z - 1;
+        }
+
+        for (int x = start.x; x != xTarget; x += xIterator) {
+            for (int y = start.y; y != yTarget; y += yIterator) {
+                for (int z = start.z; z != zTarget; z += zIterator) {
+                    points.Add(new Vector3Int(x, y, z));
+                }
+            }
+        }
+
+        return points;
+    }
+
     public static Quaternion GetRotationFromAngle(float yAngle) {
         Vector3 rotation = new Vector3(0, yAngle, 0);
         return Quaternion.Euler(rotation);

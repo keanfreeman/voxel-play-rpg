@@ -84,7 +84,7 @@ public class CameraManager : MonoBehaviour {
         SetAllSpriteRotations(adjustedYAngle);
         mainCamera.transform.SetLocalPositionAndRotation(new Vector3(0, 6, -6),
             Quaternion.Euler(45f, 0, 0));
-        voxelWorldManager.environment.seeThroughTarget = playerMovement.seeThroughTarget;
+        voxelWorldManager.GetEnvironment().seeThroughTarget = playerMovement.seeThroughTarget;
 
         detachedCamera.BecomeInactive();
     }
@@ -97,7 +97,7 @@ public class CameraManager : MonoBehaviour {
 
         detachedModeSpriteRotator.rotation = mainCameraTarget.transform.rotation;
 
-        voxelWorldManager.environment.seeThroughTarget = detachedModeSeeThroughTarget;
+        voxelWorldManager.GetEnvironment().seeThroughTarget = detachedModeSeeThroughTarget;
     }
 
     public void Rotate90Degrees(InputAction.CallbackContext obj) {

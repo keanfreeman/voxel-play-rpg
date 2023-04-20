@@ -35,8 +35,9 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] Sprite traverseIcon;
 
     public Vector3Int currVoxel { get; private set; }
-
     public bool isBuildMode { get; private set; } = false;
+
+    private Vector3Int? drawStart;
 
     private const float SPEED_MULTIPLIER = 8.0f;
     private const float VOXEL_CHANGE_DISTANCE = 0.51f;
@@ -72,6 +73,10 @@ public class DetachedCamera : MonoBehaviour
         if (movedVoxels) {
             detachedCameraBottom.MoveAnimated(currVoxel);
             UpdateCursorType();
+            if (drawStart.HasValue) {
+                VoxelDefinition currVD = constructionUI.constructionOptions.GetCurrVoxelDefinition();
+                detachedCameraBottom.DrawModel(currVD, drawStart.Value, currVoxel);
+            }
         }
         MoveCursor();
     }
@@ -146,7 +151,26 @@ public class DetachedCamera : MonoBehaviour
 
     // TODO - handle multiple button presses gracefully
     public void HandleSelect(InputAction.CallbackContext obj) {
+        // TODO - switch where input is directed rather than checking against state
         if (gameStateManager.controlState != ControlState.DETACHED) {
+            return;
+        }
+
+        if (isBuildMode) {
+            VoxelDefinition currVD = constructionUI.constructionOptions.GetCurrVoxelDefinition();
+            if (drawStart.HasValue) {
+                detachedCameraBottom.StopDrawingModel();
+                List<Vector3Int> points = Coordinates.GetPointsInCuboid(drawStart.Value, currVoxel);
+                foreach (Vector3Int point in points) {
+                    voxelWorldManager.GetEnvironment().VoxelPlace(point, currVD);
+                }
+
+                drawStart = null;
+                return;
+            }
+
+            drawStart = currVoxel;
+            detachedCameraBottom.DrawModel(currVD, drawStart.Value, drawStart.Value);
             return;
         }
 
@@ -154,7 +178,6 @@ public class DetachedCamera : MonoBehaviour
     }
 
     public void HandleToggleBuildMode(InputAction.CallbackContext obj) {
-        Debug.Log("Toggling build mode.");
         isBuildMode = !isBuildMode;
         combatUI.SetDisplayState(!isBuildMode);
         constructionUI.SetDisplayState(isBuildMode);

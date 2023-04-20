@@ -5,22 +5,31 @@ using UnityEngine;
 
 namespace VoxelPlay {
 
-	[Serializable]
-	public struct ModelBit {
-		public int voxelIndex;
-		public VoxelDefinition voxelDefinition;
+    [Serializable]
+    public struct ModelBit {
+        public int voxelIndex;
+        public VoxelDefinition voxelDefinition;
         [Tooltip("Explicitly declares an empty position. When this model definition is placed, empty positions will clear any previously existing voxel in the world on that position.")]
-		public bool isEmpty;
-		public Color32 color;
+        public bool isEmpty;
+        public Color32 color;
         [Tooltip("The rotation for this voxels. Allowed rotations are 0, 90, 180 or 270 degrees.")]
-		public float rotation;
+        public float rotation;
 
-		/// <summary>
-		/// The final color combining bit tint color and voxel definition tint color
-		/// </summary>
-		[NonSerialized]
-		public Color32 finalColor;
-	}
+        public ModelBit(int voxelIndex, VoxelDefinition voxelDefinition) {
+            this.voxelIndex = voxelIndex;
+            this.voxelDefinition = voxelDefinition;
+            this.isEmpty = false;
+            this.color = Color.clear;
+            this.rotation = 0;
+            this.finalColor = Color.clear;
+        }
+
+        /// <summary>
+        /// The final color combining bit tint color and voxel definition tint color
+        /// </summary>
+        [NonSerialized]
+        public Color32 finalColor;
+    }
 
 
     [Serializable]
@@ -32,29 +41,29 @@ namespace VoxelPlay {
     }
 
     [CreateAssetMenu (menuName = "Voxel Play/Model Definition", fileName = "ModelDefinition", order = 102)]
-	[HelpURL ("https://kronnect.freshdesk.com/support/solutions/articles/42000033382-model-definitions")]
-	public partial class ModelDefinition : ScriptableObject {
+    [HelpURL ("https://kronnect.freshdesk.com/support/solutions/articles/42000033382-model-definitions")]
+    public partial class ModelDefinition : ScriptableObject {
 
         [Tooltip("Size of the model (axis X)")]
-		public int sizeX = VoxelPlayEnvironment.CHUNK_SIZE;
+        public int sizeX = VoxelPlayEnvironment.CHUNK_SIZE;
 
         [Tooltip("Size of the model (axis Y)")]
-		public int sizeY = VoxelPlayEnvironment.CHUNK_SIZE;
+        public int sizeY = VoxelPlayEnvironment.CHUNK_SIZE;
 
         [Tooltip("Size of the model (axis Z)")]
-		public int sizeZ = VoxelPlayEnvironment.CHUNK_SIZE;
+        public int sizeZ = VoxelPlayEnvironment.CHUNK_SIZE;
 
         [Tooltip("Offset of the model with respect to the placement position (axis X)")]
-		public int offsetX;
+        public int offsetX;
 
         [Tooltip("Offset of the model with respect to the placement position (axis Y)")]
-		public int offsetY;
+        public int offsetY;
 
         [Tooltip("Offset of the model with respect to the placement position (axis Z)")]
-		public int offsetZ;
+        public int offsetZ;
 
-		[Tooltip("The duration of the build in seconds")]
-		public float buildDuration = 3f;
+        [Tooltip("The duration of the build in seconds")]
+        public float buildDuration = 3f;
 
         [Tooltip("if this model is a tree, no more trees will be allowed in the same chunk")]
         public bool exclusiveTree;
@@ -62,21 +71,21 @@ namespace VoxelPlay {
         [Tooltip("Extends bottom voxels if needed to fill empty space under the model and until the terrain surface.")]
         public bool fitToTerrain;
 
-		/// <summary>
-		/// Array of model bits.
-		/// </summary>
-		public ModelBit[] bits;
+        /// <summary>
+        /// Array of model bits.
+        /// </summary>
+        public ModelBit[] bits;
 
         /// <summary>
         /// Array of torch data
         /// </summary>
         public TorchBit [] torches;
 
-		/// <summary>
-		/// Used temporarily to cache the gameobject generated from the model definition
-		/// </summary>
-		[NonSerialized, HideInInspector]
-		public GameObject modelGameObject;
+        /// <summary>
+        /// Used temporarily to cache the gameobject generated from the model definition
+        /// </summary>
+        [NonSerialized, HideInInspector]
+        public GameObject modelGameObject;
 
         /// <summary>
         /// Returns a new model definition
@@ -96,17 +105,21 @@ namespace VoxelPlay {
             return y * (sizeZ * sizeX) + z * sizeX + x;
         }
 
-		public Vector3 size {
-			get {
-				return new Vector3 (sizeX, sizeY, sizeZ);
-			}
-		}
+        public int GetVoxelIndex(Vector3Int point) {
+            return GetVoxelIndex(point.x, point.y, point.z);
+        }
 
-		public Vector3 offset {
-			get {
-				return new Vector3 (offsetX, offsetY, offsetZ);
-			}
-		}
+        public Vector3 size {
+            get {
+                return new Vector3 (sizeX, sizeY, sizeZ);
+            }
+        }
+
+        public Vector3 offset {
+            get {
+                return new Vector3 (offsetX, offsetY, offsetZ);
+            }
+        }
 
         Bounds _bounds;
 

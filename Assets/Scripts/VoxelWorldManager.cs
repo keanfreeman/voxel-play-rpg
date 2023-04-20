@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,15 @@ public class VoxelWorldManager : MonoBehaviour
     [SerializeField] private EnvironmentSceneManager envSceneManager;
     [SerializeField] private InteractableVoxels interactableVoxels;
 
-    public VoxelPlayEnvironment environment { get; private set; }
+    private VoxelPlayEnvironment environment;
+
+    public VoxelPlayEnvironment GetEnvironment() {
+        return environment;
+    }
+
+    public void AssignEvent(VoxelPlayEvent action) {
+        environment.OnInitialized += action;
+    }
 
     public void SetVoxelPlayEnvironment(VoxelPlayEnvironment environment) {
         this.environment = environment;

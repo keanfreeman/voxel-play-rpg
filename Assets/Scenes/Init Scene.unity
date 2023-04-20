@@ -264,6 +264,10 @@ PrefabInstance:
       propertyPath: detachedCamera
       value: 
       objectReference: {fileID: 848129494}
+    - target: {fileID: 1861321071, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+      propertyPath: voxelWorldManager
+      value: 
+      objectReference: {fileID: 1568004907}
     - target: {fileID: 3839151275677363832, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
       propertyPath: gameStateManager
       value: 
@@ -414,6 +418,7 @@ MonoBehaviour:
   gameStateManager: {fileID: 955022268}
   cameraManager: {fileID: 1785101423}
   partyManager: {fileID: 683280036}
+  constructionUI: {fileID: 1861321071}
 --- !u!4 &331112265
 Transform:
   m_ObjectHideFlags: 0
@@ -1281,6 +1286,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2893097453921135557, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: testMD
+      value: 
+      objectReference: {fileID: 11400000, guid: b83c8b1af6387b3449708a7f9f9239ae, type: 2}
+    - target: {fileID: 2893097453921135557, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: treeModel
+      value: 
+      objectReference: {fileID: 11400000, guid: 1af1c96406a464ba691634e6eba6c424, type: 2}
+    - target: {fileID: 2893097453921135557, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: constructionUI
+      value: 
+      objectReference: {fileID: 1861321071}
+    - target: {fileID: 2893097453921135557, guid: 874745ef182559848a96ae759b288aca, type: 3}
+      propertyPath: detachedCamera
+      value: 
+      objectReference: {fileID: 848129494}
     - target: {fileID: 2893097453921135557, guid: 874745ef182559848a96ae759b288aca, type: 3}
       propertyPath: voxelWorldManager
       value: 

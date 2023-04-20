@@ -17,14 +17,14 @@ public class SpriteMovement : MonoBehaviour
 
     // can the player walk on this voxel?
     public bool IsWalkablePosition(Vector3Int position) {
-        Voxel voxel = voxelWorldManager.environment.GetVoxel(position);
+        Voxel voxel = voxelWorldManager.GetEnvironment().GetVoxel(position);
         return !voxel.isEmpty && !voxel.hasWater;
     }
 
     // can the player walk through this voxel?
     public bool IsTraversiblePosition(Vector3Int position,
             ICollection<TangibleEntity> ignoredCreatures) {
-        Voxel voxel = voxelWorldManager.environment.GetVoxel(position);
+        Voxel voxel = voxelWorldManager.GetEnvironment().GetVoxel(position);
         return (voxel.isEmpty || voxel.hasWater) && 
             !nonVoxelWorld.IsPositionOccupied(position, ignoredCreatures);
     }
@@ -50,7 +50,7 @@ public class SpriteMovement : MonoBehaviour
 
     public Vector3Int? GetTerrainAdjustedCoordinate(Vector3Int requestedCoordinate, Traveller traveller,
             List<TangibleEntity> ignoredCreatures) {
-        VoxelPlayEnvironment environment = voxelWorldManager.environment;
+        VoxelPlayEnvironment environment = voxelWorldManager.GetEnvironment();
 
         HashSet<Vector3Int> requestedCoordinates = traveller.GetPositionsIfOriginAtPosition(requestedCoordinate);
 
@@ -105,7 +105,7 @@ public class SpriteMovement : MonoBehaviour
     }
 
     public bool IsSlope(Voxel voxel) {
-        VoxelPlayEnvironment environment = voxelWorldManager.environment;
+        VoxelPlayEnvironment environment = voxelWorldManager.GetEnvironment();
 
         VoxelDefinition slopeVoxel = null;
         foreach (VoxelDefinition vd in environment.voxelDefinitions) {

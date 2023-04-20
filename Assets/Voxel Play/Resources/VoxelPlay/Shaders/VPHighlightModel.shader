@@ -56,7 +56,7 @@ Shader "Voxel Play/Misc/Highlight Model"
 				float3 worldNormal = UnityObjectToWorldNormal(v.normal);
 			    o.uv.xy = wpos.xz * worldNormal.y + wpos.xy * float2(-worldNormal.z, abs(worldNormal.z)) + wpos.zy * float2(worldNormal.x, abs(worldNormal.x));
 
-				o.color  = fixed4(_Color.rgb, (sin(_Time.w * 4.0) + 1.0) * 0.25 + 0.25 );
+				o.color  = fixed4(_Color.rgb, (sin(_Time.w * 1.0) + 1.0) * 0.25 + 0.25 );
 				return o;
 			}
 			

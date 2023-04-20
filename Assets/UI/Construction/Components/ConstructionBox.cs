@@ -1,29 +1,24 @@
 using CustomComponents;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using VoxelPlay;
 
 public class ConstructionBox : VisualElement {
     [UnityEngine.Scripting.Preserve]
     public new class UxmlFactory : UxmlFactory<ConstructionBox> { }
 
-    public VisualElement topOption { get; private set; }
-    public VisualElement bottomOption { get; private set; }
-
-    private VisualTreeAsset optionPickerAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-        "Assets/UI/Construction/OptionPicker.uxml");
-    // using these instead of one dict because I need iteration and reversibility
-    private List<string> topOptions = new List<string> {"Top Option 1"};
-    private List<List<string>> bottomOptions = new List<List<string>> { 
-        { new List<string> { "Bottom Option 1" } } };
-    private int topIterator = 0;
-    private int bottomIterator = 0;
+    public VisualElement topOption;
+    public VisualElement bottomOption;
 
     private Label topText;
     private Label bottomText;
+    private VisualTreeAsset optionPickerAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
+        "Assets/UI/Construction/OptionPicker.uxml");
 
     public ConstructionBox() {
         topOption = optionPickerAsset.Instantiate().Q<VisualElement>("OptionPicker");
@@ -34,42 +29,97 @@ public class ConstructionBox : VisualElement {
         topText = topOption.Q<Label>();
         bottomText = bottomOption.Q<Label>();
 
-        InitUI(topOptions, bottomOptions);
+        RenderOptions(new ConstructionOptions());
     }
 
-    public void InitUI(List<string> topOptions, List<List<string>> bottomOptions) {
-        this.topOptions = topOptions;
-        this.bottomOptions = bottomOptions;
-        topIterator = 0;
-        bottomIterator = 0;
+    public void RenderOptions(ConstructionOptions constructionOptions) {
+        topText.text = constructionOptions.GetCurrBuildOption().ToString();
+        bottomText.text = constructionOptions.GetCurrOptionName();
+    }
+}
 
-        topText.text = topOptions[topIterator];
-        bottomText.text = bottomOptions[topIterator][bottomIterator];
+public class ConstructionOptions {
+    public enum BuildOption {
+        Voxels = 0,
+        Objects = 1
+    }
+    private int buildOptionIterator = 0;
+
+    public List<VoxelDefinition> voxelOptions { get; private set; }
+    private int voxelOptionsIterator = 0;
+    public List<GameObject> objectOptions { get; private set; }
+    private int objectOptionsIterator = 0;
+
+    public ConstructionOptions() {
+        voxelOptions = new List<VoxelDefinition>();
+        objectOptions = new List<GameObject>();
+    }
+
+    public ConstructionOptions(List<VoxelDefinition> vds, List<GameObject> gos) {
+        voxelOptions = vds;
+        objectOptions = gos;
+    }
+
+    public BuildOption GetCurrBuildOption() {
+        return (BuildOption)buildOptionIterator;
+    }
+
+    public VoxelDefinition GetCurrVoxelDefinition() {
+        if (voxelOptions.Count == 0) {
+            return null;
+        }
+        return voxelOptions[voxelOptionsIterator];
+    }
+
+    public GameObject GetCurrObjectPrefab() {
+        if (objectOptions.Count == 0) {
+            return null;
+        }
+        return objectOptions[objectOptionsIterator];
+    }
+
+    public string GetCurrOptionName() {
+        if (GetCurrBuildOption() == BuildOption.Voxels) {
+            VoxelDefinition vd = GetCurrVoxelDefinition();
+            return vd == null ? "No Voxel Definitions available" : vd.name;
+        }
+        else {
+            GameObject go = GetCurrObjectPrefab();
+            return go == null ? "No Objects available" : go.name;
+        }
     }
 
     public void IterateTop(bool isRight) {
-        topIterator += isRight ? 1 : -1;
-        if (topIterator >= topOptions.Count) {
-            topIterator = 0;
+        buildOptionIterator += isRight ? 1 : -1;
+        int enumNumOptions = Enum.GetNames(typeof(BuildOption)).Length;
+        if (buildOptionIterator >= enumNumOptions) {
+            buildOptionIterator = 0;
         }
-        else if (topIterator < 0) {
-            topIterator = topOptions.Count - 1;
+        else if (buildOptionIterator < 0) {
+            buildOptionIterator = enumNumOptions - 1;
         }
-        bottomIterator = 0;
-
-        topText.text = topOptions[topIterator];
-        bottomText.text = bottomOptions[topIterator][bottomIterator];
     }
 
     public void IterateBottom(bool isRight) {
-        bottomIterator += isRight ? 1 : -1;
-        if (bottomIterator >= bottomOptions.Count) {
-            bottomIterator = 0;
-        }
-        else if (bottomIterator < 0) {
-            bottomIterator = bottomOptions.Count - 1;
-        }
+        int iteration = isRight ? 1 : -1;
 
-        bottomText.text = bottomOptions[topIterator][bottomIterator];
+        if (GetCurrBuildOption() == BuildOption.Voxels) {
+            voxelOptionsIterator += iteration;
+            if (voxelOptionsIterator >= voxelOptions.Count) {
+                voxelOptionsIterator = 0;
+            }
+            else if (voxelOptionsIterator < 0) {
+                voxelOptionsIterator = voxelOptions.Count - 1;
+            }
+        }
+        else {
+            objectOptionsIterator += iteration;
+            if (objectOptionsIterator >= objectOptions.Count) {
+                objectOptionsIterator = 0;
+            }
+            else if (objectOptionsIterator < 0) {
+                objectOptionsIterator = objectOptions.Count - 1;
+            }
+        }
     }
 }
