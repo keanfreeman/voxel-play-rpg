@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 using VoxelPlay;
+using System.Linq;
+using UnityEngine.UIElements;
 
 namespace Instantiated {
     public class NPC : Traveller {
@@ -23,6 +25,7 @@ namespace Instantiated {
 
         private const int NPC_MIN_IDLE_TIME = 1;
         private const int NPC_MAX_IDLE_TIME = 3;
+        private const int NPC_MAX_WANDER_DISTANCE = 2;
 
         private void OnTriggerEnter(Collider other) {
             if (other.gameObject.tag == "Player" && GetEntity().faction == Faction.ENEMY) {
@@ -56,20 +59,23 @@ namespace Instantiated {
                 yield return new WaitForSeconds(1);
             }
 
-            while (true) {
-                if (inCombat) {
-                    yield break;
-                }
-
-                Vector3Int newPosition = origin + GetRandomOneTileMovement();
+            while (!inCombat) {
+                // find reachable positions
+                List<Vector3Int> adjacentPositions = Coordinates.GetAdjacentCoordinates(origin);
                 List<TangibleEntity> ignoredCreatures = new List<TangibleEntity> { this };
-                Vector3Int? actualCoordinate = spriteMovement.GetTerrainAdjustedCoordinate(
-                    newPosition, this, ignoredCreatures);
-                if (actualCoordinate.HasValue) {
-                    Vector3Int destinationCoordinate = actualCoordinate.GetValueOrDefault();
-                    if (spriteMovement.IsReachablePosition(destinationCoordinate, this, ignoredCreatures)) {
-                        MoveOriginToPoint(destinationCoordinate);
-                    }
+                List<Vector3Int> reachablePositions = adjacentPositions
+                    .Where((Vector3Int target) => {
+                        int numPointsBetween = Coordinates.NumPointsBetween(target, GetEntity().startPosition);
+                        return numPointsBetween <= NPC_MAX_WANDER_DISTANCE;
+                    })
+                    .Where((Vector3Int target) => 
+                        spriteMovement.IsReachablePosition(target, this, ignoredCreatures))
+                    .ToList();
+
+                // select one at random
+                if (reachablePositions.Count > 0) {
+                    Vector3Int chosen = reachablePositions[rng.Next(0, reachablePositions.Count)];
+                    MoveOriginToPoint(chosen);
                 }
 
                 double waitTime = (rng.NextDouble() * NPC_MAX_IDLE_TIME) + NPC_MIN_IDLE_TIME;
@@ -77,18 +83,9 @@ namespace Instantiated {
             }
         }
 
+        // only implemented for override purposes
         protected override Vector3Int? GetDestinationFromDirection(SpriteMoveDirection spriteMoveDirection) {
-            // only implemented for override purposes
-            return spriteMovement.GetTerrainAdjustedCoordinate(origin + GetRandomOneTileMovement(),
-                this, new List<TangibleEntity>{this});
-        }
-
-        public Vector3Int GetRandomOneTileMovement() {
-            bool isX = rng.Next(0, 2) == 0 ? true : false;
-            if (isX) {
-                return rng.Next(0, 2) == 0 ? Vector3Int.left : Vector3Int.right;
-            }
-            return rng.Next(0, 2) == 0 ? Vector3Int.forward : Vector3Int.back;
+            throw new NotImplementedException();
         }
 
         public override bool IsInteractable() {
