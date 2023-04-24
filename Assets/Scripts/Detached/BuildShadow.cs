@@ -48,9 +48,8 @@ public class BuildShadow : MonoBehaviour
             objectShadow.transform.position = currVoxel;
             Instantiated.TangibleObject script = objectShadow.GetComponent<Instantiated.TangibleObject>();
 
-            TangibleObject entityDefinition = constructionOptions.GetCurrObject();
-            TangibleObject clone = new TangibleObject(currVoxel, entityDefinition.entityDisplay,
-                entityDefinition.occupiedPositions, rotation);
+            ObjectIdentity objectID = constructionOptions.GetCurrObject();
+            TangibleObject clone = new TangibleObject(currVoxel, rotation, objectID);
             script.Init(nonVoxelWorld, clone);
             nonVoxelWorld.instantiationMap[clone] = script;
             nonVoxelWorld.AddEntity(script);
@@ -74,8 +73,8 @@ public class BuildShadow : MonoBehaviour
             StopDrawingVoxel();
 
             if (objectShadow == null) {
-                TangibleObject tangibleObject = options.GetCurrObject();
-                objectShadow = Instantiate(tangibleObject.entityDisplay.prefab, transform);
+                ObjectIdentity objectID = options.GetCurrObject();
+                objectShadow = Instantiate(objectID.prefab, transform);
             }
 
             Quaternion rotationQ = Coordinates.GetRotationFromAngle(

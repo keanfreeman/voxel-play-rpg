@@ -37,11 +37,11 @@ namespace Instantiated {
             this.spriteMovement = spriteMovement;
             this.rng = rng;
             this.entity = npcInfo;
-            currHP = npcInfo.stats.hitPoints;
+            currHP = GetStats().hitPoints;
             this.cameraManager = cameraManager;
-            this.spriteLibrary.spriteLibraryAsset = npcInfo.entityDisplay.spriteLibraryAsset;
-            spriteObjectTransform.localScale = npcInfo.entityDisplay.scale;
-            rotationTransform.localPosition = npcInfo.entityDisplay.offset;
+            this.spriteLibrary.spriteLibraryAsset = npcInfo.GetTravellerIdentity().spriteLibraryAsset;
+            spriteObjectTransform.localScale = npcInfo.GetTravellerIdentity().scale;
+            rotationTransform.localPosition = npcInfo.GetTravellerIdentity().offset;
             this.partyManager = partyManager;
             this.gameStateManager = gameStateManager;
             SetCurrPositions(npcInfo);
@@ -100,7 +100,7 @@ namespace Instantiated {
         }
 
         public override Stats GetStats() {
-            return GetEntity().stats;
+            return GetEntity().GetTravellerIdentity().stats;
         }
 
         public new EntityDefinition.NPC GetEntity() {

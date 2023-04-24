@@ -11,6 +11,7 @@ using System.Linq;
 using VoxelPlay;
 using UnityEditorInternal.VersionControl;
 using Ink.Runtime;
+using EntityDefinition;
 
 namespace Instantiated {
     public class PlayerCharacter : Traveller {
@@ -19,14 +20,12 @@ namespace Instantiated {
         [SerializeField] public SpriteLibrary spriteLibrary;
         [SerializeField] SpriteMovement spriteMovement;
 
-        public EntityDefinition.PlayerCharacter playerInfo { get; private set; }
-
         private Direction playerCameraDirection = Direction.NORTH;
 
         public void Init(SpriteMovement spriteMovement, EntityDefinition.PlayerCharacter playerInfo,
                 NonVoxelWorld nonVoxelWorld, CameraManager cameraManager, PartyManager partyManager) {
             this.spriteMovement = spriteMovement;
-            this.playerInfo = playerInfo;
+            this.entity = playerInfo;
             this.nonVoxelWorld = nonVoxelWorld;
             this.cameraManager = cameraManager;
             this.partyManager = partyManager;
@@ -114,7 +113,7 @@ namespace Instantiated {
         }
 
         public override Stats GetStats() {
-            return playerInfo.stats;
+            return GetEntity().GetTravellerIdentity().stats;
         }
 
         public override bool IsInteractable() {

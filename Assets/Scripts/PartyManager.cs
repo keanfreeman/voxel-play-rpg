@@ -46,7 +46,7 @@ public class PartyManager : MonoBehaviour
 
     public Instantiated.PlayerCharacter GetPlayerMovement(EntityDefinition.PlayerCharacter playerCharacter) {
         foreach (Instantiated.PlayerCharacter playerMovement in partyMembers) {
-            if (playerMovement.playerInfo == playerCharacter) {
+            if (playerMovement.GetEntity() == playerCharacter) {
                 return playerMovement;
             }
         }

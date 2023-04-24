@@ -1,3 +1,4 @@
+using EntityDefinition;
 using GameMechanics;
 using MovementDirection;
 using NonVoxel;

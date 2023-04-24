@@ -9,16 +9,13 @@ using MovementDirection;
 namespace EntityDefinition {
     public class NPC : Traveller {
         public BattleGroup battleGroup { get; set; }
-        public NPCStats stats { get; private set; }
         public Faction faction { get; private set; }
         public IdleBehavior idleBehavior { get; private set; }
 
-        public NPC(Vector3Int startPosition, NPCStats stats,
-                EntityDisplay entityDisplay, Faction faction, 
-                IdleBehavior idleBehavior = IdleBehavior.STAND)
-                : base(startPosition, stats.size, entityDisplay) {
+        public NPC(Vector3Int startPosition, Faction faction, 
+                IdleBehavior idleBehavior, TravellerIdentity travellerIdentity)
+                : base(startPosition, travellerIdentity) {
             this.startPosition = startPosition;
-            this.stats = stats;
             this.faction = faction;
             this.idleBehavior = idleBehavior;
         }

@@ -9,10 +9,13 @@ namespace EntityDefinition {
     public class TangibleObject : TangibleEntity {
         public Direction startRotation { get; protected set; }
 
-        public TangibleObject(Vector3Int startPosition, EntityDisplay entityDisplay,
-                List<Vector3Int> occupiedPositions, Direction startRotation) 
-                : base(startPosition, entityDisplay, occupiedPositions) {
+        public TangibleObject(Vector3Int startPosition, Direction startRotation, ObjectIdentity objectIdentity) 
+                : base(startPosition, objectIdentity) {
             this.startRotation = startRotation;
+        }
+
+        public ObjectIdentity GetObjectIdentity() {
+            return (ObjectIdentity)identity;
         }
     }
 }

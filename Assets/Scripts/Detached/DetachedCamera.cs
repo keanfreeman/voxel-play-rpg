@@ -85,7 +85,7 @@ public class DetachedCamera : MonoBehaviour
             if (gameStateManager.controlState == ControlState.COMBAT
                     && nvEntity.GetType() == typeof(NPC)) {
                 GameMechanics.Action rangedAction = StatInfo.GetRangedAction(
-                    combatManager.GetCurrTurnPlayer().playerInfo.stats);
+                    combatManager.GetCurrTurnPlayer().GetStats());
                 detachedModeSprite.sprite = rangedAction == null ? meleeAttackIcon : rangedAttackIcon;
             }
             else {

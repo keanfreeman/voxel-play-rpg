@@ -9,31 +9,26 @@ namespace EntityDefinition {
     public abstract class TangibleEntity : Spawnable {
         public Vector3Int startPosition { get; protected set; }
         // all points occupied by this Entity, relative to the startPosition (for example, (0,0,0) and (1,0,0))
-        public EntityDisplay entityDisplay { get; protected set; }
         public List<Vector3Int> occupiedPositions { get; protected set; }
+        public Identity identity { get; protected set; }
 
-        public TangibleEntity(Vector3Int startPosition, EntityDisplay entityDisplay) {
+        public TangibleEntity(Vector3Int startPosition, ObjectIdentity identity) {
             this.startPosition = startPosition;
-            this.entityDisplay = entityDisplay;
-            this.occupiedPositions = new List<Vector3Int> { Vector3Int.zero };
+            this.identity = identity;
+            occupiedPositions = identity.occupiedPositions;
         }
 
-        public TangibleEntity(Vector3Int startPosition, EntityDisplay entityDisplay, 
-                List<Vector3Int> occupiedPositions) {
+        public TangibleEntity(Vector3Int startPosition, TravellerIdentity identity) {
             this.startPosition = startPosition;
-            this.entityDisplay = entityDisplay;
-            this.occupiedPositions = occupiedPositions;
-        }
+            this.identity = identity;
 
-        public TangibleEntity(Vector3Int startPosition, EntitySize entitySize, EntityDisplay entityDisplay) {
-            this.startPosition = startPosition;
-            this.entityDisplay = entityDisplay;
+            EntitySize entitySize = identity.stats.size;
 
             if (entitySize < EntitySize.LARGE) {
                 occupiedPositions = new List<Vector3Int> { Vector3Int.zero };
             }
             else {
-                List<Vector3Int> positions = Coordinates.GetPositionsFromSizeCategory(startPosition, entitySize, 
+                List<Vector3Int> positions = Coordinates.GetPositionsFromSizeCategory(startPosition, entitySize,
                     false);
                 occupiedPositions = new List<Vector3Int>(positions.Count);
                 foreach (Vector3Int position in positions) {

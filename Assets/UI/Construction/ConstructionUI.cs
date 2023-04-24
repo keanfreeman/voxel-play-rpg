@@ -16,6 +16,7 @@ public class ConstructionUI : UIHandler
     [SerializeField] VoxelWorldManager voxelWorldManager;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
     [SerializeField] BuildShadow buildShadow;
+    [SerializeField] NonVoxelManager nonVoxelManager;
 
     public ConstructionOptions constructionOptions { get; private set; }
 
@@ -34,13 +35,7 @@ public class ConstructionUI : UIHandler
     public void OnEnvInitialized() {
         List<VoxelDefinition> voxelDefinitions = voxelWorldManager.GetEnvironment().voxelDefinitions.ToList();
 
-        List<TangibleObject> objects = new List<TangibleObject>();
-        foreach (Spawnable spawnable in nonVoxelWorld.instantiationMap.Keys) {
-            if (spawnable.GetType() == typeof(TangibleObject)) {
-                objects.Add((TangibleObject)spawnable);
-            }
-        }
-        constructionOptions = new ConstructionOptions(voxelDefinitions, objects);
+        constructionOptions = new ConstructionOptions(voxelDefinitions, nonVoxelManager.GetObjectIdentities());
         constructionBox.RenderOptions(constructionOptions);
     }
 
