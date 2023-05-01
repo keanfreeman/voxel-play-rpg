@@ -1,30 +1,45 @@
 using Instantiated;
+using Saving;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditorInternal.Profiling.Memory.Experimental.FileFormat;
 using UnityEngine;
 
 namespace NonVoxel {
     public class NonVoxelWorld : MonoBehaviour {
-        private HashSet<TangibleEntity> entities = new HashSet<TangibleEntity>();
-        private Dictionary<Vector3Int, TangibleEntity> positionToEntity
-            = new Dictionary<Vector3Int, TangibleEntity>();
+        [SerializeField] EnvironmentSceneManager environmentSceneManager;
 
-        public HashSet<NPC> npcs = new HashSet<NPC>();
-        public Dictionary<EntityDefinition.Spawnable, InstantiatedEntity> instantiationMap 
-            = new Dictionary<EntityDefinition.Spawnable, InstantiatedEntity>();
+        public Dictionary<EntityDefinition.Entity, InstantiatedEntity> instantiationMap { get; private set; }
+            = new Dictionary<EntityDefinition.Entity, InstantiatedEntity>();
+        private Dictionary<Vector3Int, InstantiatedEntity> positionToEntity
+            = new Dictionary<Vector3Int, InstantiatedEntity>();
 
-        public InstantiatedEntity GetEntityFromDefinition(EntityDefinition.Spawnable definition) {
+        public HashSet<NPC> npcs { get; private set; } = new HashSet<NPC>();
+
+        public InstantiatedEntity GetEntityFromDefinition(EntityDefinition.Entity definition) {
             return instantiationMap.GetValueOrDefault(definition, null);
         }
 
-        public void AddEntity(TangibleEntity entity) {
-            entities.Add(entity);
-            foreach (Vector3Int position in entity.occupiedPositions) {
+        public void AddTangibleEntity(EntityDefinition.TangibleEntity entityDefinition, 
+                TangibleEntity entityInstantiation) {
+            instantiationMap[entityDefinition] = entityInstantiation;
+            if (entityDefinition.GetType() == typeof(EntityDefinition.NPC)) {
+                npcs.Add((NPC)entityInstantiation);
+            }
+
+            foreach (Vector3Int position in entityInstantiation.occupiedPositions) {
                 if (positionToEntity.ContainsKey(position)) {
-                    Debug.LogError($"Adding an entity {entity.name} to a position that's " +
+                    Debug.LogError($"Adding an entity {entityInstantiation.name} to a position that's " +
                         $"already occupied by {positionToEntity[position].name}.");
                 }
-                positionToEntity[position] = entity;
+                positionToEntity[position] = entityInstantiation;
             }
+        }
+
+        public void AddIntangibleEntity(EntityDefinition.IntangibleEntity intangibleEntityDef,
+                IntangibleEntity intangibleEntityInstantiation) {
+            instantiationMap.Add(intangibleEntityDef, intangibleEntityInstantiation);
         }
 
         public void SetPositions(TangibleEntity entity) {
@@ -35,28 +50,25 @@ namespace NonVoxel {
 
         public void RemovePositions(TangibleEntity entity) {
             foreach (Vector3Int position in entity.occupiedPositions) {
-                positionToEntity[position] = null;
+                positionToEntity.Remove(position);
             }
         }
 
-        public void DestroyEntities() {
-            foreach (TangibleEntity npc in npcs) {
-                npc.enabled = false;
-                Destroy(npc.gameObject);
-            }
-            npcs.Clear();
-
-            foreach (TangibleEntity behavior in entities) {
-                if (behavior.GetType() != typeof(PlayerCharacter)) {
-                    Destroy(behavior);
+        public IEnumerator DestroyAllEntities(bool includePlayer) {
+            foreach (InstantiatedEntity entity in instantiationMap.Values) {
+                if (includePlayer || entity.GetType() != typeof(PlayerCharacter)) {
+                    Destroy(entity.gameObject);
                 }
             }
-            entities.Clear();
+
+            yield return new WaitForEndOfFrame();
+
+            npcs.Clear();
             positionToEntity.Clear();
             instantiationMap.Clear();
         }
 
-        public TangibleEntity GetEntityFromPosition(Vector3Int position) {
+        public InstantiatedEntity GetEntityFromPosition(Vector3Int position) {
             return positionToEntity.GetValueOrDefault(position, null);
         }
 
@@ -67,7 +79,6 @@ namespace NonVoxel {
             foreach (Vector3Int position in entity.occupiedPositions) {
                 positionToEntity[position] = null;
             }
-            entities.Remove(entity);
 
             if (instantiationMap.ContainsKey(entity.GetEntity())) {
                 instantiationMap[entity.GetEntity()] = null;
@@ -75,11 +86,8 @@ namespace NonVoxel {
         }
 
         public bool IsPositionOccupied(Vector3Int position) {
-            TangibleEntity behavior = positionToEntity.GetValueOrDefault(position, null);
-            if (behavior == null || behavior.GetType() == typeof(SceneExitCube)) {
-                return false;
-            }
-            return true;
+            InstantiatedEntity behavior = positionToEntity.GetValueOrDefault(position, null);
+            return behavior != null && TypeUtils.IsSameTypeOrIsSubclass(behavior, typeof(TangibleEntity));
         }
 
         public bool IsPositionOccupied(Vector3Int position, TangibleEntity ignoredCreature) {
@@ -87,22 +95,19 @@ namespace NonVoxel {
         }
 
         public bool IsPositionOccupied(Vector3Int position, ICollection<TangibleEntity> ignoredCreatures) {
-            TangibleEntity behavior = positionToEntity.GetValueOrDefault(position, null);
-            if (behavior == null || ignoredCreatures.Contains(behavior) 
-                    || behavior.GetType() == typeof(SceneExitCube)) {
-                return false;
-            }
-            return true;
+            InstantiatedEntity behavior = positionToEntity.GetValueOrDefault(position, null);
+            return behavior != null && !ignoredCreatures.Contains(behavior)
+                && TypeUtils.IsSameTypeOrIsSubclass(behavior, typeof(TangibleEntity));
         }
 
-        public bool IsInteractable(Vector3Int position) {
+        public TangibleEntity GetInteractableEntity(Vector3Int position) {
             if (IsPositionOccupied(position)) {
-                TangibleEntity entity = positionToEntity[position];
-                if (entity.GetType() == typeof(NPC) && entity.IsInteractable()) {
-                    return true;
+                InstantiatedEntity entity = positionToEntity[position];
+                if (entity.GetType() == typeof(NPC)) {
+                    return (TangibleEntity)entity;
                 }
             }
-            return false;
+            return null;
         }
     }
 }

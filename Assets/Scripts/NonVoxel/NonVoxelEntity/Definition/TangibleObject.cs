@@ -4,18 +4,16 @@ using EntityDefinition;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace EntityDefinition {
+    [Serializable]
     public class TangibleObject : TangibleEntity {
-        public Direction startRotation { get; protected set; }
+        public Direction startRotation;
 
-        public TangibleObject(Vector3Int startPosition, Direction startRotation, ObjectIdentity objectIdentity) 
+        public TangibleObject(Vector3Int startPosition, Direction startRotation, string objectIdentity) 
                 : base(startPosition, objectIdentity) {
             this.startRotation = startRotation;
-        }
-
-        public ObjectIdentity GetObjectIdentity() {
-            return (ObjectIdentity)identity;
         }
     }
 }

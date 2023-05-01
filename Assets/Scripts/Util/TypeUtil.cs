@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class TypeUtil
+public static class TypeUtils
 {
     public static bool IsSameTypeOrSubclass(object object1, object object2) {
         Type type1 = object1.GetType();
@@ -11,7 +11,7 @@ public static class TypeUtil
         return IsSameTypeOrSubclass(type1, type2);
     }
 
-    public static bool IsSameTypeOrSubclass(object object1, Type type2) {
+    public static bool IsSameTypeOrIsSubclass(object object1, Type type2) {
         Type type1 = object1.GetType();
         return IsSameTypeOrSubclass(type1, type2);
     }

@@ -71,7 +71,7 @@ public class CombatManager : MonoBehaviour
         // attack enemy
         if (Coordinates.IsNextTo(creatureAsNPC, nearestPlayer)) {
             // TODO use less brittle attack selection method
-            Attack npcAttack = (Attack)creatureAsNPC.GetStats().actions[0];
+            AttackSO npcAttack = (AttackSO)creatureAsNPC.GetStats().actions[0];
             int attackRoll = randomManager.Roll(npcAttack.attackRoll);
             Debug.Log($"NPC rolled {attackRoll} for their attack roll.");
             if (attackRoll >= nearestPlayer.GetStats().CalculateArmorClass()) {
@@ -104,7 +104,7 @@ public class CombatManager : MonoBehaviour
         }
 
         Traveller currCreature = initiatives[currInitiative].Value;
-        TangibleEntity selectedEntity = nonVoxelWorld.GetEntityFromPosition(detachedCamera.currVoxel);
+        InstantiatedEntity selectedEntity = nonVoxelWorld.GetEntityFromPosition(detachedCamera.currVoxel);
         if (currCreature.GetType() != typeof(PlayerCharacter) || movementManager.IsMoving(currCreature)
                 || (selectedEntity != null && selectedEntity.GetType() == typeof(PlayerCharacter))) {
             yield break;
@@ -120,7 +120,7 @@ public class CombatManager : MonoBehaviour
             }
             NPC npcBehavior = (NPC)selectedEntity;
 
-            GameMechanics.Action validAttackAction;
+            ActionSO validAttackAction;
             if (!Coordinates.IsNextTo(currCreature, npcBehavior)) {
                 validAttackAction = StatInfo.GetRangedAction(playerMovement.GetStats());
                 if (validAttackAction == null) {
@@ -145,15 +145,15 @@ public class CombatManager : MonoBehaviour
                 yield break;
             }
 
-            List<Attack> attacksToDo;
-            if (validAttackAction.GetType() == typeof(Multiattack)) {
-                attacksToDo = ((Multiattack)validAttackAction).attacks;
+            List<AttackSO> attacksToDo;
+            if (validAttackAction.GetType() == typeof(MultiattackSO)) {
+                attacksToDo = ((MultiattackSO)validAttackAction).attacks;
             }
             else {
-                attacksToDo = new List<Attack> { (Attack)validAttackAction };
+                attacksToDo = new List<AttackSO> { (AttackSO)validAttackAction };
             }
 
-            foreach (Attack attack in attacksToDo) {
+            foreach (AttackSO attack in attacksToDo) {
                 int attackRoll = randomManager.Roll(attack.attackRoll);
                 Debug.Log($"Player rolled {attackRoll} for their attack roll.");
                 if (attackRoll >= npcBehavior.GetStats().CalculateArmorClass()) {

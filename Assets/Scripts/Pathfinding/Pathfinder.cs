@@ -46,7 +46,7 @@ public class Pathfinder : MonoBehaviour
 
         // check if any position in the target is occupied by someone else
         HashSet<Vector3Int> endPositions = traveller.GetPositionsIfOriginAtPosition(endPosition);
-        TangibleEntity occupyingEntity = null;
+        InstantiatedEntity occupyingEntity = null;
         foreach (Vector3Int position in endPositions) {
             if (nonVoxelWorld.IsPositionOccupied(position, ignoredCreatures)) {
                 occupyingEntity = nonVoxelWorld.GetEntityFromPosition(position);
@@ -61,6 +61,14 @@ public class Pathfinder : MonoBehaviour
             yield return coroutineWithData.result;
             yield break;
         }
+
+        // TODO - make this possible (need to allow non-square types)
+        if (!TypeUtils.IsSameTypeOrIsSubclass(occupyingEntity, typeof(Traveller))) {
+            Debug.Log("Tried to move into tile with a non-traveller object.");
+            yield return EMPTY_RESULTS;
+            yield break;
+        }
+
         // find reachable origins
         Traveller target = (Traveller)occupyingEntity;
         List<Vector3Int> reachableOriginsNextToTarget = Coordinates

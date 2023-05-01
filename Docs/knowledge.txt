@@ -1,3 +1,5 @@
+save location - C:\Users\keanf\AppData\LocalLow\DefaultCompany
+
 if you want a coroutine with a return value, you need to use CoroutineWithData
 
 Managers are responsible for the life cycle of things. 

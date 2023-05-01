@@ -16,7 +16,7 @@ public class VoxelWorldManager : MonoBehaviour
         return environment;
     }
 
-    public void AssignEvent(VoxelPlayEvent action) {
+    public void AssignVPEnvironmentInitEvent(VoxelPlayEvent action) {
         environment.OnInitialized += action;
     }
 

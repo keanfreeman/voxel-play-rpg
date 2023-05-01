@@ -6,18 +6,18 @@ using UnityEngine;
 namespace GameMechanics {
     public class StatInfo
     {
-        public static Action GetRangedAction(Stats stats) {
-            foreach (Action action in stats.actions) {
-                if (action.GetType() == typeof(Multiattack)) {
-                    Multiattack multiattack = (Multiattack)action;
-                    foreach (Attack attack in multiattack.attacks) {
+        public static ActionSO GetRangedAction(StatsSO stats) {
+            foreach (ActionSO action in stats.actions) {
+                if (action.GetType() == typeof(MultiattackSO)) {
+                    MultiattackSO multiattack = (MultiattackSO)action;
+                    foreach (AttackSO attack in multiattack.attacks) {
                         if (attack.isRanged) {
                             return multiattack;
                         }
                     }
                 }
-                else if (action.GetType() == typeof(Attack)) {
-                    Attack attack = (Attack)action;
+                else if (action.GetType() == typeof(ActionSO)) {
+                    AttackSO attack = (AttackSO)action;
                     if (attack.isRanged) {
                         return attack;
                     }
@@ -27,18 +27,18 @@ namespace GameMechanics {
         }
 
         // Falls back on ranged option if available
-        public static Action GetMeleeActionThenRanged(Stats stats) {
-            foreach (Action action in stats.actions) {
-                if (action.GetType() == typeof(Multiattack)) {
-                    Multiattack multiattack = (Multiattack)action;
-                    foreach (Attack attack in multiattack.attacks) {
+        public static ActionSO GetMeleeActionThenRanged(StatsSO stats) {
+            foreach (ActionSO action in stats.actions) {
+                if (action.GetType() == typeof(MultiattackSO)) {
+                    MultiattackSO multiattack = (MultiattackSO)action;
+                    foreach (AttackSO attack in multiattack.attacks) {
                         if (!attack.isRanged) {
                             return multiattack;
                         }
                     }
                 }
-                else if (action.GetType() == typeof(Attack)) {
-                    Attack attack = (Attack)action;
+                else if (action.GetType() == typeof(AttackSO)) {
+                    AttackSO attack = (AttackSO)action;
                     if (!attack.isRanged) {
                         return attack;
                     }

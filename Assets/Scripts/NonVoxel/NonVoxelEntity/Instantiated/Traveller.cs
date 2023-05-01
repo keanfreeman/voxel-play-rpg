@@ -13,6 +13,7 @@ namespace Instantiated {
         [SerializeField] protected CameraManager cameraManager;
         [SerializeField] protected PartyManager partyManager;
 
+        protected TravellerIdentitySO travellerIdentity;
         protected Vector3Int moveStartPoint;
         protected Vector3Int moveEndPoint;
         protected float moveStartTimestamp;
@@ -58,7 +59,11 @@ namespace Instantiated {
 
         public void MoveOriginToPoint(Vector3Int point) {
             moveStartPoint = origin;
-            MoveAllPoints(point);
+
+            nonVoxelWorld.RemovePositions(this);
+            MoveOccupiedPositionsTo(point);
+            nonVoxelWorld.SetPositions(this);
+
             moveEndPoint = point;
 
             moveStartTimestamp = Time.time;
@@ -69,6 +74,10 @@ namespace Instantiated {
 
         public void SetMoveAnimation(bool state) {
             animator.SetBool("isMoving", state);
+        }
+
+        public bool IsAnimatingMove() {
+            return animator.GetBool("isMoving");
         }
 
         private void SetMoveDirectionRelativeToCamera() {
@@ -94,7 +103,9 @@ namespace Instantiated {
 
         public abstract void RotateSprite(float degrees);
 
-        public abstract Stats GetStats();
+        public StatsSO GetStats() {
+            return travellerIdentity.stats;
+        }
 
         protected abstract Vector3Int? GetDestinationFromDirection(SpriteMoveDirection spriteMoveDirection);
     }

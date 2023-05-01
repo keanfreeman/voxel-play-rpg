@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
+using GameMechanics;
+using NonVoxelEntity;
 
 namespace Instantiated {
     public abstract class TangibleEntity : InstantiatedEntity {
@@ -16,32 +18,36 @@ namespace Instantiated {
         public Vector3Int origin { get; protected set; }
         public List<Vector3Int> occupiedPositions { get; protected set; }
 
-        public void SetCurrPositions(EntityDefinition.TangibleEntity entityInfo) {
-            SetCurrPositions(entityInfo, Direction.NORTH);
+        public void SetCurrPositions(Vector3Int newOrigin, TravellerIdentitySO travellerID) {
+            this.origin = newOrigin;
+            transform.position = origin;
+
+            this.occupiedPositions =  EntitySizeCalcs.GetPositionsFromSizeCategory(origin, 
+                travellerID.stats.size);
         }
 
-        public void SetCurrPositions(EntityDefinition.TangibleEntity entityInfo, Direction rotation) {
-            this.origin = entityInfo.startPosition;
+        public void SetCurrPositions(Vector3Int newOrigin, ObjectIdentitySO objectID, 
+                Direction rotation) {
+            this.origin = newOrigin;
+            transform.position = origin;
+            this.occupiedPositions = new();
 
             int numRotations = rotation == Direction.NORTH ? 0
                 : rotation == Direction.WEST ? 1
                 : rotation == Direction.SOUTH ? 2
                 : 3;
-            occupiedPositions = new List<Vector3Int>(entityInfo.occupiedPositions.Count);
-            foreach (Vector3Int position in entityInfo.occupiedPositions) {
+            foreach (Vector3Int position in objectID.occupiedPositions) {
                 Vector3Int rotatedPosition = Coordinates.RotatePointCounterClockwiseAroundCenter(
                     position, Vector3Int.zero, numRotations);
-                Vector3Int pointInWorld = entityInfo.startPosition + rotatedPosition;
-                occupiedPositions.Add(pointInWorld);
+                Vector3Int pointInWorld = origin + rotatedPosition;
+                this.occupiedPositions.Add(pointInWorld);
             }
 
             SetDisplayRotation(Coordinates.GetRotationFromAngle(
                 DirectionCalcs.GetDegreesFromDirection(rotation)));
         }
 
-        public void MoveAllPoints(Vector3Int point) {
-            nonVoxelWorld.RemovePositions(this);
-
+        public void MoveOccupiedPositionsTo(Vector3Int point) {
             Vector3Int difference = point - origin;
             origin = point;
 
@@ -50,8 +56,6 @@ namespace Instantiated {
                 temp.Add(position + difference);
             }
             occupiedPositions = temp;
-
-            nonVoxelWorld.SetPositions(this);
         }
 
         public HashSet<Vector3Int> GetPositionsIfOriginAtPosition(Vector3Int newOrigin) {

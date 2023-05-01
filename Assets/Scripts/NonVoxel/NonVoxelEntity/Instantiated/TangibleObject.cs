@@ -8,10 +8,14 @@ namespace Instantiated {
     public class TangibleObject : TangibleEntity {
         public EntityDefinition.TangibleObject objectInfo { get; private set; }
 
-        public void Init(NonVoxelWorld nonVoxelWorld, EntityDefinition.TangibleObject nonVoxelObject) {
+        private ObjectIdentitySO objectIdentity;
+
+        public void Init(NonVoxelWorld nonVoxelWorld, EntityDefinition.TangibleObject nonVoxelObject,
+                ObjectIdentitySO objectIdentity) {
             this.nonVoxelWorld = nonVoxelWorld;
             objectInfo = nonVoxelObject;
-            SetCurrPositions(nonVoxelObject, nonVoxelObject.startRotation);
+            this.objectIdentity = objectIdentity;
+            SetCurrPositions(nonVoxelObject.spawnPosition, objectIdentity, nonVoxelObject.startRotation);
         }
 
         public override bool IsInteractable() {

@@ -59,6 +59,12 @@ public class GameStateManager : MonoBehaviour
             combatUI.SetDisplayState(true);
             inputManager.UnlockPlayerControls();
         }
+        else if (controlState == ControlState.SPRITE_NEUTRAL && newState == ControlState.LOADING) {
+            inputManager.LockPlayerControls();
+        }
+        else if (controlState == ControlState.LOADING && newState == ControlState.SPRITE_NEUTRAL) {
+            inputManager.UnlockPlayerControls();
+        }
 
         controlState = newState;
     }
@@ -117,8 +123,8 @@ public class GameStateManager : MonoBehaviour
             partyManager.currControlledCharacter, 1);
         TangibleEntity interactableEntity = null;
         foreach (Vector3Int position in adjacentPositions) {
-            if (nonVoxelWorld.IsInteractable(position)) {
-                interactableEntity = nonVoxelWorld.GetEntityFromPosition(position);
+            interactableEntity = nonVoxelWorld.GetInteractableEntity(position);
+            if (interactableEntity != null) {
                 break;
             }
         }

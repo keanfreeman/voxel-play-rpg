@@ -35,7 +35,8 @@ public class ConstructionUI : UIHandler
     public void OnEnvInitialized() {
         List<VoxelDefinition> voxelDefinitions = voxelWorldManager.GetEnvironment().voxelDefinitions.ToList();
 
-        constructionOptions = new ConstructionOptions(voxelDefinitions, nonVoxelManager.GetObjectIdentities());
+        constructionOptions = new ConstructionOptions(voxelDefinitions, 
+            nonVoxelManager.objectIdentities.Values.ToList());
         constructionBox.RenderOptions(constructionOptions);
     }
 

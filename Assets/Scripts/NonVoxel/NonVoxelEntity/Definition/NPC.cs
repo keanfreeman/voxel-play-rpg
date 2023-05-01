@@ -7,23 +7,24 @@ using GameMechanics;
 using MovementDirection;
 
 namespace EntityDefinition {
+    [Serializable]
     public class NPC : Traveller {
-        public BattleGroup battleGroup { get; set; }
-        public Faction faction { get; private set; }
-        public IdleBehavior idleBehavior { get; private set; }
+        public BattleGroup battleGroup;
+        public Faction faction;
+        public IdleBehavior idleBehavior;
 
         public NPC(Vector3Int startPosition, Faction faction, 
-                IdleBehavior idleBehavior, TravellerIdentity travellerIdentity)
+                IdleBehavior idleBehavior, string travellerIdentity)
                 : base(startPosition, travellerIdentity) {
-            this.startPosition = startPosition;
             this.faction = faction;
             this.idleBehavior = idleBehavior;
         }
     }
 
+    [Serializable]
     public class BattleGroup {
         public Guid groupID;
-        public List<NPC> combatants { get; set; }
+        public List<NPC> combatants;
 
         public BattleGroup(List<NPC> combatants) {
             this.combatants = combatants;

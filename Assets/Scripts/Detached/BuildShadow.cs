@@ -17,6 +17,9 @@ public class BuildShadow : MonoBehaviour
     [SerializeField] ConstructionUI constructionUI;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
 
+    [SerializeField] GameObject lampPrefab;
+    [SerializeField] GameObject bedPrefab;
+
     private Vector3Int? drawStart;
     private GameObject currVoxelModelShadow;
     private GameObject objectShadow;
@@ -48,11 +51,11 @@ public class BuildShadow : MonoBehaviour
             objectShadow.transform.position = currVoxel;
             Instantiated.TangibleObject script = objectShadow.GetComponent<Instantiated.TangibleObject>();
 
-            ObjectIdentity objectID = constructionOptions.GetCurrObject();
-            TangibleObject clone = new TangibleObject(currVoxel, rotation, objectID);
-            script.Init(nonVoxelWorld, clone);
-            nonVoxelWorld.instantiationMap[clone] = script;
-            nonVoxelWorld.AddEntity(script);
+            ObjectIdentitySO objectID = constructionOptions.GetCurrObject();
+            TangibleObject definition = new TangibleObject(currVoxel, rotation, objectID.name);
+            script.Init(nonVoxelWorld, definition, objectID);
+
+            nonVoxelWorld.AddTangibleEntity(definition, script);
 
             objectShadow = null;
             DrawBuildModeShadow();
@@ -73,7 +76,7 @@ public class BuildShadow : MonoBehaviour
             StopDrawingVoxel();
 
             if (objectShadow == null) {
-                ObjectIdentity objectID = options.GetCurrObject();
+                ObjectIdentitySO objectID = options.GetCurrObject();
                 objectShadow = Instantiate(objectID.prefab, transform);
             }
 

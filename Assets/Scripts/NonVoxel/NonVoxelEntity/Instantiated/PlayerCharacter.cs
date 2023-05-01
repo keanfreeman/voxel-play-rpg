@@ -22,19 +22,29 @@ namespace Instantiated {
 
         private Direction playerCameraDirection = Direction.NORTH;
 
+        private void Awake() {
+            DontDestroyOnLoad(this);
+        }
+
+        private void OnDestroy() {
+            StopAllCoroutines();
+            enabled = false;
+        }
+
         public void Init(SpriteMovement spriteMovement, EntityDefinition.PlayerCharacter playerInfo,
-                NonVoxelWorld nonVoxelWorld, CameraManager cameraManager, PartyManager partyManager) {
+                TravellerIdentitySO identity, NonVoxelWorld nonVoxelWorld, 
+                CameraManager cameraManager, PartyManager partyManager) {
             this.spriteMovement = spriteMovement;
             this.entity = playerInfo;
+            this.travellerIdentity = identity;
             this.nonVoxelWorld = nonVoxelWorld;
             this.cameraManager = cameraManager;
             this.partyManager = partyManager;
+            this.spriteLibrary.spriteLibraryAsset = identity.spriteLibraryAsset;
         }
 
         public void HaltMovement() {
-            StopAllCoroutines();
-            isMoving = false;
-            SetMoveAnimation(isMoving);
+            permanentMoveDirection = SpriteMoveDirection.NONE;
         }
 
         public void HandleControllerMove(InputAction.CallbackContext obj) {
@@ -110,10 +120,6 @@ namespace Instantiated {
 
         public override void RotateSprite(float degrees) {
             rotationTransform.Rotate(Vector3.up, degrees);
-        }
-
-        public override Stats GetStats() {
-            return GetEntity().GetTravellerIdentity().stats;
         }
 
         public override bool IsInteractable() {

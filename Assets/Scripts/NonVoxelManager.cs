@@ -4,12 +4,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Saving;
 
 public class NonVoxelManager : MonoBehaviour
 {
     [SerializeField] InputManager inputManager;
     [SerializeField] EnvironmentSceneManager environmentSceneManager;
-    [SerializeField] GameObject playerPrefab;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
     [SerializeField] SpriteMovement spriteMovement;
     [SerializeField] RandomManager randomManager;
@@ -18,138 +18,121 @@ public class NonVoxelManager : MonoBehaviour
     [SerializeField] PartyManager partyManager;
     [SerializeField] GameStateManager gameStateManager;
     [SerializeField] OrderManager orderManager;
+    [SerializeField] SaveManager saveManager;
 
-    [SerializeField] GameObject opossumPrefab;
-    [SerializeField] GameObject sceneExitPrefab;
-    [SerializeField] GameObject bedPrefab;
-    [SerializeField] GameObject lampPrefab;
+    [SerializeField] TravellerIdentitySO mainCharacterID;
+
     [SerializeField] GameObject detachedCameraPrefab;
-    [SerializeField] GameObject storyEventCubePrefab;
-    [SerializeField] TextAsset getAttention;
-    [SerializeField] TextAsset friendDialogue;
 
-    private NonVoxelInitialization nonVoxelInitialization;
-
-    private List<Spawnable> nonVoxelEntities;
+    public Dictionary<string, TravellerIdentitySO> travellerIdentities { get; private set; } = new();
+    public Dictionary<string, ObjectIdentitySO> objectIdentities { get; private set; } = new();
+    public Dictionary<string, GameObject> intangiblePrefabs { get; private set; } = new();
 
     private void Awake() {
-        nonVoxelInitialization = new NonVoxelInitialization(playerPrefab,
-            opossumPrefab, sceneExitPrefab, bedPrefab, lampPrefab, storyEventCubePrefab,
-            getAttention, friendDialogue);
+        SetUpResources();
     }
 
-    public void DestroyEntities() {
-        nonVoxelWorld.DestroyEntities();
+    private void SetUpResources() {
+        TravellerIdentitySO[] travellerIDs = Resources.LoadAll<TravellerIdentitySO>(
+            "ScriptableObjects/Identities/Travellers");
+        foreach (TravellerIdentitySO travellerIdentitySO in travellerIDs) {
+            travellerIdentities.Add(travellerIdentitySO.name, travellerIdentitySO);
+        }
+
+        ObjectIdentitySO[] objectIDs = Resources.LoadAll<ObjectIdentitySO>(
+            "ScriptableObjects/Identities/Objects");
+        foreach (ObjectIdentitySO objectIdentitySO in objectIDs) {
+            objectIdentities.Add(objectIdentitySO.name, objectIdentitySO);
+        }
+
+        GameObject[] prefabs = Resources.LoadAll<GameObject>("Prefabs/IntangibleEntity");
+        foreach (GameObject gameObject in prefabs) {
+            intangiblePrefabs.Add(gameObject.name, gameObject);
+        }
     }
 
-    public void SetUpEntities(int environmentIndex) {
-        nonVoxelEntities = nonVoxelInitialization.GetEnvEntities(environmentIndex);
-        InitCreaturesAndWorld();
-    }
-
-    public List<ObjectIdentity> GetObjectIdentities() {
-        return nonVoxelInitialization.objectIdentities;
-    }
-
-    public List<TravellerIdentity> GetTravellerIdentities() {
-        return nonVoxelInitialization.travellerIdentities;
-    }
-
-    private void InitCreaturesAndWorld() {
+    public void CreateEntities(List<Entity> entities, EnvChangeDestination destination) {
         Dictionary<Guid, HashSet<Instantiated.NPC>> battleGroups = 
             new Dictionary<Guid, HashSet<Instantiated.NPC>>();
-        foreach (Spawnable nonVoxelSpawnable in nonVoxelEntities) {
-            if (nonVoxelSpawnable.GetType() == typeof(Party)) {
-                Party party = (Party)nonVoxelSpawnable;
+        foreach (Entity entity in entities) {
+            if (TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(TangibleEntity))) {
+                if (entity.GetType() == typeof(PlayerCharacter)) {
+                    PlayerCharacter playerInfo = (PlayerCharacter)entity;
+                    TravellerIdentitySO identity = travellerIdentities[playerInfo.identity];
+                    Instantiated.PlayerCharacter playerInstance;
 
-                bool partyAlreadySpawned = false;
-                if (partyManager.partyMembers.Count > 0) {
-                    partyAlreadySpawned = true;
-                }
-                foreach (PlayerCharacter playerCharacter in party.members) {
-                    Instantiated.PlayerCharacter playerMovement;
-                    if (partyAlreadySpawned) {
-                        playerMovement = partyManager.GetPlayerMovement(playerCharacter);
-                        playerMovement.transform.SetPositionAndRotation(playerCharacter.startPosition,
-                            Quaternion.identity);
+                    // check if player instance already exists
+                    if (partyManager.currControlledCharacter != null) {
+                        playerInstance = partyManager.GetPlayerInstance(playerInfo);
+                        playerInstance.SetCurrPositions(playerInfo.spawnPosition, identity);
                     }
                     else {
-                        GameObject playerObject = Instantiate(playerCharacter.identity.prefab,
-                            playerCharacter.startPosition, Quaternion.identity);
-                        playerMovement = playerObject.GetComponent<Instantiated.PlayerCharacter>();
-
-                        playerMovement.Init(spriteMovement, playerCharacter, nonVoxelWorld, cameraManager,
+                        GameObject playerObject = Instantiate(identity.prefab,
+                            destination.destinationTile, Quaternion.identity);
+                        playerInstance = playerObject.GetComponent<Instantiated.PlayerCharacter>();
+                        playerInstance.Init(spriteMovement, playerInfo, identity, nonVoxelWorld, cameraManager,
                             partyManager);
-                        playerMovement.spriteLibrary.spriteLibraryAsset = playerCharacter
-                            .GetTravellerIdentity().spriteLibraryAsset;
-                        partyManager.partyMembers.Add(playerMovement);
-
-                        if (playerCharacter == party.mainCharacter) {
-                            partyManager.SetMainCharacter(playerMovement);
+                        playerInstance.SetCurrPositions(playerInfo.spawnPosition, identity);
+                        partyManager.partyMembers.Add(playerInstance);
+                        if (identity == mainCharacterID) {
+                            partyManager.SetMainCharacter(playerInstance);
                         }
+
+                        nonVoxelWorld.AddTangibleEntity(playerInfo, playerInstance);
                     }
-                    playerMovement.SetCurrPositions(playerCharacter);
-                    nonVoxelWorld.AddEntity(playerMovement);
-                    nonVoxelWorld.instantiationMap[playerCharacter] = playerMovement;
+                    continue;
                 }
-
-                continue;
-            }
-            
-            if (TypeUtil.IsSameTypeOrSubclass(nonVoxelSpawnable, typeof(TangibleEntity))) {
-                TangibleEntity tangibleEntity = (TangibleEntity)nonVoxelSpawnable;
-                GameObject gameObject = Instantiate(tangibleEntity.identity.prefab,
-                    tangibleEntity.startPosition, Quaternion.identity);
-                Instantiated.InstantiatedEntity script = gameObject
-                    .GetComponent<Instantiated.InstantiatedEntity>();
-
-                if (nonVoxelSpawnable.GetType() == typeof(NPC)) {
-                    NPC npcInfo = (NPC)nonVoxelSpawnable;
-                    Instantiated.NPC npcBehavior = (Instantiated.NPC)script;
-                    npcBehavior.Init(nonVoxelWorld, spriteMovement, randomManager.rng, npcInfo,
+                else if (entity.GetType() == typeof(NPC)) {
+                    NPC npcInfo = (NPC)entity;
+                    TravellerIdentitySO identity = travellerIdentities[npcInfo.identity];
+                    GameObject npcObject = Instantiate(identity.prefab, npcInfo.spawnPosition, 
+                        Quaternion.identity);
+                    Instantiated.NPC npcInstance = npcObject.GetComponent<Instantiated.NPC>();
+                    npcInstance.Init(nonVoxelWorld, spriteMovement, randomManager.rng, npcInfo, identity,
                         cameraManager, partyManager, gameStateManager);
-                    nonVoxelWorld.npcs.Add(npcBehavior);
 
                     if (npcInfo.battleGroup != null) {
                         Guid battleGroupID = npcInfo.battleGroup.groupID;
                         if (!battleGroups.ContainsKey(battleGroupID)) {
                             battleGroups[battleGroupID] = new HashSet<Instantiated.NPC>();
                         }
-                        battleGroups[battleGroupID].Add(npcBehavior);
-                        npcBehavior.teammates = battleGroups[battleGroupID];
+                        battleGroups[battleGroupID].Add(npcInstance);
+                        npcInstance.teammates = battleGroups[battleGroupID];
                     }
-                    nonVoxelWorld.AddEntity(npcBehavior);
+                    nonVoxelWorld.AddTangibleEntity(npcInfo, npcInstance);
                 }
-
-                if (nonVoxelSpawnable.GetType() == typeof(TangibleObject)) {
-                    TangibleObject nonVoxelObject = (TangibleObject)nonVoxelSpawnable;
-                    Instantiated.TangibleObject instantiatedNVObject = (Instantiated.TangibleObject)script;
-                    instantiatedNVObject.Init(nonVoxelWorld, nonVoxelObject);
-                    nonVoxelWorld.AddEntity(instantiatedNVObject);
+                else {
+                    TangibleObject nonVoxelObject = (TangibleObject)entity;
+                    ObjectIdentitySO identity = objectIdentities[nonVoxelObject.identity];
+                    GameObject npcObject = Instantiate(identity.prefab, nonVoxelObject.spawnPosition,
+                        Quaternion.identity);
+                    Instantiated.TangibleObject instantiatedNVObject 
+                        = npcObject.GetComponent<Instantiated.TangibleObject>();
+                    instantiatedNVObject.Init(nonVoxelWorld, nonVoxelObject, identity);
+                    nonVoxelWorld.AddTangibleEntity(nonVoxelObject, instantiatedNVObject);
                 }
-
-                nonVoxelWorld.instantiationMap[tangibleEntity] = script;
             }
             else {
-                IntangibleEntity intangibleEntity = (IntangibleEntity)nonVoxelSpawnable;
-                GameObject gameObject = Instantiate(intangibleEntity.prefab,
-                    intangibleEntity.startPosition, Quaternion.identity);
-                Instantiated.InstantiatedEntity script = gameObject
-                    .GetComponent<Instantiated.InstantiatedEntity>();
+                IntangibleEntity intangibleEntity = (IntangibleEntity)entity;
+                GameObject gameObject = Instantiate(intangiblePrefabs[intangibleEntity.prefabName],
+                    intangibleEntity.spawnPosition, Quaternion.identity);
+                Instantiated.IntangibleEntity script = gameObject
+                    .GetComponent<Instantiated.IntangibleEntity>();
 
-                if (nonVoxelSpawnable.GetType() == typeof(StoryEventCube)) {
-                    StoryEventCube definition = (StoryEventCube)nonVoxelSpawnable;
+                if (intangibleEntity.GetType() == typeof(StoryEventCube)) {
+                    StoryEventCube definition = (StoryEventCube)intangibleEntity;
                     Instantiated.StoryEventCube storyEventCube = (Instantiated.StoryEventCube)script;
                     storyEventCube.Init(definition, orderManager);
                 }
 
-                if (nonVoxelSpawnable.GetType() == typeof(SceneExitCube)) {
-                    SceneExitCube sceneExitCube = (SceneExitCube)nonVoxelSpawnable;
+                if (intangibleEntity.GetType() == typeof(SceneExitCube)) {
+                    SceneExitCube sceneExitCube = (SceneExitCube)intangibleEntity;
                     Instantiated.SceneExitCube sceneExitComponent = (Instantiated.SceneExitCube)script;
-                    sceneExitComponent.Init(environmentSceneManager, sceneExitCube.destination, sceneExitCube);
+                    sceneExitComponent.Init(environmentSceneManager, inputManager, partyManager,
+                        sceneExitCube.destination, sceneExitCube);
                 }
-                
-                nonVoxelWorld.instantiationMap[intangibleEntity] = script;
+
+                nonVoxelWorld.AddIntangibleEntity(intangibleEntity, script);
             }
         }
     }

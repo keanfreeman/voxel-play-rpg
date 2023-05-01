@@ -81,10 +81,10 @@ public class DetachedCamera : MonoBehaviour
 
     private void UpdateCursorType() {
         if (nonVoxelWorld.IsPositionOccupied(currVoxel)) {
-            Instantiated.TangibleEntity nvEntity = nonVoxelWorld.GetEntityFromPosition(currVoxel);
+            Instantiated.InstantiatedEntity entity = nonVoxelWorld.GetEntityFromPosition(currVoxel);
             if (gameStateManager.controlState == ControlState.COMBAT
-                    && nvEntity.GetType() == typeof(NPC)) {
-                GameMechanics.Action rangedAction = StatInfo.GetRangedAction(
+                    && entity.GetType() == typeof(NPC)) {
+                ActionSO rangedAction = StatInfo.GetRangedAction(
                     combatManager.GetCurrTurnPlayer().GetStats());
                 detachedModeSprite.sprite = rangedAction == null ? meleeAttackIcon : rangedAttackIcon;
             }

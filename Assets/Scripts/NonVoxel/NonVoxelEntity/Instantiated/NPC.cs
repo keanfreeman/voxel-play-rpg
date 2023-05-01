@@ -33,21 +33,30 @@ namespace Instantiated {
             }
         }
 
+        private void OnDestroy() {
+            StopAllCoroutines();
+            enabled = false;
+        }
+
         public void Init(NonVoxelWorld nonVoxelWorld, SpriteMovement spriteMovement,
-                System.Random rng, EntityDefinition.NPC npcInfo, CameraManager cameraManager, 
-                PartyManager partyManager, GameStateManager gameStateManager) {
+                System.Random rng, EntityDefinition.NPC npcInfo, TravellerIdentitySO identity, 
+                CameraManager cameraManager, PartyManager partyManager, 
+                GameStateManager gameStateManager) {
             this.nonVoxelWorld = nonVoxelWorld;
             this.spriteMovement = spriteMovement;
             this.rng = rng;
             this.entity = npcInfo;
+            this.travellerIdentity = identity;
             currHP = GetStats().hitPoints;
             this.cameraManager = cameraManager;
-            this.spriteLibrary.spriteLibraryAsset = npcInfo.GetTravellerIdentity().spriteLibraryAsset;
-            spriteObjectTransform.localScale = npcInfo.GetTravellerIdentity().scale;
-            rotationTransform.localPosition = npcInfo.GetTravellerIdentity().offset;
+            this.spriteLibrary.spriteLibraryAsset = identity.spriteLibraryAsset;
+            spriteObjectTransform.localScale = identity.scale;
+            rotationTransform.localPosition = identity.offset;
             this.partyManager = partyManager;
             this.gameStateManager = gameStateManager;
-            SetCurrPositions(npcInfo);
+            Vector3Int spawn = npcInfo.currSpawnPosition.HasValue ? npcInfo.currSpawnPosition.Value
+                : npcInfo.spawnPosition;
+            SetCurrPositions(spawn, identity);
 
             if (GetEntity().idleBehavior == IdleBehavior.WANDER) {
                 StartCoroutine(MoveCoroutine());
@@ -59,13 +68,13 @@ namespace Instantiated {
                 yield return new WaitForSeconds(1);
             }
 
-            while (!inCombat) {
+            while (!inCombat && enabled) {
                 // find reachable positions
                 List<Vector3Int> adjacentPositions = Coordinates.GetAdjacentCoordinates(origin);
                 List<TangibleEntity> ignoredCreatures = new List<TangibleEntity> { this };
                 List<Vector3Int> reachablePositions = adjacentPositions
                     .Where((Vector3Int target) => {
-                        int numPointsBetween = Coordinates.NumPointsBetween(target, GetEntity().startPosition);
+                        int numPointsBetween = Coordinates.NumPointsBetween(target, GetEntity().spawnPosition);
                         return numPointsBetween <= NPC_MAX_WANDER_DISTANCE;
                     })
                     .Where((Vector3Int target) => 
@@ -94,10 +103,6 @@ namespace Instantiated {
 
         public override void RotateSprite(float degrees) {
             rotationTransform.Rotate(Vector3.up, degrees);
-        }
-
-        public override Stats GetStats() {
-            return GetEntity().GetTravellerIdentity().stats;
         }
 
         public new EntityDefinition.NPC GetEntity() {

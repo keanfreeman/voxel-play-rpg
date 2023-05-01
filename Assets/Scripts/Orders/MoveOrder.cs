@@ -1,13 +1,15 @@
 using EntityDefinition;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Orders {
+    [Serializable]
     public class MoveOrder : Order
     {
-        public Vector3Int destination { get; private set; }
-        public PlayerCharacter player { get; private set; }
+        public Vector3Int destination;
+        public PlayerCharacter player;
 
         public MoveOrder(Vector3Int destination, PlayerCharacter player) {
             this.destination = destination;

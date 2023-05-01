@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace Instantiated {
     public abstract class InstantiatedEntity : MonoBehaviour {
-        protected Spawnable entity;
+        protected Entity entity;
 
-        public Spawnable GetEntity() {
+        public Entity GetEntity() {
             return entity;
         } 
     }

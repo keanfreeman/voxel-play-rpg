@@ -48,15 +48,15 @@ public class ConstructionOptions {
 
     public List<VoxelDefinition> voxelOptions { get; private set; }
     private int voxelOptionsIterator = 0;
-    public List<ObjectIdentity> objectOptions { get; private set; }
+    public List<ObjectIdentitySO> objectOptions { get; private set; }
     private int objectOptionsIterator = 0;
 
     public ConstructionOptions() {
         voxelOptions = new List<VoxelDefinition>();
-        objectOptions = new List<ObjectIdentity>();
+        objectOptions = new List<ObjectIdentitySO>();
     }
 
-    public ConstructionOptions(List<VoxelDefinition> vds, List<ObjectIdentity> objects) {
+    public ConstructionOptions(List<VoxelDefinition> vds, List<ObjectIdentitySO> objects) {
         voxelOptions = vds;
         objectOptions = objects;
     }
@@ -72,7 +72,7 @@ public class ConstructionOptions {
         return voxelOptions[voxelOptionsIterator];
     }
 
-    public ObjectIdentity GetCurrObject() {
+    public ObjectIdentitySO GetCurrObject() {
         if (objectOptions.Count == 0) {
             return null;
         }
@@ -85,7 +85,7 @@ public class ConstructionOptions {
             return vd == null ? "No Voxel Definitions available" : vd.name;
         }
         else {
-            ObjectIdentity objectID = GetCurrObject();
+            ObjectIdentitySO objectID = GetCurrObject();
             return objectID == null ? "No Objects available" 
                 : objectID.prefab.name;
         }

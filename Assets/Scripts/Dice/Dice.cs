@@ -1,12 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public struct Dice
 {
-    public int numDice { get; private set; }
-    public int diceSize { get; private set; }
-    public int modifier { get; private set; }
+    public int numDice;
+    public int diceSize;
+    public int modifier;
 
     public Dice(int numDice, int diceSize) {
         this.numDice = numDice;

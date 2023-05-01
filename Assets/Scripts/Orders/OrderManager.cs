@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Ink.Runtime;
 
 public class OrderManager : MonoBehaviour
 {
@@ -39,7 +40,7 @@ public class OrderManager : MonoBehaviour
                 ExclaimOrder exclaimOrder = (ExclaimOrder)order;
                 InstantiatedEntity exclaimer = nonVoxelWorld.GetEntityFromDefinition(
                     exclaimOrder.exclaimingEntity);
-                if (exclaimer == null || !TypeUtil.IsSameTypeOrSubclass(exclaimer, typeof(Traveller))) {
+                if (exclaimer == null || !TypeUtils.IsSameTypeOrIsSubclass(exclaimer, typeof(Traveller))) {
                     continue;
                 }
 
@@ -49,7 +50,7 @@ public class OrderManager : MonoBehaviour
             else if (type == typeof(MoveOrder)) {
                 MoveOrder moveOrder = (MoveOrder)order;
                 InstantiatedEntity mover = nonVoxelWorld.GetEntityFromDefinition(moveOrder.player);
-                if (mover == null || !TypeUtil.IsSameTypeOrSubclass(mover, typeof(Traveller))) {
+                if (mover == null || !TypeUtils.IsSameTypeOrIsSubclass(mover, typeof(Traveller))) {
                     continue;
                 }
 
@@ -64,7 +65,7 @@ public class OrderManager : MonoBehaviour
                 CameraFocusOrder cameraFocusOrder = (CameraFocusOrder)order;
                 InstantiatedEntity focused = nonVoxelWorld.GetEntityFromDefinition(
                     cameraFocusOrder.focusTarget);
-                if (focused == null || !TypeUtil.IsSameTypeOrSubclass(focused, typeof(Traveller))) {
+                if (focused == null || !TypeUtils.IsSameTypeOrIsSubclass(focused, typeof(Traveller))) {
                     continue;
                 }
 
@@ -73,7 +74,7 @@ public class OrderManager : MonoBehaviour
             }
             else if (type == typeof(DialogueOrder)) {
                 DialogueOrder dialogueOrder = (DialogueOrder)order;
-                dialogueUI.StartDialogue(dialogueOrder.story);
+                dialogueUI.StartDialogue(new Story(dialogueOrder.storyText));
                 while (dialogueUI.IsDisplaying()) {
                     yield return null;
                 }

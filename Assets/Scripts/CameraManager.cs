@@ -71,6 +71,10 @@ public class CameraManager : MonoBehaviour {
         }
     }
 
+    public void DeParentCamera() {
+        mainCameraTarget.transform.parent = null;
+    }
+
     // todo make gradual animation
     public void AttachCameraToPlayer(PlayerCharacter playerMovement) {
         mainCameraTarget.transform.parent = playerMovement.playerObject.transform;
