@@ -8,8 +8,7 @@ namespace EntityDefinition {
     public abstract class IntangibleEntity : Entity {
         public string prefabName;
 
-        public IntangibleEntity(Vector3Int startPosition, string prefabName) {
-            this.spawnPosition = startPosition;
+        public IntangibleEntity(Vector3Int startPosition, string prefabName) : base(startPosition) {
             this.prefabName = prefabName;
         }
     }

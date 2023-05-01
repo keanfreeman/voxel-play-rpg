@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 using Utils;
 using Saving;
 
-public class PartyManager : MonoBehaviour
+public class PartyManager : MonoBehaviour, ISaveable
 {
     [SerializeField] InputManager inputManager;
     [SerializeField] CameraManager cameraManager;
@@ -18,6 +18,20 @@ public class PartyManager : MonoBehaviour
     public PlayerCharacter mainCharacter { get; private set; }
     public List<PlayerCharacter> partyMembers { get; private set; } = new List<PlayerCharacter>();
     public PlayerCharacter currControlledCharacter { get; private set; }
+
+    public void PopulateSaveData(SaveData saveData) {
+        saveData.currControlledCharacter = currControlledCharacter.GetEntity();
+    }
+
+    public IEnumerator LoadFromSaveData(SaveData saveData) {
+        foreach (PlayerCharacter pc in partyMembers) {
+            EntityDefinition.PlayerCharacter pcDef = pc.GetEntity();
+            if (pcDef.Equals(saveData.currControlledCharacter)) {
+                SetCurrControlledCharacter(pc);
+            }
+        }
+        yield break;
+    }
 
     public void ClearData() {
         mainCharacter = null;
@@ -32,10 +46,12 @@ public class PartyManager : MonoBehaviour
     public void SetCurrControlledCharacter(PlayerCharacter playerMovement) {
         inputManager.SetPlayerMovementControls(currControlledCharacter, playerMovement);
         currControlledCharacter = playerMovement;
+        cameraManager.AttachCameraToPlayer(currControlledCharacter);
     }
 
     public void SwitchToNextCharacter(InputAction.CallbackContext obj) {
-        if (gameStateManager.controlState == ControlState.COMBAT) {
+        if (gameStateManager.controlState == ControlState.COMBAT 
+                || gameStateManager.controlState == ControlState.DETACHED) {
             return;
         }
 
@@ -44,10 +60,6 @@ public class PartyManager : MonoBehaviour
         int nextCharacterPosition = currCharacterPosition == partyMembers.Count - 1 ?
             0 : currCharacterPosition + 1;
         SetCurrControlledCharacter(partyMembers[nextCharacterPosition]);
-
-        if (gameStateManager.controlState != ControlState.DETACHED) {
-            cameraManager.AttachCameraToPlayer(currControlledCharacter);
-        }
     }
 
     public Vector3Int GetPositionFromDestination(EntityDefinition.EnvChangeDestination destination,

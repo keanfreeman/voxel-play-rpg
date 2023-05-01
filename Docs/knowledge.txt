@@ -1,3 +1,5 @@
+need to use .Equals instead of == when comparing objects with overridden equality operation
+
 save location - C:\Users\keanf\AppData\LocalLow\DefaultCompany
 
 if you want a coroutine with a return value, you need to use CoroutineWithData

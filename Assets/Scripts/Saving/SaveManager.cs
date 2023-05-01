@@ -21,17 +21,10 @@ namespace Saving {
             else if (Input.GetKeyUp(KeyCode.F9)) {
                 Save();
             }
-            else if (Input.GetKeyUp(KeyCode.F10)) {
-                DeleteSave();
-            }
         }
 
         public bool SaveExists() {
             return FileManager.SaveExists();
-        }
-
-        public void DeleteSave() {
-            FileManager.Delete();
         }
 
         public IEnumerator Load() {
@@ -52,6 +45,7 @@ namespace Saving {
 
             // load new information
             yield return environmentSceneManager.LoadFromSaveData(saveData);
+            yield return partyManager.LoadFromSaveData(saveData);
 
             yield return gameStateManager.SetControlState(ControlState.SPRITE_NEUTRAL);
             Debug.Log("Loaded");
@@ -60,6 +54,7 @@ namespace Saving {
         private void Save() {
             SaveData saveData = new SaveData();
             environmentSceneManager.PopulateSaveData(saveData);
+            partyManager.PopulateSaveData(saveData);
             FileManager.WriteSaveJson(saveData.ToJson());
             Debug.Log("Saved");
         }

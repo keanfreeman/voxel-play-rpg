@@ -9,7 +9,10 @@ namespace Saving {
     public static class FileManager {
         public static void WriteSaveJson(string json) {
             string path = GetSaveDestination();
-            FileStream file = File.Exists(path) ? File.OpenWrite(path) : File.Create(path);
+            if (File.Exists(path)) {
+                Delete(path);
+            }
+            FileStream file = File.Create(path);
 
             byte[] writeArr = Encoding.UTF8.GetBytes(json);
             file.Write(writeArr);
@@ -28,8 +31,7 @@ namespace Saving {
             return File.Exists(GetSaveDestination());
         }
 
-        public static void Delete() {
-            string path = GetSaveDestination();
+        public static void Delete(string path) {
             File.Delete(path);
         }
 

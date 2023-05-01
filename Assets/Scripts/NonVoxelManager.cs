@@ -122,7 +122,7 @@ public class NonVoxelManager : MonoBehaviour
                 if (intangibleEntity.GetType() == typeof(StoryEventCube)) {
                     StoryEventCube definition = (StoryEventCube)intangibleEntity;
                     Instantiated.StoryEventCube storyEventCube = (Instantiated.StoryEventCube)script;
-                    storyEventCube.Init(definition, orderManager);
+                    storyEventCube.Init(definition, orderManager, nonVoxelWorld);
                 }
 
                 if (intangibleEntity.GetType() == typeof(SceneExitCube)) {

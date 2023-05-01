@@ -72,16 +72,19 @@ namespace NonVoxel {
             return positionToEntity.GetValueOrDefault(position, null);
         }
 
-        public void OnDeleteEntity(TangibleEntity entity) {
-            if (entity.GetType() == typeof(NPC)) {
-                npcs.Remove((NPC)entity);
-            }
-            foreach (Vector3Int position in entity.occupiedPositions) {
-                positionToEntity[position] = null;
+        public void DeleteEntity(InstantiatedEntity entity) {
+            if (TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(TangibleEntity))) {
+                TangibleEntity tangibleEntity = (TangibleEntity)entity;
+                if (entity.GetType() == typeof(NPC)) {
+                    npcs.Remove((NPC)tangibleEntity);
+                }
+                foreach (Vector3Int position in tangibleEntity.occupiedPositions) {
+                    positionToEntity.Remove(position);
+                }
             }
 
             if (instantiationMap.ContainsKey(entity.GetEntity())) {
-                instantiationMap[entity.GetEntity()] = null;
+                instantiationMap.Remove(entity.GetEntity());
             }
         }
 

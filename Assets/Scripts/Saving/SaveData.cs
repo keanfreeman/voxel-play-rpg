@@ -1,5 +1,4 @@
 using EntityDefinition;
-using Instantiated;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -11,6 +10,8 @@ namespace Saving {
     public class SaveData {
         public EnvChangeDestination currDestination;
         public Dictionary<int, List<Entity>> sceneEntityState;
+
+        public PlayerCharacter currControlledCharacter;
 
         public SaveData() { }
 
@@ -30,6 +31,7 @@ namespace Saving {
                 new JsonSerializerSettings{ TypeNameHandling = TypeNameHandling.All });
             this.currDestination = saveData.currDestination;
             this.sceneEntityState = saveData.sceneEntityState;
+            this.currControlledCharacter = saveData.currControlledCharacter;
         }
     }
 }

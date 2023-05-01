@@ -9,7 +9,7 @@ using Orders;
 using MovementDirection;
 using Saving;
 using NonVoxel;
-using ResourceIDs;
+using ResourceID;
 
 public class EnvironmentSceneManager : MonoBehaviour, ISaveable
 {
@@ -71,9 +71,8 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         voxelWorldManager.AssignVPEnvironmentInitEvent(constructionUI.OnEnvInitialized);
 
         nonVoxelManager.CreateEntities(sceneEntityState[currDestination.destinationEnv], currDestination);
-        cameraManager.AttachCameraToPlayer(partyManager.mainCharacter);
-        environment.cameraMain = cameraManager.GetMainCamera();
         partyManager.SetCurrControlledCharacter(partyManager.mainCharacter);
+        environment.cameraMain = cameraManager.GetMainCamera();
         
         StartCoroutine(gameStateManager.SetControlState(ControlState.SPRITE_NEUTRAL));
     }
@@ -127,34 +126,34 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
 
     private Dictionary<int, List<Entity>> SetUpDefaultWorldEntities() {
         PlayerCharacter mainCharacter = new PlayerCharacter(new Vector3Int(859, 37, 347),
-            ResourceIDs.ResourceIDs.MAIN_CHARACTER_STRING);
+            ResourceIDs.MAIN_CHARACTER_STRING);
         PlayerCharacter sidekick = new PlayerCharacter(new Vector3Int(864, 29, 347),
-            ResourceIDs.ResourceIDs.SIDEKICK_STRING);
+            ResourceIDs.SIDEKICK_STRING);
 
         NPC commoner = new NPC(new Vector3Int(862, 29, 346), Faction.PLAYER, IdleBehavior.STAND,
-            ResourceIDs.ResourceIDs.FRIEND_STRING);
+            ResourceIDs.FRIEND_STRING);
 
         BattleGroup battleGroup1 = new BattleGroup(new List<NPC> {
             new NPC(new Vector3Int(835, 29, 350), Faction.ENEMY, IdleBehavior.WANDER,
-                ResourceIDs.ResourceIDs.WOLF_STRING),
+                ResourceIDs.WOLF_STRING),
             new NPC(new Vector3Int(835, 29, 347), Faction.ENEMY, IdleBehavior.WANDER,
-                ResourceIDs.ResourceIDs.WOLF_STRING)
+                ResourceIDs.WOLF_STRING)
         });
         BattleGroup battleGroup2 = new BattleGroup(new List<NPC> {
             new NPC(new Vector3Int(825, 31, 348), Faction.ENEMY, IdleBehavior.WANDER,
-                ResourceIDs.ResourceIDs.WOLF_STRING),
+                ResourceIDs.WOLF_STRING),
             new NPC(new Vector3Int(825, 31, 350), Faction.ENEMY, IdleBehavior.WANDER,
-                ResourceIDs.ResourceIDs.WOLF_STRING)
+                ResourceIDs.WOLF_STRING)
         });
         BattleGroup battleGroup3 = new BattleGroup(new List<NPC> {
             new NPC(new Vector3Int(468, 26, -46), Faction.ENEMY, IdleBehavior.WANDER,
-                ResourceIDs.ResourceIDs.WOLF_STRING)
+                ResourceIDs.WOLF_STRING)
         });
 
         TangibleObject bed = new TangibleObject(new Vector3Int(857, 29, 350), Direction.NORTH,
-            ResourceIDs.ResourceIDs.BED_STRING);
+            ResourceIDs.BED_STRING);
         TangibleObject lamp = new TangibleObject(new Vector3Int(858, 33, 351), Direction.NORTH,
-            ResourceIDs.ResourceIDs.LAMP_STRING);
+            ResourceIDs.LAMP_STRING);
 
         Dictionary<int, List<Entity>> defaults = new Dictionary<int, List<Entity>> {
             {
@@ -163,7 +162,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     new SceneExitCube(
                         new Vector3Int(463, 29, -46),
                         new EnvChangeDestination(2, new Vector3Int(884, 26, 348)),
-                        ResourceIDs.ResourceIDs.SCENE_EXIT_STRING)
+                        ResourceIDs.SCENE_EXIT_STRING)
                 }
             },
             {
@@ -172,7 +171,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     new SceneExitCube(
                         new Vector3Int(884, 26, 346),
                         new EnvChangeDestination(3, new Vector3Int(858, 37, 347)),
-                        ResourceIDs.ResourceIDs.SCENE_EXIT_STRING)
+                        ResourceIDs.SCENE_EXIT_STRING)
                 }
             },
             {
@@ -187,9 +186,9 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     new SceneExitCube(
                         new Vector3Int(864, 29, 351),
                         new EnvChangeDestination(1, new Vector3Int(466, 29, -46)),
-                        ResourceIDs.ResourceIDs.SCENE_EXIT_STRING),
+                        ResourceIDs.SCENE_EXIT_STRING),
                     new StoryEventCube(
-                        new Vector3Int(856, 36, 350), 1, ResourceIDs.ResourceIDs.STORY_EVENT_CUBE_STRING,
+                        new Vector3Int(856, 36, 350), 1, ResourceIDs.STORY_EVENT_CUBE_STRING,
                         new OrderGroup(true, new List<Order>{
                             new DialogueOrder(getAttention, "???"),
                             new ExclaimOrder(mainCharacter),
