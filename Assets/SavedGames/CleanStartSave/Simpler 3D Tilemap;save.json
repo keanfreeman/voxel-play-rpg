@@ -1,0 +1,584 @@
+{
+  "$type": "Saving.SaveData, Assembly-CSharp",
+  "currDestination": {
+    "$type": "EntityDefinition.EnvChangeDestination, Assembly-CSharp",
+    "sceneIndex": 3,
+    "destinationTile": {
+      "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+      "x": 859,
+      "y": 37,
+      "z": 347,
+      "magnitude": 927.178,
+      "sqrMagnitude": 859659
+    }
+  },
+  "sceneEntityState": {
+    "$type": "System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[SceneInfo, Assembly-CSharp]], mscorlib",
+    "1": {
+      "$type": "SceneInfo, Assembly-CSharp",
+      "entities": {
+        "$type": "System.Collections.Generic.List`1[[EntityDefinition.Entity, Assembly-CSharp]], mscorlib",
+        "$values": [
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": {
+              "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
+              "groupID": "e5dd7c80-df05-4a61-893d-d7230548a326",
+              "combatants": {
+                "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
+                "$values": []
+              }
+            },
+            "faction": 1,
+            "idleBehavior": 1,
+            "currSpawnPosition": null,
+            "identity": "Wolf",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 468,
+              "y": 26,
+              "z": -46,
+              "magnitude": 470.97345,
+              "sqrMagnitude": 221816
+            },
+            "guid": "e4444aec-2c3e-42e0-8933-91c947bbf599"
+          },
+          {
+            "$type": "EntityDefinition.SceneExitCube, Assembly-CSharp",
+            "destination": {
+              "$type": "EntityDefinition.EnvChangeDestination, Assembly-CSharp",
+              "sceneIndex": 2,
+              "destinationTile": {
+                "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                "x": 884,
+                "y": 26,
+                "z": 348,
+                "magnitude": 950.387268,
+                "sqrMagnitude": 903236
+              }
+            },
+            "prefabName": "Scene Exit",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 463,
+              "y": 29,
+              "z": -46,
+              "magnitude": 466.182373,
+              "sqrMagnitude": 217326
+            },
+            "guid": "935dfbbb-dcef-45b0-b771-e2bbcf030c6f"
+          }
+        ]
+      },
+      "vpSaveBase64": null
+    },
+    "2": {
+      "$type": "SceneInfo, Assembly-CSharp",
+      "entities": {
+        "$type": "System.Collections.Generic.List`1[[EntityDefinition.Entity, Assembly-CSharp]], mscorlib",
+        "$values": [
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": {
+              "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
+              "groupID": "e5dd7c80-df05-4a61-893d-d7230548a326",
+              "combatants": {
+                "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
+                "$values": []
+              }
+            },
+            "faction": 1,
+            "idleBehavior": 1,
+            "currSpawnPosition": null,
+            "identity": "Wolf",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 468,
+              "y": 26,
+              "z": -46,
+              "magnitude": 470.97345,
+              "sqrMagnitude": 221816
+            },
+            "guid": "e4444aec-2c3e-42e0-8933-91c947bbf599"
+          },
+          {
+            "$type": "EntityDefinition.SceneExitCube, Assembly-CSharp",
+            "destination": {
+              "$type": "EntityDefinition.EnvChangeDestination, Assembly-CSharp",
+              "sceneIndex": 3,
+              "destinationTile": {
+                "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                "x": 858,
+                "y": 37,
+                "z": 347,
+                "magnitude": 926.2516,
+                "sqrMagnitude": 857942
+              }
+            },
+            "prefabName": "Scene Exit",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 884,
+              "y": 26,
+              "z": 346,
+              "magnitude": 949.6568,
+              "sqrMagnitude": 901848
+            },
+            "guid": "927cbd3b-5b8c-46fe-b006-46ac642c9377"
+          }
+        ]
+      },
+      "vpSaveBase64": null
+    },
+    "3": {
+      "$type": "SceneInfo, Assembly-CSharp",
+      "entities": {
+        "$type": "System.Collections.Generic.List`1[[EntityDefinition.Entity, Assembly-CSharp]], mscorlib",
+        "$values": [
+          {
+            "$type": "EntityDefinition.PlayerCharacter, Assembly-CSharp",
+            "currSpawnPosition": null,
+            "identity": "MainCharacter",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 859,
+              "y": 37,
+              "z": 347,
+              "magnitude": 927.178,
+              "sqrMagnitude": 859659
+            },
+            "guid": "e904e141-3f5f-468f-879f-f1d5b93cd05c"
+          },
+          {
+            "$type": "EntityDefinition.PlayerCharacter, Assembly-CSharp",
+            "currSpawnPosition": null,
+            "identity": "Sidekick",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 864,
+              "y": 29,
+              "z": 347,
+              "magnitude": 931.5289,
+              "sqrMagnitude": 867746
+            },
+            "guid": "0709b847-3622-4785-85a1-4d42dfc2b547"
+          },
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": null,
+            "faction": 0,
+            "idleBehavior": 0,
+            "currSpawnPosition": {
+              "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+              "x": 862,
+              "y": 29,
+              "z": 346,
+              "magnitude": 929.301331,
+              "sqrMagnitude": 863601
+            },
+            "identity": "FriendCommoner",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 862,
+              "y": 29,
+              "z": 346,
+              "magnitude": 929.301331,
+              "sqrMagnitude": 863601
+            },
+            "guid": "3b2cb79f-5237-4586-b3bc-02b2461a2e4b"
+          },
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": {
+              "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
+              "groupID": "d9aec605-9d33-469b-9ef9-d0e4ca7120bb",
+              "combatants": {
+                "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
+                "$values": [
+                  {
+                    "$type": "EntityDefinition.NPC, Assembly-CSharp",
+                    "faction": 1,
+                    "idleBehavior": 1,
+                    "currSpawnPosition": {
+                      "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+                      "x": 834,
+                      "y": 29,
+                      "z": 347,
+                      "magnitude": 903.7732,
+                      "sqrMagnitude": 816806
+                    },
+                    "identity": "Wolf",
+                    "spawnPosition": {
+                      "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                      "x": 835,
+                      "y": 29,
+                      "z": 347,
+                      "magnitude": 904.6961,
+                      "sqrMagnitude": 818475
+                    },
+                    "guid": "67348b1b-e947-4d71-a250-7566d419b823"
+                  }
+                ]
+              }
+            },
+            "faction": 1,
+            "idleBehavior": 1,
+            "currSpawnPosition": {
+              "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+              "x": 834,
+              "y": 29,
+              "z": 349,
+              "magnitude": 904.542969,
+              "sqrMagnitude": 818198
+            },
+            "identity": "Wolf",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 835,
+              "y": 29,
+              "z": 350,
+              "magnitude": 905.850952,
+              "sqrMagnitude": 820566
+            },
+            "guid": "881b6c39-4557-4645-b345-79b9c71ac195"
+          },
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": {
+              "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
+              "groupID": "d9aec605-9d33-469b-9ef9-d0e4ca7120bb",
+              "combatants": {
+                "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
+                "$values": [
+                  {
+                    "$type": "EntityDefinition.NPC, Assembly-CSharp",
+                    "faction": 1,
+                    "idleBehavior": 1,
+                    "currSpawnPosition": {
+                      "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+                      "x": 834,
+                      "y": 29,
+                      "z": 349,
+                      "magnitude": 904.542969,
+                      "sqrMagnitude": 818198
+                    },
+                    "identity": "Wolf",
+                    "spawnPosition": {
+                      "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                      "x": 835,
+                      "y": 29,
+                      "z": 350,
+                      "magnitude": 905.850952,
+                      "sqrMagnitude": 820566
+                    },
+                    "guid": "881b6c39-4557-4645-b345-79b9c71ac195"
+                  }
+                ]
+              }
+            },
+            "faction": 1,
+            "idleBehavior": 1,
+            "currSpawnPosition": {
+              "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+              "x": 834,
+              "y": 29,
+              "z": 347,
+              "magnitude": 903.7732,
+              "sqrMagnitude": 816806
+            },
+            "identity": "Wolf",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 835,
+              "y": 29,
+              "z": 347,
+              "magnitude": 904.6961,
+              "sqrMagnitude": 818475
+            },
+            "guid": "67348b1b-e947-4d71-a250-7566d419b823"
+          },
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": {
+              "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
+              "groupID": "e18faa4d-fd91-43b3-97ad-c8b666ab8b69",
+              "combatants": {
+                "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
+                "$values": [
+                  {
+                    "$type": "EntityDefinition.NPC, Assembly-CSharp",
+                    "faction": 1,
+                    "idleBehavior": 1,
+                    "currSpawnPosition": {
+                      "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+                      "x": 827,
+                      "y": 30,
+                      "z": 350,
+                      "magnitude": 898.5149,
+                      "sqrMagnitude": 807329
+                    },
+                    "identity": "Wolf",
+                    "spawnPosition": {
+                      "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                      "x": 825,
+                      "y": 31,
+                      "z": 350,
+                      "magnitude": 896.708435,
+                      "sqrMagnitude": 804086
+                    },
+                    "guid": "c28cf145-35e2-4345-838f-1df46d3890d2"
+                  }
+                ]
+              }
+            },
+            "faction": 1,
+            "idleBehavior": 1,
+            "currSpawnPosition": {
+              "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+              "x": 827,
+              "y": 30,
+              "z": 347,
+              "magnitude": 897.3505,
+              "sqrMagnitude": 805238
+            },
+            "identity": "Wolf",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 825,
+              "y": 31,
+              "z": 348,
+              "magnitude": 895.9297,
+              "sqrMagnitude": 802690
+            },
+            "guid": "ecac5214-73f8-4401-aa1d-5ddf74ee97cd"
+          },
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": {
+              "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
+              "groupID": "e18faa4d-fd91-43b3-97ad-c8b666ab8b69",
+              "combatants": {
+                "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
+                "$values": [
+                  {
+                    "$type": "EntityDefinition.NPC, Assembly-CSharp",
+                    "faction": 1,
+                    "idleBehavior": 1,
+                    "currSpawnPosition": {
+                      "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+                      "x": 827,
+                      "y": 30,
+                      "z": 347,
+                      "magnitude": 897.3505,
+                      "sqrMagnitude": 805238
+                    },
+                    "identity": "Wolf",
+                    "spawnPosition": {
+                      "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                      "x": 825,
+                      "y": 31,
+                      "z": 348,
+                      "magnitude": 895.9297,
+                      "sqrMagnitude": 802690
+                    },
+                    "guid": "ecac5214-73f8-4401-aa1d-5ddf74ee97cd"
+                  }
+                ]
+              }
+            },
+            "faction": 1,
+            "idleBehavior": 1,
+            "currSpawnPosition": {
+              "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+              "x": 827,
+              "y": 30,
+              "z": 350,
+              "magnitude": 898.5149,
+              "sqrMagnitude": 807329
+            },
+            "identity": "Wolf",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 825,
+              "y": 31,
+              "z": 350,
+              "magnitude": 896.708435,
+              "sqrMagnitude": 804086
+            },
+            "guid": "c28cf145-35e2-4345-838f-1df46d3890d2"
+          },
+          {
+            "$type": "EntityDefinition.SceneExitCube, Assembly-CSharp",
+            "destination": {
+              "$type": "EntityDefinition.EnvChangeDestination, Assembly-CSharp",
+              "sceneIndex": 1,
+              "destinationTile": {
+                "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                "x": 466,
+                "y": 29,
+                "z": -46,
+                "magnitude": 469.162018,
+                "sqrMagnitude": 220113
+              }
+            },
+            "prefabName": "Scene Exit",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 864,
+              "y": 29,
+              "z": 351,
+              "magnitude": 933.026245,
+              "sqrMagnitude": 870538
+            },
+            "guid": "cc2c68be-8f60-4501-baec-dace0509042b"
+          },
+          {
+            "$type": "EntityDefinition.StoryEventCube, Assembly-CSharp",
+            "orderGroup": {
+              "$type": "Orders.OrderGroup, Assembly-CSharp",
+              "destroyOnComplete": true,
+              "orders": {
+                "$type": "System.Collections.Generic.List`1[[Orders.Order, Assembly-CSharp]], mscorlib",
+                "$values": [
+                  {
+                    "$type": "Orders.DialogueOrder, Assembly-CSharp",
+                    "storyText": "{\"inkVersion\":20,\"root\":[[\"^Hey! Hey, Kean! \",\"end\",\"\\n\",[\"done\",{\"#f\":5,\"#n\":\"g-0\"}],null],\"done\",{\"#f\":1}],\"listDefs\":{}}",
+                    "speakerName": "???"
+                  },
+                  {
+                    "$type": "Orders.ExclaimOrder, Assembly-CSharp",
+                    "exclaimingEntity": {
+                      "$type": "EntityDefinition.PlayerCharacter, Assembly-CSharp",
+                      "currSpawnPosition": null,
+                      "identity": "MainCharacter",
+                      "spawnPosition": {
+                        "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                        "x": 859,
+                        "y": 37,
+                        "z": 347,
+                        "magnitude": 927.178,
+                        "sqrMagnitude": 859659
+                      },
+                      "guid": "e904e141-3f5f-468f-879f-f1d5b93cd05c"
+                    }
+                  },
+                  {
+                    "$type": "Orders.MoveOrder, Assembly-CSharp",
+                    "destination": {
+                      "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                      "x": 859,
+                      "y": 37,
+                      "z": 347,
+                      "magnitude": 927.178,
+                      "sqrMagnitude": 859659
+                    },
+                    "player": {
+                      "$type": "EntityDefinition.PlayerCharacter, Assembly-CSharp",
+                      "currSpawnPosition": null,
+                      "identity": "MainCharacter",
+                      "spawnPosition": {
+                        "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                        "x": 859,
+                        "y": 37,
+                        "z": 347,
+                        "magnitude": 927.178,
+                        "sqrMagnitude": 859659
+                      },
+                      "guid": "e904e141-3f5f-468f-879f-f1d5b93cd05c"
+                    }
+                  },
+                  {
+                    "$type": "Orders.CameraFocusOrder, Assembly-CSharp",
+                    "focusTarget": {
+                      "$type": "EntityDefinition.NPC, Assembly-CSharp",
+                      "battleGroup": null,
+                      "faction": 0,
+                      "idleBehavior": 0,
+                      "currSpawnPosition": {
+                        "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+                        "x": 862,
+                        "y": 29,
+                        "z": 346,
+                        "magnitude": 929.301331,
+                        "sqrMagnitude": 863601
+                      },
+                      "identity": "FriendCommoner",
+                      "spawnPosition": {
+                        "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                        "x": 862,
+                        "y": 29,
+                        "z": 346,
+                        "magnitude": 929.301331,
+                        "sqrMagnitude": 863601
+                      },
+                      "guid": "3b2cb79f-5237-4586-b3bc-02b2461a2e4b"
+                    }
+                  },
+                  {
+                    "$type": "Orders.DialogueOrder, Assembly-CSharp",
+                    "storyText": "{\"inkVersion\":20,\"root\":[[\"^Glad I caught you! How's the snow been?\",\"\\n\",\"^We've got a bit of a situation down in the mines. Please come down when you get a second.\",\"\\n\",[\"done\",{\"#f\":5,\"#n\":\"g-0\"}],null],\"done\",{\"#f\":1}],\"listDefs\":{}}",
+                    "speakerName": "Corey"
+                  }
+                ]
+              }
+            },
+            "cubeRadius": 1,
+            "prefabName": "StoryEventCube",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 856,
+              "y": 36,
+              "z": 350,
+              "magnitude": 925.4901,
+              "sqrMagnitude": 856532
+            },
+            "guid": "2b874e3b-724e-4808-bd13-eb777c7f7a75"
+          },
+          {
+            "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
+            "startRotation": 0,
+            "identity": "Bed",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 857,
+              "y": 29,
+              "z": 350,
+              "magnitude": 926.169556,
+              "sqrMagnitude": 857790
+            },
+            "guid": "1958d086-3d86-4b85-a4a9-2f9260acbae9"
+          },
+          {
+            "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
+            "startRotation": 0,
+            "identity": "Lamp",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 858,
+              "y": 33,
+              "z": 351,
+              "magnitude": 927.606567,
+              "sqrMagnitude": 860454
+            },
+            "guid": "f09f3b8f-4f1b-45e4-9969-455ce1c9584a"
+          }
+        ]
+      },
+      "vpSaveBase64": "DhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABADRCAAAAAAAAAAAHAA5Wb3hlbFRhaWdhRGlydA1Wb3hlbFdhdGVyU2VhDVZveGVsVGFpZ2FUb3AOU25vd1RyZWVMZWF2ZXMMVm94ZWxPcmVDb2FsFVZveGVsQnVpbGRpbmdXb29kV2FsbAxTbm93VHJlZUJhcmsAAAcAAAAAAFpEAADAQQAArEMBARUAAAD///8AAAALAAEA////AAugAA0AAP///6ALAQAAAQD///+hCw8ADQAA////sAsBAAABAP///7ELDwANAAD////ACwEAAAEA////wQsPAA0AAP///9ALAQAAAQD////RCw8ADQAA////4AsBAAABAP///+ELDwANAAD////wCwEAAAEA////8QsPAA0CAP///6AMAQAAAgD///+wDAEAAAIA////wAwBAAACAP///9AMAQAAAgD////gDAEAAAIA////8AwBAAADAP///28PAQAAAAAAAAAAAABaRAAAwEEAALRDAQESAAAA////AABpAgAEAP///2kCAQAAAAD///9qAg8AAAQA////eQIBAAAAAP///3oCDwAABAD///+JAgEAAAAA////igJOAQAEAP///9gDAgAAAAD////aA54BAAQA////eAUBAAAAAP///3kF/wAABAD///94BgEAAAAA////eQaIBAABAP///wELDwANAAD///8QCwEAAAEA////EQvvAA0CAP///wAMAQAAAgD///8QDAEAAAAAAAAAAAAAVkQAAMBBAACsQwEBKQAAAP///wAAAAsAAQD///8AC6AADQAA////oAsgAAABAP///8ALBQANAAD////FCwsAAAEA////0AsFAA0AAP///9ULCwAAAQD////gCwUADQAA////5QsLAAABAP////ALBQANAAD////1CwsAAAIA////oAwgAAACAP///8UMCwAAAgD////VDAsAAAIA////5QwLAAACAP////UMCwAABQD///+2DQYAAAUA////xg0BAAAFAP///9YNAQAABQD////bDQEAAAUA////5g0BAAAFAP///+sNAQAABQD////2DQEAAAUA////+w0BAAAFAP///7YOBgAABQD////GDgEAAAUA////1g4BAAAFAP///9sOAQAABQD////mDgEAAAUA////6w4BAAAFAP////YOAQAABQD////7DgEAAAUA////tg8GAAAFAP///8YPAQAABQD////LDwEAAAUA////1g8BAAAFAP///9sPAQAABQD////mDwEAAAUA////6w8BAAAFAP////YPAQAABQD////7DwEAAAAAAAAAAAAAVkQAAMBBAAC0QwEBFQAAAP///wAApgYABAD///+mBgEAAAAA////pwYPAAAEAP///7YGAQAAAAD///+3BrYBAAQA////bQgBAAAAAP///24IDwAABAD///99CAEAAAAA////fgjvAAAEAP///20JAQAAAAD///9uCZIBAAEA////AAsFAA0AAP///wULCwAAAQD///8QCwUADQAA////FQsLAAABAP///yAL4AANAgD///8FDAsAAAIA////FQwLAAAFAP///wYNBgAABQD///8GDgYAAAUA////Bg8GAAAAAAAAAAAAAFJEAADAQQAArEMBAWgAAAD///8AACUAAAQA////JQADAAAAAP///ygAAQoABAD///8pCgMAAAAA////LArhAAABAP///w0LAwANAAD///8QCw0AAAEA////HQsDAA0AAP///yALDQAAAQD///8tCwMADQAA////MAsMAAABAP///zwLBAANAAD///9ACwwAAAEA////TAsEAA0AAP///1ALDAAAAQD///9cCwQADQAA////YAsMAAABAP///2wLBAANAAD///9wCwwAAAEA////fAsEAA0AAP///4ALCwAAAQD///+LCwUADQAA////kAsLAAABAP///5sLBQANAAD///+gCykAAAEA////yQsHAA0AAP///9ALCQAAAQD////ZCwcADQAA////4AsJAAABAP///+kLBwANAAD////wCwkAAAEA////+QsHAA0AAP///wAMAgAAAgD///8CDAsAAAAA////EAwCAAACAP///xIMCwAAAAD///8gDAMAAAIA////IwwKAAAAAP///zAMAwAAAgD///8zDAkAAAAA////QAwDAAACAP///0MMCQAAAAD///9QDAIAAAIA////UgwKAAAAAP///2AMAgAAAgD///9iDAoAAAIA////cAwMAAACAP///4AMCwAAAgD///+QDAsAAAIA////oAwpAAACAP///9AMCQAAAgD////gDAkAAAIA////8AwJAAACAP///wANAgAAAgD///8QDQIAAAIA////IA0DAAAGAP///ygNAQAAAgD///8wDQMAAAIA////QA0DAAACAP///1ANAgAABgD///9XDQEAAAIA////YA0CAAAGAP///4INAQAABgD////GDQEAAAYA////KA4BAAAGAP///1cOAQAAAwD///9yDgEAAAMA////gQ4BAAAGAP///4IOAQAAAwD///+DDgEAAAMA////kg4BAAADAP///7YOAQAAAwD////FDgEAAAYA////xg4BAAADAP///8cOAQAAAwD////WDgEAAAMA////Bw8CAAADAP///wsPAQAAAwD///8QDwEAAAMA////Fw8DAAADAP///yYPAgAABgD///8oDwEAAAMA////KQ8CAAADAP///zcPAwAAAwD///9GDwMAAAMA////VQ8CAAAGAP///1cPAQAAAwD///9YDwIAAAMA////Yg8BAAADAP///2YPAwAAAwD///9xDwMAAAMA////dw8BAAADAP///4APAgAABgD///+CDwEAAAMA////gw8CAAADAP///5EPAwAAAwD///+iDwEAAAMA////pg8BAAADAP///7UPAwAAAwD////EDwIAAAYA////xg8BAAADAP///8cPAgAAAwD////VDwMAAAMA////5g8BAAAAAAAAAAAAAFZEAAAgQgAArEMBAS0ABQD///+2AAYAAAUA////xgABAAAFAP///8gABAAABQD////WAAEAAAUA////2AAEAAAFAP///+YAAQAABQD////oAAQAAAUA////9gABAAAFAP////gABAAABQD///+2AQYAAAUA////xgEBAAAFAP///8sBAQAABQD////WAQEAAAUA////2wEBAAAFAP///+YBAQAABQD////rAQEAAAUA////9gEBAAAFAP////sBAQAABQD///+2AgYAAAUA////xgIBAAAFAP///8sCAQAABQD////WAgEAAAUA////2wIBAAAFAP///+YCAQAABQD////rAgEAAAUA////9gIBAAAFAP////sCAQAABQD///+2AwYAAAUA////xgMBAAAFAP///8sDAQAABQD////WAwEAAAUA////2wMBAAAFAP///+YDAQAABQD////rAwEAAAUA////9gMBAAAFAP////sDAQAABQD///+2BAYAAAUA////xgQBAAAFAP///8gEBAAABQD////WBAEAAAUA////2AQEAAAFAP///+YEAQAABQD////oBAQAAAUA////9gQBAAAFAP////gEBAAAAAAAAAAAAABWRAAAIEIAALRDAQEFAAUA////BgAGAAAFAP///wYBBgAABQD///8GAgYAAAUA////BgMGAAAFAP///wYEBgAAAAAAAAAAAAAAAA=="
+    }
+  },
+  "currControlledCharacter": {
+    "$type": "EntityDefinition.PlayerCharacter, Assembly-CSharp",
+    "currSpawnPosition": null,
+    "identity": "MainCharacter",
+    "spawnPosition": {
+      "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+      "x": 859,
+      "y": 37,
+      "z": 347,
+      "magnitude": 927.178,
+      "sqrMagnitude": 859659
+    },
+    "guid": "e904e141-3f5f-468f-879f-f1d5b93cd05c"
+  }
+}

@@ -9,7 +9,7 @@ namespace Saving {
     [Serializable]
     public class SaveData {
         public EnvChangeDestination currDestination;
-        public Dictionary<int, List<Entity>> sceneEntityState;
+        public Dictionary<int, SceneInfo> sceneEntityState;
 
         public PlayerCharacter currControlledCharacter;
 

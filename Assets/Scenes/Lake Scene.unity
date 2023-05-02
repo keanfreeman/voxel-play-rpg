@@ -251,7 +251,7 @@ MonoBehaviour:
   maxBushesPerFrame: 10
   multiThreadGeneration: 1
   lowMemoryMode: 0
-  delayedInitialization: 0
+  delayedInitialization: 1
   onlyRenderInFrustum: 1
   serverMode: 0
   enableColliders: 1

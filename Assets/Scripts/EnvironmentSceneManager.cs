@@ -36,7 +36,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     public EnvChangeDestination currDestination { get; private set; }
         = new EnvChangeDestination(3, new Vector3Int(859, 37, 347));
     // first index is the scene index. done for serialization purposes.
-    public Dictionary<int, List<Entity>> sceneEntityState;
+    public Dictionary<int, SceneInfo> sceneEntityState;
 
     void Awake() {
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;
@@ -44,7 +44,11 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     }
 
     public void PopulateSaveData(SaveData saveData) {
-        sceneEntityState[currDestination.destinationEnv] = SaveEntities(false);
+        sceneEntityState[currDestination.sceneIndex].entities = RetrieveEntitiesInScene();
+        VoxelPlayEnvironment vpEnv = voxelWorldManager.GetEnvironment();
+        sceneEntityState[currDestination.sceneIndex].vpSaveBase64
+            = vpEnv.SaveGameToBase64();
+
         saveData.currDestination = currDestination;
         saveData.sceneEntityState = sceneEntityState;
     }
@@ -52,7 +56,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     public IEnumerator LoadFromSaveData(SaveData saveData) {
         currDestination = saveData.currDestination;
         sceneEntityState = saveData.sceneEntityState;
-        yield return SceneManager.LoadSceneAsync(currDestination.destinationEnv);
+        yield return SceneManager.LoadSceneAsync(currDestination.sceneIndex);
     }
 
     private void SceneManager_sceneLoaded(Scene loadedScene, LoadSceneMode loadedSceneMode) {
@@ -70,31 +74,54 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         voxelWorldManager.SetVoxelPlayEnvironment(environment);
         voxelWorldManager.AssignVPEnvironmentInitEvent(constructionUI.OnEnvInitialized);
 
-        nonVoxelManager.CreateEntities(sceneEntityState[currDestination.destinationEnv], currDestination);
-        partyManager.SetCurrControlledCharacter(partyManager.mainCharacter);
+        environment.Init();
+        string vpBase64 = sceneEntityState[currDestination.sceneIndex].vpSaveBase64;
+        if (vpBase64 != null) {
+            environment.LoadGameFromBase64(vpBase64, false);
+        }
+
+        nonVoxelManager.CreateEntities(sceneEntityState[currDestination.sceneIndex].entities, currDestination);
         environment.cameraMain = cameraManager.GetMainCamera();
-        
+        partyManager.SetCurrControlledCharacter(partyManager.mainCharacter);
+
         StartCoroutine(gameStateManager.SetControlState(ControlState.SPRITE_NEUTRAL));
     }
 
     public IEnumerator LoadNextScene(EnvChangeDestination newDestination) {
-        StartCoroutine(gameStateManager.SetControlState(ControlState.LOADING));
+        yield return gameStateManager.SetControlState(ControlState.LOADING);
 
-        sceneEntityState[currDestination.destinationEnv] = SaveEntities(true);
+        sceneEntityState[currDestination.sceneIndex].entities = RetrieveEntitiesInScene();
+        MovePlayersToNextScene(currDestination, newDestination);
         currDestination = newDestination;
-        // add them to the next scene, which is where they'll be
-        foreach (Instantiated.PlayerCharacter playerCharacter in partyManager.partyMembers) {
-            playerCharacter.GetEntity().spawnPosition = partyManager
-                .GetPositionFromDestination(currDestination, playerCharacter);
-            sceneEntityState[currDestination.destinationEnv].Add(playerCharacter.GetEntity());
-        }
 
         voxelWorldManager.SetVoxelPlayEnvironment(null);
-        yield return nonVoxelWorld.DestroyAllEntities(false);
-        yield return SceneManager.LoadSceneAsync(currDestination.destinationEnv);
+        cameraManager.DeParentCamera();
+        nonVoxelWorld.DestroyAllEntities();
+        partyManager.ClearData();
+        yield return SceneManager.LoadSceneAsync(currDestination.sceneIndex);
     }
 
-    public List<Entity> SaveEntities(bool removePlayers) {
+    // todo - address list inefficiency if necessary
+    public void MovePlayersToNextScene(EnvChangeDestination origin, EnvChangeDestination destination) {
+        List<Entity> originEntities = sceneEntityState[origin.sceneIndex].entities;
+        List<Entity> destinationEntities = sceneEntityState[destination.sceneIndex].entities;
+
+        List<Entity> pcs = new();
+        foreach (Entity entity in originEntities) {
+            if (entity.GetType() == typeof(PlayerCharacter)) {
+                PlayerCharacter pcDef = (PlayerCharacter)entity;
+                pcDef.spawnPosition = destination.destinationTile + Vector3Int.right * pcs.Count;
+                destinationEntities.Add(entity);
+                pcs.Add(entity);
+            }
+        }
+
+        foreach (Entity pc in pcs) {
+            originEntities.Remove(pc);
+        }
+    }
+
+    public List<Entity> RetrieveEntitiesInScene() {
         List<Entity> spawnables = new List<Entity>();
         foreach (KeyValuePair<Entity, Instantiated.InstantiatedEntity> pair in nonVoxelWorld.instantiationMap) {
             Entity entity = pair.Key;
@@ -108,11 +135,6 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             }
 
             if (entity.GetType() == typeof(PlayerCharacter)) {
-                if (removePlayers) {
-                    // remove from results and save in temporary spot for move to new scene.
-                    continue;
-                }
-
                 PlayerCharacter pcDef = (PlayerCharacter)entity;
                 Instantiated.PlayerCharacter pcInstance = (Instantiated.PlayerCharacter)instantiation;
                 pcDef.spawnPosition = pcInstance.origin;
@@ -124,7 +146,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         return spawnables;
     }
 
-    private Dictionary<int, List<Entity>> SetUpDefaultWorldEntities() {
+    private Dictionary<int, SceneInfo> SetUpDefaultWorldEntities() {
         PlayerCharacter mainCharacter = new PlayerCharacter(new Vector3Int(859, 37, 347),
             ResourceIDs.MAIN_CHARACTER_STRING);
         PlayerCharacter sidekick = new PlayerCharacter(new Vector3Int(864, 29, 347),
@@ -155,27 +177,27 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         TangibleObject lamp = new TangibleObject(new Vector3Int(858, 33, 351), Direction.NORTH,
             ResourceIDs.LAMP_STRING);
 
-        Dictionary<int, List<Entity>> defaults = new Dictionary<int, List<Entity>> {
+        Dictionary<int, SceneInfo> defaults = new() {
             {
-                1, new List<Entity> {
+                1, new SceneInfo(new List<Entity> {
                     battleGroup3.combatants[0],
                     new SceneExitCube(
                         new Vector3Int(463, 29, -46),
                         new EnvChangeDestination(2, new Vector3Int(884, 26, 348)),
                         ResourceIDs.SCENE_EXIT_STRING)
-                }
+                }, null)
             },
             {
-                2, new List<Entity> {
+                2, new SceneInfo(new List<Entity> {
                     battleGroup3.combatants[0],
                     new SceneExitCube(
                         new Vector3Int(884, 26, 346),
                         new EnvChangeDestination(3, new Vector3Int(858, 37, 347)),
                         ResourceIDs.SCENE_EXIT_STRING)
-                }
+                }, null)
             },
             {
-                3, new List<Entity> {
+                3, new SceneInfo(new List<Entity> {
                     mainCharacter,
                     sidekick,
                     commoner,
@@ -199,10 +221,21 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     ),
                     bed,
                     lamp
-                }
+                }, null)
             }
         };
 
         return defaults;
+    }
+}
+
+[Serializable]
+public class SceneInfo {
+    public List<Entity> entities;
+    public string vpSaveBase64;
+
+    public SceneInfo(List<Entity> entities, string vpSaveBase64) {
+        this.entities = entities;
+        this.vpSaveBase64 = vpSaveBase64;
     }
 }

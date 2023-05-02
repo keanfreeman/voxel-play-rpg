@@ -24,7 +24,7 @@ namespace Instantiated {
         private void OnTriggerEnter(Collider other) {
             if (other.gameObject.tag == "Player") {
                 Debug.Log($"Entered cube going to {destination.destinationTile}, " +
-                    $"{destination.destinationEnv}");
+                    $"{destination.sceneIndex}");
                 StartCoroutine(StopPlayerAndLoadScene(other));
             }
         }

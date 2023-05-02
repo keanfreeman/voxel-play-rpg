@@ -30,7 +30,7 @@ public class PartyManager : MonoBehaviour, ISaveable
                 SetCurrControlledCharacter(pc);
             }
         }
-        yield break;
+        yield return null;
     }
 
     public void ClearData() {

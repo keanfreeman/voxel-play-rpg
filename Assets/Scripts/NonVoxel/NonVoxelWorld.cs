@@ -54,14 +54,10 @@ namespace NonVoxel {
             }
         }
 
-        public IEnumerator DestroyAllEntities(bool includePlayer) {
+        public void DestroyAllEntities() {
             foreach (InstantiatedEntity entity in instantiationMap.Values) {
-                if (includePlayer || entity.GetType() != typeof(PlayerCharacter)) {
-                    Destroy(entity.gameObject);
-                }
+                Destroy(entity.gameObject);
             }
-
-            yield return new WaitForEndOfFrame();
 
             npcs.Clear();
             positionToEntity.Clear();

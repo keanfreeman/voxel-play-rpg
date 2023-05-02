@@ -5,9 +5,9 @@
 
 #define USES_SEE_THROUGH
 
-//#define USES_BRIGHT_POINT_LIGHTS
+#define USES_BRIGHT_POINT_LIGHTS
 
-//#define USES_URP_NATIVE_LIGHTS
+#define USES_URP_NATIVE_LIGHTS
 
 float _VPObscuranceIntensity;
 #define AO_FUNCTION ao = 1.05-(1.0-ao)*(1.0-ao)

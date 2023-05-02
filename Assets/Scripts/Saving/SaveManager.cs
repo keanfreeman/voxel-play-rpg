@@ -40,7 +40,7 @@ namespace Saving {
             // destroy existing information
             cameraManager.DeParentCamera();
 
-            yield return nonVoxelWorld.DestroyAllEntities(true);
+            nonVoxelWorld.DestroyAllEntities();
             partyManager.ClearData();
 
             // load new information

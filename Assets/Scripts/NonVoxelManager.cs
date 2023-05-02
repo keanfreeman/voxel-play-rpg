@@ -59,28 +59,19 @@ public class NonVoxelManager : MonoBehaviour
                 if (entity.GetType() == typeof(PlayerCharacter)) {
                     PlayerCharacter playerInfo = (PlayerCharacter)entity;
                     TravellerIdentitySO identity = travellerIdentities[playerInfo.identity];
-                    Instantiated.PlayerCharacter playerInstance;
-
-                    // check if player instance already exists
-                    if (partyManager.currControlledCharacter != null) {
-                        playerInstance = partyManager.GetPlayerInstance(playerInfo);
-                        playerInstance.SetCurrPositions(playerInfo.spawnPosition, identity);
+                    GameObject playerObject = Instantiate(identity.prefab,
+                        destination.destinationTile, Quaternion.identity);
+                    Instantiated.PlayerCharacter playerInstance 
+                        = playerObject.GetComponent<Instantiated.PlayerCharacter>();
+                    playerInstance.Init(spriteMovement, playerInfo, identity, nonVoxelWorld, cameraManager,
+                        partyManager);
+                    playerInstance.SetCurrPositions(playerInfo.spawnPosition, identity);
+                    partyManager.partyMembers.Add(playerInstance);
+                    if (identity == mainCharacterID) {
+                        partyManager.SetMainCharacter(playerInstance);
                     }
-                    else {
-                        GameObject playerObject = Instantiate(identity.prefab,
-                            destination.destinationTile, Quaternion.identity);
-                        playerInstance = playerObject.GetComponent<Instantiated.PlayerCharacter>();
-                        playerInstance.Init(spriteMovement, playerInfo, identity, nonVoxelWorld, cameraManager,
-                            partyManager);
-                        playerInstance.SetCurrPositions(playerInfo.spawnPosition, identity);
-                        partyManager.partyMembers.Add(playerInstance);
-                        if (identity == mainCharacterID) {
-                            partyManager.SetMainCharacter(playerInstance);
-                        }
 
-                        nonVoxelWorld.AddTangibleEntity(playerInfo, playerInstance);
-                    }
-                    continue;
+                    nonVoxelWorld.AddTangibleEntity(playerInfo, playerInstance);
                 }
                 else if (entity.GetType() == typeof(NPC)) {
                     NPC npcInfo = (NPC)entity;

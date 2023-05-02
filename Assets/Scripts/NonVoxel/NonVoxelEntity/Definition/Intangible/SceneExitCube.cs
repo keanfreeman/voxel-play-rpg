@@ -17,11 +17,11 @@ namespace EntityDefinition {
 
     [Serializable]
     public class EnvChangeDestination {
-        public int destinationEnv;
+        public int sceneIndex;
         public Vector3Int destinationTile;
 
         public EnvChangeDestination(int destinationEnvironment, Vector3Int destinationTile) {
-            this.destinationEnv = destinationEnvironment;
+            this.sceneIndex = destinationEnvironment;
             this.destinationTile = destinationTile;
         }
     }
