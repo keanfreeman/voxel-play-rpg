@@ -1,3 +1,5 @@
+need to use TextureRotation if you want to save the rotation of a voxel (including prefabs)
+
 need to use .Equals instead of == when comparing objects with overridden equality operation
 
 save location - C:\Users\keanf\AppData\LocalLow\DefaultCompany

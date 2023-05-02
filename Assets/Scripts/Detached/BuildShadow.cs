@@ -31,15 +31,18 @@ public class BuildShadow : MonoBehaviour
         ConstructionOptions constructionOptions = constructionUI.constructionOptions;
         Vector3Int currVoxel = detachedCamera.currVoxel;
         if (constructionOptions.GetCurrBuildOption() == BuildOption.Voxels) {
+            VoxelPlayEnvironment vpEnv = voxelWorldManager.GetEnvironment();
             VoxelDefinition currVD = constructionOptions.GetCurrVoxelDefinition();
             if (drawStart.HasValue) {
                 List<Vector3Int> points = Coordinates.GetPointsInCuboid(drawStart.Value, currVoxel);
                 foreach (Vector3Int point in points) {
-                    // TODO - rotate custom voxels, like the slope
-                    voxelWorldManager.GetEnvironment().VoxelPlace(point, currVD);
+                    vpEnv.VoxelPlace(point, currVD);
+                    if (currVD.name == "SlopeVoxel") {
+                        vpEnv.VoxelSetTexturesRotation(point, (int)rotation);
+                    }
                 }
 
-                StopDrawingVoxel();
+                StopDrawingModel();
                 return;
             }
 
@@ -73,7 +76,7 @@ public class BuildShadow : MonoBehaviour
             }
         }
         else if (options.GetCurrBuildOption() == BuildOption.Objects) {
-            StopDrawingVoxel();
+            StopDrawingModel();
 
             if (objectShadow == null) {
                 ObjectIdentitySO objectID = options.GetCurrObject();
@@ -139,14 +142,14 @@ public class BuildShadow : MonoBehaviour
     public void StopDrawingShadow() {
         ConstructionOptions constructionOptions = constructionUI.constructionOptions;
         if (constructionOptions.GetCurrBuildOption() == BuildOption.Voxels) {
-            StopDrawingVoxel();
+            StopDrawingModel();
         }
         else {
             StopDrawingObject();
         }
     }
 
-    private void StopDrawingVoxel() {
+    private void StopDrawingModel() {
         if (drawStart.HasValue) {
             drawStart = null;
             Destroy(currVoxelModelShadow);
