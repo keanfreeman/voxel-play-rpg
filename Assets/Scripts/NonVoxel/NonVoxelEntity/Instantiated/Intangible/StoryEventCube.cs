@@ -28,7 +28,6 @@ namespace Instantiated {
                 orderManager.ExecuteOrders(cubeInfo.orderGroup);
                 if (cubeInfo.orderGroup.destroyOnComplete) {
                     nonVoxelWorld.DeleteEntity(this);
-                    Destroy(this);
                 }
             }
         }

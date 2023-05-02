@@ -42,7 +42,8 @@ public class ConstructionBox : VisualElement {
 public class ConstructionOptions {
     public enum BuildOption {
         Voxels = 0,
-        Objects = 1
+        Objects = 1,
+        Destroy = 2
     }
     private int buildOptionIterator = 0;
 
@@ -80,14 +81,18 @@ public class ConstructionOptions {
     }
 
     public string GetCurrOptionName() {
-        if (GetCurrBuildOption() == BuildOption.Voxels) {
+        BuildOption buildOption = GetCurrBuildOption();
+        if (buildOption == BuildOption.Voxels) {
             VoxelDefinition vd = GetCurrVoxelDefinition();
             return vd == null ? "No Voxel Definitions available" : vd.name;
         }
-        else {
+        else if (buildOption == BuildOption.Objects) {
             ObjectIdentitySO objectID = GetCurrObject();
             return objectID == null ? "No Objects available" 
                 : objectID.prefab.name;
+        }
+        else {
+            return "Destroy Object/Voxel";
         }
     }
 

@@ -82,6 +82,8 @@ namespace NonVoxel {
             if (instantiationMap.ContainsKey(entity.GetEntity())) {
                 instantiationMap.Remove(entity.GetEntity());
             }
+
+            Destroy(entity.gameObject);
         }
 
         public bool IsPositionOccupied(Vector3Int position) {

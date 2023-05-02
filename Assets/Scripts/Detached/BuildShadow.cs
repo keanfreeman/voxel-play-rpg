@@ -4,6 +4,7 @@ using NonVoxel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Principal;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VoxelPlay;
@@ -17,8 +18,7 @@ public class BuildShadow : MonoBehaviour
     [SerializeField] ConstructionUI constructionUI;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
 
-    [SerializeField] GameObject lampPrefab;
-    [SerializeField] GameObject bedPrefab;
+    [SerializeField] GameObject genericNonVoxelObjectPrefab;
 
     private Vector3Int? drawStart;
     private GameObject currVoxelModelShadow;
@@ -28,17 +28,24 @@ public class BuildShadow : MonoBehaviour
     private Coroutine rotateObjectCoroutine;
 
     public void HandleBuildSelect() {
+        VoxelPlayEnvironment vpEnv = voxelWorldManager.GetEnvironment();
         ConstructionOptions constructionOptions = constructionUI.constructionOptions;
         Vector3Int currVoxel = detachedCamera.currVoxel;
-        if (constructionOptions.GetCurrBuildOption() == BuildOption.Voxels) {
-            VoxelPlayEnvironment vpEnv = voxelWorldManager.GetEnvironment();
+        BuildOption buildOption = constructionOptions.GetCurrBuildOption();
+
+        if (buildOption == BuildOption.Voxels) {
             VoxelDefinition currVD = constructionOptions.GetCurrVoxelDefinition();
             if (drawStart.HasValue) {
                 List<Vector3Int> points = Coordinates.GetPointsInCuboid(drawStart.Value, currVoxel);
                 foreach (Vector3Int point in points) {
-                    vpEnv.VoxelPlace(point, currVD);
-                    if (currVD.name == "SlopeVoxel") {
-                        vpEnv.VoxelSetTexturesRotation(point, (int)rotation);
+                    if (currVD.name == "Null" || currVD.name == "DefaultVoxelHole") {
+                        vpEnv.VoxelDestroy(point);
+                    }
+                    else {
+                        vpEnv.VoxelPlace(point, currVD);
+                        if (currVD.name == "SlopeVoxel") {
+                            vpEnv.VoxelSetTexturesRotation(point, (int)rotation);
+                        }
                     }
                 }
 
@@ -49,7 +56,7 @@ public class BuildShadow : MonoBehaviour
             drawStart = currVoxel;
             DrawVoxelShadow(currVD, drawStart.Value, drawStart.Value, rotation);
         }
-        else {
+        else if (buildOption == BuildOption.Objects) {
             objectShadow.transform.parent = null;
             objectShadow.transform.position = currVoxel;
             Instantiated.TangibleObject script = objectShadow.GetComponent<Instantiated.TangibleObject>();
@@ -63,29 +70,42 @@ public class BuildShadow : MonoBehaviour
             objectShadow = null;
             DrawBuildModeShadow();
         }
+        else {
+            vpEnv.VoxelDestroy(currVoxel);
+            Instantiated.InstantiatedEntity entity = nonVoxelWorld.GetEntityFromPosition(currVoxel);
+            if (entity != null && TypeUtils.IsSameTypeOrIsSubclass(entity, 
+                    typeof(Instantiated.TangibleObject))) {
+                nonVoxelWorld.DeleteEntity(entity);
+            }
+        }
         return;
     }
 
     public void DrawBuildModeShadow() {
         ConstructionOptions options = constructionUI.constructionOptions;
         if (options.GetCurrBuildOption() == BuildOption.Voxels) {
-            StopDrawingObject();
             if (drawStart.HasValue) {
                 VoxelDefinition currVD = constructionUI.constructionOptions.GetCurrVoxelDefinition();
                 DrawVoxelShadow(currVD, drawStart.Value, detachedCamera.currVoxel, rotation);
             }
         }
         else if (options.GetCurrBuildOption() == BuildOption.Objects) {
-            StopDrawingModel();
+            StopDrawingObject();
 
+            Instantiated.TangibleObject objectScript;
             if (objectShadow == null) {
                 ObjectIdentitySO objectID = options.GetCurrObject();
-                objectShadow = Instantiate(objectID.prefab, transform);
+                objectShadow = Instantiate(genericNonVoxelObjectPrefab, transform);
+                objectScript = objectShadow.GetComponent<Instantiated.TangibleObject>();
+                Instantiate(objectID.prefab, objectScript.leafTransform);
             }
-
+            else {
+                objectScript = objectShadow.GetComponent<Instantiated.TangibleObject>();
+            }
+            
             Quaternion rotationQ = Coordinates.GetRotationFromAngle(
                 DirectionCalcs.GetDegreesFromDirection(rotation));
-            objectShadow.GetComponent<Instantiated.TangibleObject>().rotationTransform.rotation = rotationQ;
+            objectScript.rotationTransform.rotation = rotationQ;
         }
     }
 

@@ -23,6 +23,7 @@ public class NonVoxelManager : MonoBehaviour
     [SerializeField] TravellerIdentitySO mainCharacterID;
 
     [SerializeField] GameObject detachedCameraPrefab;
+    [SerializeField] GameObject genericNonVoxelObjectPrefab;
 
     public Dictionary<string, TravellerIdentitySO> travellerIdentities { get; private set; } = new();
     public Dictionary<string, ObjectIdentitySO> objectIdentities { get; private set; } = new();
@@ -95,10 +96,13 @@ public class NonVoxelManager : MonoBehaviour
                 else {
                     TangibleObject nonVoxelObject = (TangibleObject)entity;
                     ObjectIdentitySO identity = objectIdentities[nonVoxelObject.identity];
-                    GameObject npcObject = Instantiate(identity.prefab, nonVoxelObject.spawnPosition,
-                        Quaternion.identity);
+                    
+                    GameObject baseObjectPrefab = Instantiate(genericNonVoxelObjectPrefab);
                     Instantiated.TangibleObject instantiatedNVObject 
-                        = npcObject.GetComponent<Instantiated.TangibleObject>();
+                        = baseObjectPrefab.GetComponent<Instantiated.TangibleObject>();
+                    Instantiate(identity.prefab, instantiatedNVObject.leafTransform);
+                    baseObjectPrefab.transform.position = nonVoxelObject.spawnPosition;
+
                     instantiatedNVObject.Init(nonVoxelWorld, nonVoxelObject, identity);
                     nonVoxelWorld.AddTangibleEntity(nonVoxelObject, instantiatedNVObject);
                 }

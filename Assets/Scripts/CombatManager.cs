@@ -173,7 +173,6 @@ public class CombatManager : MonoBehaviour
 
                                 nonVoxelWorld.DeleteEntity(npcBehavior);
                                 initiatives.Remove(initiative);
-                                Destroy(selectedEntity.gameObject);
                                 break;
                             }
                         }

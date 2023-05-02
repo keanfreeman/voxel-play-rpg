@@ -217,7 +217,7 @@ MonoBehaviour:
   useComputeBuffers: 0
   previewTouchUIinEditor: 0
   prewarmChunksInEditor: 5000
-  enableTinting: 0
+  enableTinting: 1
   enableFresnel: 0
   fresnelExponent: 8
   fresnelIntensity: 0.2
@@ -265,7 +265,7 @@ MonoBehaviour:
   fogDistanceAuto: 1
   fogDistance: 300
   fogFallOff: 0.8
-  enableClouds: 1
+  enableClouds: 0
   defaultBuildSound: {fileID: 0}
   defaultPickupSound: {fileID: 0}
   defaultDestructionSound: {fileID: 0}

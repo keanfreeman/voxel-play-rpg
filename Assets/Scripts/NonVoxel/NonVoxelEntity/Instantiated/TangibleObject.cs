@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace Instantiated {
     public class TangibleObject : TangibleEntity {
+        [SerializeField] public Transform leafTransform;
+
         public EntityDefinition.TangibleObject objectInfo { get; private set; }
 
         private ObjectIdentitySO objectIdentity;
@@ -13,6 +15,7 @@ namespace Instantiated {
         public void Init(NonVoxelWorld nonVoxelWorld, EntityDefinition.TangibleObject nonVoxelObject,
                 ObjectIdentitySO objectIdentity) {
             this.nonVoxelWorld = nonVoxelWorld;
+            this.entity = nonVoxelObject;
             objectInfo = nonVoxelObject;
             this.objectIdentity = objectIdentity;
             SetCurrPositions(nonVoxelObject.spawnPosition, objectIdentity, nonVoxelObject.startRotation);

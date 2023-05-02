@@ -637,6 +637,7 @@ MonoBehaviour:
   saveManager: {fileID: 96488336}
   mainCharacterID: {fileID: 11400000, guid: 1654ee971551b024bb477b23ff6f8211, type: 2}
   detachedCameraPrefab: {fileID: 1275296119661960477, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
+  genericNonVoxelObjectPrefab: {fileID: 100008, guid: 1df8fdc65931cd340beda593a897f605, type: 3}
 --- !u!4 &582458983
 Transform:
   m_ObjectHideFlags: 0
@@ -1516,8 +1517,7 @@ MonoBehaviour:
   voxelWorldManager: {fileID: 1568004907}
   constructionUI: {fileID: 1861321071}
   nonVoxelWorld: {fileID: 1135948956}
-  lampPrefab: {fileID: 8642372455544918963, guid: 603c7321f95eb9c4db2341dc2c101f74, type: 3}
-  bedPrefab: {fileID: 100008, guid: 869877b757b54c64c8031c53a8ee3001, type: 3}
+  genericNonVoxelObjectPrefab: {fileID: 100008, guid: 1df8fdc65931cd340beda593a897f605, type: 3}
 --- !u!1 &1785101421
 GameObject:
   m_ObjectHideFlags: 0

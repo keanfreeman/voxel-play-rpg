@@ -225,11 +225,11 @@
             "idleBehavior": 1,
             "currSpawnPosition": {
               "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
-              "x": 836,
+              "x": 835,
               "y": 29,
               "z": 350,
-              "magnitude": 906.7728,
-              "sqrMagnitude": 822237
+              "magnitude": 905.850952,
+              "sqrMagnitude": 820566
             },
             "identity": "Wolf",
             "spawnPosition": {
@@ -280,11 +280,11 @@
             "idleBehavior": 1,
             "currSpawnPosition": {
               "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
-              "x": 834,
+              "x": 835,
               "y": 29,
               "z": 348,
-              "magnitude": 904.1576,
-              "sqrMagnitude": 817501
+              "magnitude": 905.0801,
+              "sqrMagnitude": 819170
             },
             "identity": "Wolf",
             "spawnPosition": {
@@ -335,11 +335,11 @@
             "idleBehavior": 1,
             "currSpawnPosition": {
               "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
-              "x": 827,
-              "y": 30,
-              "z": 349,
-              "magnitude": 898.125854,
-              "sqrMagnitude": 806630
+              "x": 824,
+              "y": 31,
+              "z": 350,
+              "magnitude": 895.788452,
+              "sqrMagnitude": 802437
             },
             "identity": "Wolf",
             "spawnPosition": {
@@ -390,11 +390,11 @@
             "idleBehavior": 1,
             "currSpawnPosition": {
               "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
-              "x": 826,
+              "x": 827,
               "y": 30,
-              "z": 351,
-              "magnitude": 897.985,
-              "sqrMagnitude": 806377
+              "z": 349,
+              "magnitude": 898.125854,
+              "sqrMagnitude": 806630
             },
             "identity": "Wolf",
             "spawnPosition": {
@@ -529,56 +529,98 @@
               "x": 855,
               "y": 36,
               "z": 350,
-              "magnitude": 925.4901,
-              "sqrMagnitude": 856532
+              "magnitude": 924.5653,
+              "sqrMagnitude": 854821
             },
             "guid": "2b874e3b-724e-4808-bd13-eb777c7f7a75"
           },
           {
             "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
-            "startRotation": 0,
-            "identity": "Bed",
+            "startRotation": 3,
+            "identity": "Desk 2",
             "spawnPosition": {
               "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
-              "x": 857,
+              "x": 858,
               "y": 29,
               "z": 350,
-              "magnitude": 926.169556,
-              "sqrMagnitude": 857790
+              "magnitude": 927.0949,
+              "sqrMagnitude": 859505
             },
-            "guid": "1958d086-3d86-4b85-a4a9-2f9260acbae9"
+            "guid": "4075e023-163a-470a-9c25-0ace04020e61"
           },
           {
             "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
-            "startRotation": 0,
+            "startRotation": 3,
             "identity": "Lamp",
             "spawnPosition": {
               "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
               "x": 858,
-              "y": 33,
-              "z": 351,
-              "magnitude": 927.606567,
-              "sqrMagnitude": 860454
+              "y": 29,
+              "z": 349,
+              "magnitude": 926.717834,
+              "sqrMagnitude": 858806
             },
-            "guid": "f09f3b8f-4f1b-45e4-9969-455ce1c9584a"
+            "guid": "25b3caaa-edee-484a-abcd-eb4725a8ac2a"
+          },
+          {
+            "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
+            "startRotation": 3,
+            "identity": "Office Chair",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 857,
+              "y": 29,
+              "z": 351,
+              "magnitude": 926.5479,
+              "sqrMagnitude": 858491
+            },
+            "guid": "323f4c83-6197-4f9c-87a9-43f9838e5532"
+          },
+          {
+            "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
+            "startRotation": 1,
+            "identity": "Bed",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 857,
+              "y": 33,
+              "z": 348,
+              "magnitude": 925.549561,
+              "sqrMagnitude": 856642
+            },
+            "guid": "457f9205-041c-4e18-a5a4-d09680214882"
+          },
+          {
+            "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
+            "startRotation": 1,
+            "identity": "Storage Rack",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 858,
+              "y": 33,
+              "z": 350,
+              "magnitude": 927.228638,
+              "sqrMagnitude": 859753
+            },
+            "guid": "45f2c8e7-56d6-479c-af72-0899028d8301"
           }
         ]
       },
-      "vpSaveBase64": "DhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABADRCAAAAAAAAAAAJAA5Wb3hlbFRhaWdhRGlydA1Wb3hlbFdhdGVyU2VhDVZveGVsVGFpZ2FUb3AOU25vd1RyZWVMZWF2ZXMMVm94ZWxPcmVDb2FsFVZveGVsQnVpbGRpbmdXb29kV2FsbApTbG9wZVZveGVsBE51bGwMU25vd1RyZWVCYXJrAAAKAAAAAABaRAAAwEEAAKxDAQEYAAAA////AAAACwABAP///wALkAANAAD///+QCwEAAAEA////kQsPAA0AAP///6ALAQAAAQD///+hCw8ADQAA////sAsBAAABAP///7ELDwANAAD////ACwEAAAEA////wQsPAA0AAP///9ALAQAAAQD////RCw8ADQAA////4AsBAAABAP///+ELDwANAAD////wCwEAAAEA////8QsPAA0CAP///5AMAQAAAgD///+gDAEAAAIA////sAwBAAACAP///8AMAQAAAgD////QDAEAAAIA////4AwBAAACAP////AMAQAAAwD///9vDwEAAAAAAAAAAAAAWkQAAMBBAAC0QwEBEgAAAP///wAAaQIABAD///9pAgEAAAAA////agIPAAAEAP///3kCAQAAAAD///96Ag8AAAQA////iQIBAAAAAP///4oCTgEABAD////YAwIAAAAA////2gOeAQAEAP///3gFAQAAAAD///95Bf8AAAQA////eAYBAAAAAP///3kGiAQAAQD///8BCw8ADQAA////EAsBAAABAP///xEL7wANAgD///8ADAEAAAIA////EAwBAAAAAAAAAAAAAFZEAADAQQAArEMBAUUAAAD///8AAAALAAEA////AAuQAA0AAP///5ALMAAAAQD////ACwUADQAA////xQsLAAABAP///9ALBQANAAD////VCwsAAAEA////4AsFAA0AAP///+ULCwAAAQD////wCwUADQAA////9QsLAAACAP///5AMFgAABQD///+mDAYAAAIA////rAwKAAAFAP///7YMBgAAAgD///+8DAQAAAIA////xQwBAAAFAP///8YMBgAAAgD////MDAQAAAIA////1QwBAAAFAP///9YMBgAAAgD////cDAQAAAIA////5QwBAAAFAP///+YMBgAAAgD////sDAQAAAIA////9QwBAAAFAP////YMBgAAAgD////8DAQAAAUA////pg0GAAAFAP///7YNAQAABQD////GDQEAAAYA////xw0BAAAHAP///8wNBAAABQD////WDQIAAAUA////2w0BAAAHAP///9wNBAAABQD////mDQEAAAUA////6w0BAAAHAP///+wNBAAABQD////2DQEAAAUA////+w0BAAAFAP///6YOBgAABQD///+2DgEAAAUA////xg4BAAAHAP///8wOBAAABQD////WDgEAAAYA////1w4BAAAFAP///9sOAQAABwD////cDgQAAAUA////5g4CAAAFAP///+sOAQAABwD////sDgQAAAUA////9g4BAAAFAP////sOAQAABQD///+mDwYAAAUA////tg8BAAAFAP///7sPAQAABQD////GDwEAAAUA////yw8BAAAHAP///8wPBAAABQD////WDwEAAAUA////2w8BAAAHAP///9wPBAAABQD////mDwEAAAYA////5w8BAAAFAP///+sPAQAABwD////sDwQAAAUA////9g8CAAAFAP////sPAQAAAAAAAAAAAABWRAAAwEEAALRDAQEXAAAA////AACmBgAEAP///6YGAQAAAAD///+nBg8AAAQA////tgYBAAAAAP///7cGtgEABAD///9tCAEAAAAA////bggPAAAEAP///30IAQAAAAD///9+CO8AAAQA////bQkBAAAAAP///24JkgEAAQD///8ACwUADQAA////BQsLAAABAP///xALBQANAAD///8VCwsAAAEA////IAvgAA0CAP///wUMAQAABQD///8GDAYAAAIA////DAwEAAACAP///xUMCwAABQD///8GDQYAAAUA////Bg4GAAAFAP///wYPBgAAAAAAAAAAAABSRAAAwEEAAKxDAQFlAAAA////AAAlAAAEAP///yUAAwAAAAD///8oAAEKAAQA////KQoDAAAAAP///ywK4QAAAQD///8NCwMADQAA////EAsNAAABAP///x0LAwANAAD///8gCw0AAAEA////LQsDAA0AAP///zALDAAAAQD///88CwQADQAA////QAsMAAABAP///0wLBAANAAD///9QCwwAAAEA////XAsEAA0AAP///2ALDAAAAQD///9sCwQADQAA////cAsMAAABAP///3wLBAANAAD///+ACwsAAAEA////iwsFAA0AAP///5ALOQAAAQD////JCwcADQAA////0AsJAAABAP///9kLBwANAAD////gCwkAAAEA////6QsHAA0AAP////ALCQAAAQD////5CwcADQAA////AAwCAAACAP///wIMCwAAAAD///8QDAIAAAIA////EgwLAAAAAP///yAMAwAAAgD///8jDAoAAAAA////MAwDAAACAP///zMMCQAAAAD///9ADAMAAAIA////QwwJAAAAAP///1AMAgAAAgD///9SDAoAAAAA////YAwCAAACAP///2IMCgAAAgD///9wDAwAAAIA////gAwLAAACAP///5AMOQAAAgD////QDAkAAAIA////4AwJAAACAP////AMCQAAAgD///8ADQIAAAIA////EA0CAAACAP///yANAwAACAD///8oDQEAAAIA////MA0DAAACAP///0ANAwAAAgD///9QDQIAAAgA////Vw0BAAACAP///2ANAgAACAD///+CDQEAAAgA////xg0BAAAIAP///ygOAQAACAD///9XDgEAAAMA////cg4BAAADAP///4EOAQAACAD///+CDgEAAAMA////gw4BAAADAP///5IOAQAAAwD///+2DgEAAAMA////xQ4BAAAIAP///8YOAQAAAwD////HDgEAAAMA////1g4BAAADAP///wcPAgAAAwD///8LDwEAAAMA////EA8BAAADAP///xcPAwAAAwD///8mDwIAAAgA////KA8BAAADAP///ykPAgAAAwD///83DwMAAAMA////Rg8DAAADAP///1UPAgAACAD///9XDwEAAAMA////WA8CAAADAP///2IPAQAAAwD///9mDwMAAAMA////cQ8DAAADAP///3cPAQAAAwD///+ADwIAAAgA////gg8BAAADAP///4MPAgAAAwD///+RDwMAAAMA////og8BAAADAP///6YPAQAAAwD///+1DwMAAAMA////xA8CAAAIAP///8YPAQAAAwD////HDwIAAAMA////1Q8DAAADAP///+YPAQAAAAAAAAAAAABaRAAAIEIAAKRDAQEaAAMA////XwABAAADAP///08BAQAAAwD///9eAQIAAAMA////bwEBAAADAP///18CAQAAAwD///9PAwEAAAMA////XgMCAAADAP///28DAQAAAwD///9fBAEAAAcA////QAUEAAADAP///08FAQAABwD///9QBQQAAAMA////XgUCAAAHAP///2AFBAAAAwD///9vBQEAAAcA////cAUEAAAHAP///4AFBAAABwD///+QBQQAAAcA////oAUEAAAHAP///7AFBAAABwD////ABQQAAAcA////0AUEAAAHAP///+AFBAAABwD////wBQQAAAMA////XwYBAAADAP///18IAQAAAAAAAAAAAABaRAAAIEIAAKxDAQEIAAMA////bwEBAAADAP///28DAQAABwD///8ABQQAAAcA////EAUEAAAHAP///yAFBAAABwD///8wBQQAAAcA////QAUEAAADAP///28FAQAAAAAAAAAAAABWRAAAIEIAAKRDAQEMAAcA////QwUNAAAHAP///1MFDQAABwD///9jBQ0AAAcA////cwUNAAAHAP///4MFDQAABwD///+TBQ0AAAcA////owUNAAAHAP///7MFDQAABwD////DBQ0AAAcA////0wUNAAAHAP///+MFDQAABwD////zBQ0AAAAAAAAAAAAAVkQAACBCAACsQwEBTgAFAP///6YABgAABQD///+2AAYAAAUA////xgABAAAFAP///8gABAAABwD////MAAQAAAUA////1gABAAAFAP///9gABAAABwD////cAAQAAAUA////5gABAAAFAP///+gABAAABwD////sAAQAAAUA////9gABAAAGAP////cAAQAABQD////4AAQAAAUA////pgEGAAAFAP///7YBAQAABQD///+7AQEAAAUA////xgEBAAAGAP///8cBAQAABQD////LAQEAAAcA////zAEEAAAFAP///9YBAgAABQD////bAQEAAAcA////3AEEAAAFAP///+YBAQAABQD////rAQEAAAcA////7AEEAAAFAP////YBAQAABQD////7AQEAAAUA////pgIGAAAFAP///7YCAQAABQD///+7AgEAAAUA////xgIBAAAFAP///8sCAQAABwD////MAgQAAAUA////1gIBAAAGAP///9cCAQAABQD////bAgEAAAcA////3AIEAAAFAP///+YCAgAABQD////rAgEAAAcA////7AIEAAAFAP////YCAQAABQD////7AgEAAAUA////pgMGAAAFAP///7YDAQAABQD///+7AwEAAAUA////xgMBAAAFAP///8sDAQAABwD////MAwQAAAUA////1gMBAAAFAP///9sDAQAABwD////cAwQAAAUA////5gMBAAAGAP///+cDAQAABQD////rAwEAAAcA////7AMEAAAFAP////YDAgAABQD////7AwEAAAUA////pgQGAAAFAP///7YEBgAABQD////GBAEAAAUA////yAQEAAAHAP///8wEBAAABQD////WBAEAAAUA////2AQEAAAHAP///9wEBAAABQD////mBAEAAAUA////6AQEAAAHAP///+wEBAAABQD////2BAEAAAYA////9wQBAAAFAP////gEBAAABwD///8DBQ0AAAcA////EwUNAAAHAP///yMFDQAABwD///8zBQ0AAAcA////QwUNAAAAAAAAAAAAAFZEAAAgQgAAtEMBAQUABQD///8GAAYAAAUA////BgEGAAAFAP///wYCBgAABQD///8GAwYAAAUA////BgQGAAAAAAAAAAAAAAAA"
+      "vpSaveBase64": "DhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABADRCAAAAAAAAAAAMAA5Wb3hlbFRhaWdhRGlydA1Wb3hlbFdhdGVyU2VhDVZveGVsVGFpZ2FUb3AOU25vd1RyZWVMZWF2ZXMMVm94ZWxPcmVDb2FsDlZveGVsQnJpY2tXYWxsFVZveGVsQnVpbGRpbmdXb29kV2FsbApTbG9wZVZveGVsClZveGVsR2xhc3MMU25vd1RyZWVCYXJrD0hRX1ZveGVsQmVkUm9jaw5Wb3hlbFNvbGlkUm9jawAACwAAAAAAWkQAAMBBAACsQwEBGAAAAP///wAAAAsAAQD///8AC5AADQAA////kAsBAAABAP///5ELDwANAAD///+gCwEAAAEA////oQsPAA0AAP///7ALAQAAAQD///+xCw8ADQAA////wAsBAAABAP///8ELDwANAAD////QCwEAAAEA////0QsPAA0AAP///+ALAQAAAQD////hCw8ADQAA////8AsBAAABAP////ELDwANAgD///+QDAEAAAIA////oAwBAAACAP///7AMAQAAAgD////ADAEAAAIA////0AwBAAACAP///+AMAQAAAgD////wDAEAAAMA////bw8BAAAAAAAAAAAAAFpEAADAQQAAtEMBARIAAAD///8AAGkCAAQA////aQIBAAAAAP///2oCDwAABAD///95AgEAAAAA////egIPAAAEAP///4kCAQAAAAD///+KAk4BAAQA////2AMCAAAAAP///9oDngEABAD///94BQEAAAAA////eQX/AAAEAP///3gGAQAAAAD///95BogEAAEA////AQsPAA0AAP///xALAQAAAQD///8RC+8ADQIA////AAwBAAACAP///xAMAQAAAAAAAAAAAABWRAAAwEEAAKxDAQFOAAAA////AAAACwABAP///wALkAANAAD///+QCxYAAAUA////pgsGAAAAAP///6wLCgAABQD///+2CwYAAAAA////vAsEAAABAP///8ALBQANAAD////FCwEAAAUA////xgsGAAAAAP///8wLBAAAAQD////QCwUADQAA////1QsBAAAFAP///9YLBgAAAAD////cCwQAAAEA////4AsFAA0AAP///+ULAQAABQD////mCwYAAAAA////7AsEAAABAP////ALBQANAAD////1CwEAAAUA////9gsGAAAAAP////wLBAAAAgD///+QDBYAAAYA////pgwGAAACAP///6wMCgAABgD///+2DAYAAAIA////vAwEAAACAP///8UMAQAABgD////GDAYAAAIA////zAwEAAACAP///9UMAQAABgD////WDAYAAAIA////3AwEAAACAP///+UMAQAABgD////mDAYAAAIA////7AwEAAACAP////UMAQAABgD////2DAYAAAIA/////AwEAAAFAP///6YNAQAABgD///+nDQQAAAUA////qw0BAAAGAP///7YNAQAABgD////GDQEAAAcA////xw0BAAAGAP///9YNAgAABgD////bDQEAAAYA////5g0CAAAGAP///+sNAQAABgD////2DQIAAAYA////+w0BAAAFAP///6YOAQAABgD///+nDgQAAAUA////qw4BAAAGAP///7YOAQAABgD////GDgEAAAYA////1g4BAAAHAP///9cOAQAACAD////bDgEAAAYA////5g4CAAAIAP///+sOAQAABgD////2DgIAAAgA////+w4BAAAFAP///6YPAQAABgD///+nDwQAAAUA////qw8BAAAGAP///7YPAQAABgD///+7DwEAAAYA////xg8BAAAGAP///8sPAQAABgD////WDwEAAAgA////2w8BAAAGAP///+YPAQAABwD////nDwEAAAgA////6w8BAAAGAP////YPAgAACAD////7DwEAAAAAAAAAAAAAVkQAAMBBAAC0QwEBHwAAAP///wAApgYABAD///+mBgEAAAAA////pwYPAAAEAP///7YGAQAAAAD///+3BrYBAAQA////bQgBAAAAAP///24IDwAABAD///99CAEAAAAA////fgjvAAAEAP///20JAQAAAAD///9uCZIBAAEA////AAsFAA0AAP///wULAQAABQD///8GCwYAAAAA////DAsEAAABAP///xALBQANAAD///8VCwsAAAEA////IAvgAA0CAP///wUMAQAABgD///8GDAYAAAIA////DAwEAAACAP///xUMCwAABQD///8GDQEAAAYA////Bw0EAAAFAP///wsNAQAABQD///8GDgEAAAYA////Bw4EAAAFAP///wsOAQAABQD///8GDwEAAAYA////Bw8EAAAFAP///wsPAQAAAAAAAAAAAABSRAAAwEEAAKxDAQFlAAAA////AAAlAAAEAP///yUAAwAAAAD///8oAAEKAAQA////KQoDAAAAAP///ywK4QAAAQD///8NCwMADQAA////EAsNAAABAP///x0LAwANAAD///8gCw0AAAEA////LQsDAA0AAP///zALDAAAAQD///88CwQADQAA////QAsMAAABAP///0wLBAANAAD///9QCwwAAAEA////XAsEAA0AAP///2ALDAAAAQD///9sCwQADQAA////cAsMAAABAP///3wLBAANAAD///+ACwsAAAEA////iwsFAA0AAP///5ALOQAAAQD////JCwcADQAA////0AsJAAABAP///9kLBwANAAD////gCwkAAAEA////6QsHAA0AAP////ALCQAAAQD////5CwcADQAA////AAwCAAACAP///wIMCwAAAAD///8QDAIAAAIA////EgwLAAAAAP///yAMAwAAAgD///8jDAoAAAAA////MAwDAAACAP///zMMCQAAAAD///9ADAMAAAIA////QwwJAAAAAP///1AMAgAAAgD///9SDAoAAAAA////YAwCAAACAP///2IMCgAAAgD///9wDAwAAAIA////gAwLAAACAP///5AMOQAAAgD////QDAkAAAIA////4AwJAAACAP////AMCQAAAgD///8ADQIAAAIA////EA0CAAACAP///yANAwAACQD///8oDQEAAAIA////MA0DAAACAP///0ANAwAAAgD///9QDQIAAAkA////Vw0BAAACAP///2ANAgAACQD///+CDQEAAAkA////xg0BAAAJAP///ygOAQAACQD///9XDgEAAAMA////cg4BAAADAP///4EOAQAACQD///+CDgEAAAMA////gw4BAAADAP///5IOAQAAAwD///+2DgEAAAMA////xQ4BAAAJAP///8YOAQAAAwD////HDgEAAAMA////1g4BAAADAP///wcPAgAAAwD///8LDwEAAAMA////EA8BAAADAP///xcPAwAAAwD///8mDwIAAAkA////KA8BAAADAP///ykPAgAAAwD///83DwMAAAMA////Rg8DAAADAP///1UPAgAACQD///9XDwEAAAMA////WA8CAAADAP///2IPAQAAAwD///9mDwMAAAMA////cQ8DAAADAP///3cPAQAAAwD///+ADwIAAAkA////gg8BAAADAP///4MPAgAAAwD///+RDwMAAAMA////og8BAAADAP///6YPAQAAAwD///+1DwMAAAMA////xA8CAAAJAP///8YPAQAAAwD////HDwIAAAMA////1Q8DAAADAP///+YPAQAAAAAAAAAAAABaRAAAIEIAAKRDAQEOAAMA////XwABAAADAP///08BAQAAAwD///9eAQIAAAMA////bwEBAAADAP///18CAQAAAwD///9PAwEAAAMA////XgMCAAADAP///28DAQAAAwD///9fBAEAAAMA////TwUBAAADAP///14FAgAAAwD///9vBQEAAAMA////XwYBAAADAP///18IAQAAAAAAAAAAAABaRAAAIEIAAKxDAQEDAAMA////bwEBAAADAP///28DAQAAAwD///9vBQEAAAAAAAAAAAAAVkQAACBCAACkQwEBAAAAAAAAAAAAAFZEAAAgQgAArEMBAUwABQD///+mAAYAAAUA////tgABAAAGAP///7cABAAABQD///+7AAEAAAUA////xgABAAAGAP///8gAAwAABQD////LAAEAAAUA////1gABAAAGAP///9gAAwAABQD////bAAEAAAUA////5gABAAAGAP///+gAAwAABQD////rAAEAAAUA////9gABAAAHAP////cAAQAABgD////4AAMAAAUA////+wABAAAFAP///6YBAQAABgD///+nAQQAAAUA////qwEBAAAGAP///7YBAQAABgD///+7AQEAAAYA////xgEBAAAHAP///8cBAQAABgD////LAQEAAAYA////1gECAAAGAP///9sBAQAABgD////mAQEAAAYA////6wEBAAAGAP////YBAQAABgD////7AQEAAAUA////pgIBAAAIAP///6cCBAAABQD///+rAgEAAAYA////tgIBAAAGAP///7sCAQAABgD////GAgEAAAYA////ywIBAAAGAP///9YCAQAABwD////XAgEAAAYA////2wIBAAAGAP///+YCAgAABgD////rAgEAAAYA////9gIBAAAGAP////sCAQAABQD///+mAwEAAAgA////pwMEAAAFAP///6sDAQAABgD///+2AwEAAAYA////uwMBAAAGAP///8YDAQAABgD////LAwEAAAYA////1gMBAAAGAP///9sDAQAABgD////mAwEAAAcA////5wMBAAAGAP///+sDAQAABgD////2AwIAAAYA////+wMBAAAFAP///6YEBgAABQD///+2BAEAAAYA////twQEAAAFAP///7sEAQAABQD////GBAEAAAYA////yAQDAAAFAP///8sEAQAABQD////WBAEAAAYA////2AQDAAAFAP///9sEAQAABQD////mBAEAAAYA////6AQDAAAFAP///+sEAQAABQD////2BAEAAAcA////9wQBAAAGAP////gEAwAABQD////7BAEAAAAAAAAAAAAAVkQAACBCAAC0QwEBCwAFAP///wYABgAABQD///8GAQEAAAYA////BwEEAAAFAP///wsBAQAABQD///8GAgEAAAYA////BwIEAAAFAP///wsCAQAABQD///8GAwEAAAYA////BwMEAAAFAP///wsDAQAABQD///8GBAYAAAAAAAAAAAAAVkQAANDCAACsQwABEQAGAP///6gAAQAABgD///+2AQEAAAYA////yAEBAAAGAP///9sBAQAABgD////7AQEAAAYA////qQIBAAAGAP///6gEAQAABgD////rBQEAAAYA////uAYBAAAGAP///6gIAgAABgD///+mCgEAAAYA////2woBAAAGAP///6kLAQAABgD////4CwEAAAYA////+wsBAAAKAP///wAMAAEACwD///8ADQADAAAAAAAAAAAAAAA="
     }
   },
   "currControlledCharacter": {
     "$type": "EntityDefinition.PlayerCharacter, Assembly-CSharp",
     "currSpawnPosition": null,
-    "identity": "MainCharacter",
+    "identity": "Sidekick",
     "spawnPosition": {
       "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
-      "x": 859,
-      "y": 37,
-      "z": 346,
-      "magnitude": 926.8042,
-      "sqrMagnitude": 858966
+      "x": 864,
+      "y": 29,
+      "z": 345,
+      "magnitude": 930.7857,
+      "sqrMagnitude": 866362
     },
-    "guid": "e904e141-3f5f-468f-879f-f1d5b93cd05c"
+    "guid": "0709b847-3622-4785-85a1-4d42dfc2b547"
   }
 }

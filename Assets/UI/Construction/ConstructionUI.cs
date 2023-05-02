@@ -79,6 +79,8 @@ public class ConstructionUI : UIHandler
 
     private IEnumerator ExecuteNavigateOptions() {
         while (currNavigationDirection != 0) {
+            buildShadow.StopDrawingShadow();
+
             bool isRight = currNavigationDirection > 0;
             if (uiDocument.rootVisualElement.focusController.focusedElement == constructionBox.topOption) {
                 constructionOptions.IterateTop(isRight);
@@ -86,6 +88,7 @@ public class ConstructionUI : UIHandler
             else {
                 constructionOptions.IterateBottom(isRight);
             }
+
             constructionBox.RenderOptions(constructionOptions);
             buildShadow.DrawBuildModeShadow();
 
