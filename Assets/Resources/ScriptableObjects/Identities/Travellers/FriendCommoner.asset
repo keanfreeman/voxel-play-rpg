@@ -15,5 +15,5 @@ MonoBehaviour:
   prefab: {fileID: 6944743723035480207, guid: 8763f4ed44e10d446ba76d834eb2f67f, type: 3}
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 7f921340309c3dd468982e366b2a27b5, type: 3}
   offset: {x: 0.5, y: 0.5, z: 0.5}
-  scale: {x: 0.8, y: 0.8, z: 0.8}
+  scale: {x: 1, y: 1, z: 1}
   stats: {fileID: 11400000, guid: 26880ce264f5b614da344f889395c044, type: 2}
