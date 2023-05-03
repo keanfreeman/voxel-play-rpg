@@ -171,7 +171,7 @@ public class CombatManager : MonoBehaviour
                                     currInitiative -= 1;
                                 }
 
-                                nonVoxelWorld.DeleteEntity(npcBehavior);
+                                nonVoxelWorld.DestroyEntity(npcBehavior);
                                 initiatives.Remove(initiative);
                                 break;
                             }

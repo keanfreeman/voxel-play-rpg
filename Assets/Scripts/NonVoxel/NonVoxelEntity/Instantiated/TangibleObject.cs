@@ -22,7 +22,7 @@ namespace Instantiated {
         }
 
         public override bool IsInteractable() {
-            return true;
+            return objectInfo.interactOrders != null;
         }
     }
 }

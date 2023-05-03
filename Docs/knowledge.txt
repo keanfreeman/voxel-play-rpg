@@ -1,3 +1,9 @@
+recursive loops in json serialization seem to end in null values
+
+for json serialization: "JsonSerializationException: Unable to find a constructor to use for 
+	type Orders.OrderGroup. A class should either have a default constructor, 
+	one constructor with arguments or a constructor marked with the JsonConstructor attribute"
+
 need to use TextureRotation if you want to save the rotation of a voxel (including prefabs)
 
 need to use .Equals instead of == when comparing objects with overridden equality operation

@@ -1,4 +1,5 @@
 using EntityDefinition;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,11 +10,17 @@ namespace Orders {
     public class MoveOrder : Order
     {
         public Vector3Int destination;
-        public PlayerCharacter player;
+        public Guid travellerGuid;
 
-        public MoveOrder(Vector3Int destination, PlayerCharacter player) {
+        [JsonConstructor]
+        public MoveOrder(Vector3Int destination, Guid travellerGuid) {
             this.destination = destination;
-            this.player = player;
+            this.travellerGuid = travellerGuid;
+        }
+
+        public MoveOrder(Vector3Int destination, Traveller traveller) {
+            this.destination = destination;
+            this.travellerGuid = traveller.guid;
         }
     }
 }

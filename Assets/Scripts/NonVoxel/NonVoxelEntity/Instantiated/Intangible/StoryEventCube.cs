@@ -27,7 +27,7 @@ namespace Instantiated {
             if (other.gameObject.tag == "Player") {
                 orderManager.ExecuteOrders(cubeInfo.orderGroup);
                 if (cubeInfo.orderGroup.destroyOnComplete) {
-                    nonVoxelWorld.DeleteEntity(this);
+                    nonVoxelWorld.DestroyEntity(this);
                 }
             }
         }

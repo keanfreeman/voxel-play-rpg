@@ -1,4 +1,5 @@
 using EntityDefinition;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,10 +9,15 @@ namespace Orders {
     [Serializable]
     public class CameraFocusOrder : Order
     {
-        public NPC focusTarget;
+        public Guid focusTargetTravellerGuid;
 
-        public CameraFocusOrder(NPC focusTarget) {
-            this.focusTarget = focusTarget;
+        [JsonConstructor]
+        public CameraFocusOrder(Guid focusTargetTravellerGuid) {
+            this.focusTargetTravellerGuid = focusTargetTravellerGuid;
+        }
+
+        public CameraFocusOrder(Traveller traveller) {
+            this.focusTargetTravellerGuid = traveller.guid;
         }
     }
 }

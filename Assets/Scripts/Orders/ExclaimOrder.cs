@@ -1,4 +1,5 @@
 using EntityDefinition;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,10 +9,15 @@ namespace Orders {
     [Serializable]
     public class ExclaimOrder : Order
     {
-        public TangibleEntity exclaimingEntity;
+        public Guid travellerGuid;
 
-        public ExclaimOrder(TangibleEntity exclaimingEntity) {
-            this.exclaimingEntity = exclaimingEntity;
+        [JsonConstructor]
+        public ExclaimOrder(Guid travellerGuid) {
+            this.travellerGuid = travellerGuid;
+        }
+
+        public ExclaimOrder(Traveller traveller) {
+            this.travellerGuid = traveller.guid;
         }
     }
 }

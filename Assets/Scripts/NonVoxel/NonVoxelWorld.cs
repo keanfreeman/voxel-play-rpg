@@ -1,5 +1,6 @@
 using Instantiated;
 using Saving;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,20 +11,20 @@ namespace NonVoxel {
     public class NonVoxelWorld : MonoBehaviour {
         [SerializeField] EnvironmentSceneManager environmentSceneManager;
 
-        public Dictionary<EntityDefinition.Entity, InstantiatedEntity> instantiationMap { get; private set; }
-            = new Dictionary<EntityDefinition.Entity, InstantiatedEntity>();
+        public Dictionary<Guid, InstantiatedEntity> entityIDToInstantiation { get; private set; }
+            = new Dictionary<Guid, InstantiatedEntity>();
         private Dictionary<Vector3Int, InstantiatedEntity> positionToEntity
             = new Dictionary<Vector3Int, InstantiatedEntity>();
 
         public HashSet<NPC> npcs { get; private set; } = new HashSet<NPC>();
 
-        public InstantiatedEntity GetEntityFromDefinition(EntityDefinition.Entity definition) {
-            return instantiationMap.GetValueOrDefault(definition, null);
+        public InstantiatedEntity GetInstanceFromID(Guid guid) {
+            return entityIDToInstantiation.GetValueOrDefault(guid, null);
         }
 
         public void AddTangibleEntity(EntityDefinition.TangibleEntity entityDefinition, 
                 TangibleEntity entityInstantiation) {
-            instantiationMap[entityDefinition] = entityInstantiation;
+            entityIDToInstantiation[entityDefinition.guid] = entityInstantiation;
             if (entityDefinition.GetType() == typeof(EntityDefinition.NPC)) {
                 npcs.Add((NPC)entityInstantiation);
             }
@@ -39,7 +40,7 @@ namespace NonVoxel {
 
         public void AddIntangibleEntity(EntityDefinition.IntangibleEntity intangibleEntityDef,
                 IntangibleEntity intangibleEntityInstantiation) {
-            instantiationMap.Add(intangibleEntityDef, intangibleEntityInstantiation);
+            entityIDToInstantiation.Add(intangibleEntityDef.guid, intangibleEntityInstantiation);
         }
 
         public void SetPositions(TangibleEntity entity) {
@@ -55,20 +56,20 @@ namespace NonVoxel {
         }
 
         public void DestroyAllEntities() {
-            foreach (InstantiatedEntity entity in instantiationMap.Values) {
+            foreach (InstantiatedEntity entity in entityIDToInstantiation.Values) {
                 Destroy(entity.gameObject);
             }
 
             npcs.Clear();
             positionToEntity.Clear();
-            instantiationMap.Clear();
+            entityIDToInstantiation.Clear();
         }
 
         public InstantiatedEntity GetEntityFromPosition(Vector3Int position) {
             return positionToEntity.GetValueOrDefault(position, null);
         }
 
-        public void DeleteEntity(InstantiatedEntity entity) {
+        public void DestroyEntity(InstantiatedEntity entity) {
             if (TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(TangibleEntity))) {
                 TangibleEntity tangibleEntity = (TangibleEntity)entity;
                 if (entity.GetType() == typeof(NPC)) {
@@ -79,8 +80,8 @@ namespace NonVoxel {
                 }
             }
 
-            if (instantiationMap.ContainsKey(entity.GetEntity())) {
-                instantiationMap.Remove(entity.GetEntity());
+            if (entityIDToInstantiation.ContainsKey(entity.GetEntity().guid)) {
+                entityIDToInstantiation.Remove(entity.GetEntity().guid);
             }
 
             Destroy(entity.gameObject);
@@ -103,9 +104,9 @@ namespace NonVoxel {
 
         public TangibleEntity GetInteractableEntity(Vector3Int position) {
             if (IsPositionOccupied(position)) {
-                InstantiatedEntity entity = positionToEntity[position];
-                if (entity.GetType() == typeof(NPC)) {
-                    return (TangibleEntity)entity;
+                TangibleEntity entity = (TangibleEntity)positionToEntity[position];
+                if (entity.IsInteractable()) {
+                    return entity;
                 }
             }
             return null;

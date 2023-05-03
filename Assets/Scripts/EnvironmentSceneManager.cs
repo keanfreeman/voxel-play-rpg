@@ -28,6 +28,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     [SerializeField] TravellerIdentitySO wolfID;
     [SerializeField] ObjectIdentitySO bedID;
     [SerializeField] ObjectIdentitySO lampID;
+    [SerializeField] ObjectIdentitySO constructionToolsID;
     [SerializeField] GameObject sceneExitPrefab;
     [SerializeField] GameObject storyEventCubePrefab;
     [SerializeField] TextAsset getAttention;
@@ -123,9 +124,10 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
 
     public List<Entity> RetrieveEntitiesInScene() {
         List<Entity> spawnables = new List<Entity>();
-        foreach (KeyValuePair<Entity, Instantiated.InstantiatedEntity> pair in nonVoxelWorld.instantiationMap) {
-            Entity entity = pair.Key;
+        foreach (KeyValuePair<Guid, Instantiated.InstantiatedEntity> pair 
+                in nonVoxelWorld.entityIDToInstantiation) {
             Instantiated.InstantiatedEntity instantiation = pair.Value;
+            Entity entity = instantiation.GetEntity();
 
             // if NPC, save moved position
             if (entity.GetType() == typeof(NPC)) {
@@ -148,34 +150,56 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
 
     private Dictionary<int, SceneInfo> SetUpDefaultWorldEntities() {
         PlayerCharacter mainCharacter = new PlayerCharacter(new Vector3Int(859, 37, 347),
-            ResourceIDs.MAIN_CHARACTER_STRING);
+            mainCharacterID.name);
         PlayerCharacter sidekick = new PlayerCharacter(new Vector3Int(864, 29, 347),
-            ResourceIDs.SIDEKICK_STRING);
+            sidekickID.name);
 
         NPC commoner = new NPC(new Vector3Int(862, 29, 346), Faction.PLAYER, IdleBehavior.STAND,
-            ResourceIDs.FRIEND_STRING);
+            friendID.name);
 
         BattleGroup battleGroup1 = new BattleGroup(new List<NPC> {
             new NPC(new Vector3Int(835, 29, 350), Faction.ENEMY, IdleBehavior.WANDER,
-                ResourceIDs.WOLF_STRING),
+                wolfID.name),
             new NPC(new Vector3Int(835, 29, 347), Faction.ENEMY, IdleBehavior.WANDER,
-                ResourceIDs.WOLF_STRING)
+                wolfID.name)
         });
         BattleGroup battleGroup2 = new BattleGroup(new List<NPC> {
             new NPC(new Vector3Int(825, 31, 348), Faction.ENEMY, IdleBehavior.WANDER,
-                ResourceIDs.WOLF_STRING),
+                wolfID.name),
             new NPC(new Vector3Int(825, 31, 350), Faction.ENEMY, IdleBehavior.WANDER,
-                ResourceIDs.WOLF_STRING)
+                wolfID.name)
         });
         BattleGroup battleGroup3 = new BattleGroup(new List<NPC> {
             new NPC(new Vector3Int(468, 26, -46), Faction.ENEMY, IdleBehavior.WANDER,
-                ResourceIDs.WOLF_STRING)
+                wolfID.name)
         });
 
         TangibleObject bed = new TangibleObject(new Vector3Int(857, 29, 350), Direction.NORTH,
-            ResourceIDs.BED_STRING);
+            bedID.name);
         TangibleObject lamp = new TangibleObject(new Vector3Int(858, 33, 351), Direction.NORTH,
-            ResourceIDs.LAMP_STRING);
+            lampID.name);
+        TangibleObject constructionTools = new TangibleObject(new Vector3Int(858, 37, 351), Direction.NORTH,
+            constructionToolsID.name);
+
+        OrderGroup coreyIntroOrders = new OrderGroup(new List<Order>{
+            new DialogueOrder(getAttention, "???"),
+            new ExclaimOrder(mainCharacter),
+            new MoveOrder(new Vector3Int(859, 37, 347), mainCharacter),
+            new CameraFocusOrder(commoner),
+            new DialogueOrder(friendDialogue, "Corey"),
+            new CameraFocusOrder(mainCharacter),
+            new MoveOrder(new Vector3Int(862, 29, 350), commoner)
+        }, true);
+        StoryEventCube introEventCube = new StoryEventCube(
+            new Vector3Int(856, 36, 350), 1, ResourceIDs.STORY_EVENT_CUBE_STRING,
+            coreyIntroOrders
+        );
+        OrderGroup toolsIntroOrders = new OrderGroup(new List<Order> {
+            new DialogueOrder("It's a set of construction tools. Worth every penny!"),
+            new DestroyOrder(constructionTools),
+            // todo - play pickup fanfare
+        });
+        constructionTools.interactOrders = toolsIntroOrders;
 
         Dictionary<int, SceneInfo> defaults = new() {
             {
@@ -209,18 +233,10 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                         new Vector3Int(864, 29, 351),
                         new EnvChangeDestination(1, new Vector3Int(466, 29, -46)),
                         ResourceIDs.SCENE_EXIT_STRING),
-                    new StoryEventCube(
-                        new Vector3Int(856, 36, 350), 1, ResourceIDs.STORY_EVENT_CUBE_STRING,
-                        new OrderGroup(true, new List<Order>{
-                            new DialogueOrder(getAttention, "???"),
-                            new ExclaimOrder(mainCharacter),
-                            new MoveOrder(new Vector3Int(859, 37, 347), mainCharacter),
-                            new CameraFocusOrder(commoner),
-                            new DialogueOrder(friendDialogue, "Corey")
-                        })
-                    ),
+                    introEventCube,
                     bed,
-                    lamp
+                    lamp,
+                    constructionTools
                 }, null)
             }
         };

@@ -9,6 +9,6 @@ namespace Instantiated {
 
         public Entity GetEntity() {
             return entity;
-        } 
+        }
     }
 }

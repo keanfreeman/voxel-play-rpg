@@ -1,8 +1,14 @@
+using Ink;
 using Ink.Runtime;
+using Ink.UnityIntegration;
 using Newtonsoft.Json;
+using Saving;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using UnityEditor;
 using UnityEngine;
 
 namespace Orders {
@@ -16,6 +22,11 @@ namespace Orders {
         public DialogueOrder(string storyText, string speakerName) {
             this.storyText = storyText;
             this.speakerName = speakerName;
+        }
+
+        public DialogueOrder(string storyRawInkText) {
+            Compiler inkCompiler = new Compiler(storyRawInkText);
+            this.storyText = inkCompiler.Compile().ToJson();
         }
 
         public DialogueOrder(TextAsset story, string speakerName) {

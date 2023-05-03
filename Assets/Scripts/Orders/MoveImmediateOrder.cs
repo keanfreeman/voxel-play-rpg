@@ -13,6 +13,7 @@ namespace Orders {
         public Vector3Int destination;
         public EntityDefinition.TangibleEntity entity;
 
+        // todo - change to use guids
         public MoveImmediateOrder(Vector3Int destination, EntityDefinition.TangibleEntity entity) {
             this.destination = destination;
             this.entity = entity;

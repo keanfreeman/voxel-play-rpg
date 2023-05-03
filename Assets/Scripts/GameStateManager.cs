@@ -1,6 +1,7 @@
 using Ink.Runtime;
 using Instantiated;
 using NonVoxel;
+using Orders;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] CameraManager cameraManager;
     [SerializeField] PartyManager partyManager;
     [SerializeField] MovementManager movementManager;
+    [SerializeField] OrderManager orderManager;
 
     public ControlState controlState { get; private set; } = ControlState.LOADING;
 
@@ -67,13 +69,6 @@ public class GameStateManager : MonoBehaviour
         }
 
         controlState = newState;
-    }
-
-    public void EnterDialogue(Story story) {
-        inputManager.LockPlayerControls();
-        controlState = ControlState.DIALOGUE;
-        combatUI.SetDisplayState(false);
-        dialogueUI.StartDialogue(story, ExitDialogue);
     }
 
     public void ExitDialogue() {
@@ -133,12 +128,10 @@ public class GameStateManager : MonoBehaviour
             return;
         }
 
-        Story story = objectInkMapping.GetStoryFromEntity(interactableEntity);
-        if (story == null) {
-            Debug.Log("No story for that entity.");
-            return;
+        if (interactableEntity.GetType() == typeof(TangibleObject)) {
+            TangibleObject tangibleObject = (TangibleObject)interactableEntity;
+            OrderGroup orderGroup = tangibleObject.objectInfo.interactOrders;
+            orderManager.ExecuteOrders(orderGroup);
         }
-
-        EnterDialogue(story);
     }
 }

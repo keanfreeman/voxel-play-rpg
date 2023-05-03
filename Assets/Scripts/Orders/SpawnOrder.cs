@@ -10,6 +10,7 @@ namespace Orders {
         public Vector3Int destination;
         public TangibleEntity entity;
 
+        // todo - change to use guids
         public SpawnOrder(Vector3Int destination, TangibleEntity entity) {
             this.destination = destination;
             this.entity = entity;

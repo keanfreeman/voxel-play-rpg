@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,12 +7,18 @@ using UnityEngine;
 namespace Orders {
     [Serializable]
     public class OrderGroup {
-        public bool destroyOnComplete = true;
-        public List<Order> orders = new List<Order>();
+        public bool destroyOnComplete;
+        public List<Order> orders;
 
-        public OrderGroup(bool destroyOnComplete, List<Order> orders) {
-            this.destroyOnComplete = destroyOnComplete;
+        [JsonConstructor]
+        public OrderGroup(List<Order> orders, bool destroyOnComplete) {
             this.orders = orders;
+            this.destroyOnComplete = destroyOnComplete;
+        }
+
+        public OrderGroup(List<Order> orders) {
+            this.orders = orders;
+            this.destroyOnComplete = true;
         }
     }
 }

@@ -13,6 +13,7 @@ public class DialogueUI : UIHandler {
     [SerializeField] CombatUI combatUI;
     [SerializeField] InputManager inputManager;
 
+    private string speakerNameBlock;
     private string currentLine;
     private Story currentStory;
     private bool inChoice = false;
@@ -43,9 +44,10 @@ public class DialogueUI : UIHandler {
         return dialogueRoot.style.display.value != DisplayStyle.None;
     }
 
-    public void StartDialogue(Story story, Action callback = null) {
+    public void StartDialogue(Story story, string speakerName, Action callback = null) {
+        this.speakerNameBlock = speakerName == null ? "" : speakerName + ": ";
         this.callback = callback;
-        dialogueText.text = string.Empty;
+        dialogueText.text = speakerNameBlock;
         SetDisplayState(true);
 
         currentStory = story;
@@ -58,22 +60,24 @@ public class DialogueUI : UIHandler {
     public void StopDialogue() {
         inputManager.LockUIControls();
         SetDisplayState(false);
+        speakerNameBlock = null;
         inChoice = false;
         callback?.Invoke();
     }
 
     private IEnumerator TypeLine() {
-        foreach (char c in currentLine.ToCharArray()) {
+        char[] charArray = currentLine.ToCharArray();
+        for (int i = 0; i < charArray.Length; i++) {
+            char c = charArray[i];
             dialogueText.text += c;
-            if (dialogueText.text.Length == currentLine.Length) {
-                DisplayChoices();
-            }
-            else {
+            if (i < charArray.Length) {
                 yield return new WaitForSeconds(
                     punctuation.Contains(c) ? PUNCTUATION_WAIT_SPEED : TEXT_WAIT_SPEED
                 );
             }
         }
+
+        DisplayChoices();
     }
 
     private void DisplayChoices() {
@@ -100,7 +104,7 @@ public class DialogueUI : UIHandler {
         currentStory.ChooseChoiceIndex(choiceIndex);
         choiceHolder.Clear();
         if (currentStory.canContinue) {
-            dialogueText.text = string.Empty;
+            dialogueText.text = speakerNameBlock;
             currentLine = currentStory.Continue();
             StartCoroutine(TypeLine());
         }
@@ -126,10 +130,9 @@ public class DialogueUI : UIHandler {
             return;
         }
 
-        // if done with text, continue
-        if (dialogueText.text.Length == currentLine.Length) {
+        if (IsDoneDisplayingText()) {
             if (currentStory.canContinue) {
-                dialogueText.text = string.Empty;
+                dialogueText.text = speakerNameBlock;
                 currentLine = currentStory.Continue();
                 StartCoroutine(TypeLine());
             }
@@ -140,9 +143,14 @@ public class DialogueUI : UIHandler {
         else {
             // skip dialogue display
             StopAllCoroutines();
-            dialogueText.text = currentLine;
+            dialogueText.text = speakerNameBlock + currentLine;
             DisplayChoices();
         }
     }
+
+    private bool IsDoneDisplayingText() {
+        return currentLine.Length + speakerNameBlock.Length == dialogueText.text.Length;
+    }
+
     public override void HandleCancel(InputAction.CallbackContext obj) { }
 }

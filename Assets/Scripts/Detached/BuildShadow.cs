@@ -75,7 +75,7 @@ public class BuildShadow : MonoBehaviour
             Instantiated.InstantiatedEntity entity = nonVoxelWorld.GetEntityFromPosition(currVoxel);
             if (entity != null && TypeUtils.IsSameTypeOrIsSubclass(entity, 
                     typeof(Instantiated.TangibleObject))) {
-                nonVoxelWorld.DeleteEntity(entity);
+                nonVoxelWorld.DestroyEntity(entity);
             }
         }
         return;
