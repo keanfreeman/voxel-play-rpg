@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 6602362568682605173}
   m_LocalRotation: {x: 0.38268343, y: -0, z: -0, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6602362569037619163}
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -4129831155367829575, guid: f29ac931a227a8c4d894fd7a8204bd4f, type: 3}
+  m_Sprite: {fileID: 1468131563, guid: 3fa3de39f315b7f47911c224e2b893e2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Library: []
-  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 49daa44d67efc2d4789eb9dae886a3f7, type: 3}
+  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 0e5dab64ea2d1ef4992a7bc29d034ae1, type: 3}
 --- !u!114 &6602362568682605172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,9 +134,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CategoryHash: 0.009161512
-  m_labelHash: 0.034215245
-  m_SpriteKey: 1.9520785
+  m_CategoryHash: 1.8625731e-11
+  m_labelHash: 1.9637669e-10
+  m_SpriteKey: 2.895889e-14
 --- !u!1 &6602362568786100546
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,9 +216,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nonVoxelWorld: {fileID: 0}
+  rotationTransform: {fileID: 6602362569037619163}
   animator: {fileID: 6602362568682605174}
   spriteRenderer: {fileID: 6602362568682605161}
-  rotationTransform: {fileID: 6602362569037619163}
   cameraManager: {fileID: 0}
   partyManager: {fileID: 0}
   playerObject: {fileID: 6602362568786100546}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Wolf
   m_EditorClassIdentifier: 
   prefab: {fileID: 6944743723035480207, guid: 8763f4ed44e10d446ba76d834eb2f67f, type: 3}
-  spriteLibraryAsset: {fileID: 7108339969198208228, guid: b502032a4a3f15345abf916b36a22bdb, type: 3}
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: a9861a38ae761844ba5fd9a930292837, type: 3}
   offset: {x: 1, y: 0.6, z: 1}
   scale: {x: 6.5, y: 6.5, z: 6.5}
   stats: {fileID: 11400000, guid: 3a082ae71cfccac4fa745ee97ef206be, type: 2}

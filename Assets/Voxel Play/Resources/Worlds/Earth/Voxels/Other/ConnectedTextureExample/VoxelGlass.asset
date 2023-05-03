@@ -59,7 +59,7 @@ MonoBehaviour:
   animationSpeed: 4
   tintColor:
     serializedVersion: 2
-    rgba: 4278226687
+    rgba: 4294967295
   colorVariation: 0.5
   alpha: 0.5
   computeLighting: 0

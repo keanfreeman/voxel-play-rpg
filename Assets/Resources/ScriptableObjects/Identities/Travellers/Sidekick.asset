@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sidekick
   m_EditorClassIdentifier: 
   prefab: {fileID: 6602362568786100546, guid: fe42c4746314fb342af93e270ea31860, type: 3}
-  spriteLibraryAsset: {fileID: 7108339969198208228, guid: af71052f51b355140b8e9592dea218af, type: 3}
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 8a21c61f68df3774e80fbd535f8b1e9d, type: 3}
   offset: {x: 0.5, y: 0.5, z: 0.5}
   scale: {x: 0.8, y: 0.8, z: 0.8}
   stats: {fileID: 11400000, guid: 26880ce264f5b614da344f889395c044, type: 2}

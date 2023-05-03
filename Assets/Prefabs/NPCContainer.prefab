@@ -79,14 +79,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nonVoxelWorld: {fileID: 0}
+  rotationTransform: {fileID: 2748450979791656774}
   animator: {fileID: 2231892887192972477}
   spriteRenderer: {fileID: 6944743724923771679}
-  rotationTransform: {fileID: 2748450979791656774}
   cameraManager: {fileID: 0}
   partyManager: {fileID: 0}
   spriteLibrary: {fileID: 6883624661340336756}
   spriteObjectTransform: {fileID: 6944743724923771676}
-  encounteredPlayer: 0
 --- !u!65 &509808264901212375
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -176,7 +175,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -4129831155367829575, guid: f29ac931a227a8c4d894fd7a8204bd4f, type: 3}
+  m_Sprite: {fileID: -1568524660, guid: 3fa3de39f315b7f47911c224e2b893e2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -221,7 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Library: []
-  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 49daa44d67efc2d4789eb9dae886a3f7, type: 3}
+  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 7f921340309c3dd468982e366b2a27b5, type: 3}
 --- !u!114 &3042457884990322400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,4 +235,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_CategoryHash: 0.009161512
   m_labelHash: 0.034215245
-  m_SpriteKey: 1.9520785
+  m_SpriteKey: 0

@@ -1,28 +1,7 @@
 fileFormatVersion: 2
-guid: f29ac931a227a8c4d894fd7a8204bd4f
+guid: 50ab8aa963e52f34f8d27339a7b2e6fc
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -2395915012264860623
-    second: fighterback0
-  - first:
-      213: -8400664740927844676
-    second: fighterback1
-  - first:
-      213: -6634168576637341269
-    second: fighterforward0
-  - first:
-      213: -4129831155367829575
-    second: fighterside0
-  - first:
-      213: -8638566481526460322
-    second: fighterforward1
-  - first:
-      213: 3834112824545117737
-    second: fighterside1
-  - first:
-      213: -7544341681760622511
-    second: fighterside2
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -54,7 +33,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -68,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 25
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -84,11 +63,11 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
-  cookieLightType: 1
+  cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 16384
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -100,18 +79,6 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -135,7 +102,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Windows Store Apps
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -150,148 +117,169 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: fighterback0
+      name: fox_0
       rect:
         serializedVersion: 2
-        x: 3
-        y: 9
-        width: 98
-        height: 140
+        x: 2
+        y: 1070
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1346ded8dffffbed0800000000000000
-      internalID: -2395915012264860623
+      spriteID: cab547cfe4151ab43bf5cd241341be71
+      internalID: -1687091692
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: fighterback1
+      name: fox_1
       rect:
         serializedVersion: 2
-        x: 311
-        y: 9
-        width: 105
-        height: 140
+        x: 34
+        y: 1070
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cbec8df3de7da6b80800000000000000
-      internalID: -8400664740927844676
+      spriteID: cc2ffd9f28d401d428b6cb5141ae51c6
+      internalID: 212328928
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: fighterforward0
+      name: fox_2
       rect:
         serializedVersion: 2
-        x: 108
-        y: 9
-        width: 98
-        height: 133
+        x: 66
+        y: 1070
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ba1f87134d2bee3a0800000000000000
-      internalID: -6634168576637341269
+      spriteID: 88b325de9453578428f2dd48d0569713
+      internalID: -1770887186
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: fighterside0
+      name: fox_3
       rect:
         serializedVersion: 2
-        x: 213
-        y: 9
-        width: 98
-        height: 140
+        x: 98
+        y: 1070
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9bf95f9e174efa6c0800000000000000
-      internalID: -4129831155367829575
+      spriteID: f425e8b6fffe5e24b89eddb73040d1a6
+      internalID: -507451752
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: fighterforward1
+      name: fox_4
       rect:
         serializedVersion: 2
-        x: 423
-        y: 9
-        width: 98
-        height: 140
+        x: 2
+        y: 1034
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e50f40cdd85ad1880800000000000000
-      internalID: -8638566481526460322
+      spriteID: a7afa851d68851e42be46f0cd37d06a8
+      internalID: 177605584
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: fighterside1
+      name: fox_5
       rect:
         serializedVersion: 2
-        x: 528
-        y: 9
-        width: 98
-        height: 133
+        x: 34
+        y: 1034
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 92608c7cc41853530800000000000000
-      internalID: 3834112824545117737
+      spriteID: b8ed1fe2bc51e654f978044c3067f2c2
+      internalID: -441074580
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: fighterside2
+      name: fox_6
       rect:
         serializedVersion: 2
-        x: 633
-        y: 9
-        width: 98
-        height: 133
+        x: 66
+        y: 1034
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1582c7a463d1d4790800000000000000
-      internalID: -7544341681760622511
+      spriteID: 37adb7c6f790f9c4eade873fd0a21e5b
+      internalID: -868783773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fox_7
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 1034
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9268d168d2a3b6438454582d9caf48d
+      internalID: 1888740299
       vertices: []
       indices: 
       edges: []
@@ -299,7 +287,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e9b25917df989e4999e27899da2f5e7
+    spriteID: 3ef9a4bfdd15adc4ab07353dc2e56723
     internalID: 0
     vertices: []
     indices: 
@@ -307,13 +295,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      fighterback0: -2395915012264860623
-      fighterback1: -8400664740927844676
-      fighterforward0: -6634168576637341269
-      fighterforward1: -8638566481526460322
-      fighterside0: -4129831155367829575
-      fighterside1: 3834112824545117737
-      fighterside2: -7544341681760622511
+      fox_0: -1687091692
+      fox_1: 212328928
+      fox_2: -1770887186
+      fox_3: -507451752
+      fox_4: 177605584
+      fox_5: -441074580
+      fox_6: -868783773
+      fox_7: 1888740299
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
