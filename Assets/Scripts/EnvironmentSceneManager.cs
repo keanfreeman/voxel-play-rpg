@@ -56,7 +56,21 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
 
     public IEnumerator LoadFromSaveData(SaveData saveData) {
         currDestination = saveData.currDestination;
-        sceneEntityState = saveData.sceneEntityState;
+        Dictionary<int, SceneInfo> sceneEntityStateTemp = saveData.sceneEntityState;
+        // make it possible to have saved vpenvironment info but need to load other info
+        SceneInfo currSceneInfo = sceneEntityStateTemp[currDestination.sceneIndex];
+        if (currSceneInfo.vpSaveBase64 != null && currSceneInfo.entities == null) {
+            Debug.Log("Using default values with loaded vpenvironment.");
+            sceneEntityState = SetUpDefaultWorldEntities();
+            foreach (KeyValuePair<int, SceneInfo> item in sceneEntityState) {
+                int sceneIndex = item.Key;
+                sceneEntityState[sceneIndex].vpSaveBase64 = sceneEntityStateTemp[sceneIndex].vpSaveBase64;
+            }
+        }
+        else {
+            sceneEntityState = saveData.sceneEntityState;
+        }
+
         yield return SceneManager.LoadSceneAsync(currDestination.sceneIndex);
     }
 

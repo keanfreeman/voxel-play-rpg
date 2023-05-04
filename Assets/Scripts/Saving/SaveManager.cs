@@ -21,10 +21,29 @@ namespace Saving {
             else if (Input.GetKeyUp(KeyCode.F9)) {
                 Save();
             }
+            else if (Input.GetKeyUp(KeyCode.F11)) {
+                ResetEntities();
+            }
         }
 
         public bool SaveExists() {
             return FileManager.SaveExists();
+        }
+
+        public void ResetEntities() {
+            string json = FileManager.ReadSaveJson();
+            if (json == null) {
+                Debug.LogError("Tried to load a nonexistent file.");
+                return;
+            }
+            SaveData saveData = new SaveData(json);
+
+            foreach (SceneInfo sceneInfo in saveData.sceneEntityState.Values) {
+                sceneInfo.entities = null;
+            }
+
+            FileManager.WriteSaveJson(saveData.ToJson());
+            Debug.Log("Reset entities");
         }
 
         public IEnumerator Load() {
