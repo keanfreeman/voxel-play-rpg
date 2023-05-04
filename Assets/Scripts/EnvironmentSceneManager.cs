@@ -26,6 +26,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     [SerializeField] TravellerIdentitySO sidekickID;
     [SerializeField] TravellerIdentitySO friendID;
     [SerializeField] TravellerIdentitySO wolfID;
+    [SerializeField] TravellerIdentitySO catID;
     [SerializeField] ObjectIdentitySO bedID;
     [SerializeField] ObjectIdentitySO lampID;
     [SerializeField] ObjectIdentitySO constructionToolsID;
@@ -170,6 +171,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
 
         NPC commoner = new NPC(new Vector3Int(862, 29, 346), Faction.PLAYER, IdleBehavior.STAND,
             friendID.name);
+        NPC cat = new NPC(new Vector3Int(858, 33, 350), Faction.PLAYER, IdleBehavior.WANDER, catID.name);
 
         BattleGroup battleGroup1 = new BattleGroup(new List<NPC> {
             new NPC(new Vector3Int(835, 29, 350), Faction.ENEMY, IdleBehavior.WANDER,
@@ -188,7 +190,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                 wolfID.name)
         });
 
-        TangibleObject bed = new TangibleObject(new Vector3Int(857, 29, 350), Direction.NORTH,
+        TangibleObject bed = new TangibleObject(new Vector3Int(857, 33, 348), Direction.EAST,
             bedID.name);
         TangibleObject lamp = new TangibleObject(new Vector3Int(858, 33, 351), Direction.NORTH,
             lampID.name);
@@ -239,6 +241,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     mainCharacter,
                     sidekick,
                     commoner,
+                    cat,
                     battleGroup1.combatants[0],
                     battleGroup1.combatants[1],
                     battleGroup2.combatants[0],
