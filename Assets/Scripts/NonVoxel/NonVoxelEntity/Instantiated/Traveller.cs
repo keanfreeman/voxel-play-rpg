@@ -20,7 +20,7 @@ namespace Instantiated {
         private float moveFinishedTimestamp;
         public SpriteMoveDirection permanentMoveDirection { get; protected set; } = SpriteMoveDirection.NONE;
 
-        public bool isMoving { get; protected set; }
+        public bool isMoving { get; protected set; } = false;
         public int currHP { get; protected set; }
 
         protected const float TIME_TO_MOVE_A_TILE = 0.2f;

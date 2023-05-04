@@ -73,5 +73,9 @@ namespace Instantiated {
         }
 
         public abstract bool IsInteractable();
+
+        public new EntityDefinition.TangibleEntity GetEntity() {
+            return (EntityDefinition.TangibleEntity)base.GetEntity();
+        }
     }
 }

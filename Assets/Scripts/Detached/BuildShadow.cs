@@ -62,7 +62,7 @@ public class BuildShadow : MonoBehaviour
             Instantiated.TangibleObject script = objectShadow.GetComponent<Instantiated.TangibleObject>();
 
             ObjectIdentitySO objectID = constructionOptions.GetCurrObject();
-            TangibleObject definition = new TangibleObject(currVoxel, rotation, objectID.name);
+            TangibleObject definition = new TangibleObject(currVoxel, objectID.name, rotation);
             script.Init(nonVoxelWorld, definition, objectID);
 
             nonVoxelWorld.AddTangibleEntity(definition, script);

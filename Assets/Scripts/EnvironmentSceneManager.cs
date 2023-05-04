@@ -34,6 +34,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     [SerializeField] GameObject storyEventCubePrefab;
     [SerializeField] TextAsset getAttention;
     [SerializeField] TextAsset friendDialogue;
+    [SerializeField] TextAsset catIntroDialogue;
 
     public EnvChangeDestination currDestination { get; private set; }
         = new EnvChangeDestination(3, new Vector3Int(859, 37, 347));
@@ -172,6 +173,9 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         NPC commoner = new NPC(new Vector3Int(862, 29, 346), Faction.PLAYER, IdleBehavior.STAND,
             friendID.name);
         NPC cat = new NPC(new Vector3Int(858, 33, 350), Faction.PLAYER, IdleBehavior.WANDER, catID.name);
+        cat.interactOrders = new OrderGroup(new List<Order> {
+            new DialogueOrder(catIntroDialogue, new Dictionary<string, Guid>{{catID.name, cat.guid}}),
+        });
 
         BattleGroup battleGroup1 = new BattleGroup(new List<NPC> {
             new NPC(new Vector3Int(835, 29, 350), Faction.ENEMY, IdleBehavior.WANDER,
@@ -190,12 +194,10 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                 wolfID.name)
         });
 
-        TangibleObject bed = new TangibleObject(new Vector3Int(857, 33, 348), Direction.EAST,
-            bedID.name);
-        TangibleObject lamp = new TangibleObject(new Vector3Int(858, 33, 351), Direction.NORTH,
-            lampID.name);
-        TangibleObject constructionTools = new TangibleObject(new Vector3Int(858, 37, 351), Direction.NORTH,
-            constructionToolsID.name);
+        TangibleObject bed = new TangibleObject(new Vector3Int(857, 33, 348), bedID.name, Direction.EAST);
+        TangibleObject lamp = new TangibleObject(new Vector3Int(858, 33, 351), lampID.name, Direction.NORTH);
+        TangibleObject constructionTools = new TangibleObject(new Vector3Int(858, 37, 351),
+            constructionToolsID.name, Direction.NORTH);
 
         OrderGroup coreyIntroOrders = new OrderGroup(new List<Order>{
             new DialogueOrder(getAttention, "???"),
@@ -211,7 +213,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             coreyIntroOrders
         );
         OrderGroup toolsIntroOrders = new OrderGroup(new List<Order> {
-            new DialogueOrder("It's a set of construction tools. Worth every penny!"),
+            new DialogueOrder("It's a set of construction tools. Maybe we'll have time to build soon?"),
             new DestroyOrder(constructionTools),
             // todo - play pickup fanfare
         });

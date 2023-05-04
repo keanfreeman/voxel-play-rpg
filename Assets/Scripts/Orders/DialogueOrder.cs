@@ -17,16 +17,25 @@ namespace Orders {
     {
         public string storyText;
         public string speakerName;
+        public Dictionary<string, Guid> joinPartyTargets;
 
         [JsonConstructor]
-        public DialogueOrder(string storyText, string speakerName) {
+        public DialogueOrder(string storyText, string speakerName, 
+                Dictionary<string, Guid> joinPartyTargets) {
             this.storyText = storyText;
             this.speakerName = speakerName;
+            this.joinPartyTargets = joinPartyTargets;
         }
 
         public DialogueOrder(string storyRawInkText) {
             Compiler inkCompiler = new Compiler(storyRawInkText);
             this.storyText = inkCompiler.Compile().ToJson();
+        }
+
+        public DialogueOrder(TextAsset story, Dictionary<string, Guid> joinPartyTargets) {
+            this.storyText = story.text;
+            this.speakerName = null;
+            this.joinPartyTargets = joinPartyTargets;
         }
 
         public DialogueOrder(TextAsset story, string speakerName) {

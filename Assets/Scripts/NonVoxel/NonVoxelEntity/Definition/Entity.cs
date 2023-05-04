@@ -12,12 +12,12 @@ namespace EntityDefinition {
         public Guid guid;
 
         [JsonConstructor]
-        protected Entity(Vector3Int spawnPosition, Guid guid) {
+        public Entity(Vector3Int spawnPosition, Guid guid) {
             this.spawnPosition = spawnPosition;
             this.guid = guid;
         }
 
-        protected Entity(Vector3Int spawnPosition) {
+        public Entity(Vector3Int spawnPosition) {
             this.spawnPosition = spawnPosition;
             this.guid = Guid.NewGuid();
         }

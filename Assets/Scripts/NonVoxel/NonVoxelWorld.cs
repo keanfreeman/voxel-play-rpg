@@ -65,10 +65,6 @@ namespace NonVoxel {
             entityIDToInstantiation.Clear();
         }
 
-        public InstantiatedEntity GetEntityFromPosition(Vector3Int position) {
-            return positionToEntity.GetValueOrDefault(position, null);
-        }
-
         public void DestroyEntity(InstantiatedEntity entity) {
             if (TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(TangibleEntity))) {
                 TangibleEntity tangibleEntity = (TangibleEntity)entity;
@@ -85,6 +81,10 @@ namespace NonVoxel {
             }
 
             Destroy(entity.gameObject);
+        }
+
+        public InstantiatedEntity GetEntityFromPosition(Vector3Int position) {
+            return positionToEntity.GetValueOrDefault(position, null);
         }
 
         public bool IsPositionOccupied(Vector3Int position) {

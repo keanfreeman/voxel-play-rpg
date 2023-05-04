@@ -499,6 +499,7 @@ MonoBehaviour:
   storyEventCubePrefab: {fileID: 440023488360116698, guid: fdcc5270671822a4981fb62ffa96d63e, type: 3}
   getAttention: {fileID: 4900000, guid: b86cc2d817bbfba4fb3823337db5549c, type: 3}
   friendDialogue: {fileID: 4900000, guid: f6e75214fd7d776488cd3aa73424fa2a, type: 3}
+  catIntroDialogue: {fileID: 4900000, guid: 399118e85bc2a6849b446dcb14ec1550, type: 3}
 --- !u!4 &331112265
 Transform:
   m_ObjectHideFlags: 0
@@ -566,6 +567,7 @@ MonoBehaviour:
   effectManager: {fileID: 234026431}
   gameStateManager: {fileID: 955022268}
   dialogueUI: {fileID: 2139012955}
+  nonVoxelManager: {fileID: 582458982}
 --- !u!1 &582458976
 GameObject:
   m_ObjectHideFlags: 0
@@ -640,6 +642,7 @@ MonoBehaviour:
   mainCharacterID: {fileID: 11400000, guid: 1654ee971551b024bb477b23ff6f8211, type: 2}
   detachedCameraPrefab: {fileID: 1275296119661960477, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
   genericNonVoxelObjectPrefab: {fileID: 100008, guid: 1df8fdc65931cd340beda593a897f605, type: 3}
+  playerPrefab: {fileID: 6602362568786100546, guid: fe42c4746314fb342af93e270ea31860, type: 3}
 --- !u!4 &582458983
 Transform:
   m_ObjectHideFlags: 0

@@ -7,6 +7,8 @@ using Ink.Runtime;
 using System.Linq;
 using System;
 using UnityEngine.InputSystem;
+using Orders;
+using NonVoxel;
 
 public class DialogueUI : UIHandler {
     [SerializeField] UIDocument uiDocument;
@@ -31,6 +33,13 @@ public class DialogueUI : UIHandler {
     private const string GIVEN_TEXT = "DialogueGivenText";
     private const string CHOICE_HOLDER = "DialogueChoiceHolder";
 
+    // ink variables
+    private DialogueOrder orderInfo;
+    private static string PLAY_SOUND_EFFECT = "play_sound_effect";
+    private static string JOIN_PARTY_REQUEST = "join_party_request";
+    private List<string> dialogueVariables = new List<string> { PLAY_SOUND_EFFECT, JOIN_PARTY_REQUEST };
+    private List<Order> storyOrders = new();
+
     private void Awake() {
         dialogueRoot = uiDocument.rootVisualElement.Q<TemplateContainer>(DIALOGUE_UI);
         dialogueText = dialogueRoot.Q<Label>(GIVEN_TEXT);
@@ -44,13 +53,50 @@ public class DialogueUI : UIHandler {
         return dialogueRoot.style.display.value != DisplayStyle.None;
     }
 
-    public void StartDialogue(Story story, string speakerName, Action callback = null) {
+    public bool HasStoryOrder() {
+        return storyOrders.Count != 0;
+    }
+
+    public Order PopLatestStoryOrder() {
+        if (storyOrders.Count == 0) return null;
+
+        int lastIndex = storyOrders.Count - 1;
+        Order lastOrder = storyOrders[lastIndex];
+        storyOrders.RemoveAt(lastIndex);
+        return lastOrder;
+    }
+
+    public void VariableObserver(string variableName, object newValue) {
+        if (variableName == PLAY_SOUND_EFFECT) {
+            // todo implement
+        }
+        else if (variableName == JOIN_PARTY_REQUEST) {
+            string partyMemberName = (string)newValue;
+            Guid partyMemberID = orderInfo.joinPartyTargets[partyMemberName];
+            storyOrders.Add(new JoinPartyOrder(partyMemberID));
+        }
+    }
+
+    private void SetUpVariableObservation(Story story) {
+        List<string> variablesToObserve = dialogueVariables
+            .Where((string variable) => {
+                return story.variablesState.GetVariableWithName(variable) != null;
+            })
+            .ToList();
+        currentStory.ObserveVariables(variablesToObserve, VariableObserver);
+    }
+
+    public void StartDialogue(Story story, DialogueOrder orderInfo, Action callback = null) {
+        this.orderInfo = orderInfo;
+
+        string speakerName = orderInfo.speakerName;
         this.speakerNameBlock = speakerName == null ? "" : speakerName + ": ";
         this.callback = callback;
         dialogueText.text = speakerNameBlock;
         SetDisplayState(true);
 
         currentStory = story;
+        SetUpVariableObservation(currentStory);
         currentLine = currentStory.Continue();
 
         StartCoroutine(TypeLine());

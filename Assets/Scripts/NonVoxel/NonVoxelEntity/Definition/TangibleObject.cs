@@ -12,18 +12,17 @@ namespace EntityDefinition {
     [Serializable]
     public class TangibleObject : TangibleEntity {
         public Direction startRotation;
-        public OrderGroup interactOrders;
 
         [JsonConstructor]
-        public TangibleObject(Direction startRotation, OrderGroup interactOrders, 
-                Vector3Int startPosition, string objectIdentity)
-                : base(startPosition, objectIdentity) {
+        public TangibleObject(Vector3Int startPosition, string identity, OrderGroup interactOrders, 
+                Direction startRotation) 
+                : base(startPosition, identity, interactOrders) {
             this.startRotation = startRotation;
-            this.interactOrders = interactOrders;
         }
 
-        public TangibleObject(Vector3Int startPosition, Direction startRotation, string objectIdentity) 
-                : base(startPosition, objectIdentity) {
+        public TangibleObject(Vector3Int startPosition, string identity,
+                Direction startRotation)
+                : base(startPosition, identity) {
             this.startRotation = startRotation;
         }
     }

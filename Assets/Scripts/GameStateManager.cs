@@ -128,10 +128,8 @@ public class GameStateManager : MonoBehaviour
             return;
         }
 
-        if (interactableEntity.GetType() == typeof(TangibleObject)) {
-            TangibleObject tangibleObject = (TangibleObject)interactableEntity;
-            OrderGroup orderGroup = tangibleObject.objectInfo.interactOrders;
-            orderManager.ExecuteOrders(orderGroup);
-        }
+        EntityDefinition.TangibleEntity entityDef = interactableEntity.GetEntity();
+        OrderGroup orderGroup = entityDef.interactOrders;
+        orderManager.ExecuteOrders(orderGroup);
     }
 }

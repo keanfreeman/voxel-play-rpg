@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.U2D.Animation;
 using GameMechanics;
 using MovementDirection;
+using Newtonsoft.Json;
+using Orders;
 
 namespace EntityDefinition {
     [Serializable]
@@ -12,6 +14,14 @@ namespace EntityDefinition {
         public BattleGroup battleGroup;
         public Faction faction;
         public IdleBehavior idleBehavior;
+
+        [JsonConstructor]
+        public NPC(Vector3Int startPosition, Faction faction,
+                IdleBehavior idleBehavior, string travellerIdentity, OrderGroup interactOrders)
+                : base(startPosition, travellerIdentity, interactOrders) {
+            this.faction = faction;
+            this.idleBehavior = idleBehavior;
+        }
 
         public NPC(Vector3Int startPosition, Faction faction, 
                 IdleBehavior idleBehavior, string travellerIdentity)

@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Ink.Runtime;
+using System.Linq;
 
 public class OrderManager : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class OrderManager : MonoBehaviour
     [SerializeField] EffectManager effectManager;
     [SerializeField] GameStateManager gameStateManager;
     [SerializeField] DialogueUI dialogueUI;
+    [SerializeField] NonVoxelManager nonVoxelManager;
 
     private Coroutine currCoroutine = null;
 
@@ -83,8 +85,13 @@ public class OrderManager : MonoBehaviour
         }
         else if (type == typeof(DialogueOrder)) {
             DialogueOrder dialogueOrder = (DialogueOrder)order;
-            dialogueUI.StartDialogue(new Story(dialogueOrder.storyText), dialogueOrder.speakerName);
-            while (dialogueUI.IsDisplaying()) {
+            dialogueUI.StartDialogue(new Story(dialogueOrder.storyText), dialogueOrder);
+
+            while (dialogueUI.IsDisplaying() || dialogueUI.HasStoryOrder()) {
+                while (dialogueUI.HasStoryOrder()) {
+                    Order storyOrder = dialogueUI.PopLatestStoryOrder();
+                    yield return ExecuteOrder(storyOrder);
+                }
                 yield return null;
             }
         }
@@ -109,6 +116,21 @@ public class OrderManager : MonoBehaviour
                     $"it doesn't exist.");
             }
             tangibleObject.objectInfo.interactOrders = changeOrdersOrder.newOrders;
+        }
+        else if (type == typeof(JoinPartyOrder)) {
+            JoinPartyOrder joinPartyOrder = (JoinPartyOrder)order;
+            InstantiatedEntity entity = nonVoxelWorld.GetInstanceFromID(joinPartyOrder.newPartyMemberID);
+            if (entity.GetType() != typeof(NPC)) {
+                Debug.LogError($"Tried to add entity of type {type} to party: {entity}");
+                yield break;
+            }
+
+            NPC npc = (NPC)entity;
+            nonVoxelManager.ConvertNPCToPlayer(npc);
+            // todo play fanfare
+        }
+        else {
+            Debug.LogError($"Found an order type not implemented: {type}");
         }
     }
 }
