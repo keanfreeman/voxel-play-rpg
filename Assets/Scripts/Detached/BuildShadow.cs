@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Security.Principal;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -39,21 +40,36 @@ public class BuildShadow : MonoBehaviour
             VoxelDefinition currVD = constructionOptions.GetCurrVoxelDefinition();
             if (drawStart.HasValue) {
                 if (constructionOptions.GetCurrVoxelBuildModeOption() == VoxelBuildModeOption.Cuboid) {
-                    List<Vector3Int> points = Coordinates.GetPointsInCuboid(drawStart.Value, currVoxel);
-                    foreach (Vector3Int point in points) {
+                    Dictionary<Vector3Int, VoxelDefinition> points 
+                        = Coordinates.GetPointsInCuboid(drawStart.Value, currVoxel, currVD);
+                    foreach (KeyValuePair<Vector3Int, VoxelDefinition> point in points) {
                         if (currVD.name == "Null" || currVD.name == "DefaultVoxelHole") {
-                            vpEnv.VoxelDestroy(point);
+                            vpEnv.VoxelDestroy(point.Key);
                         }
                         else {
-                            vpEnv.VoxelPlace(point, currVD);
+                            vpEnv.VoxelPlace(point.Key, currVD);
                             if (currVD.name == "SlopeVoxel") {
-                                vpEnv.VoxelSetTexturesRotation(point, (int)rotation);
+                                vpEnv.VoxelSetTexturesRotation(point.Key, (int)rotation);
                             }
                         }
                     }
                 }
                 else {
-                    PlaceTunnel(drawStart.Value, currVoxel, currVD);
+                    Dictionary<Vector3Int, VoxelDefinition> positions 
+                        = GetTunnelPositions(drawStart.Value, currVoxel, currVD);
+                    foreach (KeyValuePair<Vector3Int, VoxelDefinition> pair in positions) {
+                        Vector3Int point = pair.Key;
+                        VoxelDefinition tunnelVD = pair.Value;
+                        if (tunnelVD.name == "Null" || tunnelVD.name == "DefaultVoxelHole") {
+                            vpEnv.VoxelDestroy(point);
+                        }
+                        else {
+                            vpEnv.VoxelPlace(point, tunnelVD);
+                            if (tunnelVD.name == "SlopeVoxel") {
+                                vpEnv.VoxelSetTexturesRotation(point, (int)rotation);
+                            }
+                        }
+                    }
                 }
 
                 StopDrawingModel();
@@ -88,7 +104,8 @@ public class BuildShadow : MonoBehaviour
         return;
     }
 
-    private void PlaceTunnel(Vector3Int start, Vector3Int end, VoxelDefinition floorVoxel) {
+    private Dictionary<Vector3Int, VoxelDefinition> GetTunnelPositions(Vector3Int start, 
+            Vector3Int end, VoxelDefinition floorVoxel) {
         VoxelPlayEnvironment vpEnv = voxelWorldManager.GetEnvironment();
         VoxelDefinition nullVoxel = vpEnv.voxelDefinitions[0];
         Direction tunnelDirection = DirectionCalcs.GetDirectionFromPoints(start, end);
@@ -104,17 +121,17 @@ public class BuildShadow : MonoBehaviour
         int tunnelDistance = Mathf.Abs(iterateX ? diff.x : diff.z) + 1;
         int tunnelWidth = Mathf.Abs(iterateX ? diff.z : diff.x) + 1;
         // 1 floor voxel + 3 air voxels = 4 height
-        List<KeyValuePair<Vector3Int, VoxelDefinition>> blocksToPlace = new(tunnelDistance * tunnelWidth * 4);
+        Dictionary<Vector3Int, VoxelDefinition> blocksToPlace = new(tunnelDistance * tunnelWidth * 4);
         do {
             Vector3Int widthPosition = lengthPosition;
             Vector3Int widthIterator = iterateX
             ? (diff.z > 0 ? Vector3Int.forward : Vector3Int.back)
             : (diff.x > 0 ? Vector3Int.right : Vector3Int.left);
             do {
-                blocksToPlace.Add(new(widthPosition, floorVoxel));
-                blocksToPlace.Add(new(widthPosition + Vector3Int.up, nullVoxel));
-                blocksToPlace.Add(new(widthPosition + Vector3Int.up * 2, nullVoxel));
-                blocksToPlace.Add(new(widthPosition + Vector3Int.up * 3, nullVoxel));
+                blocksToPlace.Add(widthPosition, floorVoxel);
+                blocksToPlace.Add(widthPosition + Vector3Int.up, nullVoxel);
+                blocksToPlace.Add(widthPosition + Vector3Int.up * 2, nullVoxel);
+                blocksToPlace.Add(widthPosition + Vector3Int.up * 3, nullVoxel);
 
                 widthPosition += widthIterator;
             } while (iterateX
@@ -129,20 +146,7 @@ public class BuildShadow : MonoBehaviour
             ? (lengthPosition.x != end.x + lengthIterator.x) 
             : (lengthPosition.z != end.z + lengthIterator.z));
 
-        foreach (KeyValuePair<Vector3Int, VoxelDefinition> pair in blocksToPlace) {
-            Vector3Int point = pair.Key;
-            VoxelDefinition currVD = pair.Value;
-            if (currVD.name == "Null" || currVD.name == "DefaultVoxelHole") {
-                vpEnv.VoxelDestroy(point);
-            }
-            else {
-                vpEnv.VoxelPlace(point, currVD);
-                if (currVD.name == "SlopeVoxel") {
-                    vpEnv.VoxelSetTexturesRotation(point, 
-                        (int)DirectionCalcs.GetOppositeDirection(tunnelDirection));
-                }
-            }
-        }
+        return blocksToPlace;
     }
 
     public void DrawBuildModeShadow() {
@@ -183,14 +187,17 @@ public class BuildShadow : MonoBehaviour
         Vector3Int diff = end - start;
         VoxelPlayEnvironment env = voxelWorldManager.GetEnvironment();
         currVoxelModelShadow = env.ModelHighlight(md, detachedCamera.currVoxel);
-        currVoxelModelShadow.transform.localPosition += new Vector3(0.5f, 0, 0.5f)
-            + new Vector3(-0.5f * diff.x, 0, -0.5f * diff.z);
-        if (diff.y > 0) {
-            currVoxelModelShadow.transform.localPosition += Vector3.down * diff.y;
+
+        currVoxelModelShadow.transform.parent = null;
+        Vector3 newPosition = new Vector3(0.5f, 0, 0.5f) + start 
+            + new Vector3(0.5f * diff.x, 0, 0.5f * diff.z);
+        if (diff.y < 0) {
+            newPosition += new Vector3Int(0, diff.y, 0);
         }
+        currVoxelModelShadow.transform.position = newPosition;
     }
 
-    private ModelDefinition SetUpModelDefinition(VoxelDefinition vd, Vector3Int start, Vector3Int end,
+    private ModelDefinition SetUpModelDefinition(VoxelDefinition voxelType, Vector3Int start, Vector3Int end,
             Direction rotation) {
         Vector3Int diff = start - end;
         int sizeX = Mathf.Abs(diff.x) + 1;
@@ -205,18 +212,30 @@ public class BuildShadow : MonoBehaviour
         md.fitToTerrain = false;
         md.buildDuration = 0;
 
+        VoxelBuildModeOption buildMode = constructionUI.constructionOptions.GetCurrVoxelBuildModeOption();
+        Dictionary<Vector3Int, VoxelDefinition> positionToTypeMap;
+        if (buildMode == VoxelBuildModeOption.Cuboid) {
+            positionToTypeMap = Coordinates.GetPointsInCuboid(start, end, voxelType);
+        }
+        else {
+            positionToTypeMap = GetTunnelPositions(start, end, voxelType);
+        }
 
-        md.bits = new ModelBit[Coordinates.GetNumPointsInCuboid(start, end)];
-        int iterator = 0;
-        for (int x = 0; x < Mathf.Abs(diff.x) + 1; x++) {
-            for (int y = 0; y < Mathf.Abs(diff.y) + 1; y++) {
-                for (int z = 0; z < Mathf.Abs(diff.z) + 1; z++) {
-                    md.bits[iterator] = new ModelBit(md.GetVoxelIndex(x, y, z), vd,
-                        DirectionCalcs.GetDegreesFromDirection(rotation));
-                    iterator += 1;
+        Vector3Int bottomLeft = Coordinates.GetBottomLeftOfCuboid(start, end);
+        List<ModelBit> modelBits = new();
+        for (int x = 0; x < sizeX; x++) {
+            for (int y = 0; y < sizeY; y++) {
+                for (int z = 0; z < sizeZ; z++) {
+                    Vector3Int currModelPosition = bottomLeft + new Vector3Int(x, y, z);
+                    VoxelDefinition type = positionToTypeMap.GetValueOrDefault(currModelPosition, null);
+                    if (type != null) {
+                        modelBits.Add(new ModelBit(md.GetVoxelIndex(x, y, z), type,
+                            DirectionCalcs.GetDegreesFromDirection(rotation)));
+                    }
                 }
             }
         }
+        md.bits = modelBits.ToArray();
 
         md.ComputeFinalColors();
         md.ComputeBounds();

@@ -5,21 +5,27 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using VoxelPlay;
 
 public static class Coordinates
 {
+    public static Vector3Int GetBottomLeftOfCuboid(Vector3Int start, Vector3Int end) {
+        return new(Mathf.Min(start.x, end.x), Mathf.Min(start.y, end.y), Mathf.Min(start.z, end.z));
+    }
+
     public static int GetNumPointsInCuboid(Vector3Int start, Vector3Int end) {
         Vector3Int diff = end - start;
         int numPoints = (Mathf.Abs(diff.x) + 1) * (Mathf.Abs(diff.y) + 1) * (Mathf.Abs(diff.z) + 1);
         return numPoints;
     }
 
-    public static List<Vector3Int> GetPointsInCuboid(Vector3Int start, Vector3Int end) {
-        if (start == end) return new List<Vector3Int> { start };
+    public static Dictionary<Vector3Int, VoxelDefinition> GetPointsInCuboid(Vector3Int start,
+            Vector3Int end, VoxelDefinition voxelDefinition) {
+        if (start == end) return new() { { start, voxelDefinition } };
 
         int numPoints = GetNumPointsInCuboid(start, end);
-        List<Vector3Int> points = new(numPoints);
+        Dictionary<Vector3Int, VoxelDefinition> points = new(numPoints);
 
         int xIterator;
         int xTarget;
@@ -57,7 +63,7 @@ public static class Coordinates
         for (int x = start.x; x != xTarget; x += xIterator) {
             for (int y = start.y; y != yTarget; y += yIterator) {
                 for (int z = start.z; z != zTarget; z += zIterator) {
-                    points.Add(new Vector3Int(x, y, z));
+                    points.Add(new Vector3Int(x, y, z), voxelDefinition);
                 }
             }
         }
