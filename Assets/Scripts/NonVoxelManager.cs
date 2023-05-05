@@ -37,10 +37,14 @@ public class NonVoxelManager : MonoBehaviour
     public void ConvertNPCToPlayer(Instantiated.NPC npc) {
         NPC npcEntity = npc.GetEntity();
         Vector3Int currOrigin = npc.origin;
+        bool wasFacingRight = npc.spriteRenderer.flipX;
         nonVoxelWorld.DestroyEntity(npc);
 
         PlayerCharacter newPC = new PlayerCharacter(currOrigin, npcEntity.identity);
-        CreatePCInstance(newPC);
+        Instantiated.PlayerCharacter instance = CreatePCInstance(newPC);
+
+        instance.rotationTransform.rotation = cameraManager.GetMainCameraTarget().transform.rotation;
+        instance.spriteRenderer.flipX = wasFacingRight;
     }
 
     private void SetUpResources() {
@@ -128,7 +132,7 @@ public class NonVoxelManager : MonoBehaviour
         }
     }
 
-    private void CreatePCInstance(PlayerCharacter playerInfo) {
+    private Instantiated.PlayerCharacter CreatePCInstance(PlayerCharacter playerInfo) {
         TravellerIdentitySO identity = travellerIdentities[playerInfo.identity];
         GameObject playerObject = Instantiate(playerPrefab,
             playerInfo.spawnPosition, Quaternion.identity);
@@ -143,5 +147,6 @@ public class NonVoxelManager : MonoBehaviour
         }
 
         nonVoxelWorld.AddTangibleEntity(playerInfo, playerInstance);
+        return playerInstance;
     }
 }

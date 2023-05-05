@@ -8,8 +8,8 @@ using UnityEngine;
 
 namespace Instantiated {
     public abstract class Traveller : TangibleEntity {
+        [SerializeField] public SpriteRenderer spriteRenderer;
         [SerializeField] protected Animator animator;
-        [SerializeField] protected SpriteRenderer spriteRenderer;
         [SerializeField] protected CameraManager cameraManager;
         [SerializeField] protected PartyManager partyManager;
 

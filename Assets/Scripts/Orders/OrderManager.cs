@@ -38,7 +38,10 @@ public class OrderManager : MonoBehaviour
             yield return ExecuteOrder(order);
         }
 
-        yield return cameraManager.MoveCameraToTargetCreature(partyManager.currControlledCharacter);
+        if (cameraManager.attachedEntity == null 
+                || cameraManager.attachedEntity != partyManager.currControlledCharacter) {
+            yield return cameraManager.MoveCameraToTargetCreature(partyManager.currControlledCharacter);
+        }
         yield return gameStateManager.SetControlState(ControlState.SPRITE_NEUTRAL);
 
         currCoroutine = null;

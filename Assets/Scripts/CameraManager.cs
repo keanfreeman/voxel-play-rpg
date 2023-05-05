@@ -18,6 +18,7 @@ public class CameraManager : MonoBehaviour {
     [SerializeField] DetachedCamera detachedCamera;
 
     public bool isRotating { get; private set; }
+    public TangibleEntity attachedEntity { get; private set; }
     
     private float rotateStartTimestamp;
     private float previousRotateFraction;
@@ -38,7 +39,7 @@ public class CameraManager : MonoBehaviour {
     }
 
     public IEnumerator MoveCameraToTargetCreature(Traveller traveller) {
-        mainCameraTarget.transform.parent = null;
+        DeParentCamera();
         Vector3 start = mainCameraTarget.transform.position;
         Vector3 end = traveller.transform.position + new Vector3(0.5f, 0.5f, 0.5f);
         float startTime = Time.time;
@@ -52,6 +53,7 @@ public class CameraManager : MonoBehaviour {
         }
 
         mainCameraTarget.transform.parent = traveller.transform;
+        attachedEntity = traveller;
         mainCameraTarget.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
     }
 
@@ -73,11 +75,13 @@ public class CameraManager : MonoBehaviour {
 
     public void DeParentCamera() {
         mainCameraTarget.transform.parent = null;
+        attachedEntity = null;
     }
 
     // todo make gradual animation
     public void AttachCameraToPlayer(PlayerCharacter playerMovement) {
         mainCameraTarget.transform.parent = playerMovement.playerObject.transform;
+        attachedEntity = playerMovement;
         // need to jump to nearest 90 degree angle if coming from detached
         Direction direction = GetCameraApproximateDirection();
         playerMovement.SetPlayerCameraDirection(direction);
@@ -95,6 +99,7 @@ public class CameraManager : MonoBehaviour {
 
     public void AttachCameraToDetached() {
         mainCameraTarget.transform.parent = detachedModeContainer.transform;
+        attachedEntity = null;
         mainCameraTarget.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
         mainCamera.transform.SetLocalPositionAndRotation(new Vector3(0, 6, -6),
             Quaternion.Euler(45f, 0, 0));

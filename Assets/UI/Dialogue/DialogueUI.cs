@@ -147,17 +147,20 @@ public class DialogueUI : UIHandler {
     }
 
     private void HandleButtonClick(int choiceIndex) {
+        inChoice = false;
+
         currentStory.ChooseChoiceIndex(choiceIndex);
         choiceHolder.Clear();
         if (currentStory.canContinue) {
             dialogueText.text = speakerNameBlock;
             currentLine = currentStory.Continue();
-            StartCoroutine(TypeLine());
+            if (currentLine.Length != 0) {
+                StartCoroutine(TypeLine());
+                return;
+            }
         }
-        else {
-            StopDialogue();
-        }
-        inChoice = false;
+        
+        StopDialogue();
     }
 
     public override void SetDisplayState(bool isVisible) {
