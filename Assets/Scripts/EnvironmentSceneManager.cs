@@ -209,7 +209,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             new MoveOrder(new Vector3Int(862, 29, 350), commoner)
         }, true);
         StoryEventCube introEventCube = new StoryEventCube(
-            new Vector3Int(856, 36, 350), 1, ResourceIDs.STORY_EVENT_CUBE_STRING,
+            new Vector3Int(855, 36, 350), 1, ResourceIDs.STORY_EVENT_CUBE_STRING,
             coreyIntroOrders
         );
         OrderGroup toolsIntroOrders = new OrderGroup(new List<Order> {

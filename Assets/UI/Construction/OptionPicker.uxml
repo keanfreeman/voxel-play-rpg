@@ -1,8 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/Construction/ConstructionStyle.uss?fileID=7433441132597879392&amp;guid=363672be90e163f45a0c3021fcb973d8&amp;type=3#ConstructionStyle" />
-    <ui:VisualElement name="OptionPicker" focusable="true" style="flex-direction: row; justify-content: space-between; align-items: center; width: 100%;">
-        <ui:VisualElement name="LeftImage" style="background-image: url(&apos;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-4528830608231651361&amp;guid=69c00ed200b49c143ad08dfced5659be&amp;type=3#arrow-left@2x&apos;); width: 48px; height: 48px;" />
-        <ui:Label text="Option Text" display-tooltip-when-elided="true" name="TextHolder" style="-unity-text-align: middle-left; align-items: stretch; -unity-font-style: normal; visibility: visible;" />
-        <ui:VisualElement name="RightImage" style="background-image: url(&apos;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1087164816274819069&amp;guid=69c00ed200b49c143ad08dfced5659be&amp;type=3#arrow-right@2x&apos;); width: 48px; height: 48px;" />
-    </ui:VisualElement>
-</ui:UXML>

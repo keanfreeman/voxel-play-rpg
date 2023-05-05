@@ -1,0 +1,29 @@
+#OptionPicker:focus {
+    background-color: rgb(212, 55, 55);
+}
+
+#OptionPicker {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#LeftImage {
+    background-image: url('project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-4528830608231651361&guid=69c00ed200b49c143ad08dfced5659be&type=3#arrow-left@2x');
+    width: 48px;
+    height: 48px;
+}
+
+#TextHolder {
+    -unity-text-align: middle-left;
+    align-items: stretch;
+    -unity-font-style: normal;
+    visibility: visible;
+}
+
+#RightImage {
+    background-image: url('project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1087164816274819069&guid=69c00ed200b49c143ad08dfced5659be&type=3#arrow-right@2x');
+    width: 48px;
+    height: 48px;
+}

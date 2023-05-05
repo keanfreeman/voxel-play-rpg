@@ -1,10 +1,7 @@
 using CustomComponents;
-using EntityDefinition;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using VoxelPlay;
@@ -13,22 +10,25 @@ public class ConstructionBox : VisualElement {
     [UnityEngine.Scripting.Preserve]
     public new class UxmlFactory : UxmlFactory<ConstructionBox> { }
 
-    public VisualElement topOption;
-    public VisualElement bottomOption;
+    public OptionPicker topOption;
+    public OptionPicker bottomOption;
 
     private Label topText;
     private Label bottomText;
-    private VisualTreeAsset optionPickerAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-        "Assets/UI/Construction/OptionPicker.uxml");
+    private const string styleResource = "ConstructionStyle";
 
     public ConstructionBox() {
-        topOption = optionPickerAsset.Instantiate().Q<VisualElement>("OptionPicker");
-        bottomOption = optionPickerAsset.Instantiate().Q<VisualElement>("OptionPicker");
+        StyleSheet styleSheet = Resources.Load<StyleSheet>(styleResource);
+        styleSheets.Add(styleSheet);
+
+        topOption = new OptionPicker();
+        bottomOption = new OptionPicker();
+
         Add(topOption);
         Add(bottomOption);
 
-        topText = topOption.Q<Label>();
-        bottomText = bottomOption.Q<Label>();
+        topText = topOption.label;
+        bottomText = bottomOption.label;
 
         RenderOptions(new ConstructionOptions());
     }
