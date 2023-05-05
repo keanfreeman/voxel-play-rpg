@@ -108,39 +108,20 @@ public class PartyManager : MonoBehaviour, ISaveable
             return;
         }
 
-        // figure out who's following who
-        List<PlayerCharacter> orderedPartyList = new List<PlayerCharacter>();
-        HashSet<PlayerCharacter> closenessList = new HashSet<PlayerCharacter>(partyMembers);
-        closenessList.Remove(currControlledCharacter);
-
-        PlayerCharacter followTarget = currControlledCharacter;
-        while (closenessList.Count > 0) {
-            PlayerCharacter closest = FindClosestTo(closenessList, followTarget);
-            orderedPartyList.Add(closest);
-            closenessList.Remove(closest);
-            followTarget = closest;
-        }
-
-        // order them to move towards their followTarget
-        Vector3Int nextMove = leaderOldPosition;
-        foreach (PlayerCharacter playerMovement in orderedPartyList) {
-            Vector3Int temp = playerMovement.origin;
-            playerMovement.MoveOriginToPoint(nextMove);
-            nextMove = temp;
-        }
-    }
-
-    private PlayerCharacter FindClosestTo(HashSet<PlayerCharacter> candidates, PlayerCharacter target) {
-        PlayerCharacter closest = candidates.GetEnumerator().Current;
-        float distance = float.MaxValue;
-        foreach (PlayerCharacter playerMovement in candidates) {
-            int currDistance = Coordinates.NumPointsBetween(playerMovement.origin, target.origin);
-            if (currDistance < distance) {
-                closest = playerMovement;
-                distance = currDistance;
+        Deque<PlayerCharacter> followers = new(partyMembers.Count - 1);
+        foreach (PlayerCharacter pc in partyMembers) {
+            if (pc == currControlledCharacter) {
+                continue;
             }
+            followers.AddToBack(pc);
         }
 
-        return closest;
+        Vector3Int nextDestination = leaderOldPosition;
+        while (followers.Count > 0) {
+            PlayerCharacter pc = followers.RemoveFromFront();
+            Vector3Int currPosition = pc.origin;
+            pc.MoveOriginToPoint(nextDestination);
+            nextDestination = currPosition;
+        }
     }
 }

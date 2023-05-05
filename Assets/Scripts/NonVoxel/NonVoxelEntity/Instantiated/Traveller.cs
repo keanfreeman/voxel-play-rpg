@@ -70,6 +70,10 @@ namespace Instantiated {
             isMoving = true;
             SetMoveAnimation(isMoving);
             SetMoveDirectionRelativeToCamera();
+
+            if (partyManager.currControlledCharacter == this) {
+                partyManager.OnLeaderMoved(moveStartPoint);
+            }
         }
 
         public void SetMoveAnimation(bool state) {

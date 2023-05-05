@@ -78,6 +78,10 @@ public class GameStateManager : MonoBehaviour
     }
 
     public void EnterCombat(NPC npcInCombat) {
+        if (combatManager.isInCombat()) {
+            return;
+        }
+
         inputManager.LockPlayerControls();
         combatManager.SetFirstCombatant(npcInCombat);
         controlState = ControlState.COMBAT;
@@ -85,8 +89,8 @@ public class GameStateManager : MonoBehaviour
         combatManager.StartCombat();
     }
 
-    public void ExitCombat() {
-        controlState = ControlState.SPRITE_NEUTRAL;
+    public IEnumerator ExitCombat() {
+        yield return SetControlState(ControlState.SPRITE_NEUTRAL);
         inputManager.SwitchDetachedToPlayerControlState();
     }
 
@@ -130,6 +134,10 @@ public class GameStateManager : MonoBehaviour
 
         EntityDefinition.TangibleEntity entityDef = interactableEntity.GetEntity();
         OrderGroup orderGroup = entityDef.interactOrders;
+        if (orderGroup == null) {
+            Debug.LogError("Entity is marked as interactable but has no interactions.");
+            return;
+        }
         orderManager.ExecuteOrders(orderGroup);
     }
 }

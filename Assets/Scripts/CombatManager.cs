@@ -32,6 +32,10 @@ public class CombatManager : MonoBehaviour
 
     private const int TILE_TO_FEET = 5;
 
+    public bool isInCombat() {
+        return initiatives != null;
+    }
+
     public void StartCombat() {
         if (initiatives == null) {
             SetCombatantsAndInitiativeOrder();
@@ -194,8 +198,28 @@ public class CombatManager : MonoBehaviour
 
         if (initiatives.Count == partyManager.partyMembers.Count) {
             initiatives = null;
-            gameStateManager.ExitCombat();
+            yield return ExitCombat();
         }
+    }
+
+    private IEnumerator ExitCombat() {
+        inputManager.LockPlayerControls();
+
+        // move party next to leader
+        foreach (PlayerCharacter pc in partyManager.partyMembers) {
+            if (pc == partyManager.currControlledCharacter) {
+                continue;
+            }
+
+            CoroutineWithData coroutineWithData = new CoroutineWithData(this,
+            pathfinder.FindPath(pc, partyManager.currControlledCharacter.origin));
+            yield return coroutineWithData.coroutine;
+            Deque<Vector3Int> path = (Deque<Vector3Int>)coroutineWithData.result;
+
+            yield return movementManager.MoveAlongPath(pc, path);
+        }
+
+        yield return gameStateManager.ExitCombat();
     }
 
     public void HandleDetachedCancel(InputAction.CallbackContext obj) {
