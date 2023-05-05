@@ -4,9 +4,11 @@ using NonVoxel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Security.Principal;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.ProBuilder.Shapes;
 using VoxelPlay;
 using static ConstructionOptions;
 
@@ -31,22 +33,27 @@ public class BuildShadow : MonoBehaviour
         VoxelPlayEnvironment vpEnv = voxelWorldManager.GetEnvironment();
         ConstructionOptions constructionOptions = constructionUI.constructionOptions;
         Vector3Int currVoxel = detachedCamera.currVoxel;
-        BuildOption buildOption = constructionOptions.GetCurrBuildOption();
+        TopBuildOption buildOption = constructionOptions.GetCurrTopBuildOption();
 
-        if (buildOption == BuildOption.Voxels) {
+        if (buildOption == TopBuildOption.Voxels) {
             VoxelDefinition currVD = constructionOptions.GetCurrVoxelDefinition();
             if (drawStart.HasValue) {
-                List<Vector3Int> points = Coordinates.GetPointsInCuboid(drawStart.Value, currVoxel);
-                foreach (Vector3Int point in points) {
-                    if (currVD.name == "Null" || currVD.name == "DefaultVoxelHole") {
-                        vpEnv.VoxelDestroy(point);
-                    }
-                    else {
-                        vpEnv.VoxelPlace(point, currVD);
-                        if (currVD.name == "SlopeVoxel") {
-                            vpEnv.VoxelSetTexturesRotation(point, (int)rotation);
+                if (constructionOptions.GetCurrVoxelBuildModeOption() == VoxelBuildModeOption.Cuboid) {
+                    List<Vector3Int> points = Coordinates.GetPointsInCuboid(drawStart.Value, currVoxel);
+                    foreach (Vector3Int point in points) {
+                        if (currVD.name == "Null" || currVD.name == "DefaultVoxelHole") {
+                            vpEnv.VoxelDestroy(point);
+                        }
+                        else {
+                            vpEnv.VoxelPlace(point, currVD);
+                            if (currVD.name == "SlopeVoxel") {
+                                vpEnv.VoxelSetTexturesRotation(point, (int)rotation);
+                            }
                         }
                     }
+                }
+                else {
+                    PlaceTunnel(drawStart.Value, currVoxel, currVD);
                 }
 
                 StopDrawingModel();
@@ -56,7 +63,7 @@ public class BuildShadow : MonoBehaviour
             drawStart = currVoxel;
             DrawVoxelShadow(currVD, drawStart.Value, drawStart.Value, rotation);
         }
-        else if (buildOption == BuildOption.Objects) {
+        else if (buildOption == TopBuildOption.Objects) {
             objectShadow.transform.parent = null;
             objectShadow.transform.position = currVoxel;
             Instantiated.TangibleObject script = objectShadow.GetComponent<Instantiated.TangibleObject>();
@@ -81,15 +88,72 @@ public class BuildShadow : MonoBehaviour
         return;
     }
 
+    private void PlaceTunnel(Vector3Int start, Vector3Int end, VoxelDefinition floorVoxel) {
+        VoxelPlayEnvironment vpEnv = voxelWorldManager.GetEnvironment();
+        VoxelDefinition nullVoxel = vpEnv.voxelDefinitions[0];
+        Direction tunnelDirection = DirectionCalcs.GetDirectionFromPoints(start, end);
+
+        Vector3Int diff = end - start;
+        bool iterateX = tunnelDirection == Direction.EAST || tunnelDirection == Direction.WEST;
+
+        Vector3Int lengthPosition = start;
+        Vector3Int lengthIterator = iterateX 
+            ? (diff.x > 0 ? Vector3Int.right : Vector3Int.left)
+            : (diff.z > 0 ? Vector3Int.forward : Vector3Int.back);
+
+        int tunnelDistance = Mathf.Abs(iterateX ? diff.x : diff.z) + 1;
+        int tunnelWidth = Mathf.Abs(iterateX ? diff.z : diff.x) + 1;
+        // 1 floor voxel + 3 air voxels = 4 height
+        List<KeyValuePair<Vector3Int, VoxelDefinition>> blocksToPlace = new(tunnelDistance * tunnelWidth * 4);
+        do {
+            Vector3Int widthPosition = lengthPosition;
+            Vector3Int widthIterator = iterateX
+            ? (diff.z > 0 ? Vector3Int.forward : Vector3Int.back)
+            : (diff.x > 0 ? Vector3Int.right : Vector3Int.left);
+            do {
+                blocksToPlace.Add(new(widthPosition, floorVoxel));
+                blocksToPlace.Add(new(widthPosition + Vector3Int.up, nullVoxel));
+                blocksToPlace.Add(new(widthPosition + Vector3Int.up * 2, nullVoxel));
+                blocksToPlace.Add(new(widthPosition + Vector3Int.up * 3, nullVoxel));
+
+                widthPosition += widthIterator;
+            } while (iterateX
+                ? (widthPosition.z != end.z + widthIterator.z)
+                : (widthPosition.x != end.x + widthIterator.x));
+
+            lengthPosition += lengthIterator;
+            if (lengthPosition.y != end.y) {
+                lengthPosition.y += diff.y > 0 ? 1 : -1;
+            }
+        } while (iterateX 
+            ? (lengthPosition.x != end.x + lengthIterator.x) 
+            : (lengthPosition.z != end.z + lengthIterator.z));
+
+        foreach (KeyValuePair<Vector3Int, VoxelDefinition> pair in blocksToPlace) {
+            Vector3Int point = pair.Key;
+            VoxelDefinition currVD = pair.Value;
+            if (currVD.name == "Null" || currVD.name == "DefaultVoxelHole") {
+                vpEnv.VoxelDestroy(point);
+            }
+            else {
+                vpEnv.VoxelPlace(point, currVD);
+                if (currVD.name == "SlopeVoxel") {
+                    vpEnv.VoxelSetTexturesRotation(point, 
+                        (int)DirectionCalcs.GetOppositeDirection(tunnelDirection));
+                }
+            }
+        }
+    }
+
     public void DrawBuildModeShadow() {
         ConstructionOptions options = constructionUI.constructionOptions;
-        if (options.GetCurrBuildOption() == BuildOption.Voxels) {
+        if (options.GetCurrTopBuildOption() == TopBuildOption.Voxels) {
             if (drawStart.HasValue) {
                 VoxelDefinition currVD = constructionUI.constructionOptions.GetCurrVoxelDefinition();
                 DrawVoxelShadow(currVD, drawStart.Value, detachedCamera.currVoxel, rotation);
             }
         }
-        else if (options.GetCurrBuildOption() == BuildOption.Objects) {
+        else if (options.GetCurrTopBuildOption() == TopBuildOption.Objects) {
             StopDrawingObject();
 
             Instantiated.TangibleObject objectScript;
@@ -141,6 +205,7 @@ public class BuildShadow : MonoBehaviour
         md.fitToTerrain = false;
         md.buildDuration = 0;
 
+
         md.bits = new ModelBit[Coordinates.GetNumPointsInCuboid(start, end)];
         int iterator = 0;
         for (int x = 0; x < Mathf.Abs(diff.x) + 1; x++) {
@@ -161,7 +226,7 @@ public class BuildShadow : MonoBehaviour
 
     public void StopDrawingShadow() {
         ConstructionOptions constructionOptions = constructionUI.constructionOptions;
-        if (constructionOptions.GetCurrBuildOption() == BuildOption.Voxels) {
+        if (constructionOptions.GetCurrTopBuildOption() == TopBuildOption.Voxels) {
             StopDrawingModel();
         }
         else {

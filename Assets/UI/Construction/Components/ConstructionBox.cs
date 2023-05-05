@@ -5,15 +5,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using VoxelPlay;
+using static ConstructionOptions;
 
 public class ConstructionBox : VisualElement {
     [UnityEngine.Scripting.Preserve]
     public new class UxmlFactory : UxmlFactory<ConstructionBox> { }
 
     public OptionPicker topOption;
+    public OptionPicker middleOption;
     public OptionPicker bottomOption;
 
     private Label topText;
+    private Label middleText;
     private Label bottomText;
     private const string styleResource = "ConstructionStyle";
 
@@ -22,30 +25,52 @@ public class ConstructionBox : VisualElement {
         styleSheets.Add(styleSheet);
 
         topOption = new OptionPicker();
+        middleOption = new OptionPicker();
         bottomOption = new OptionPicker();
+        SetThirdOptionDisplay(DisplayStyle.None);
 
         Add(topOption);
+        Add(middleOption);
         Add(bottomOption);
 
         topText = topOption.label;
+        middleText = middleOption.label;
         bottomText = bottomOption.label;
 
         RenderOptions(new ConstructionOptions());
     }
 
     public void RenderOptions(ConstructionOptions constructionOptions) {
-        topText.text = constructionOptions.GetCurrBuildOption().ToString();
-        bottomText.text = constructionOptions.GetCurrOptionName();
+        TopBuildOption topBuildOption = constructionOptions.GetCurrTopBuildOption();
+        topText.text = topBuildOption.ToString();
+        middleText.text = constructionOptions.GetCurrOptionName();
+
+        if (topBuildOption == TopBuildOption.Voxels) {
+            SetThirdOptionDisplay(DisplayStyle.Flex);
+            bottomText.text = constructionOptions.GetCurrVoxelBuildModeOption().ToString();
+        }
+        else {
+            SetThirdOptionDisplay(DisplayStyle.None);
+        }
+    }
+
+    private void SetThirdOptionDisplay(DisplayStyle display) {
+        bottomOption.style.display = display;
     }
 }
 
 public class ConstructionOptions {
-    public enum BuildOption {
+    public enum TopBuildOption {
         Voxels = 0,
         Objects = 1,
         Destroy = 2
     }
-    private int buildOptionIterator = 0;
+    private int topBuildOptionIterator = 0;
+    public enum VoxelBuildModeOption {
+        Cuboid = 0,
+        Tunnel = 1
+    }
+    private int voxelBuildModeIterator = 0;
 
     public List<VoxelDefinition> voxelOptions { get; private set; }
     private int voxelOptionsIterator = 0;
@@ -62,8 +87,8 @@ public class ConstructionOptions {
         objectOptions = objects;
     }
 
-    public BuildOption GetCurrBuildOption() {
-        return (BuildOption)buildOptionIterator;
+    public TopBuildOption GetCurrTopBuildOption() {
+        return (TopBuildOption)topBuildOptionIterator;
     }
 
     public VoxelDefinition GetCurrVoxelDefinition() {
@@ -71,6 +96,10 @@ public class ConstructionOptions {
             return null;
         }
         return voxelOptions[voxelOptionsIterator];
+    }
+
+    public VoxelBuildModeOption GetCurrVoxelBuildModeOption() {
+        return (VoxelBuildModeOption)voxelBuildModeIterator;
     }
 
     public ObjectIdentitySO GetCurrObject() {
@@ -81,36 +110,34 @@ public class ConstructionOptions {
     }
 
     public string GetCurrOptionName() {
-        BuildOption buildOption = GetCurrBuildOption();
-        if (buildOption == BuildOption.Voxels) {
+        TopBuildOption buildOption = GetCurrTopBuildOption();
+        if (buildOption == TopBuildOption.Voxels) {
             VoxelDefinition vd = GetCurrVoxelDefinition();
             return vd == null ? "No Voxel Definitions available" : vd.name;
         }
-        else if (buildOption == BuildOption.Objects) {
+        else if (buildOption == TopBuildOption.Objects) {
             ObjectIdentitySO objectID = GetCurrObject();
             return objectID == null ? "No Objects available" 
                 : objectID.prefab.name;
         }
-        else {
-            return "Destroy Object/Voxel";
-        }
+        else return "Destroy Object/Voxel";
     }
 
     public void IterateTop(bool isRight) {
-        buildOptionIterator += isRight ? 1 : -1;
-        int enumNumOptions = Enum.GetNames(typeof(BuildOption)).Length;
-        if (buildOptionIterator >= enumNumOptions) {
-            buildOptionIterator = 0;
+        topBuildOptionIterator += isRight ? 1 : -1;
+        int enumNumOptions = Enum.GetNames(typeof(TopBuildOption)).Length;
+        if (topBuildOptionIterator >= enumNumOptions) {
+            topBuildOptionIterator = 0;
         }
-        else if (buildOptionIterator < 0) {
-            buildOptionIterator = enumNumOptions - 1;
+        else if (topBuildOptionIterator < 0) {
+            topBuildOptionIterator = enumNumOptions - 1;
         }
     }
 
-    public void IterateBottom(bool isRight) {
+    public void IterateMiddle(bool isRight) {
         int iteration = isRight ? 1 : -1;
 
-        if (GetCurrBuildOption() == BuildOption.Voxels) {
+        if (GetCurrTopBuildOption() == TopBuildOption.Voxels) {
             voxelOptionsIterator += iteration;
             if (voxelOptionsIterator >= voxelOptions.Count) {
                 voxelOptionsIterator = 0;
@@ -127,6 +154,19 @@ public class ConstructionOptions {
             else if (objectOptionsIterator < 0) {
                 objectOptionsIterator = objectOptions.Count - 1;
             }
+        }
+    }
+
+    public void IterateBottom(bool isRight) {
+        if (GetCurrTopBuildOption() != TopBuildOption.Voxels) return;
+
+        voxelBuildModeIterator += isRight ? 1 : -1;
+        int enumNumOptions = Enum.GetNames(typeof(VoxelBuildModeOption)).Length;
+        if (voxelBuildModeIterator >= enumNumOptions) {
+            voxelBuildModeIterator = 0;
+        }
+        else if (voxelBuildModeIterator < 0) {
+            voxelBuildModeIterator = enumNumOptions - 1;
         }
     }
 }

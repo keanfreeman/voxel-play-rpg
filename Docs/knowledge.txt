@@ -1,3 +1,12 @@
+can use this code in voxel play to ensure voxels are always loaded:
+	VoxelPlayEnvironment.Textures
+	// Add any other voxel found inside Defaults
+	LogMessage("Loading all voxels in VoxelPlay/Defaults");
+	VoxelDefinition[] vdd = Resources.LoadAll<VoxelDefinition>("VoxelPlay/Defaults");
+	for (int k = 0; k < vdd.Length; k++) {
+		AddVoxelTextures(vdd[k]);
+	}
+
 recursive loops in json serialization seem to end in null values
 
 for json serialization: "JsonSerializationException: Unable to find a constructor to use for 

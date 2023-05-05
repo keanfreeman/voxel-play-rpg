@@ -82,8 +82,12 @@ public class ConstructionUI : UIHandler
             buildShadow.StopDrawingShadow();
 
             bool isRight = currNavigationDirection > 0;
-            if (uiDocument.rootVisualElement.focusController.focusedElement == constructionBox.topOption) {
+            Focusable focused = uiDocument.rootVisualElement.focusController.focusedElement;
+            if (focused == constructionBox.topOption) {
                 constructionOptions.IterateTop(isRight);
+            }
+            else if (focused == constructionBox.middleOption) {
+                constructionOptions.IterateMiddle(isRight);
             }
             else {
                 constructionOptions.IterateBottom(isRight);

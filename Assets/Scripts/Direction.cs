@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace MovementDirection {
     public enum Direction {
         NORTH = 0,
@@ -7,6 +9,33 @@ namespace MovementDirection {
     }
 
     public static class DirectionCalcs {
+        public static Direction GetOppositeDirection(Direction direction) {
+            switch (direction) {
+                case Direction.NORTH:
+                    return Direction.SOUTH;
+                case Direction.EAST:
+                    return Direction.WEST;
+                case Direction.SOUTH:
+                    return Direction.NORTH;
+                case Direction.WEST:
+                    return Direction.EAST;
+                default:
+                    throw new System.IndexOutOfRangeException("Enum value not accounted for.");
+            }
+        }
+
+        public static Direction GetDirectionFromPoints(Vector3Int start, Vector3Int end) {
+            Vector3Int diff = end - start;
+            if (diff.x == 0 && diff.z == 0) return Direction.NORTH;
+
+            Vector2 diff2 = new (diff.x, diff.z);
+            float angle = Vector2.SignedAngle(new Vector2(1, 1), diff2);
+            if (angle >= 0 && angle < 90) return Direction.NORTH;
+            else if (angle >= 90 && angle < 180) return Direction.WEST;
+            else if (angle < 0 && angle >= -90) return Direction.EAST;
+            else return Direction.SOUTH;
+        }
+
         public static float GetDegreesFromDirection(Direction direction) {
             switch (direction) {
                 case Direction.EAST:
