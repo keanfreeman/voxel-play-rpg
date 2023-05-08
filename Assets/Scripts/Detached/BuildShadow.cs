@@ -30,6 +30,18 @@ public class BuildShadow : MonoBehaviour
     private int dPadRotationDirection = 0;
     private Coroutine rotateObjectCoroutine;
 
+    private void Update() {
+        if (Input.GetKeyUp(KeyCode.P)) {
+            Debug.Log("placing torch");
+            Vector3 torchDirection = rotation == Direction.NORTH
+                ? Vector3.back : rotation == Direction.EAST
+                ? Vector3.left : rotation == Direction.SOUTH
+                ? Vector3.forward
+                : Vector3.right;
+            voxelWorldManager.GetEnvironment().TorchAttach(detachedCamera.currVoxel, torchDirection);
+        }
+    }
+
     public void HandleBuildSelect() {
         VoxelPlayEnvironment vpEnv = voxelWorldManager.GetEnvironment();
         ConstructionOptions constructionOptions = constructionUI.constructionOptions;
@@ -297,6 +309,7 @@ public class BuildShadow : MonoBehaviour
             }
 
             rotation = (Direction)newRotation;
+            Debug.Log($"New rotation is {rotation}");
             DrawBuildModeShadow();
             yield return new WaitForSeconds(0.3f);
         }

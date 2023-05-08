@@ -23,7 +23,7 @@
             "$type": "EntityDefinition.NPC, Assembly-CSharp",
             "battleGroup": {
               "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
-              "groupID": "8cdd9542-3405-4628-9b23-f0597e5da457",
+              "groupID": "15898048-4e1f-48e6-b593-54e5007efa8f",
               "combatants": {
                 "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
                 "$values": []
@@ -33,6 +33,7 @@
             "idleBehavior": 1,
             "currSpawnPosition": null,
             "identity": "Wolf",
+            "interactOrders": null,
             "spawnPosition": {
               "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
               "x": 468,
@@ -41,7 +42,7 @@
               "magnitude": 470.97345,
               "sqrMagnitude": 221816
             },
-            "guid": "85ecccdd-e1db-4e51-8773-cc89f7b0268b"
+            "guid": "8242eac8-4d17-4c69-be08-8e3665f1df57"
           },
           {
             "$type": "EntityDefinition.SceneExitCube, Assembly-CSharp",
@@ -66,7 +67,7 @@
               "magnitude": 466.182373,
               "sqrMagnitude": 217326
             },
-            "guid": "39d87c97-ce3a-47b5-b703-1e7b865345e5"
+            "guid": "4f4755c5-51a3-470c-a58e-b6cc16aa2be0"
           }
         ]
       },
@@ -81,7 +82,7 @@
             "$type": "EntityDefinition.NPC, Assembly-CSharp",
             "battleGroup": {
               "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
-              "groupID": "8cdd9542-3405-4628-9b23-f0597e5da457",
+              "groupID": "15898048-4e1f-48e6-b593-54e5007efa8f",
               "combatants": {
                 "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
                 "$values": []
@@ -91,6 +92,7 @@
             "idleBehavior": 1,
             "currSpawnPosition": null,
             "identity": "Wolf",
+            "interactOrders": null,
             "spawnPosition": {
               "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
               "x": 468,
@@ -99,7 +101,7 @@
               "magnitude": 470.97345,
               "sqrMagnitude": 221816
             },
-            "guid": "85ecccdd-e1db-4e51-8773-cc89f7b0268b"
+            "guid": "8242eac8-4d17-4c69-be08-8e3665f1df57"
           },
           {
             "$type": "EntityDefinition.SceneExitCube, Assembly-CSharp",
@@ -124,7 +126,7 @@
               "magnitude": 949.6568,
               "sqrMagnitude": 901848
             },
-            "guid": "7359dc21-185d-49a1-b9ff-9839da97db16"
+            "guid": "127cd9a6-0b1a-488b-8943-6187bad64a65"
           }
         ]
       },
@@ -139,6 +141,7 @@
             "$type": "EntityDefinition.PlayerCharacter, Assembly-CSharp",
             "currSpawnPosition": null,
             "identity": "MainCharacter",
+            "interactOrders": null,
             "spawnPosition": {
               "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
               "x": 859,
@@ -147,12 +150,13 @@
               "magnitude": 927.178,
               "sqrMagnitude": 859659
             },
-            "guid": "bacdb175-df9a-4926-8f48-60562adc23c1"
+            "guid": "2e07e0bb-fe67-450b-90cf-d40623ac3df7"
           },
           {
             "$type": "EntityDefinition.PlayerCharacter, Assembly-CSharp",
             "currSpawnPosition": null,
             "identity": "Sidekick",
+            "interactOrders": null,
             "spawnPosition": {
               "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
               "x": 864,
@@ -161,7 +165,7 @@
               "magnitude": 931.5289,
               "sqrMagnitude": 867746
             },
-            "guid": "8a272730-d29c-4ebb-9f44-b58da172e43b"
+            "guid": "6b477256-e0c9-42ee-b5f5-db38d8cbd762"
           },
           {
             "$type": "EntityDefinition.NPC, Assembly-CSharp",
@@ -177,6 +181,7 @@
               "sqrMagnitude": 863601
             },
             "identity": "FriendCommoner",
+            "interactOrders": null,
             "spawnPosition": {
               "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
               "x": 862,
@@ -185,13 +190,55 @@
               "magnitude": 929.301331,
               "sqrMagnitude": 863601
             },
-            "guid": "2a4157c5-7c0c-4d63-94f1-86ce96966d7b"
+            "guid": "e563589a-d6e1-43a5-8e8d-119c568d1c45"
+          },
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": null,
+            "faction": 0,
+            "idleBehavior": 1,
+            "currSpawnPosition": {
+              "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+              "x": 857,
+              "y": 33,
+              "z": 350,
+              "magnitude": 926.3034,
+              "sqrMagnitude": 858038
+            },
+            "identity": "Cat",
+            "interactOrders": {
+              "$type": "Orders.OrderGroup, Assembly-CSharp",
+              "destroyOnComplete": true,
+              "orders": {
+                "$type": "System.Collections.Generic.List`1[[Orders.Order, Assembly-CSharp]], mscorlib",
+                "$values": [
+                  {
+                    "$type": "Orders.DialogueOrder, Assembly-CSharp",
+                    "storyText": "{\"inkVersion\":20,\"root\":[[{\"->\":\"start_knot\"},[\"done\",{\"#f\":5,\"#n\":\"g-0\"}],null],\"done\",{\"start_knot\":[\"^It's your cat, Soot.\",\"\\n\",{\"->\":\"loop_knot\"},{\"#f\":1}],\"loop_knot\":[[\"ev\",\"str\",\"^Pet Soot.\",\"/str\",\"/ev\",{\"*\":\".^.c-0\",\"flg\":4},\"ev\",\"str\",\"^Take Soot along with you.\",\"/str\",\"/ev\",{\"*\":\".^.c-1\",\"flg\":4},\"ev\",\"str\",\"^Leave.\",\"/str\",\"/ev\",{\"*\":\".^.c-2\",\"flg\":4},{\"c-0\":[\"\\n\",\"ev\",\"str\",\"^meow\",\"/str\",\"/ev\",{\"VAR=\":\"play_sound_effect\",\"re\":true},\"^Soot enjoyed that!\",\"\\n\",{\"->\":\".^.^.^\"},{\"#f\":5}],\"c-1\":[\"\\n\",\"^You took Soot along with you!\",\"\\n\",\"ev\",\"str\",\"^Cat\",\"/str\",\"/ev\",{\"VAR=\":\"join_party_request\",\"re\":true},\"end\",{\"#f\":5}],\"c-2\":[\"^ \",\"end\",\"\\n\",{\"#f\":5}]}],{\"#f\":1}],\"global decl\":[\"ev\",\"str\",\"^none\",\"/str\",{\"VAR=\":\"join_party_request\"},\"str\",\"^none\",\"/str\",{\"VAR=\":\"play_sound_effect\"},\"/ev\",\"end\",null],\"#f\":1}],\"listDefs\":{}}",
+                    "speakerName": null,
+                    "joinPartyTargets": {
+                      "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Guid, mscorlib]], mscorlib",
+                      "Cat": "06a70e74-4c19-4238-9716-7a19baa2c5b1"
+                    }
+                  }
+                ]
+              }
+            },
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 858,
+              "y": 33,
+              "z": 350,
+              "magnitude": 927.228638,
+              "sqrMagnitude": 859753
+            },
+            "guid": "06a70e74-4c19-4238-9716-7a19baa2c5b1"
           },
           {
             "$type": "EntityDefinition.NPC, Assembly-CSharp",
             "battleGroup": {
               "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
-              "groupID": "271564fc-3873-4ee9-9b82-4f8a5b9103f2",
+              "groupID": "ee2dce02-4725-4921-9883-eaf065f71eac",
               "combatants": {
                 "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
                 "$values": [
@@ -201,13 +248,14 @@
                     "idleBehavior": 1,
                     "currSpawnPosition": {
                       "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
-                      "x": 836,
+                      "x": 835,
                       "y": 29,
                       "z": 346,
-                      "magnitude": 905.23645,
-                      "sqrMagnitude": 819453
+                      "magnitude": 904.313,
+                      "sqrMagnitude": 817782
                     },
                     "identity": "Wolf",
+                    "interactOrders": null,
                     "spawnPosition": {
                       "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
                       "x": 835,
@@ -216,7 +264,7 @@
                       "magnitude": 904.6961,
                       "sqrMagnitude": 818475
                     },
-                    "guid": "5bed4263-3c4e-4b88-9c37-7088cc8ec222"
+                    "guid": "9a363494-5518-45a7-b4cd-4905404fbefd"
                   }
                 ]
               }
@@ -232,6 +280,7 @@
               "sqrMagnitude": 821970
             },
             "identity": "Wolf",
+            "interactOrders": null,
             "spawnPosition": {
               "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
               "x": 835,
@@ -240,13 +289,13 @@
               "magnitude": 905.850952,
               "sqrMagnitude": 820566
             },
-            "guid": "8155bf5c-2e75-4ea1-9804-50d7dcc689ae"
+            "guid": "69192ed4-a511-40b9-a963-384ae284d609"
           },
           {
             "$type": "EntityDefinition.NPC, Assembly-CSharp",
             "battleGroup": {
               "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
-              "groupID": "271564fc-3873-4ee9-9b82-4f8a5b9103f2",
+              "groupID": "ee2dce02-4725-4921-9883-eaf065f71eac",
               "combatants": {
                 "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
                 "$values": [
@@ -256,13 +305,14 @@
                     "idleBehavior": 1,
                     "currSpawnPosition": {
                       "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
-                      "x": 834,
+                      "x": 833,
                       "y": 29,
-                      "z": 351,
-                      "magnitude": 905.3165,
-                      "sqrMagnitude": 819598
+                      "z": 348,
+                      "magnitude": 903.2353,
+                      "sqrMagnitude": 815834
                     },
                     "identity": "Wolf",
+                    "interactOrders": null,
                     "spawnPosition": {
                       "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
                       "x": 835,
@@ -271,7 +321,7 @@
                       "magnitude": 905.850952,
                       "sqrMagnitude": 820566
                     },
-                    "guid": "8155bf5c-2e75-4ea1-9804-50d7dcc689ae"
+                    "guid": "69192ed4-a511-40b9-a963-384ae284d609"
                   }
                 ]
               }
@@ -280,13 +330,14 @@
             "idleBehavior": 1,
             "currSpawnPosition": {
               "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
-              "x": 834,
+              "x": 833,
               "y": 29,
-              "z": 346,
-              "magnitude": 903.3897,
-              "sqrMagnitude": 816113
+              "z": 347,
+              "magnitude": 902.850464,
+              "sqrMagnitude": 815139
             },
             "identity": "Wolf",
+            "interactOrders": null,
             "spawnPosition": {
               "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
               "x": 835,
@@ -295,13 +346,13 @@
               "magnitude": 904.6961,
               "sqrMagnitude": 818475
             },
-            "guid": "5bed4263-3c4e-4b88-9c37-7088cc8ec222"
+            "guid": "9a363494-5518-45a7-b4cd-4905404fbefd"
           },
           {
             "$type": "EntityDefinition.NPC, Assembly-CSharp",
             "battleGroup": {
               "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
-              "groupID": "40a015f4-78d5-4b2f-8869-79815c05b25b",
+              "groupID": "34773bc8-0d90-48d9-9740-2da0369133ac",
               "combatants": {
                 "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
                 "$values": [
@@ -311,13 +362,14 @@
                     "idleBehavior": 1,
                     "currSpawnPosition": {
                       "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
-                      "x": 826,
+                      "x": 827,
                       "y": 30,
                       "z": 351,
-                      "magnitude": 897.985,
-                      "sqrMagnitude": 806377
+                      "magnitude": 898.9049,
+                      "sqrMagnitude": 808030
                     },
                     "identity": "Wolf",
+                    "interactOrders": null,
                     "spawnPosition": {
                       "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
                       "x": 825,
@@ -326,7 +378,7 @@
                       "magnitude": 896.708435,
                       "sqrMagnitude": 804086
                     },
-                    "guid": "2aaa7650-0731-466f-b75b-40613f7647eb"
+                    "guid": "9ab729b0-d363-4e66-8bfa-09d208f59e2b"
                   }
                 ]
               }
@@ -335,13 +387,14 @@
             "idleBehavior": 1,
             "currSpawnPosition": {
               "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
-              "x": 824,
+              "x": 825,
               "y": 31,
               "z": 349,
-              "magnitude": 895.398254,
-              "sqrMagnitude": 801738
+              "magnitude": 896.3186,
+              "sqrMagnitude": 803387
             },
             "identity": "Wolf",
+            "interactOrders": null,
             "spawnPosition": {
               "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
               "x": 825,
@@ -350,13 +403,13 @@
               "magnitude": 895.9297,
               "sqrMagnitude": 802690
             },
-            "guid": "c0322241-8c52-4dd1-8e87-85675321629c"
+            "guid": "50c2cb34-7891-4072-a1a0-244b7967ab51"
           },
           {
             "$type": "EntityDefinition.NPC, Assembly-CSharp",
             "battleGroup": {
               "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
-              "groupID": "40a015f4-78d5-4b2f-8869-79815c05b25b",
+              "groupID": "34773bc8-0d90-48d9-9740-2da0369133ac",
               "combatants": {
                 "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
                 "$values": [
@@ -373,6 +426,7 @@
                       "sqrMagnitude": 801041
                     },
                     "identity": "Wolf",
+                    "interactOrders": null,
                     "spawnPosition": {
                       "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
                       "x": 825,
@@ -381,7 +435,7 @@
                       "magnitude": 895.9297,
                       "sqrMagnitude": 802690
                     },
-                    "guid": "c0322241-8c52-4dd1-8e87-85675321629c"
+                    "guid": "50c2cb34-7891-4072-a1a0-244b7967ab51"
                   }
                 ]
               }
@@ -390,13 +444,14 @@
             "idleBehavior": 1,
             "currSpawnPosition": {
               "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
-              "x": 827,
+              "x": 825,
               "y": 30,
-              "z": 351,
-              "magnitude": 898.9049,
-              "sqrMagnitude": 808030
+              "z": 352,
+              "magnitude": 897.457,
+              "sqrMagnitude": 805429
             },
             "identity": "Wolf",
+            "interactOrders": null,
             "spawnPosition": {
               "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
               "x": 825,
@@ -405,7 +460,7 @@
               "magnitude": 896.708435,
               "sqrMagnitude": 804086
             },
-            "guid": "2aaa7650-0731-466f-b75b-40613f7647eb"
+            "guid": "9ab729b0-d363-4e66-8bfa-09d208f59e2b"
           },
           {
             "$type": "EntityDefinition.SceneExitCube, Assembly-CSharp",
@@ -430,7 +485,7 @@
               "magnitude": 933.026245,
               "sqrMagnitude": 870538
             },
-            "guid": "c6e3b6ab-c551-470e-bb78-8372a6a5d421"
+            "guid": "d1f63e9c-aa3e-41cc-9d96-0344d3a87b53"
           },
           {
             "$type": "EntityDefinition.StoryEventCube, Assembly-CSharp",
@@ -443,11 +498,12 @@
                   {
                     "$type": "Orders.DialogueOrder, Assembly-CSharp",
                     "storyText": "{\"inkVersion\":20,\"root\":[[\"^Hey! Hey, Kean! \",\"end\",\"\\n\",[\"done\",{\"#f\":5,\"#n\":\"g-0\"}],null],\"done\",{\"#f\":1}],\"listDefs\":{}}",
-                    "speakerName": "???"
+                    "speakerName": "???",
+                    "joinPartyTargets": null
                   },
                   {
                     "$type": "Orders.ExclaimOrder, Assembly-CSharp",
-                    "travellerGuid": "bacdb175-df9a-4926-8f48-60562adc23c1"
+                    "travellerGuid": "2e07e0bb-fe67-450b-90cf-d40623ac3df7"
                   },
                   {
                     "$type": "Orders.MoveOrder, Assembly-CSharp",
@@ -459,20 +515,21 @@
                       "magnitude": 927.178,
                       "sqrMagnitude": 859659
                     },
-                    "travellerGuid": "bacdb175-df9a-4926-8f48-60562adc23c1"
+                    "travellerGuid": "2e07e0bb-fe67-450b-90cf-d40623ac3df7"
                   },
                   {
                     "$type": "Orders.CameraFocusOrder, Assembly-CSharp",
-                    "focusTargetTravellerGuid": "2a4157c5-7c0c-4d63-94f1-86ce96966d7b"
+                    "focusTargetTravellerGuid": "e563589a-d6e1-43a5-8e8d-119c568d1c45"
                   },
                   {
                     "$type": "Orders.DialogueOrder, Assembly-CSharp",
                     "storyText": "{\"inkVersion\":20,\"root\":[[\"^Glad I caught you! How's the snow been?\",\"\\n\",\"^We've got a bit of a situation down in the mines. Please come down when you get a second.\",\"\\n\",[\"done\",{\"#f\":5,\"#n\":\"g-0\"}],null],\"done\",{\"#f\":1}],\"listDefs\":{}}",
-                    "speakerName": "Corey"
+                    "speakerName": "Corey",
+                    "joinPartyTargets": null
                   },
                   {
                     "$type": "Orders.CameraFocusOrder, Assembly-CSharp",
-                    "focusTargetTravellerGuid": "bacdb175-df9a-4926-8f48-60562adc23c1"
+                    "focusTargetTravellerGuid": "2e07e0bb-fe67-450b-90cf-d40623ac3df7"
                   },
                   {
                     "$type": "Orders.MoveOrder, Assembly-CSharp",
@@ -484,7 +541,7 @@
                       "magnitude": 930.798035,
                       "sqrMagnitude": 866385
                     },
-                    "travellerGuid": "2a4157c5-7c0c-4d63-94f1-86ce96966d7b"
+                    "travellerGuid": "e563589a-d6e1-43a5-8e8d-119c568d1c45"
                   }
                 ]
               }
@@ -493,81 +550,19 @@
             "prefabName": "StoryEventCube",
             "spawnPosition": {
               "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
-              "x": 856,
+              "x": 855,
               "y": 36,
               "z": 350,
-              "magnitude": 925.4901,
-              "sqrMagnitude": 856532
+              "magnitude": 924.5653,
+              "sqrMagnitude": 854821
             },
-            "guid": "94426340-9d8d-4cd1-b69e-8b06cfd98d50"
-          },
-          {
-            "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
-            "startRotation": 3,
-            "interactOrders": null,
-            "identity": "Desk 2",
-            "spawnPosition": {
-              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
-              "x": 858,
-              "y": 29,
-              "z": 350,
-              "magnitude": 927.0949,
-              "sqrMagnitude": 859505
-            },
-            "guid": "09c2aa1b-7b53-42ce-a11c-a51e56656311"
-          },
-          {
-            "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
-            "startRotation": 3,
-            "interactOrders": null,
-            "identity": "Lamp",
-            "spawnPosition": {
-              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
-              "x": 858,
-              "y": 29,
-              "z": 349,
-              "magnitude": 926.717834,
-              "sqrMagnitude": 858806
-            },
-            "guid": "baaff622-e335-4f83-9923-64e5c1fd5cef"
-          },
-          {
-            "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
-            "startRotation": 0,
-            "interactOrders": {
-              "$type": "Orders.OrderGroup, Assembly-CSharp",
-              "destroyOnComplete": true,
-              "orders": {
-                "$type": "System.Collections.Generic.List`1[[Orders.Order, Assembly-CSharp]], mscorlib",
-                "$values": [
-                  {
-                    "$type": "Orders.DialogueOrder, Assembly-CSharp",
-                    "storyText": "{\"inkVersion\":20,\"root\":[[\"^It's a set of construction tools. Worth every penny!\",\"\\n\",[\"done\",{\"#n\":\"g-0\"}],null],\"done\",null],\"listDefs\":{}}",
-                    "speakerName": null
-                  },
-                  {
-                    "$type": "Orders.DestroyOrder, Assembly-CSharp",
-                    "entityGuid": "3eca4ca3-4491-44fb-92b7-8941bb9c8e1f"
-                  }
-                ]
-              }
-            },
-            "identity": "Construction Tools",
-            "spawnPosition": {
-              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
-              "x": 858,
-              "y": 37,
-              "z": 351,
-              "magnitude": 927.7575,
-              "sqrMagnitude": 860734
-            },
-            "guid": "3eca4ca3-4491-44fb-92b7-8941bb9c8e1f"
+            "guid": "b9fb5687-eac1-471e-ba69-24f1de4ec266"
           },
           {
             "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
             "startRotation": 1,
-            "interactOrders": null,
             "identity": "Bed",
+            "interactOrders": null,
             "spawnPosition": {
               "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
               "x": 857,
@@ -576,47 +571,66 @@
               "magnitude": 925.549561,
               "sqrMagnitude": 856642
             },
-            "guid": "bc259232-c154-4bb5-856e-6e11e1181119"
+            "guid": "37550386-a1a7-4923-8cc9-3d1d2bf6b658"
           },
           {
             "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
-            "startRotation": 3,
+            "startRotation": 0,
+            "identity": "Lamp",
             "interactOrders": null,
-            "identity": "Office Chair",
-            "spawnPosition": {
-              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
-              "x": 857,
-              "y": 29,
-              "z": 351,
-              "magnitude": 926.5479,
-              "sqrMagnitude": 858491
-            },
-            "guid": "30c32b56-6c49-4659-a7b3-95fff733d96c"
-          },
-          {
-            "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
-            "startRotation": 3,
-            "interactOrders": null,
-            "identity": "Storage Rack",
             "spawnPosition": {
               "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
               "x": 858,
               "y": 33,
-              "z": 349,
-              "magnitude": 926.8517,
-              "sqrMagnitude": 859054
+              "z": 351,
+              "magnitude": 927.606567,
+              "sqrMagnitude": 860454
             },
-            "guid": "71a7ac74-12f2-46de-a25d-41f24e01c59c"
+            "guid": "83562e46-a35a-490b-b8e6-0d5461e886be"
+          },
+          {
+            "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
+            "startRotation": 0,
+            "identity": "Construction Tools",
+            "interactOrders": {
+              "$type": "Orders.OrderGroup, Assembly-CSharp",
+              "destroyOnComplete": true,
+              "orders": {
+                "$type": "System.Collections.Generic.List`1[[Orders.Order, Assembly-CSharp]], mscorlib",
+                "$values": [
+                  {
+                    "$type": "Orders.DialogueOrder, Assembly-CSharp",
+                    "storyText": "{\"inkVersion\":20,\"root\":[[\"^It's a set of construction tools. Maybe we'll have time to build soon?\",\"\\n\",[\"done\",{\"#n\":\"g-0\"}],null],\"done\",null],\"listDefs\":{}}",
+                    "speakerName": null,
+                    "joinPartyTargets": null
+                  },
+                  {
+                    "$type": "Orders.DestroyOrder, Assembly-CSharp",
+                    "entityGuid": "a4144d7d-a4ad-49a6-a008-39547731d454"
+                  }
+                ]
+              }
+            },
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 858,
+              "y": 37,
+              "z": 351,
+              "magnitude": 927.7575,
+              "sqrMagnitude": 860734
+            },
+            "guid": "a4144d7d-a4ad-49a6-a008-39547731d454"
           }
         ]
       },
-      "vpSaveBase64": "DhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABADRCAAAAAAAAAAAMAA5Wb3hlbFRhaWdhRGlydA1Wb3hlbFdhdGVyU2VhDVZveGVsVGFpZ2FUb3AOU25vd1RyZWVMZWF2ZXMMVm94ZWxPcmVDb2FsDlZveGVsQnJpY2tXYWxsFVZveGVsQnVpbGRpbmdXb29kV2FsbApTbG9wZVZveGVsClZveGVsR2xhc3MMU25vd1RyZWVCYXJrD0hRX1ZveGVsQmVkUm9jaw5Wb3hlbFNvbGlkUm9jawAACwAAAAAAWkQAAMBBAACsQwEBGAAAAP///wAAAAsAAQD///8AC5AADQAA////kAsBAAABAP///5ELDwANAAD///+gCwEAAAEA////oQsPAA0AAP///7ALAQAAAQD///+xCw8ADQAA////wAsBAAABAP///8ELDwANAAD////QCwEAAAEA////0QsPAA0AAP///+ALAQAAAQD////hCw8ADQAA////8AsBAAABAP////ELDwANAgD///+QDAEAAAIA////oAwBAAACAP///7AMAQAAAgD////ADAEAAAIA////0AwBAAACAP///+AMAQAAAgD////wDAEAAAMA////bw8BAAAAAAAAAAAAAFpEAADAQQAAtEMBARIAAAD///8AAGkCAAQA////aQIBAAAAAP///2oCDwAABAD///95AgEAAAAA////egIPAAAEAP///4kCAQAAAAD///+KAk4BAAQA////2AMCAAAAAP///9oDngEABAD///94BQEAAAAA////eQX/AAAEAP///3gGAQAAAAD///95BogEAAEA////AQsPAA0AAP///xALAQAAAQD///8RC+8ADQIA////AAwBAAACAP///xAMAQAAAAAAAAAAAABWRAAAwEEAAKxDAQFOAAAA////AAAACwABAP///wALkAANAAD///+QCxYAAAUA////pgsGAAAAAP///6wLCgAABQD///+2CwYAAAAA////vAsEAAABAP///8ALBQANAAD////FCwEAAAUA////xgsGAAAAAP///8wLBAAAAQD////QCwUADQAA////1QsBAAAFAP///9YLBgAAAAD////cCwQAAAEA////4AsFAA0AAP///+ULAQAABQD////mCwYAAAAA////7AsEAAABAP////ALBQANAAD////1CwEAAAUA////9gsGAAAAAP////wLBAAAAgD///+QDBYAAAYA////pgwGAAACAP///6wMCgAABgD///+2DAYAAAIA////vAwEAAACAP///8UMAQAABgD////GDAYAAAIA////zAwEAAACAP///9UMAQAABgD////WDAYAAAIA////3AwEAAACAP///+UMAQAABgD////mDAYAAAIA////7AwEAAACAP////UMAQAABgD////2DAYAAAIA/////AwEAAAFAP///6YNAQAABgD///+nDQQAAAUA////qw0BAAAGAP///7YNAQAABgD////GDQEAAAcA////xw0BAAAGAP///9YNAgAABgD////bDQEAAAYA////5g0CAAAGAP///+sNAQAABgD////2DQIAAAYA////+w0BAAAFAP///6YOAQAABgD///+nDgQAAAUA////qw4BAAAGAP///7YOAQAABgD////GDgEAAAYA////1g4BAAAHAP///9cOAQAACAD////bDgEAAAYA////5g4CAAAIAP///+sOAQAABgD////2DgIAAAgA////+w4BAAAFAP///6YPAQAABgD///+nDwQAAAUA////qw8BAAAGAP///7YPAQAABgD///+7DwEAAAYA////xg8BAAAGAP///8sPAQAABgD////WDwEAAAgA////2w8BAAAGAP///+YPAQAABwD////nDwEAAAgA////6w8BAAAGAP////YPAgAACAD////7DwEAAAAAAAAAAAAAVkQAAMBBAAC0QwEBHwAAAP///wAApgYABAD///+mBgEAAAAA////pwYPAAAEAP///7YGAQAAAAD///+3BrYBAAQA////bQgBAAAAAP///24IDwAABAD///99CAEAAAAA////fgjvAAAEAP///20JAQAAAAD///9uCZIBAAEA////AAsFAA0AAP///wULAQAABQD///8GCwYAAAAA////DAsEAAABAP///xALBQANAAD///8VCwsAAAEA////IAvgAA0CAP///wUMAQAABgD///8GDAYAAAIA////DAwEAAACAP///xUMCwAABQD///8GDQEAAAYA////Bw0EAAAFAP///wsNAQAABQD///8GDgEAAAYA////Bw4EAAAFAP///wsOAQAABQD///8GDwEAAAYA////Bw8EAAAFAP///wsPAQAAAAAAAAAAAABSRAAAwEEAAKxDAQFlAAAA////AAAlAAAEAP///yUAAwAAAAD///8oAAEKAAQA////KQoDAAAAAP///ywK4QAAAQD///8NCwMADQAA////EAsNAAABAP///x0LAwANAAD///8gCw0AAAEA////LQsDAA0AAP///zALDAAAAQD///88CwQADQAA////QAsMAAABAP///0wLBAANAAD///9QCwwAAAEA////XAsEAA0AAP///2ALDAAAAQD///9sCwQADQAA////cAsMAAABAP///3wLBAANAAD///+ACwsAAAEA////iwsFAA0AAP///5ALOQAAAQD////JCwcADQAA////0AsJAAABAP///9kLBwANAAD////gCwkAAAEA////6QsHAA0AAP////ALCQAAAQD////5CwcADQAA////AAwCAAACAP///wIMCwAAAAD///8QDAIAAAIA////EgwLAAAAAP///yAMAwAAAgD///8jDAoAAAAA////MAwDAAACAP///zMMCQAAAAD///9ADAMAAAIA////QwwJAAAAAP///1AMAgAAAgD///9SDAoAAAAA////YAwCAAACAP///2IMCgAAAgD///9wDAwAAAIA////gAwLAAACAP///5AMOQAAAgD////QDAkAAAIA////4AwJAAACAP////AMCQAAAgD///8ADQIAAAIA////EA0CAAACAP///yANAwAACQD///8oDQEAAAIA////MA0DAAACAP///0ANAwAAAgD///9QDQIAAAkA////Vw0BAAACAP///2ANAgAACQD///+CDQEAAAkA////xg0BAAAJAP///ygOAQAACQD///9XDgEAAAMA////cg4BAAADAP///4EOAQAACQD///+CDgEAAAMA////gw4BAAADAP///5IOAQAAAwD///+2DgEAAAMA////xQ4BAAAJAP///8YOAQAAAwD////HDgEAAAMA////1g4BAAADAP///wcPAgAAAwD///8LDwEAAAMA////EA8BAAADAP///xcPAwAAAwD///8mDwIAAAkA////KA8BAAADAP///ykPAgAAAwD///83DwMAAAMA////Rg8DAAADAP///1UPAgAACQD///9XDwEAAAMA////WA8CAAADAP///2IPAQAAAwD///9mDwMAAAMA////cQ8DAAADAP///3cPAQAAAwD///+ADwIAAAkA////gg8BAAADAP///4MPAgAAAwD///+RDwMAAAMA////og8BAAADAP///6YPAQAAAwD///+1DwMAAAMA////xA8CAAAJAP///8YPAQAAAwD////HDwIAAAMA////1Q8DAAADAP///+YPAQAAAAAAAAAAAABaRAAAIEIAAKRDAQEOAAMA////XwABAAADAP///08BAQAAAwD///9eAQIAAAMA////bwEBAAADAP///18CAQAAAwD///9PAwEAAAMA////XgMCAAADAP///28DAQAAAwD///9fBAEAAAMA////TwUBAAADAP///14FAgAAAwD///9vBQEAAAMA////XwYBAAADAP///18IAQAAAAAAAAAAAABaRAAAIEIAAKxDAQEDAAMA////bwEBAAADAP///28DAQAAAwD///9vBQEAAAAAAAAAAAAAVkQAACBCAACkQwEBAAAAAAAAAAAAAFZEAAAgQgAArEMBAUwABQD///+mAAYAAAUA////tgABAAAGAP///7cABAAABQD///+7AAEAAAUA////xgABAAAGAP///8gAAwAABQD////LAAEAAAUA////1gABAAAGAP///9gAAwAABQD////bAAEAAAUA////5gABAAAGAP///+gAAwAABQD////rAAEAAAUA////9gABAAAHAP////cAAQAABgD////4AAMAAAUA////+wABAAAFAP///6YBAQAABgD///+nAQQAAAUA////qwEBAAAGAP///7YBAQAABgD///+7AQEAAAYA////xgEBAAAHAP///8cBAQAABgD////LAQEAAAYA////1gECAAAGAP///9sBAQAABgD////mAQEAAAYA////6wEBAAAGAP////YBAQAABgD////7AQEAAAUA////pgIBAAAIAP///6cCBAAABQD///+rAgEAAAYA////tgIBAAAGAP///7sCAQAABgD////GAgEAAAYA////ywIBAAAGAP///9YCAQAABwD////XAgEAAAYA////2wIBAAAGAP///+YCAgAABgD////rAgEAAAYA////9gIBAAAGAP////sCAQAABQD///+mAwEAAAgA////pwMEAAAFAP///6sDAQAABgD///+2AwEAAAYA////uwMBAAAGAP///8YDAQAABgD////LAwEAAAYA////1gMBAAAGAP///9sDAQAABgD////mAwEAAAcA////5wMBAAAGAP///+sDAQAABgD////2AwIAAAYA////+wMBAAAFAP///6YEBgAABQD///+2BAEAAAYA////twQEAAAFAP///7sEAQAABQD////GBAEAAAYA////yAQDAAAFAP///8sEAQAABQD////WBAEAAAYA////2AQDAAAFAP///9sEAQAABQD////mBAEAAAYA////6AQDAAAFAP///+sEAQAABQD////2BAEAAAcA////9wQBAAAGAP////gEAwAABQD////7BAEAAAAAAAAAAAAAVkQAACBCAAC0QwEBCwAFAP///wYABgAABQD///8GAQEAAAYA////BwEEAAAFAP///wsBAQAABQD///8GAgEAAAYA////BwIEAAAFAP///wsCAQAABQD///8GAwEAAAYA////BwMEAAAFAP///wsDAQAABQD///8GBAYAAAAAAAAAAAAAVkQAANDCAACsQwABEQAGAP///6gAAQAABgD///+2AQEAAAYA////yAEBAAAGAP///9sBAQAABgD////7AQEAAAYA////qQIBAAAGAP///6gEAQAABgD////rBQEAAAYA////uAYBAAAGAP///6gIAgAABgD///+mCgEAAAYA////2woBAAAGAP///6kLAQAABgD////4CwEAAAYA////+wsBAAAKAP///wAMAAEACwD///8ADQADAAAAAAAAAAAAAAA="
+      "vpSaveBase64": "DhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABADRCAAAAAAAAAAAMAA5Wb3hlbFRhaWdhRGlydApTbG9wZVZveGVsDVZveGVsV2F0ZXJTZWENVm94ZWxUYWlnYVRvcA5Wb3hlbFNvbGlkUm9jaw5Tbm93VHJlZUxlYXZlcwxWb3hlbE9yZUNvYWwOVm94ZWxCcmlja1dhbGwVVm94ZWxCdWlsZGluZ1dvb2RXYWxsClZveGVsR2xhc3MMU25vd1RyZWVCYXJrD0hRX1ZveGVsQmVkUm9jawAACwAAAAAAWkQAAMBBAACsQwEBSAAAAP///wAA2gAAAQD////aAAEAMAAA////2wAPAAABAP///+oAAQAwAAD////rAO4AAAEA////2QEBADAAAP///9sBDgAAAQD////pAQEAMAAA////6wHtAAABAP///9gCAQAwAAD////bAg0AAAEA////6AIBADAAAP///+sC7AAAAQD////XAwEAMAAA////2wMMAAABAP///+cDAQAwAAD////rA+sAAAEA////1gQBADAAAP///9oEDAAAAQD////mBAEAMAAA////6gTrAAABAP///9UFAQAwAAD////ZBQwAAAEA////5QUBADAAAP///+kF6wAAAQD////UBgEAMAAA////2AYMAAABAP///+QGAQAwAAD////oBusAAAEA////0wcBADAAAP///9cHDAAAAQD////jBwEAMAAA////5wfrAAABAP///9IIAQAwAAD////WCAwAAAEA////4ggBADAAAP///+YI6wAAAQD////RCQEAMAAA////1QkMAAABAP///+EJAQAwAAD////lCesAAAEA////0AoBADAAAP///9QKDAAAAQD////gCgEAMAAA////5AocAAACAP///wALkAANAAD///+QCwQAAAIA////lAsMAA0AAP///6ALBAAAAgD///+kCwwADQAA////sAsEAAACAP///7QLDAANAAD////ACwQAAAIA////xAsMAA0AAP///9MLAQAAAgD////UCwwADQAA////4wsBAAACAP///+QLDAANAAD////wCwQAAAIA////9AsMAA0DAP///5AMBAAAAwD///+gDAQAAAMA////sAwEAAAEAP///8AMAwAAAwD////DDAEAAAQA////0gwBAAADAP///9MMAQAABAD////iDAEAAAMA////4wwBAAAEAP////AMAwAAAwD////zDAEAAAUA////bw8BAAAAAAAAAAAAAFpEAADAQQAAtEMBARIAAAD///8AAGkCAAYA////aQIBAAAAAP///2oCDwAABgD///95AgEAAAAA////egIPAAAGAP///4kCAQAAAAD///+KAk4BAAYA////2AMCAAAAAP///9oDngEABgD///94BQEAAAAA////eQX/AAAGAP///3gGAQAAAAD///95BosEAAIA////BAsMAA0AAP///xALBAAAAgD///8UC+wADQMA////AAwEAAADAP///xAMBAAAAAAAAAAAAABWRAAAwEEAAKxDAQFTAAAA////AAAACwACAP///wALkAANAAD///+QCxYAAAcA////pgsGAAAAAP///6wLCgAABwD///+2CwYAAAAA////vAsEAAACAP///8ALBQANAAD////FCwEAAAcA////xgsGAAAAAP///8wLBAAAAgD////QCwUADQAA////1QsBAAAHAP///9YLBgAAAAD////cCwMAAAEA////3wsBADACAP///+ALBQANAAD////lCwEAAAcA////5gsGAAAAAP///+wLAwAAAQD////vCwEAMAIA////8AsFAA0AAP////ULAQAABwD////2CwYAAAAA/////AsEAAADAP///5AMFgAACAD///+mDAYAAAMA////rAwKAAAIAP///7YMBgAAAwD///+8DAQAAAMA////xQwBAAAIAP///8YMBgAAAwD////MDAEAAAQA////zQwDAAADAP///9UMAQAACAD////WDAYAAAMA////3AwBAAAEAP///90MAQAAAQD////eDAEAMAMA////5QwBAAAIAP///+YMBgAAAwD////sDAEAAAQA////7QwBAAABAP///+4MAQAwAwD////1DAEAAAgA////9gwGAAADAP////wMAQAABAD////9DAMAAAcA////pg0BAAAJAP///6cNBAAABwD///+rDQEAAAgA////tg0BAAAIAP///8YNAQAAAQD////HDQEAAAgA////1g0CAAAIAP///9sNAQAACAD////mDQIAAAgA////6w0BAAAIAP////YNAgAACAD////7DQEAAAcA////pg4BAAAJAP///6cOBAAABwD///+rDgEAAAgA////tg4BAAAIAP///8YOAQAACAD////WDgEAAAEA////1w4BAAAJAP///9sOAQAACAD////mDgIAAAkA////6w4BAAAIAP////YOAgAACQD////7DgEAAAcA////pg8BAAAJAP///6cPBAAABwD///+rDwEAAAgA////xg8BAAAIAP///9YPAQAACQD////bDwEAAAgA////5g8BAAABAP///+cPAQAACQD////rDwEAAAgA////9g8CAAAJAP////sPAQAAAAAAAAAAAABWRAAAwEEAALRDAQEfAAAA////AACmBgAGAP///6YGAQAAAAD///+nBg8AAAYA////tgYBAAAAAP///7cGtgEABgD///9tCAEAAAAA////bggPAAAGAP///30IAQAAAAD///9+CO8AAAYA////bQkBAAAAAP///24JkgEAAgD///8ACwUADQAA////BQsBAAAHAP///wYLBgAAAAD///8MCwQAAAIA////EAsFAA0AAP///xULCwAAAgD///8gC+AADQMA////BQwBAAAIAP///wYMBgAAAwD///8MDAQAAAMA////FQwLAAAHAP///wYNAQAACAD///8HDQQAAAcA////Cw0BAAAHAP///wYOAQAACAD///8HDgQAAAcA////Cw4BAAAHAP///wYPAQAACAD///8HDwQAAAcA////Cw8BAAAAAAAAAAAAAFJEAADAQQAArEMBAWUAAAD///8AACUAAAYA////JQADAAAAAP///ygAAQoABgD///8pCgMAAAAA////LArhAAACAP///w0LAwANAAD///8QCw0AAAIA////HQsDAA0AAP///yALDQAAAgD///8tCwMADQAA////MAsMAAACAP///zwLBAANAAD///9ACwwAAAIA////TAsEAA0AAP///1ALDAAAAgD///9cCwQADQAA////YAsMAAACAP///2wLBAANAAD///9wCwwAAAIA////fAsEAA0AAP///4ALCwAAAgD///+LCwUADQAA////kAs5AAACAP///8kLBwANAAD////QCwkAAAIA////2QsHAA0AAP///+ALCQAAAgD////pCwcADQAA////8AsJAAACAP////kLBwANAAD///8ADAIAAAMA////AgwLAAAAAP///xAMAgAAAwD///8SDAsAAAAA////IAwDAAADAP///yMMCgAAAAD///8wDAMAAAMA////MwwJAAAAAP///0AMAwAAAwD///9DDAkAAAAA////UAwCAAADAP///1IMCgAAAAD///9gDAIAAAMA////YgwKAAADAP///3AMDAAAAwD///+ADAsAAAMA////kAw5AAADAP///9AMCQAAAwD////gDAkAAAMA////8AwJAAADAP///wANAgAAAwD///8QDQIAAAMA////IA0DAAAKAP///ygNAQAAAwD///8wDQMAAAMA////QA0DAAADAP///1ANAgAACgD///9XDQEAAAMA////YA0CAAAKAP///4INAQAACgD////GDQEAAAoA////KA4BAAAKAP///1cOAQAABQD///9yDgEAAAUA////gQ4BAAAKAP///4IOAQAABQD///+DDgEAAAUA////kg4BAAAFAP///7YOAQAABQD////FDgEAAAoA////xg4BAAAFAP///8cOAQAABQD////WDgEAAAUA////Bw8CAAAFAP///wsPAQAABQD///8QDwEAAAUA////Fw8DAAAFAP///yYPAgAACgD///8oDwEAAAUA////KQ8CAAAFAP///zcPAwAABQD///9GDwMAAAUA////VQ8CAAAKAP///1cPAQAABQD///9YDwIAAAUA////Yg8BAAAFAP///2YPAwAABQD///9xDwMAAAUA////dw8BAAAFAP///4APAgAACgD///+CDwEAAAUA////gw8CAAAFAP///5EPAwAABQD///+iDwEAAAUA////pg8BAAAFAP///7UPAwAABQD////EDwIAAAoA////xg8BAAAFAP///8cPAgAABQD////VDwMAAAUA////5g8BAAAAAAAAAAAAAFpEAAAgQgAApEMBAQ4ABQD///9fAAEAAAUA////TwEBAAAFAP///14BAgAABQD///9vAQEAAAUA////XwIBAAAFAP///08DAQAABQD///9eAwIAAAUA////bwMBAAAFAP///18EAQAABQD///9PBQEAAAUA////XgUCAAAFAP///28FAQAABQD///9fBgEAAAUA////XwgBAAAAAAAAAAAAAFpEAAAgQgAArEMBAQMABQD///9vAQEAAAUA////bwMBAAAFAP///28FAQAAAAAAAAAAAABWRAAAIEIAAKRDAQEAAAAAAAAAAAAAVkQAACBCAACsQwEBRgAHAP///6YABgAABwD///+2AAEAAAgA////uAADAAAHAP///7sAAQAABwD////GAAEAAAgA////yAADAAAHAP///8sAAQAABwD////WAAEAAAgA////2AADAAAHAP///9sAAQAABwD////mAAEAAAgA////6AADAAAHAP///+sAAQAABwD////2AAEAAAEA////9wABAAAIAP////gAAwAABwD////7AAEAAAcA////pgEBAAAJAP///6cBBAAABwD///+rAQEAAAgA////tgEBAAAJAP///7sBAQAACAD////GAQEAAAEA////xwEBAAAJAP///8sBAQAACAD////WAQEAAAkA////2wEBAAAIAP///+YBAQAACQD////rAQEAAAgA////9gEBAAAJAP////sBAQAABwD///+mAgEAAAkA////pwIEAAAHAP///6sCAQAACAD///+2AgEAAAkA////uwIBAAAIAP///8YCAQAACQD////LAgEAAAgA////1gIBAAABAP///9cCAQAACQD////bAgEAAAgA////5gICAAAJAP///+sCAQAACAD////2AgEAAAkA////+wIBAAAHAP///6YDAQAACQD///+nAwQAAAcA////qwMBAAAIAP///7YDAQAACQD///+7AwEAAAgA////xgMBAAAJAP///8sDAQAACAD////WAwEAAAkA////2wMBAAAIAP///+YDAQAAAQD////nAwEAAAkA////6wMBAAAIAP////YDAgAACQD////7AwEAAAcA////pgQGAAAHAP///7YEBgAABwD////GBAEAAAcA////yAQEAAAHAP///9YEAQAABwD////YBAQAAAcA////5gQBAAAHAP///+gEBAAABwD////2BAEAAAEA////9wQBAAAHAP////gEBAAAAAAAAAAAAABWRAAAIEIAALRDAQELAAcA////BgAGAAAHAP///wYBAQAACQD///8HAQQAAAcA////CwEBAAAHAP///wYCAQAACQD///8HAgQAAAcA////CwIBAAAHAP///wYDAQAACQD///8HAwQAAAcA////CwMBAAAHAP///wYEBgAAAAAAAAAAAABWRAAA0MIAAKxDAAERAAgA////qAABAAAIAP///7YBAQAACAD////IAQEAAAgA////2wEBAAAIAP////sBAQAACAD///+pAgEAAAgA////qAQBAAAIAP///+sFAQAACAD///+4BgEAAAgA////qAgCAAAIAP///6YKAQAACAD////bCgEAAAgA////qQsBAAAIAP////gLAQAACAD////7CwEAAAsA////AAwAAQAEAP///wANAAMAAAAAAAAAAAAAAA=="
     }
   },
   "currControlledCharacter": {
     "$type": "EntityDefinition.PlayerCharacter, Assembly-CSharp",
     "currSpawnPosition": null,
     "identity": "MainCharacter",
+    "interactOrders": null,
     "spawnPosition": {
       "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
       "x": 859,
@@ -625,6 +639,6 @@
       "magnitude": 927.178,
       "sqrMagnitude": 859659
     },
-    "guid": "bacdb175-df9a-4926-8f48-60562adc23c1"
+    "guid": "2e07e0bb-fe67-450b-90cf-d40623ac3df7"
   }
 }

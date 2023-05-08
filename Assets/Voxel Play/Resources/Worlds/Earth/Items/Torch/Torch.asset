@@ -3,8 +3,9 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -16,12 +17,16 @@ MonoBehaviour:
   voxelType: {fileID: 0}
   model: {fileID: 0}
   icon: {fileID: 2800000, guid: 97c2e96626e1847d880a607af7c00555, type: 3}
+  iconPrefab: {fileID: 0}
   color:
     serializedVersion: 2
     rgba: 4294967295
-  prefab: {fileID: 1683081954926426, guid: 0829ffb0b638a453ea9fe0286a241a6b, type: 2}
+  prefab: {fileID: 1683081954926426, guid: 0829ffb0b638a453ea9fe0286a241a6b, type: 3}
+  prefab2: {fileID: 0}
+  prefab3: {fileID: 0}
   useSound: {fileID: 0}
   canBePicked: 1
   pickMode: 1
   pickupSound: {fileID: 0}
   properties: []
+  lightIntensity: 0

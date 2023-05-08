@@ -74,10 +74,11 @@ namespace VoxelPlay.GPULighting {
 
         private void Start() {
             env = VoxelPlayEnvironment.instance;
-            if (!VoxelPlayEnvironment.supportsBrightPointLights || VoxelPlayEnvironment.supportsURPNativeLights) {
-                DestroyImmediate(this);
-                return;
-            }
+            // todo - refactor to get correct bools
+            //if (!VoxelPlayEnvironment.supportsBrightPointLights || VoxelPlayEnvironment.supportsURPNativeLights) {
+            //    DestroyImmediate(this);
+            //    return;
+            //}
         }
 
         void CheckAnchorPosition() {

@@ -157,7 +157,7 @@ MonoBehaviour:
   fxRoot: {fileID: 0}
   particlePoolSize: 1000
   voxelDefinitionsCount: 34
-  enableURP: 1
+  enableURP: 0
   debugLevel: 0
   world: {fileID: 11400000, guid: 80cf97423a1cf6b468a1f541d8ee234d, type: 2}
   enableBuildMode: 0
