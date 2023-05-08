@@ -10,7 +10,6 @@ using UnityEngine.U2D.Animation;
 namespace Instantiated {
     public class PlayerCharacter : Traveller {
         [SerializeField] public GameObject playerObject;
-        [SerializeField] public GameObject seeThroughTarget;
         [SerializeField] public SpriteLibrary spriteLibrary;
         [SerializeField] SpriteMovement spriteMovement;
 

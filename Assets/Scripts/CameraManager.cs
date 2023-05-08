@@ -5,17 +5,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using VoxelPlay;
 
 public class CameraManager : MonoBehaviour {
     [SerializeField] GameObject mainCameraTarget;
     [SerializeField] Camera mainCamera;
     [SerializeField] GameObject detachedModeContainer;
-    [SerializeField] GameObject detachedModeSeeThroughTarget;
     [SerializeField] Transform detachedModeSpriteRotator;
     [SerializeField] VoxelWorldManager voxelWorldManager;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
     [SerializeField] PartyManager partyManager;
     [SerializeField] DetachedCamera detachedCamera;
+    [SerializeField] GameObject seeThroughOrigin;
+    [SerializeField] GameObject seeThroughTarget;
 
     public bool isRotating { get; private set; }
     public TangibleEntity attachedEntity { get; private set; }
@@ -36,6 +38,11 @@ public class CameraManager : MonoBehaviour {
 
     public Camera GetMainCamera() {
         return mainCamera;
+    }
+
+    public void SetSeeThroughTarget(VoxelPlayEnvironment env) {
+        env.seeThroughOrigin = seeThroughOrigin;
+        env.seeThroughTarget = seeThroughTarget;
     }
 
     public IEnumerator MoveCameraToTargetCreature(Traveller traveller) {
@@ -92,8 +99,6 @@ public class CameraManager : MonoBehaviour {
         SetAllSpriteRotations(adjustedYAngle);
         mainCamera.transform.SetLocalPositionAndRotation(new Vector3(0, 6, -6),
             Quaternion.Euler(45f, 0, 0));
-        voxelWorldManager.GetEnvironment().seeThroughTarget = playerMovement.seeThroughTarget;
-
         detachedCamera.BecomeInactive();
     }
 
@@ -105,8 +110,6 @@ public class CameraManager : MonoBehaviour {
             Quaternion.Euler(45f, 0, 0));
 
         detachedModeSpriteRotator.rotation = mainCameraTarget.transform.rotation;
-
-        voxelWorldManager.GetEnvironment().seeThroughTarget = detachedModeSeeThroughTarget;
     }
 
     public void Rotate90Degrees(InputAction.CallbackContext obj) {

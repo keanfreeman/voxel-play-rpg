@@ -29,4 +29,4 @@ MonoBehaviour:
   pickMode: 1
   pickupSound: {fileID: 0}
   properties: []
-  lightIntensity: 0
+  lightIntensity: 15

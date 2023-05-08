@@ -99,6 +99,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
 
         nonVoxelManager.CreateEntities(sceneEntityState[currDestination.sceneIndex].entities, currDestination);
         environment.cameraMain = cameraManager.GetMainCamera();
+        cameraManager.SetSeeThroughTarget(environment);
         partyManager.SetCurrControlledCharacter(partyManager.mainCharacter);
 
         StartCoroutine(gameStateManager.SetControlState(ControlState.SPRITE_NEUTRAL));

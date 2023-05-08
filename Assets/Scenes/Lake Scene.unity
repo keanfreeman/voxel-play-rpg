@@ -228,6 +228,7 @@ MonoBehaviour:
   outlineThreshold: 0.49
   enableCurvature: 0
   seeThrough: 1
+  seeThroughOrigin: {fileID: 0}
   seeThroughTarget: {fileID: 0}
   seeThroughRadius: 5
   seeThroughAlpha: 0.1

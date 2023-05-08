@@ -70,10 +70,10 @@ namespace VoxelPlay
         {
 
             SetArrays (false);
-            Camera cam = currentCamera;
-            if (cam == null)
+            if (seeThroughOrigin == null) {
                 return;
-            Vector3 camPos = cam.transform.position;
+            }
+            Vector3 originPosition = seeThroughOrigin.transform.position;
 
             if (seeThroughTarget == null) {
                 if ((UnityEngine.Object)characterController != null) {
@@ -87,17 +87,17 @@ namespace VoxelPlay
             // Exclude any voxel above roof from rendering
             float radiusSqr = seeThroughRadius * seeThroughRadius;
             Vector3 cylinderAxis;
-            float distToTarget = Vector3.Distance (targetPos, camPos);
-            cylinderAxis.x = (camPos.x - targetPos.x) / distToTarget;
-            cylinderAxis.y = (camPos.y - targetPos.y) / distToTarget;
-            cylinderAxis.z = (camPos.z - targetPos.z) / distToTarget;
+            float distToTarget = Vector3.Distance (targetPos, originPosition);
+            cylinderAxis.x = (originPosition.x - targetPos.x) / distToTarget;
+            cylinderAxis.y = (originPosition.y - targetPos.y) / distToTarget;
+            cylinderAxis.z = (originPosition.z - targetPos.z) / distToTarget;
             Shader.SetGlobalVector (ShaderParams.SeeThroughData, new Vector4 (-cylinderAxis.x, -cylinderAxis.y, -cylinderAxis.z, radiusSqr));
             Shader.SetGlobalFloat(ShaderParams.SeeThroughAlpha, seeThroughAlpha);
 
             alphaOccludedIndicesCount = 0;
 
             // Add surrounding chunks
-            int chunkCount = LineCast (targetPos, camPos, occludedChunks);
+            int chunkCount = LineCast (targetPos, originPosition, occludedChunks);
             int flag = Time.frameCount;
             for (int k = 0; k < chunkCount; k++) {
                 VoxelChunk chunk = occludedChunks [k];

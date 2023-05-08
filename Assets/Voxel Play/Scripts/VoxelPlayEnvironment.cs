@@ -179,6 +179,8 @@ namespace VoxelPlay
         public bool enableCurvature;
 
         public bool seeThrough;
+        // keanfree - added
+        public GameObject seeThroughOrigin;
         public GameObject seeThroughTarget;
         public float seeThroughRadius = 3f;
         [Range (0f, 1f)]
