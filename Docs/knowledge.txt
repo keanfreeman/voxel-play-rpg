@@ -1,3 +1,6 @@
+there's a bug where if the level's loading and blocks are made transparent (e.g. the player moves),
+those blocks will become empty voxels.
+
 can use this code in voxel play to ensure voxels are always loaded:
 	VoxelPlayEnvironment.Textures
 	// Add any other voxel found inside Defaults

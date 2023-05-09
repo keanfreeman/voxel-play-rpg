@@ -10,6 +10,8 @@ using MovementDirection;
 using Saving;
 using NonVoxel;
 using ResourceID;
+using System.Linq;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnvironmentSceneManager : MonoBehaviour, ISaveable
 {
@@ -61,12 +63,39 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         Dictionary<int, SceneInfo> sceneEntityStateTemp = saveData.sceneEntityState;
         // make it possible to have saved vpenvironment info but need to load other info
         SceneInfo currSceneInfo = sceneEntityStateTemp[currDestination.sceneIndex];
-        if (currSceneInfo.vpSaveBase64 != null && currSceneInfo.entities == null) {
-            Debug.Log("Using default values with loaded vpenvironment.");
+
+        bool hasOnlyObjects = false;
+        if (currSceneInfo.entities != null) {
+            int numNonObjects = currSceneInfo.entities
+                .Where((entity) => {
+                    return !TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(TangibleObject));
+                })
+                .Count();
+            hasOnlyObjects = numNonObjects == 0;
+        }
+        if (currSceneInfo.vpSaveBase64 != null && hasOnlyObjects) {
+            Debug.Log("Using default values with loaded vpenvironment and non-objects.");
             sceneEntityState = SetUpDefaultWorldEntities();
             foreach (KeyValuePair<int, SceneInfo> item in sceneEntityState) {
                 int sceneIndex = item.Key;
                 sceneEntityState[sceneIndex].vpSaveBase64 = sceneEntityStateTemp[sceneIndex].vpSaveBase64;
+
+                // remove objects from default
+                HashSet<Entity> entitiesToRemove = new();
+                for (int i = 0; i < sceneEntityState[sceneIndex].entities.Count; i++) {
+                    Entity entity = sceneEntityState[sceneIndex].entities[i];
+                    if (TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(TangibleObject))) {
+                        entitiesToRemove.Add(entity);
+                    }
+                }
+                sceneEntityState[sceneIndex].entities.RemoveAll(e => entitiesToRemove.Contains(e));
+
+                // add them from save state
+                foreach (Entity entity in sceneEntityStateTemp[sceneIndex].entities) {
+                    if (TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(TangibleObject))) {
+                        sceneEntityState[sceneIndex].entities.Add(entity);
+                    }
+                }
             }
         }
         else {
@@ -200,6 +229,13 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         TangibleObject constructionTools = new TangibleObject(new Vector3Int(858, 37, 351),
             constructionToolsID.name, Direction.NORTH);
 
+        OrderGroup coreyUndergroundOrders = new OrderGroup(new List<Order> {
+            new CameraFocusOrder(commoner),
+            new DialogueOrder("Everyone's at the arboretum. Let's go!", "Corey"),
+            new CameraFocusOrder(mainCharacter),
+            new MoveOrder(new Vector3Int(845, -8, 336), commoner, false),
+            new MoveOrder(new Vector3Int(846, -8, 336), mainCharacter, true),
+        }, true);
         OrderGroup coreyIntroOrders = new OrderGroup(new List<Order>{
             new DialogueOrder(getAttention, "???"),
             new ExclaimOrder(mainCharacter),
@@ -207,7 +243,9 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             new CameraFocusOrder(commoner),
             new DialogueOrder(friendDialogue, "Corey"),
             new CameraFocusOrder(mainCharacter),
-            new MoveOrder(new Vector3Int(862, 29, 350), commoner)
+            new MoveOrder(new Vector3Int(871, -8, 322), commoner, false),
+            new CreateEntityOrder(new StoryEventCube(new Vector3Int(873, -8, 323), 2,
+                ResourceIDs.STORY_EVENT_CUBE_STRING, coreyUndergroundOrders))
         }, true);
         StoryEventCube introEventCube = new StoryEventCube(
             new Vector3Int(855, 36, 350), 1, ResourceIDs.STORY_EVENT_CUBE_STRING,

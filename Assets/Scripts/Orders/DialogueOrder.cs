@@ -25,6 +25,12 @@ namespace Orders {
             this.storyText = inkCompiler.Compile().ToJson();
         }
 
+        public DialogueOrder(string storyRawInkText, string speakerName) {
+            Compiler inkCompiler = new Compiler(storyRawInkText);
+            this.storyText = inkCompiler.Compile().ToJson();
+            this.speakerName = speakerName;
+        }
+
         public DialogueOrder(TextAsset story, Dictionary<string, Guid> joinPartyTargets) {
             this.storyText = story.text;
             this.speakerName = null;

@@ -73,7 +73,13 @@ public class OrderManager : MonoBehaviour
                 pathfinder.FindPath(traveller, moveOrder.destination));
             yield return coroutineWithData.coroutine;
             Deque<Vector3Int> path = (Deque<Vector3Int>)coroutineWithData.result;
-            yield return movementManager.MoveAlongPath(traveller, path);
+
+            if (moveOrder.waitForCompletion) {
+                yield return movementManager.MoveAlongPath(traveller, path);
+            }
+            else {
+                StartCoroutine(movementManager.MoveAlongPath(traveller, path));
+            }
         }
         else if (type == typeof(CameraFocusOrder)) {
             CameraFocusOrder cameraFocusOrder = (CameraFocusOrder)order;
@@ -131,6 +137,14 @@ public class OrderManager : MonoBehaviour
             NPC npc = (NPC)entity;
             nonVoxelManager.ConvertNPCToPlayer(npc);
             // todo play fanfare
+        }
+        else if (type == typeof(CreateEntityOrder)) {
+            CreateEntityOrder createEntityOrder = (CreateEntityOrder)order;
+
+            // todo - remove use of dummy variable
+            EntityDefinition.EnvChangeDestination dummy = new(0, Vector3Int.zero);
+            nonVoxelManager.CreateEntities(new List<EntityDefinition.Entity>() { createEntityOrder.entity },
+                dummy);
         }
         else {
             Debug.LogError($"Found an order type not implemented: {type}");

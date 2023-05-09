@@ -1,3 +1,4 @@
+using EntityDefinition;
 using Ink.Runtime;
 using NonVoxel;
 using System.Collections;
@@ -38,8 +39,16 @@ namespace Saving {
             }
             SaveData saveData = new SaveData(json);
 
+            // destroy all npcs, players, etc, for resetting story stuff
             foreach (SceneInfo sceneInfo in saveData.sceneEntityState.Values) {
-                sceneInfo.entities = null;
+                HashSet<Entity> entitiesToRemove = new();
+                for (int i = 0; i < sceneInfo.entities.Count; i++) {
+                    Entity entity = sceneInfo.entities[i];
+                    if (!TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(TangibleObject))) {
+                        entitiesToRemove.Add(entity);
+                    }
+                }
+                sceneInfo.entities.RemoveAll(e => entitiesToRemove.Contains(e));
             }
 
             FileManager.WriteSaveJson(saveData.ToJson());
