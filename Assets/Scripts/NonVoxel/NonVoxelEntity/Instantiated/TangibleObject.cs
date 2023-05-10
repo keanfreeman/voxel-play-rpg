@@ -3,6 +3,7 @@ using EntityDefinition;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Orders;
 
 namespace Instantiated {
     public class TangibleObject : TangibleEntity {
@@ -23,6 +24,10 @@ namespace Instantiated {
 
         public override bool IsInteractable() {
             return objectInfo.interactOrders != null;
+        }
+
+        public override void SetInteractionOrders(OrderGroup newOrders) {
+            objectInfo.interactOrders = newOrders;
         }
     }
 }

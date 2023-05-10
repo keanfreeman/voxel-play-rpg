@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using GameMechanics;
 using NonVoxelEntity;
+using Orders;
 
 namespace Instantiated {
     public abstract class TangibleEntity : InstantiatedEntity {
@@ -73,6 +74,8 @@ namespace Instantiated {
         }
 
         public abstract bool IsInteractable();
+
+        public abstract void SetInteractionOrders(OrderGroup newOrders);
 
         public new EntityDefinition.TangibleEntity GetEntity() {
             return (EntityDefinition.TangibleEntity)base.GetEntity();

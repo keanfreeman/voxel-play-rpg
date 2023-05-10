@@ -23,6 +23,10 @@ public class OrderManager : MonoBehaviour
 
     private Coroutine currCoroutine = null;
 
+    public void ClearData() {
+        currCoroutine = null;
+    }
+
     public void ExecuteOrders(OrderGroup orderGroup) {
         if (currCoroutine != null) {
             Debug.LogError("Tried to execute orders when they were already ordered.");
@@ -118,24 +122,36 @@ public class OrderManager : MonoBehaviour
         }
         else if (type == typeof(ChangeOrdersOrder)) {
             ChangeOrdersOrder changeOrdersOrder = (ChangeOrdersOrder)order;
-            TangibleObject tangibleObject = (TangibleObject)nonVoxelWorld
+            TangibleEntity tangibleEntity = (TangibleEntity)nonVoxelWorld
                 .GetInstanceFromID(changeOrdersOrder.orderHolderGuid);
-            if (tangibleObject == null) {
+            if (tangibleEntity == null) {
                 Debug.Log($"Could not change orders of {changeOrdersOrder.orderHolderGuid} because " +
                     $"it doesn't exist.");
             }
-            tangibleObject.objectInfo.interactOrders = changeOrdersOrder.newOrders;
+            tangibleEntity.SetInteractionOrders(changeOrdersOrder.newOrders);
         }
         else if (type == typeof(JoinPartyOrder)) {
             JoinPartyOrder joinPartyOrder = (JoinPartyOrder)order;
-            InstantiatedEntity entity = nonVoxelWorld.GetInstanceFromID(joinPartyOrder.newPartyMemberID);
-            if (entity.GetType() != typeof(NPC)) {
-                Debug.LogError($"Tried to add entity of type {type} to party: {entity}");
+            InstantiatedEntity instance = nonVoxelWorld.GetInstanceFromID(joinPartyOrder.newPartyMemberID);
+            if (instance.GetType() != typeof(NPC)) {
+                Debug.LogError($"Tried to add entity of type {type} to party: {instance}");
                 yield break;
             }
 
-            NPC npc = (NPC)entity;
-            nonVoxelManager.ConvertNPCToPlayer(npc);
+            // detach camera from creature if it's about to be destroyed.
+            bool isAttached = false;
+            if (cameraManager.GetMainCameraTarget() == instance.gameObject) {
+                cameraManager.DeParentCamera();
+                isAttached = true;
+            }
+            cameraManager.DeParentCamera();
+
+            NPC npc = (NPC)instance;
+            PlayerCharacter pc = nonVoxelManager.ConvertNPCToPlayer(npc);
+            if (isAttached) {
+                cameraManager.AttachCameraToPlayer(pc);
+            }
+
             // todo play fanfare
         }
         else if (type == typeof(CreateEntityOrder)) {

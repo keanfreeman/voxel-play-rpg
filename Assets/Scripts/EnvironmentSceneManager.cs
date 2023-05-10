@@ -27,6 +27,8 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     [SerializeField] TravellerIdentitySO mainCharacterID;
     [SerializeField] TravellerIdentitySO sidekickID;
     [SerializeField] TravellerIdentitySO friendID;
+    [SerializeField] TravellerIdentitySO rogueGrimesID;
+    [SerializeField] TravellerIdentitySO bardDrillID;
     [SerializeField] TravellerIdentitySO wolfID;
     [SerializeField] TravellerIdentitySO catID;
     [SerializeField] ObjectIdentitySO bedID;
@@ -37,6 +39,9 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     [SerializeField] TextAsset getAttention;
     [SerializeField] TextAsset friendDialogue;
     [SerializeField] TextAsset catIntroDialogue;
+    [SerializeField] TextAsset drillIntroDialogue;
+    [SerializeField] TextAsset grimesIntroDialogue;
+    [SerializeField] TextAsset drillRecruitDialogue;
 
     public EnvChangeDestination currDestination { get; private set; }
         = new EnvChangeDestination(3, new Vector3Int(859, 37, 347));
@@ -119,6 +124,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
 
         voxelWorldManager.SetVoxelPlayEnvironment(environment);
         voxelWorldManager.AssignVPEnvironmentInitEvent(constructionUI.OnEnvInitialized);
+        environment.OnInitialized += Environment_OnInitialized;
 
         environment.Init();
         string vpBase64 = sceneEntityState[currDestination.sceneIndex].vpSaveBase64;
@@ -130,7 +136,10 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         environment.cameraMain = cameraManager.GetMainCamera();
         cameraManager.SetSeeThroughTarget(environment);
         partyManager.SetCurrControlledCharacter(partyManager.mainCharacter);
+    }
 
+    private void Environment_OnInitialized() {
+        Debug.Log("Environment initialized.");
         StartCoroutine(gameStateManager.SetControlState(ControlState.SPRITE_NEUTRAL));
     }
 
@@ -200,12 +209,16 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         PlayerCharacter sidekick = new PlayerCharacter(new Vector3Int(864, 29, 347),
             sidekickID.name);
 
-        NPC commoner = new NPC(new Vector3Int(862, 29, 346), Faction.PLAYER, IdleBehavior.STAND,
+        NPC commonerCorey = new NPC(new Vector3Int(862, 29, 346), Faction.PLAYER, IdleBehavior.STAND,
             friendID.name);
         NPC cat = new NPC(new Vector3Int(858, 33, 350), Faction.PLAYER, IdleBehavior.WANDER, catID.name);
         cat.interactOrders = new OrderGroup(new List<Order> {
             new DialogueOrder(catIntroDialogue, new Dictionary<string, Guid>{{catID.name, cat.guid}}),
         });
+        NPC rogueGrimes = new(new Vector3Int(850, -8, 340), Faction.PLAYER, IdleBehavior.STAND,
+            rogueGrimesID.name);
+        NPC bardDrill = new(new Vector3Int(848, -8, 339), Faction.PLAYER, IdleBehavior.STAND,
+            bardDrillID.name);
 
         BattleGroup battleGroup1 = new BattleGroup(new List<NPC> {
             new NPC(new Vector3Int(835, 29, 350), Faction.ENEMY, IdleBehavior.WANDER,
@@ -229,34 +242,49 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         TangibleObject constructionTools = new TangibleObject(new Vector3Int(858, 37, 351),
             constructionToolsID.name, Direction.NORTH);
 
-        OrderGroup coreyUndergroundOrders = new OrderGroup(new List<Order> {
-            new CameraFocusOrder(commoner),
-            new DialogueOrder("Everyone's at the arboretum. Let's go!", "Corey"),
+        OrderGroup coreyUndergroundMeetingOrders = new OrderGroup(new List<Order> {
+            new CameraFocusOrder(commonerCorey),
+            new DialogueOrder("People are gathering at the Arboretum. Let's go!", "Corey"),
             new CameraFocusOrder(mainCharacter),
-            new MoveOrder(new Vector3Int(845, -8, 336), commoner, false),
+            new MoveOrder(new Vector3Int(845, -8, 336), commonerCorey, false),
             new MoveOrder(new Vector3Int(846, -8, 336), mainCharacter, true),
+            new CameraFocusOrder(bardDrill),
+            // todo - music change (e.g. tense, exciting, silly)
+            // todo - use input name of player
+            new DialogueOrder("Good, everyone's here. Let me explain the situation.", "Drill"),
+            // todo - reaction bubbles above non-combat NPCs in crowd (e.g. I'm scared!)
+            new DialogueOrder(drillIntroDialogue, "Drill"),
+            new ChangeOrdersOrder(rogueGrimes, new OrderGroup(new List<Order> {
+                new CameraFocusOrder(rogueGrimes),
+                new DialogueOrder(grimesIntroDialogue, "Grimes",
+                    new Dictionary<string, Guid>{{rogueGrimesID.name, rogueGrimes.guid}})
+            })),
+            new ChangeOrdersOrder(bardDrill, new OrderGroup(new List<Order> {
+                new CameraFocusOrder(bardDrill),
+                new DialogueOrder(drillRecruitDialogue, "Drill",
+                    new Dictionary<string, Guid>{{bardDrillID.name, bardDrill.guid}})
+            }))
         }, true);
         OrderGroup coreyIntroOrders = new OrderGroup(new List<Order>{
             new DialogueOrder(getAttention, "???"),
             new ExclaimOrder(mainCharacter),
             new MoveOrder(new Vector3Int(859, 37, 347), mainCharacter),
-            new CameraFocusOrder(commoner),
+            new CameraFocusOrder(commonerCorey),
             new DialogueOrder(friendDialogue, "Corey"),
             new CameraFocusOrder(mainCharacter),
-            new MoveOrder(new Vector3Int(871, -8, 322), commoner, false),
+            new MoveOrder(new Vector3Int(871, -8, 322), commonerCorey, false),
             new CreateEntityOrder(new StoryEventCube(new Vector3Int(873, -8, 323), 2,
-                ResourceIDs.STORY_EVENT_CUBE_STRING, coreyUndergroundOrders))
+                ResourceIDs.STORY_EVENT_CUBE_STRING, coreyUndergroundMeetingOrders))
         }, true);
         StoryEventCube introEventCube = new StoryEventCube(
             new Vector3Int(855, 36, 350), 1, ResourceIDs.STORY_EVENT_CUBE_STRING,
             coreyIntroOrders
         );
-        OrderGroup toolsIntroOrders = new OrderGroup(new List<Order> {
+        constructionTools.interactOrders = new OrderGroup(new List<Order> {
             new DialogueOrder("It's a set of construction tools. Maybe we'll have time to build soon?"),
             new DestroyOrder(constructionTools),
             // todo - play pickup fanfare
         });
-        constructionTools.interactOrders = toolsIntroOrders;
 
         Dictionary<int, SceneInfo> defaults = new() {
             {
@@ -281,8 +309,10 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                 3, new SceneInfo(new List<Entity> {
                     mainCharacter,
                     sidekick,
-                    commoner,
+                    commonerCorey,
                     cat,
+                    rogueGrimes,
+                    bardDrill,
                     battleGroup1.combatants[0],
                     battleGroup1.combatants[1],
                     battleGroup2.combatants[0],

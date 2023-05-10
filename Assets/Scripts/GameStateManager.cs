@@ -61,7 +61,7 @@ public class GameStateManager : MonoBehaviour
             combatUI.SetDisplayState(true);
             inputManager.UnlockPlayerControls();
         }
-        else if (controlState == ControlState.SPRITE_NEUTRAL && newState == ControlState.LOADING) {
+        else if (newState == ControlState.LOADING) {
             inputManager.LockPlayerControls();
         }
         else if (controlState == ControlState.LOADING && newState == ControlState.SPRITE_NEUTRAL) {

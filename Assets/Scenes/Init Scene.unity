@@ -177,6 +177,7 @@ MonoBehaviour:
   environmentSceneManager: {fileID: 331112264}
   cameraManager: {fileID: 1785101423}
   gameStateManager: {fileID: 955022268}
+  orderManager: {fileID: 341726108}
 --- !u!1 &104703754
 GameObject:
   m_ObjectHideFlags: 0
@@ -420,6 +421,8 @@ MonoBehaviour:
   mainCharacterID: {fileID: 11400000, guid: 1654ee971551b024bb477b23ff6f8211, type: 2}
   sidekickID: {fileID: 11400000, guid: e53dac3b3581979488ad54517e9f8c08, type: 2}
   friendID: {fileID: 11400000, guid: 7ae00259687620b49b3d85a997837cf0, type: 2}
+  rogueGrimesID: {fileID: 11400000, guid: 6ea4a234003cbe445853b911a578a4c9, type: 2}
+  bardDrillID: {fileID: 11400000, guid: 23c7534ea505cc0489030a837a8c14e2, type: 2}
   wolfID: {fileID: 11400000, guid: 84f95ac80ccb2d5438107462b3e2fec6, type: 2}
   catID: {fileID: 11400000, guid: b07ea72c8b8d72549a206784669964aa, type: 2}
   bedID: {fileID: 11400000, guid: a9e7d9935abf6ea4ea5de8c36f0726f2, type: 2}
@@ -430,6 +433,9 @@ MonoBehaviour:
   getAttention: {fileID: 4900000, guid: b86cc2d817bbfba4fb3823337db5549c, type: 3}
   friendDialogue: {fileID: 4900000, guid: f6e75214fd7d776488cd3aa73424fa2a, type: 3}
   catIntroDialogue: {fileID: 4900000, guid: 399118e85bc2a6849b446dcb14ec1550, type: 3}
+  drillIntroDialogue: {fileID: 4900000, guid: 51517cdf17e875b4a92ea6df83020a19, type: 3}
+  grimesIntroDialogue: {fileID: 4900000, guid: 1c76e1459598be74891835a5a77234bb, type: 3}
+  drillRecruitDialogue: {fileID: 4900000, guid: 79f7028613a001b4890ba2a01fd795a0, type: 3}
 --- !u!4 &331112265
 Transform:
   m_ObjectHideFlags: 0

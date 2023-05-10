@@ -19,7 +19,7 @@ namespace Orders {
             this.newOrders = newOrders;
         }
 
-        public ChangeOrdersOrder(TangibleObject targetOrderHolder, OrderGroup newOrders) {
+        public ChangeOrdersOrder(TangibleEntity targetOrderHolder, OrderGroup newOrders) {
             this.orderHolderGuid = targetOrderHolder.guid;
             this.newOrders = newOrders;
         }

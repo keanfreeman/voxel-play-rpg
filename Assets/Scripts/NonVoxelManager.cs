@@ -34,7 +34,7 @@ public class NonVoxelManager : MonoBehaviour
         SetUpResources();
     }
 
-    public void ConvertNPCToPlayer(Instantiated.NPC npc) {
+    public Instantiated.PlayerCharacter ConvertNPCToPlayer(Instantiated.NPC npc) {
         NPC npcEntity = npc.GetEntity();
         Vector3Int currOrigin = npc.origin;
         bool wasFacingRight = npc.spriteRenderer.flipX;
@@ -45,6 +45,8 @@ public class NonVoxelManager : MonoBehaviour
 
         instance.rotationTransform.rotation = cameraManager.GetMainCameraTarget().transform.rotation;
         instance.spriteRenderer.flipX = wasFacingRight;
+
+        return instance;
     }
 
     private void SetUpResources() {

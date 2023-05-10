@@ -20,6 +20,13 @@ namespace Orders {
             this.joinPartyTargets = joinPartyTargets;
         }
 
+        public DialogueOrder(TextAsset story, string speakerName,
+                Dictionary<string, Guid> joinPartyTargets) {
+            this.storyText = story.text;
+            this.speakerName = speakerName;
+            this.joinPartyTargets = joinPartyTargets;
+        }
+
         public DialogueOrder(string storyRawInkText) {
             Compiler inkCompiler = new Compiler(storyRawInkText);
             this.storyText = inkCompiler.Compile().ToJson();

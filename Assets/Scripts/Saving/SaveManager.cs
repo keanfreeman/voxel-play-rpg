@@ -14,6 +14,7 @@ namespace Saving {
         [SerializeField] EnvironmentSceneManager environmentSceneManager;
         [SerializeField] CameraManager cameraManager;
         [SerializeField] GameStateManager gameStateManager;
+        [SerializeField] OrderManager orderManager;
 
         private void Update() {
             if (Input.GetKeyUp(KeyCode.F5)) {
@@ -67,15 +68,14 @@ namespace Saving {
 
             // destroy existing information
             cameraManager.DeParentCamera();
-
             nonVoxelWorld.DestroyAllEntities();
             partyManager.ClearData();
+            orderManager.ClearData();
 
             // load new information
             yield return environmentSceneManager.LoadFromSaveData(saveData);
             yield return partyManager.LoadFromSaveData(saveData);
 
-            yield return gameStateManager.SetControlState(ControlState.SPRITE_NEUTRAL);
             Debug.Log("Loaded");
         }
 

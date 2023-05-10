@@ -6,6 +6,7 @@ using MovementDirection;
 using UnityEngine.InputSystem;
 using NonVoxel;
 using UnityEngine.U2D.Animation;
+using Orders;
 
 namespace Instantiated {
     public class PlayerCharacter : Traveller {
@@ -117,6 +118,10 @@ namespace Instantiated {
 
         public override bool IsInteractable() {
             return false;
+        }
+
+        public override void SetInteractionOrders(OrderGroup newOrders) {
+            throw new System.NotImplementedException("Player interaction orders should not be set.");
         }
 
         public new EntityDefinition.PlayerCharacter GetEntity() {

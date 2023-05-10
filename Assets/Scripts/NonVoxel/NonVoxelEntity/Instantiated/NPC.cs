@@ -10,6 +10,7 @@ using UnityEngine.U2D.Animation;
 using VoxelPlay;
 using System.Linq;
 using UnityEngine.UIElements;
+using Orders;
 
 namespace Instantiated {
     public class NPC : Traveller {
@@ -98,7 +99,12 @@ namespace Instantiated {
         }
 
         public override bool IsInteractable() {
-            return true;
+            OrderGroup orderGroup = GetEntity().interactOrders;
+            return orderGroup != null && orderGroup.orders.Count > 0;
+        }
+
+        public override void SetInteractionOrders(OrderGroup newOrders) {
+            GetEntity().interactOrders = newOrders;
         }
 
         public override void RotateSprite(float degrees) {

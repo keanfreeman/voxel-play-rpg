@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ce9939ee099c7642aee7099a37f1d24, type: 3}
-  m_Name: FriendCommoner
+  m_Name: RogueGrimes
   m_EditorClassIdentifier: 
   prefab: {fileID: 6944743723035480207, guid: 8763f4ed44e10d446ba76d834eb2f67f, type: 3}
-  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 7f921340309c3dd468982e366b2a27b5, type: 3}
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 3210504759cf301438402c8f2a5dc490, type: 3}
   offset: {x: 0.5, y: 0.5, z: 0.5}
   scale: {x: 1, y: 1, z: 1}
-  stats: {fileID: 11400000, guid: 26880ce264f5b614da344f889395c044, type: 2}
+  stats: {fileID: 11400000, guid: 32dcc2b2170cdcd4fb7f48df078dc96f, type: 2}
