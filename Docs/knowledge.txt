@@ -1,5 +1,7 @@
 there's a bug where if the level's loading and blocks are made transparent (e.g. the player moves),
 those blocks will become empty voxels.
+- possibly, the same issue happens when saving and voxels are currently transparent. 
+- maybe need to disable the feature before saving?
 
 can use this code in voxel play to ensure voxels are always loaded:
 	VoxelPlayEnvironment.Textures
