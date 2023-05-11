@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dea1a8c41541d1478a028afbafe1ce0, type: 3}
   m_Name: RogueDagger
   m_EditorClassIdentifier: 
-  actionName: Longsword
+  actionName: Dagger
   attackRoll:
     numDice: 1
     diceSize: 20

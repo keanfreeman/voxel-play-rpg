@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57fff3cec1d1a5d418eb67eab3a9b48c, type: 3}
   m_Name: ScoutMeleeMultiattack
   m_EditorClassIdentifier: 
-  actionName: ScoutRangedMultiattack
+  actionName: ScoutMeleeMultiattack
   attacks:
   - {fileID: 11400000, guid: 97b7b01354d607640a5bc94a263c089c, type: 2}
   - {fileID: 11400000, guid: 97b7b01354d607640a5bc94a263c089c, type: 2}
