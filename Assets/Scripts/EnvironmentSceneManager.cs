@@ -31,6 +31,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     [SerializeField] TravellerIdentitySO bardDrillID;
     [SerializeField] TravellerIdentitySO wolfID;
     [SerializeField] TravellerIdentitySO catID;
+    [SerializeField] TravellerIdentitySO zombieID;
     [SerializeField] ObjectIdentitySO bedID;
     [SerializeField] ObjectIdentitySO lampID;
     [SerializeField] ObjectIdentitySO constructionToolsID;
@@ -206,10 +207,10 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     private Dictionary<int, SceneInfo> SetUpDefaultWorldEntities() {
         PlayerCharacter mainCharacter = new PlayerCharacter(new Vector3Int(859, 37, 347),
             mainCharacterID.name);
-        PlayerCharacter sidekick = new PlayerCharacter(new Vector3Int(864, 29, 347),
+        PlayerCharacter sidekick = new PlayerCharacter(new Vector3Int(850, -8, 345),
             sidekickID.name);
 
-        NPC commonerCorey = new NPC(new Vector3Int(862, 29, 346), Faction.PLAYER, IdleBehavior.STAND,
+        NPC fighterCorey = new NPC(new Vector3Int(862, 29, 346), Faction.PLAYER, IdleBehavior.STAND,
             friendID.name);
         NPC cat = new NPC(new Vector3Int(858, 33, 350), Faction.PLAYER, IdleBehavior.WANDER, catID.name);
         cat.interactOrders = new OrderGroup(new List<Order> {
@@ -220,21 +221,27 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         NPC bardDrill = new(new Vector3Int(848, -8, 339), Faction.PLAYER, IdleBehavior.STAND,
             bardDrillID.name);
 
-        BattleGroup battleGroup1 = new BattleGroup(new List<NPC> {
+        BattleGroup wolfBG1 = new BattleGroup(new List<NPC> {
             new NPC(new Vector3Int(835, 29, 350), Faction.ENEMY, IdleBehavior.WANDER,
                 wolfID.name),
             new NPC(new Vector3Int(835, 29, 347), Faction.ENEMY, IdleBehavior.WANDER,
                 wolfID.name)
         });
-        BattleGroup battleGroup2 = new BattleGroup(new List<NPC> {
+        BattleGroup wolfBG2 = new BattleGroup(new List<NPC> {
             new NPC(new Vector3Int(825, 31, 348), Faction.ENEMY, IdleBehavior.WANDER,
                 wolfID.name),
             new NPC(new Vector3Int(825, 31, 350), Faction.ENEMY, IdleBehavior.WANDER,
                 wolfID.name)
         });
-        BattleGroup battleGroup3 = new BattleGroup(new List<NPC> {
+        BattleGroup wolfBG3 = new BattleGroup(new List<NPC> {
             new NPC(new Vector3Int(468, 26, -46), Faction.ENEMY, IdleBehavior.WANDER,
                 wolfID.name)
+        });
+        BattleGroup zombieBG1 = new(new List<NPC> {
+            new NPC(new Vector3Int(849, -12, 365), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
+            new NPC(new Vector3Int(849, -12, 362), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
+            new NPC(new Vector3Int(840, -12, 365), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
+            new NPC(new Vector3Int(840, -12, 362), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
         });
 
         TangibleObject bed = new TangibleObject(new Vector3Int(857, 33, 348), bedID.name, Direction.EAST);
@@ -243,10 +250,10 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             constructionToolsID.name, Direction.NORTH);
 
         OrderGroup coreyUndergroundMeetingOrders = new OrderGroup(new List<Order> {
-            new CameraFocusOrder(commonerCorey),
+            new CameraFocusOrder(fighterCorey),
             new DialogueOrder("People are gathering at the Arboretum. Let's go!", "Corey"),
             new CameraFocusOrder(mainCharacter),
-            new MoveOrder(new Vector3Int(845, -8, 336), commonerCorey, false),
+            new MoveOrder(new Vector3Int(845, -8, 336), fighterCorey, false),
             new MoveOrder(new Vector3Int(846, -8, 336), mainCharacter, true),
             new CameraFocusOrder(bardDrill),
             // todo - music change (e.g. tense, exciting, silly)
@@ -254,6 +261,8 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             new DialogueOrder("Good, everyone's here. Let me explain the situation.", "Drill"),
             // todo - reaction bubbles above non-combat NPCs in crowd (e.g. I'm scared!)
             new DialogueOrder(drillIntroDialogue, "Drill"),
+            // todo - have conversation with corey before joining
+            new JoinPartyOrder(fighterCorey.guid),
             new ChangeOrdersOrder(rogueGrimes, new OrderGroup(new List<Order> {
                 new CameraFocusOrder(rogueGrimes),
                 new DialogueOrder(grimesIntroDialogue, "Grimes",
@@ -269,10 +278,10 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             new DialogueOrder(getAttention, "???"),
             new ExclaimOrder(mainCharacter),
             new MoveOrder(new Vector3Int(859, 37, 347), mainCharacter),
-            new CameraFocusOrder(commonerCorey),
+            new CameraFocusOrder(fighterCorey),
             new DialogueOrder(friendDialogue, "Corey"),
             new CameraFocusOrder(mainCharacter),
-            new MoveOrder(new Vector3Int(871, -8, 322), commonerCorey, false),
+            new MoveOrder(new Vector3Int(871, -8, 322), fighterCorey, false),
             new CreateEntityOrder(new StoryEventCube(new Vector3Int(873, -8, 323), 2,
                 ResourceIDs.STORY_EVENT_CUBE_STRING, coreyUndergroundMeetingOrders))
         }, true);
@@ -300,7 +309,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         Dictionary<int, SceneInfo> defaults = new() {
             {
                 1, new SceneInfo(new List<Entity> {
-                    battleGroup3.combatants[0],
+                    wolfBG3.combatants[0],
                     new SceneExitCube(
                         new Vector3Int(463, 29, -46),
                         new EnvChangeDestination(2, new Vector3Int(884, 26, 348)),
@@ -309,7 +318,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             },
             {
                 2, new SceneInfo(new List<Entity> {
-                    battleGroup3.combatants[0],
+                    wolfBG3.combatants[0],
                     new SceneExitCube(
                         new Vector3Int(884, 26, 346),
                         new EnvChangeDestination(3, new Vector3Int(858, 37, 347)),
@@ -320,14 +329,18 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                 3, new SceneInfo(new List<Entity> {
                     mainCharacter,
                     sidekick,
-                    commonerCorey,
+                    fighterCorey,
                     cat,
                     rogueGrimes,
                     bardDrill,
-                    battleGroup1.combatants[0],
-                    battleGroup1.combatants[1],
-                    battleGroup2.combatants[0],
-                    battleGroup2.combatants[1],
+                    zombieBG1.combatants[0],
+                    zombieBG1.combatants[1],
+                    zombieBG1.combatants[2],
+                    zombieBG1.combatants[3],
+                    wolfBG1.combatants[0],
+                    wolfBG1.combatants[1],
+                    wolfBG2.combatants[0],
+                    wolfBG2.combatants[1],
                     introEventCube,
                     bed,
                     lamp,

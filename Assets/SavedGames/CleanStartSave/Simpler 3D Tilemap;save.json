@@ -18,7 +18,58 @@
       "$type": "SceneInfo, Assembly-CSharp",
       "entities": {
         "$type": "System.Collections.Generic.List`1[[EntityDefinition.Entity, Assembly-CSharp]], mscorlib",
-        "$values": []
+        "$values": [
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": {
+              "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
+              "groupID": "ece13f2a-de08-416c-8d11-ae3b92850d7e",
+              "combatants": {
+                "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
+                "$values": []
+              }
+            },
+            "faction": 1,
+            "idleBehavior": 1,
+            "currSpawnPosition": null,
+            "identity": "Wolf",
+            "interactOrders": null,
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 468,
+              "y": 26,
+              "z": -46,
+              "magnitude": 470.97345,
+              "sqrMagnitude": 221816
+            },
+            "guid": "fcfd72d8-5b3e-4e93-b612-a79a901b4bdb"
+          },
+          {
+            "$type": "EntityDefinition.SceneExitCube, Assembly-CSharp",
+            "destination": {
+              "$type": "EntityDefinition.EnvChangeDestination, Assembly-CSharp",
+              "sceneIndex": 2,
+              "destinationTile": {
+                "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                "x": 884,
+                "y": 26,
+                "z": 348,
+                "magnitude": 950.387268,
+                "sqrMagnitude": 903236
+              }
+            },
+            "prefabName": "Scene Exit",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 463,
+              "y": 29,
+              "z": -46,
+              "magnitude": 466.182373,
+              "sqrMagnitude": 217326
+            },
+            "guid": "0b73f3b8-0db0-4544-8d50-da340c69325f"
+          }
+        ]
       },
       "vpSaveBase64": null
     },
@@ -26,7 +77,58 @@
       "$type": "SceneInfo, Assembly-CSharp",
       "entities": {
         "$type": "System.Collections.Generic.List`1[[EntityDefinition.Entity, Assembly-CSharp]], mscorlib",
-        "$values": []
+        "$values": [
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": {
+              "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
+              "groupID": "ece13f2a-de08-416c-8d11-ae3b92850d7e",
+              "combatants": {
+                "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
+                "$values": []
+              }
+            },
+            "faction": 1,
+            "idleBehavior": 1,
+            "currSpawnPosition": null,
+            "identity": "Wolf",
+            "interactOrders": null,
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 468,
+              "y": 26,
+              "z": -46,
+              "magnitude": 470.97345,
+              "sqrMagnitude": 221816
+            },
+            "guid": "fcfd72d8-5b3e-4e93-b612-a79a901b4bdb"
+          },
+          {
+            "$type": "EntityDefinition.SceneExitCube, Assembly-CSharp",
+            "destination": {
+              "$type": "EntityDefinition.EnvChangeDestination, Assembly-CSharp",
+              "sceneIndex": 3,
+              "destinationTile": {
+                "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                "x": 858,
+                "y": 37,
+                "z": 347,
+                "magnitude": 926.2516,
+                "sqrMagnitude": 857942
+              }
+            },
+            "prefabName": "Scene Exit",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 884,
+              "y": 26,
+              "z": 346,
+              "magnitude": 949.6568,
+              "sqrMagnitude": 901848
+            },
+            "guid": "4c87635d-ef1a-41d1-8f71-1ea456fde765"
+          }
+        ]
       },
       "vpSaveBase64": null
     },
@@ -35,6 +137,659 @@
       "entities": {
         "$type": "System.Collections.Generic.List`1[[EntityDefinition.Entity, Assembly-CSharp]], mscorlib",
         "$values": [
+          {
+            "$type": "EntityDefinition.PlayerCharacter, Assembly-CSharp",
+            "currSpawnPosition": null,
+            "identity": "MainCharacter",
+            "interactOrders": null,
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 859,
+              "y": 37,
+              "z": 347,
+              "magnitude": 927.178,
+              "sqrMagnitude": 859659
+            },
+            "guid": "3dc2634d-c5c0-4f7c-b447-b0865c9c1b39"
+          },
+          {
+            "$type": "EntityDefinition.PlayerCharacter, Assembly-CSharp",
+            "currSpawnPosition": null,
+            "identity": "Sidekick",
+            "interactOrders": null,
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 864,
+              "y": 29,
+              "z": 347,
+              "magnitude": 931.5289,
+              "sqrMagnitude": 867746
+            },
+            "guid": "6481df6a-a483-49b4-b963-5c863cd76ec1"
+          },
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": null,
+            "faction": 0,
+            "idleBehavior": 0,
+            "currSpawnPosition": {
+              "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+              "x": 862,
+              "y": 29,
+              "z": 346,
+              "magnitude": 929.301331,
+              "sqrMagnitude": 863601
+            },
+            "identity": "FighterCorey",
+            "interactOrders": null,
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 862,
+              "y": 29,
+              "z": 346,
+              "magnitude": 929.301331,
+              "sqrMagnitude": 863601
+            },
+            "guid": "a4dcf14d-1720-47b2-8b25-1123abb8ec2b"
+          },
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": null,
+            "faction": 0,
+            "idleBehavior": 1,
+            "currSpawnPosition": {
+              "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+              "x": 857,
+              "y": 33,
+              "z": 349,
+              "magnitude": 925.926,
+              "sqrMagnitude": 857339
+            },
+            "identity": "Cat",
+            "interactOrders": {
+              "$type": "Orders.OrderGroup, Assembly-CSharp",
+              "destroyOnComplete": true,
+              "orders": {
+                "$type": "System.Collections.Generic.List`1[[Orders.Order, Assembly-CSharp]], mscorlib",
+                "$values": [
+                  {
+                    "$type": "Orders.DialogueOrder, Assembly-CSharp",
+                    "storyText": "{\"inkVersion\":20,\"root\":[[{\"->\":\"start_knot\"},[\"done\",{\"#f\":5,\"#n\":\"g-0\"}],null],\"done\",{\"start_knot\":[\"^It's your cat, Soot.\",\"\\n\",{\"->\":\"loop_knot\"},{\"#f\":1}],\"loop_knot\":[[\"ev\",\"str\",\"^Pet Soot.\",\"/str\",\"/ev\",{\"*\":\".^.c-0\",\"flg\":4},\"ev\",\"str\",\"^Take Soot along with you.\",\"/str\",\"/ev\",{\"*\":\".^.c-1\",\"flg\":4},\"ev\",\"str\",\"^Leave.\",\"/str\",\"/ev\",{\"*\":\".^.c-2\",\"flg\":4},{\"c-0\":[\"\\n\",\"ev\",\"str\",\"^meow\",\"/str\",\"/ev\",{\"VAR=\":\"play_sound_effect\",\"re\":true},\"^Soot enjoyed that!\",\"\\n\",{\"->\":\".^.^.^\"},{\"#f\":5}],\"c-1\":[\"\\n\",\"^You took Soot along with you!\",\"\\n\",\"ev\",\"str\",\"^Cat\",\"/str\",\"/ev\",{\"VAR=\":\"join_party_request\",\"re\":true},\"end\",{\"#f\":5}],\"c-2\":[\"^ \",\"end\",\"\\n\",{\"#f\":5}]}],{\"#f\":1}],\"global decl\":[\"ev\",\"str\",\"^none\",\"/str\",{\"VAR=\":\"join_party_request\"},\"str\",\"^none\",\"/str\",{\"VAR=\":\"play_sound_effect\"},\"/ev\",\"end\",null],\"#f\":1}],\"listDefs\":{}}",
+                    "speakerName": null,
+                    "joinPartyTargets": {
+                      "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Guid, mscorlib]], mscorlib",
+                      "Cat": "abf98b27-5555-426b-b954-f357c995048b"
+                    }
+                  }
+                ]
+              }
+            },
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 858,
+              "y": 33,
+              "z": 350,
+              "magnitude": 927.228638,
+              "sqrMagnitude": 859753
+            },
+            "guid": "abf98b27-5555-426b-b954-f357c995048b"
+          },
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": null,
+            "faction": 0,
+            "idleBehavior": 0,
+            "currSpawnPosition": {
+              "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+              "x": 850,
+              "y": -8,
+              "z": 340,
+              "magnitude": 915.513,
+              "sqrMagnitude": 838164
+            },
+            "identity": "RogueGrimes",
+            "interactOrders": null,
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 850,
+              "y": -8,
+              "z": 340,
+              "magnitude": 915.513,
+              "sqrMagnitude": 838164
+            },
+            "guid": "427e9bb8-fa58-4573-8453-c26850875ebb"
+          },
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": null,
+            "faction": 0,
+            "idleBehavior": 0,
+            "currSpawnPosition": {
+              "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+              "x": 848,
+              "y": -8,
+              "z": 339,
+              "magnitude": 913.2847,
+              "sqrMagnitude": 834089
+            },
+            "identity": "BardDrill",
+            "interactOrders": null,
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 848,
+              "y": -8,
+              "z": 339,
+              "magnitude": 913.2847,
+              "sqrMagnitude": 834089
+            },
+            "guid": "a7449fd8-e538-4877-80bf-bb9391843743"
+          },
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": {
+              "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
+              "groupID": "c5d37013-4506-4414-8773-079bee199768",
+              "combatants": {
+                "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
+                "$values": [
+                  {
+                    "$type": "EntityDefinition.NPC, Assembly-CSharp",
+                    "faction": 1,
+                    "idleBehavior": 1,
+                    "currSpawnPosition": {
+                      "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+                      "x": 833,
+                      "y": 29,
+                      "z": 347,
+                      "magnitude": 902.850464,
+                      "sqrMagnitude": 815139
+                    },
+                    "identity": "Wolf",
+                    "interactOrders": null,
+                    "spawnPosition": {
+                      "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                      "x": 835,
+                      "y": 29,
+                      "z": 347,
+                      "magnitude": 904.6961,
+                      "sqrMagnitude": 818475
+                    },
+                    "guid": "4d0505a0-4420-4d77-baf5-e5be270d02b0"
+                  }
+                ]
+              }
+            },
+            "faction": 1,
+            "idleBehavior": 1,
+            "currSpawnPosition": {
+              "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+              "x": 835,
+              "y": 29,
+              "z": 351,
+              "magnitude": 906.237854,
+              "sqrMagnitude": 821267
+            },
+            "identity": "Wolf",
+            "interactOrders": null,
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 835,
+              "y": 29,
+              "z": 350,
+              "magnitude": 905.850952,
+              "sqrMagnitude": 820566
+            },
+            "guid": "e2501bc4-8255-4aa6-8be7-aabf368c07f4"
+          },
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": {
+              "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
+              "groupID": "c5d37013-4506-4414-8773-079bee199768",
+              "combatants": {
+                "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
+                "$values": [
+                  {
+                    "$type": "EntityDefinition.NPC, Assembly-CSharp",
+                    "faction": 1,
+                    "idleBehavior": 1,
+                    "currSpawnPosition": {
+                      "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+                      "x": 835,
+                      "y": 29,
+                      "z": 351,
+                      "magnitude": 906.237854,
+                      "sqrMagnitude": 821267
+                    },
+                    "identity": "Wolf",
+                    "interactOrders": null,
+                    "spawnPosition": {
+                      "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                      "x": 835,
+                      "y": 29,
+                      "z": 350,
+                      "magnitude": 905.850952,
+                      "sqrMagnitude": 820566
+                    },
+                    "guid": "e2501bc4-8255-4aa6-8be7-aabf368c07f4"
+                  }
+                ]
+              }
+            },
+            "faction": 1,
+            "idleBehavior": 1,
+            "currSpawnPosition": {
+              "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+              "x": 833,
+              "y": 29,
+              "z": 347,
+              "magnitude": 902.850464,
+              "sqrMagnitude": 815139
+            },
+            "identity": "Wolf",
+            "interactOrders": null,
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 835,
+              "y": 29,
+              "z": 347,
+              "magnitude": 904.6961,
+              "sqrMagnitude": 818475
+            },
+            "guid": "4d0505a0-4420-4d77-baf5-e5be270d02b0"
+          },
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": {
+              "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
+              "groupID": "d793ea29-897e-4981-82f1-cd9baa858589",
+              "combatants": {
+                "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
+                "$values": [
+                  {
+                    "$type": "EntityDefinition.NPC, Assembly-CSharp",
+                    "faction": 1,
+                    "idleBehavior": 1,
+                    "currSpawnPosition": {
+                      "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+                      "x": 826,
+                      "y": 30,
+                      "z": 352,
+                      "magnitude": 898.376343,
+                      "sqrMagnitude": 807080
+                    },
+                    "identity": "Wolf",
+                    "interactOrders": null,
+                    "spawnPosition": {
+                      "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                      "x": 825,
+                      "y": 31,
+                      "z": 350,
+                      "magnitude": 896.708435,
+                      "sqrMagnitude": 804086
+                    },
+                    "guid": "d15cd53b-5af2-4fc5-a475-31af6f9edaed"
+                  }
+                ]
+              }
+            },
+            "faction": 1,
+            "idleBehavior": 1,
+            "currSpawnPosition": {
+              "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+              "x": 823,
+              "y": 31,
+              "z": 347,
+              "magnitude": 893.6996,
+              "sqrMagnitude": 798699
+            },
+            "identity": "Wolf",
+            "interactOrders": null,
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 825,
+              "y": 31,
+              "z": 348,
+              "magnitude": 895.9297,
+              "sqrMagnitude": 802690
+            },
+            "guid": "5036fef5-0bb1-4e9a-b41b-e3b171d64f32"
+          },
+          {
+            "$type": "EntityDefinition.NPC, Assembly-CSharp",
+            "battleGroup": {
+              "$type": "EntityDefinition.BattleGroup, Assembly-CSharp",
+              "groupID": "d793ea29-897e-4981-82f1-cd9baa858589",
+              "combatants": {
+                "$type": "System.Collections.Generic.List`1[[EntityDefinition.NPC, Assembly-CSharp]], mscorlib",
+                "$values": [
+                  {
+                    "$type": "EntityDefinition.NPC, Assembly-CSharp",
+                    "faction": 1,
+                    "idleBehavior": 1,
+                    "currSpawnPosition": {
+                      "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+                      "x": 823,
+                      "y": 31,
+                      "z": 347,
+                      "magnitude": 893.6996,
+                      "sqrMagnitude": 798699
+                    },
+                    "identity": "Wolf",
+                    "interactOrders": null,
+                    "spawnPosition": {
+                      "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                      "x": 825,
+                      "y": 31,
+                      "z": 348,
+                      "magnitude": 895.9297,
+                      "sqrMagnitude": 802690
+                    },
+                    "guid": "5036fef5-0bb1-4e9a-b41b-e3b171d64f32"
+                  }
+                ]
+              }
+            },
+            "faction": 1,
+            "idleBehavior": 1,
+            "currSpawnPosition": {
+              "$type": "System.Nullable`1[[UnityEngine.Vector3Int, UnityEngine.CoreModule]], mscorlib",
+              "x": 826,
+              "y": 30,
+              "z": 352,
+              "magnitude": 898.376343,
+              "sqrMagnitude": 807080
+            },
+            "identity": "Wolf",
+            "interactOrders": null,
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 825,
+              "y": 31,
+              "z": 350,
+              "magnitude": 896.708435,
+              "sqrMagnitude": 804086
+            },
+            "guid": "d15cd53b-5af2-4fc5-a475-31af6f9edaed"
+          },
+          {
+            "$type": "EntityDefinition.StoryEventCube, Assembly-CSharp",
+            "orderGroup": {
+              "$type": "Orders.OrderGroup, Assembly-CSharp",
+              "destroyOnComplete": true,
+              "orders": {
+                "$type": "System.Collections.Generic.List`1[[Orders.Order, Assembly-CSharp]], mscorlib",
+                "$values": [
+                  {
+                    "$type": "Orders.DialogueOrder, Assembly-CSharp",
+                    "storyText": "{\"inkVersion\":20,\"root\":[[\"^Hey! Hey, Kean! \",\"end\",\"\\n\",[\"done\",{\"#f\":5,\"#n\":\"g-0\"}],null],\"done\",{\"#f\":1}],\"listDefs\":{}}",
+                    "speakerName": "???",
+                    "joinPartyTargets": null
+                  },
+                  {
+                    "$type": "Orders.ExclaimOrder, Assembly-CSharp",
+                    "travellerGuid": "3dc2634d-c5c0-4f7c-b447-b0865c9c1b39"
+                  },
+                  {
+                    "$type": "Orders.MoveOrder, Assembly-CSharp",
+                    "destination": {
+                      "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                      "x": 859,
+                      "y": 37,
+                      "z": 347,
+                      "magnitude": 927.178,
+                      "sqrMagnitude": 859659
+                    },
+                    "travellerGuid": "3dc2634d-c5c0-4f7c-b447-b0865c9c1b39",
+                    "waitForCompletion": true
+                  },
+                  {
+                    "$type": "Orders.CameraFocusOrder, Assembly-CSharp",
+                    "focusTargetTravellerGuid": "a4dcf14d-1720-47b2-8b25-1123abb8ec2b"
+                  },
+                  {
+                    "$type": "Orders.DialogueOrder, Assembly-CSharp",
+                    "storyText": "{\"inkVersion\":20,\"root\":[[\"^Glad I caught you! How's the snow been?\",\"\\n\",\"^We've got a bit of a situation down in the mines. Please come down when you get a second.\",\"\\n\",[\"done\",{\"#f\":5,\"#n\":\"g-0\"}],null],\"done\",{\"#f\":1}],\"listDefs\":{}}",
+                    "speakerName": "Corey",
+                    "joinPartyTargets": null
+                  },
+                  {
+                    "$type": "Orders.CameraFocusOrder, Assembly-CSharp",
+                    "focusTargetTravellerGuid": "3dc2634d-c5c0-4f7c-b447-b0865c9c1b39"
+                  },
+                  {
+                    "$type": "Orders.MoveOrder, Assembly-CSharp",
+                    "destination": {
+                      "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                      "x": 871,
+                      "y": -8,
+                      "z": 322,
+                      "magnitude": 928.649048,
+                      "sqrMagnitude": 862389
+                    },
+                    "travellerGuid": "a4dcf14d-1720-47b2-8b25-1123abb8ec2b",
+                    "waitForCompletion": false
+                  },
+                  {
+                    "$type": "Orders.CreateEntityOrder, Assembly-CSharp",
+                    "entity": {
+                      "$type": "EntityDefinition.StoryEventCube, Assembly-CSharp",
+                      "orderGroup": {
+                        "$type": "Orders.OrderGroup, Assembly-CSharp",
+                        "destroyOnComplete": true,
+                        "orders": {
+                          "$type": "System.Collections.Generic.List`1[[Orders.Order, Assembly-CSharp]], mscorlib",
+                          "$values": [
+                            {
+                              "$type": "Orders.CameraFocusOrder, Assembly-CSharp",
+                              "focusTargetTravellerGuid": "a4dcf14d-1720-47b2-8b25-1123abb8ec2b"
+                            },
+                            {
+                              "$type": "Orders.DialogueOrder, Assembly-CSharp",
+                              "storyText": "{\"inkVersion\":20,\"root\":[[\"^People are gathering at the Arboretum. Let's go!\",\"\\n\",[\"done\",{\"#n\":\"g-0\"}],null],\"done\",null],\"listDefs\":{}}",
+                              "speakerName": "Corey",
+                              "joinPartyTargets": null
+                            },
+                            {
+                              "$type": "Orders.CameraFocusOrder, Assembly-CSharp",
+                              "focusTargetTravellerGuid": "3dc2634d-c5c0-4f7c-b447-b0865c9c1b39"
+                            },
+                            {
+                              "$type": "Orders.MoveOrder, Assembly-CSharp",
+                              "destination": {
+                                "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                                "x": 845,
+                                "y": -8,
+                                "z": 336,
+                                "magnitude": 909.387146,
+                                "sqrMagnitude": 826985
+                              },
+                              "travellerGuid": "a4dcf14d-1720-47b2-8b25-1123abb8ec2b",
+                              "waitForCompletion": false
+                            },
+                            {
+                              "$type": "Orders.MoveOrder, Assembly-CSharp",
+                              "destination": {
+                                "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                                "x": 846,
+                                "y": -8,
+                                "z": 336,
+                                "magnitude": 910.3164,
+                                "sqrMagnitude": 828676
+                              },
+                              "travellerGuid": "3dc2634d-c5c0-4f7c-b447-b0865c9c1b39",
+                              "waitForCompletion": true
+                            },
+                            {
+                              "$type": "Orders.CameraFocusOrder, Assembly-CSharp",
+                              "focusTargetTravellerGuid": "a7449fd8-e538-4877-80bf-bb9391843743"
+                            },
+                            {
+                              "$type": "Orders.DialogueOrder, Assembly-CSharp",
+                              "storyText": "{\"inkVersion\":20,\"root\":[[\"^Good, everyone's here. Let me explain the situation.\",\"\\n\",[\"done\",{\"#n\":\"g-0\"}],null],\"done\",null],\"listDefs\":{}}",
+                              "speakerName": "Drill",
+                              "joinPartyTargets": null
+                            },
+                            {
+                              "$type": "Orders.DialogueOrder, Assembly-CSharp",
+                              "storyText": "{\"inkVersion\":20,\"root\":[[{\"->\":\"start_knot\"},[\"done\",{\"#f\":5,\"#n\":\"g-0\"}],null],\"done\",{\"start_knot\":[\"^Haul, one of our beloved miners, is missing. The entrance to the mine appears to have collapsed shut, too. We presume he's stuck in there.\",\"\\n\",\"^Any questions? \",{\"->\":\"loop_knot\"},\"\\n\",{\"#f\":1}],\"loop_knot\":[[\"ev\",\"str\",\"^Where are we? What year is it? I feel like I'm losing it.\",\"/str\",\"/ev\",{\"*\":\".^.c-0\",\"flg\":20},\"ev\",\"str\",\"^Are the mines dangerous?\",\"/str\",\"/ev\",{\"*\":\".^.c-1\",\"flg\":20},\"ev\",\"str\",\"^How much time do we have?\",\"/str\",\"/ev\",{\"*\":\".^.c-2\",\"flg\":20},\"ev\",\"str\",\"^No questions here!\",\"/str\",\"/ev\",{\"*\":\".^.c-3\",\"flg\":20},{\"c-0\":[\"\\n\",\"^... Wow. Times are dire indeed. But I'll humor you.\",\"\\n\",\"^Your name is Kean and you're our good friend. You live in the house above us in a land of desolate wilderness. You're (usually) brilliant.\",\"\\n\",\"^It's no problem though. As long as we've got the mine, our connection to the outside world, and each other, we'll be fine.\",\"\\n\",\"^Capiche? \",{\"->\":\".^.^.^\"},\"\\n\",{\"#f\":5}],\"c-1\":[\"\\n\",\"^Usually it's nothing Haul can't handle, but he's been in there for quite a while and hasn't gotten himself out.\",\"\\n\",\"^I'm proposing we get in there and make sure he's okay. \",{\"->\":\".^.^.^\"},\"\\n\",{\"#f\":5}],\"c-2\":[\"\\n\",\"^Hard to say, but my gut says we should move quickly. Haul usually would have gotten himself out by now. \",{\"->\":\".^.^.^\"},\"\\n\",{\"#f\":5}],\"c-3\":[\"\\n\",{\"->\":\"complete_knot\"},{\"#f\":5}]}],{\"#f\":1}],\"complete_knot\":[\"^Good. Let's form a search party, open up the mine, and see what's in there. \",\"end\",\"\\n\",{\"#f\":1}],\"#f\":1}],\"listDefs\":{}}",
+                              "speakerName": "Drill",
+                              "joinPartyTargets": null
+                            },
+                            {
+                              "$type": "Orders.JoinPartyOrder, Assembly-CSharp",
+                              "newPartyMemberID": "a4dcf14d-1720-47b2-8b25-1123abb8ec2b"
+                            },
+                            {
+                              "$type": "Orders.ChangeOrdersOrder, Assembly-CSharp",
+                              "orderHolderGuid": "427e9bb8-fa58-4573-8453-c26850875ebb",
+                              "newOrders": {
+                                "$type": "Orders.OrderGroup, Assembly-CSharp",
+                                "destroyOnComplete": true,
+                                "orders": {
+                                  "$type": "System.Collections.Generic.List`1[[Orders.Order, Assembly-CSharp]], mscorlib",
+                                  "$values": [
+                                    {
+                                      "$type": "Orders.CameraFocusOrder, Assembly-CSharp",
+                                      "focusTargetTravellerGuid": "427e9bb8-fa58-4573-8453-c26850875ebb"
+                                    },
+                                    {
+                                      "$type": "Orders.DialogueOrder, Assembly-CSharp",
+                                      "storyText": "{\"inkVersion\":20,\"root\":[[{\"->\":\"start_knot\"},[\"done\",{\"#f\":5,\"#n\":\"g-0\"}],null],\"done\",{\"start_knot\":[\"^Hey, Kean. \",{\"->\":\"loop_knot\"},\"\\n\",{\"#f\":1}],\"loop_knot\":[[\"ev\",\"str\",\"^So, your name is Grimes? Is that like the famous...?\",\"/str\",\"/ev\",{\"*\":\".^.c-0\",\"flg\":20},\"ev\",\"str\",\"^Got any hobbies?\",\"/str\",\"/ev\",{\"*\":\".^.c-1\",\"flg\":20},\"ev\",\"str\",\"^We could use your help saving that guy in the mines.\",\"/str\",\"/ev\",{\"*\":\".^.c-2\",\"flg\":20},{\"c-0\":[\"\\n\",\"^No. \",{\"->\":\".^.^.^\"},\"\\n\",{\"#f\":5}],\"c-1\":[\"^ \",{\"->\":\"hobby_tangent\"},\"\\n\",{\"#f\":5}],\"c-2\":[\"\\n\",\"ev\",\"str\",\"^RogueGrimes\",\"/str\",\"/ev\",{\"VAR=\":\"join_party_request\",\"re\":true},\"^And boy howdy. \",\"end\",\"\\n\",{\"#f\":5}]}],{\"#f\":1}],\"hobby_tangent\":[[\"^Someone's life is possibly in peril, and you want to know if I have hobbies?\",\"\\n\",\"ev\",\"str\",\"^Yes.\",\"/str\",\"/ev\",{\"*\":\".^.c-0\",\"flg\":4},\"ev\",\"str\",\"^No.\",\"/str\",\"/ev\",{\"*\":\".^.c-1\",\"flg\":4},{\"c-0\":[\"\\n\",\"^Well, no. \",{\"->\":\"loop_knot\"},\"\\n\",{\"#f\":5}],\"c-1\":[\"\\n\",\"^Thought so. \",{\"->\":\"loop_knot\"},\"\\n\",{\"#f\":5}]}],{\"#f\":1}],\"global decl\":[\"ev\",\"str\",\"^none\",\"/str\",{\"VAR=\":\"join_party_request\"},\"/ev\",\"end\",null],\"#f\":1}],\"listDefs\":{}}",
+                                      "speakerName": "Grimes",
+                                      "joinPartyTargets": {
+                                        "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Guid, mscorlib]], mscorlib",
+                                        "RogueGrimes": "427e9bb8-fa58-4573-8453-c26850875ebb"
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "$type": "Orders.ChangeOrdersOrder, Assembly-CSharp",
+                              "orderHolderGuid": "a7449fd8-e538-4877-80bf-bb9391843743",
+                              "newOrders": {
+                                "$type": "Orders.OrderGroup, Assembly-CSharp",
+                                "destroyOnComplete": true,
+                                "orders": {
+                                  "$type": "System.Collections.Generic.List`1[[Orders.Order, Assembly-CSharp]], mscorlib",
+                                  "$values": [
+                                    {
+                                      "$type": "Orders.CameraFocusOrder, Assembly-CSharp",
+                                      "focusTargetTravellerGuid": "a7449fd8-e538-4877-80bf-bb9391843743"
+                                    },
+                                    {
+                                      "$type": "Orders.DialogueOrder, Assembly-CSharp",
+                                      "storyText": "{\"inkVersion\":20,\"root\":[[{\"->\":\"start_knot\"},[\"done\",{\"#f\":5,\"#n\":\"g-0\"}],null],\"done\",{\"start_knot\":[[\"^Kean, my good friend! Feeling okay, I hope?\",\"\\n\",\"ev\",\"str\",\"^Yea, ready to kick some ass!\",\"/str\",\"/ev\",{\"*\":\".^.c-0\",\"flg\":4},\"ev\",\"str\",\"^Not so much. I'm feeling a little disoriented.\",\"/str\",\"/ev\",{\"*\":\".^.c-1\",\"flg\":4},{\"c-0\":[\"\\n\",\"^Glad to hear it! I need you at your best. \",{\"->\":\"loop_knot\"},\"\\n\",{\"#f\":5}],\"c-1\":[\"\\n\",\"^Understandable given the circumstances. But chin up, okay? Everything is easier with practice. \",{\"->\":\"loop_knot\"},\"\\n\",{\"#f\":5}]}],{\"#f\":1}],\"loop_knot\":[[\"ev\",\"str\",\"^Before we go - what was Bard college like?\",\"/str\",\"/ev\",{\"*\":\".^.c-0\",\"flg\":20},\"ev\",\"str\",\"^One more thing - what would you say you do around here?\",\"/str\",\"/ev\",{\"*\":\".^.c-1\",\"flg\":20},\"ev\",\"str\",\"^Let's go find our friend.\",\"/str\",\"/ev\",{\"*\":\".^.c-2\",\"flg\":20},{\"c-0\":[\"\\n\",\"^To be honest, I had no idea what I was in for and didn't really gain my stride until the end.\",\"\\n\",\"^But it was worth it. Now my free-solos hold others in a trance! The magic is a nice perk, too. \",{\"->\":\".^.^.^\"},\"\\n\",{\"#f\":5}],\"c-1\":[\"\\n\",\"^Talk with customers, mostly. Nobody else wants to do it. This coal isn't going to sell itself, you know?\",\"\\n\",\"^Don't get the wrong idea though, I pitch in in other ways, too. \",{\"->\":\".^.^.^\"},\"\\n\",{\"#f\":5}],\"c-2\":[\"\\n\",\"ev\",\"str\",\"^BardDrill\",\"/str\",\"/ev\",{\"VAR=\":\"join_party_request\",\"re\":true},\"^Yes, let's wait no longer. \",\"end\",\"\\n\",{\"#f\":5}]}],{\"#f\":1}],\"global decl\":[\"ev\",\"str\",\"^none\",\"/str\",{\"VAR=\":\"join_party_request\"},\"/ev\",\"end\",null],\"#f\":1}],\"listDefs\":{}}",
+                                      "speakerName": "Drill",
+                                      "joinPartyTargets": {
+                                        "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Guid, mscorlib]], mscorlib",
+                                        "BardDrill": "a7449fd8-e538-4877-80bf-bb9391843743"
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "cubeRadius": 2,
+                      "prefabName": "StoryEventCube",
+                      "spawnPosition": {
+                        "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                        "x": 873,
+                        "y": -8,
+                        "z": 323,
+                        "magnitude": 930.871643,
+                        "sqrMagnitude": 866522
+                      },
+                      "guid": "a22c3507-d422-4bb2-8bb9-ca575f18a19f"
+                    }
+                  }
+                ]
+              }
+            },
+            "cubeRadius": 1,
+            "prefabName": "StoryEventCube",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 855,
+              "y": 36,
+              "z": 350,
+              "magnitude": 924.5653,
+              "sqrMagnitude": 854821
+            },
+            "guid": "4c353971-d8ef-42e2-aabc-ac0948a1443c"
+          },
+          {
+            "$type": "EntityDefinition.SceneExitCube, Assembly-CSharp",
+            "destination": {
+              "$type": "EntityDefinition.EnvChangeDestination, Assembly-CSharp",
+              "sceneIndex": 1,
+              "destinationTile": {
+                "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                "x": 466,
+                "y": 29,
+                "z": -46,
+                "magnitude": 469.162018,
+                "sqrMagnitude": 220113
+              }
+            },
+            "prefabName": "Scene Exit",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 862,
+              "y": -8,
+              "z": 341,
+              "magnitude": 927.032349,
+              "sqrMagnitude": 859389
+            },
+            "guid": "e0292da2-3c70-48fc-aefc-98fd0acd7bad"
+          },
+          {
+            "$type": "EntityDefinition.StoryEventCube, Assembly-CSharp",
+            "orderGroup": {
+              "$type": "Orders.OrderGroup, Assembly-CSharp",
+              "destroyOnComplete": false,
+              "orders": {
+                "$type": "System.Collections.Generic.List`1[[Orders.Order, Assembly-CSharp]], mscorlib",
+                "$values": [
+                  {
+                    "$type": "Orders.DialogueOrder, Assembly-CSharp",
+                    "storyText": "{\"inkVersion\":20,\"root\":[[\"^I'm not sure where this goes. I probably shouldn't leave yet.\",\"\\n\",[\"done\",{\"#n\":\"g-0\"}],null],\"done\",null],\"listDefs\":{}}",
+                    "speakerName": null,
+                    "joinPartyTargets": null
+                  },
+                  {
+                    "$type": "Orders.MoveOrder, Assembly-CSharp",
+                    "destination": {
+                      "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+                      "x": 863,
+                      "y": -8,
+                      "z": 337,
+                      "magnitude": 926.4999,
+                      "sqrMagnitude": 858402
+                    },
+                    "travellerGuid": "3dc2634d-c5c0-4f7c-b447-b0865c9c1b39",
+                    "waitForCompletion": true
+                  }
+                ]
+              }
+            },
+            "cubeRadius": 5,
+            "prefabName": "StoryEventCube",
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 861,
+              "y": -9,
+              "z": 340,
+              "magnitude": 925.744,
+              "sqrMagnitude": 857002
+            },
+            "guid": "0e35981c-fc2c-4d99-86a9-a3560de208fd"
+          },
           {
             "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
             "startRotation": 1,
@@ -280,7 +1035,7 @@
           }
         ]
       },
-      "vpSaveBase64": "DhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABADRCAAAAAAAAAAAVAA5Wb3hlbFNvbGlkUm9jawxWb3hlbE9yZUNvYWwKQmx1ZUJyaWNrcw5Wb3hlbFRhaWdhRGlydApTbG9wZVZveGVsDVZveGVsV2F0ZXJTZWENVm94ZWxUYWlnYVRvcA5Tbm93VHJlZUxlYXZlcxJWb3hlbEJ1aWxkaW5nRmxvb3IRdm94ZWxtZXRhbGljam9pc3QVVm94ZWxCdWlsZGluZ1dvb2RXYWxsDlZveGVsQnJpY2tXYWxsEVZveGVsQnVpbGRpbmdSb29mClZveGVsR2xhc3MOVm94ZWxGb3Jlc3RUb3AMVm94ZWxPcmVHb2xkEVZveGVsRm9yZXN0TGVhdmVzD1ZveGVsRm9yZXN0QmFyawxWb3hlbE9yZUdlbXMMU25vd1RyZWVCYXJrD0hRX1ZveGVsQmVkUm9jawEABVRvcmNoHgAAAAAAXkQAAADBAACcQwABDQAAAP///wAAiAsAAQD///+ICwIAAAAA////iguOAQABAP///xgNAQAAAAD///8ZDQ8AAAEA////KA0BAAAAAP///ykNLQAAAQD///9WDQEAAAAA////Vw0PAAABAP///2YNAgAAAAD///9oDe4AAAEA////Vg4BAAAAAP///1cOqQEAAAAAAAAAAABeRAAAAMEAAKRDAAELAAAA////AAD1AgABAP////UCAgAAAAD////3Av8AAAEA////9gMBAAAAAP////cDDwAAAQD///8GBAIAAAAA////CAQABwABAP///wgLAQAAAAD///8JC/8AAAEA////CAwEAAAAAP///wwM9AMAAAAAAAAAAABSRAAAAEEAAKRDAAFMAAAA////AABZAAACAP///1kABwAAAAD///9gAAkAAAIA////aQABAAAAAP///3AACQAAAgD///95AAEAAAAA////gAAJAAACAP///4kAAQAAAAD///+QAAkAAAIA////mQABAAAAAP///6AACQAAAgD///+pAAcAAAAA////sACpAAACAP///1kBBwAAAAD///9gAQkAAAIA////aQEBAAAAAP///3ABCQAAAgD///95AQEAAAAA////gAEJAAACAP///4kBAQAAAAD///+QAQkAAAIA////mQEBAAAAAP///6ABCQAAAgD///+pAQcAAAAA////sAFQAAADAP///wACWQAAAgD///9ZAgcAAAMA////YAIJAAACAP///2kCAQAAAwD///9wAgkAAAIA////eQIBAAADAP///4ACCQAAAgD///+JAgEAAAMA////kAIJAAACAP///5kCAQAAAwD///+gAgkAAAIA////qQIHAAADAP///7ACqQAAAgD///9ZAwcAAAMA////YAMJAAACAP///2kDAQAAAwD///9wAwkAAAIA////eQMBAAADAP///4ADCQAAAgD///+JAwEAAAMA////kAMJAAACAP///5kDAQAAAwD///+gAwkAAAIA////qQMHAAADAP///7ADiAAAAQD///84BAEAAAMA////OQQgAAACAP///1kEBwAAAwD///9gBAkAAAIA////aQQHAAADAP///3AECQAAAgD///95BAcAAAMA////gAQJAAACAP///4kEBwAAAwD///+QBAkAAAIA////mQQHAAADAP///6AECQAAAgD///+pBAcAAAMA////sASIAAABAP///zgFAQAAAwD///85BXwGAAEA////tQsCAAADAP///7cLmgEAAQD///9RDQIAAAMA////Uw0PAAABAP///2INAQAAAwD///9jDasAAAEA////Dg4BAAADAP///w8ODQAAAQD///8cDgMAAAMA////Hw7hAQAAAAAAAAAAAFpEAADAQQAArEMBAU8AAwD///8AAKsAAAMA////rQAOAAADAP///70ADgAAAwD////NAA0AAAQA////2gABADADAP///90ADQAABAD////qAAEAMAMA////7QDOAAADAP///70BDgAAAwD////NAQwAAAQA////2QEBADADAP///90BDAAABAD////pAQEAMAMA////7QHOAAADAP///7wCDwAAAwD////NAgsAAAQA////2AIBADADAP///90CCwAABAD////oAgEAMAMA////7QLqAAAEAP///9cDAQAwAwD////bAwwAAAQA////5wMBADADAP///+sD6wAABAD////WBAEAMAMA////2gQMAAAEAP///+YEAQAwAwD////qBOsAAAQA////1QUBADADAP///9kFDAAABAD////lBQEAMAMA////6QXrAAAEAP///9QGAQAwAwD////YBgwAAAQA////5AYBADADAP///+gG6wAABAD////TBwEAMAMA////1wcMAAAEAP///+MHAQAwAwD////nB+sAAAQA////0ggBADADAP///9YIDAAABAD////iCAEAMAMA////5gjrAAAEAP///9EJAQAwAwD////VCQwAAAQA////4QkBADADAP///+UJ6wAABAD////QCgEAMAMA////1AoMAAAEAP///+AKAQAwAwD////kChwAAAUA////AAuQAA0DAP///5ALBAAABQD///+UCwwADQMA////oAsEAAAFAP///6QLDAANAwD///+wCwQAAAUA////tAsMAA0DAP///8ALBAAABQD////ECwwADQMA////0wsBAAAFAP///9QLDAANAwD////jCwEAAAUA////5AsMAA0DAP////ALBAAABQD////0CwwADQYA////kAwEAAAGAP///6AMBAAABgD///+wDAQAAAAA////wAwDAAAGAP///8MMAQAAAAD////SDAEAAAYA////0wwBAAAAAP///+IMAQAABgD////jDAEAAAAA////8AwDAAAGAP////MMAQAABwD///9vDwEAAAEA/AEAAAAAAAAAAAAAgL8AAAAAAAAAAFpEAADAQQAAtEMBARIAAwD///8AAGkCAAEA////aQIBAAADAP///2oCDwAAAQD///95AgEAAAMA////egIPAAABAP///4kCAQAAAwD///+KAk4BAAEA////2AMCAAADAP///9oDngEAAQD///94BQEAAAMA////eQX/AAABAP///3gGAQAAAwD///95BosEAAUA////BAsMAA0DAP///xALBAAABQD///8UC+wADQYA////AAwEAAAGAP///xAMBAAAAAAAAAAAAABaRAAAAMEAAJxDAAEBAAAA////AAAAEAAAAAAAAAAAAFpEAAAAwQAApEMAASwBAAD///8AAF0DAAEA////XQMBAAAAAP///14DmgAAAQD////4AwEAAAAA////+QMPAAABAP///wgEAQAAAAD///8JBEQAAAEA////TQQDAAAAAP///1AEDQAAAQD///9dBAEAAAAA////XgT2AQABAP///1QGAgAAAAD///9WBqoAAAgA////AAcKAAAAAP///woHBgAACAD///8QBwoAAAAA////GgcGAAAIAP///yAHCgAAAAD///8qBwYAAAgA////MAcNAAAAAP///z0HAwAACQD///9ABwIAAAgA////QgcLAAAAAP///00HAwAACQD///9QBwIAAAgA////UgcIAAAAAP///1oHBgAACQD///9gBwIAAAgA////YgcIAAAAAP///2oHBgAACQD///9wBwIAAAgA////cgcIAAAAAP///3oHBgAACQD///+ABwIAAAgA////ggcIAAAAAP///4oHBgAACQD///+QBwIAAAgA////kgcIAAAAAP///5oHBgAACQD///+gBwIAAAgA////ogcIAAAAAP///6oHBgAACQD///+wBwIAAAgA////sgcIAAAAAP///7oHBgAACQD////ABwIAAAgA////wgcIAAAAAP///8oHBgAACQD////QBwIAAAgA////0gcIAAAAAP///9oHBgAACQD////gBwIAAAgA////4gcIAAAAAP///+oHBgAACQD////wBwIAAAgA////8gcIAAAAAP////oHBgAAAAD///8KCAYAAAAA////GggGAAAAAP///yoIBgAAAAD///89CAMAAAAA////TQgDAAAKAP///1EIAQAAAAD///9aCAEAAAQA////WwgBAAAEAP///1wIAQAAAAD///9dCAMAAAoA////YQgBAAAAAP///2oIBgAACgD///9xCAEAAAAA////eggGAAAKAP///4EIAQAAAAD///+KCAYAAAoA////kQgBAAAAAP///5oIBgAACgD///+hCAEAAAAA////qggGAAAKAP///7EIAQAAAAD///+6CAYAAAoA////wQgBAAAAAP///8oIBgAACgD////RCAEAAAAA////2ggGAAAKAP///+EIAQAAAAD////qCAYAAAoA////8QgBAAAAAP////oIBgAAAAD///8KCQYAAAAA////GgkGAAAAAP///yoJBgAAAAD///89CQMAAAAA////TQkDAAAKAP///1EJAQAAAAD///9aCQEAAAAA////XQkDAAAKAP///2EJAQAAAAD///9qCQEAAAQA////awkBAAAEAP///2wJAQAAAAD///9tCQMAAAoA////cQkBAAAAAP///3oJBgAACgD///+BCQEAAAAA////igkGAAAKAP///5EJAQAAAAD///+aCQYAAAoA////oQkBAAAAAP///6oJBgAACgD///+xCQEAAAAA////ugkGAAAKAP///8EJAQAAAAD////KCQYAAAoA////0QkBAAAAAP///9oJBgAACgD////hCQEAAAAA////6gkGAAAKAP////EJAQAAAAD////6CQYAAAAA////CgoGAAAAAP///xoKBgAAAAD///8qCgYAAAAA////PQoDAAAAAP///00KAwAACgD///9QCgIAAAAA////WgoBAAAAAP///10KAwAACgD///9hCgEAAAAA////agoBAAAAAP///20KAwAACgD///9xCgEAAAAA////egoBAAAEAP///3sKAQAABAD///98CgEAAAAA////fQoDAAAKAP///4EKAQAAAAD///+KCgYAAAoA////kQoBAAAAAP///5oKBgAACgD///+hCgEAAAAA////qgoGAAAKAP///7EKAQAAAAD///+6CgYAAAoA////wQoBAAAAAP///8oKBgAACgD////RCgEAAAAA////2goGAAAKAP///+EKAQAAAAD////qCgYAAAoA////8QoBAAAAAP////oKBgAAAAD///8KCwYAAAAA////GgsGAAAAAP///yoLBgAAAAD///89CwMAAAAA////TQsDAAAKAP///1ALAQAAAAD///9dCwMAAAoA////YQsBAAAAAP///2oLAQAAAAD///9tCwMAAAoA////cQsBAAAAAP///3oLAQAAAAD///99CwMAAAoA////gQsBAAAAAP///4oLAQAABAD///+LCwEAAAQA////jAsBAAAAAP///40LAwAACgD///+RCwEAAAAA////mgsGAAAKAP///6ELAQAAAAD///+qCwYAAAoA////sQsBAAAAAP///7oLBgAACgD////BCwEAAAAA////ygsGAAAKAP///9ELAQAAAAD////aCwYAAAoA////4QsBAAAAAP///+oLBgAACgD////xCwEAAAAA////+gsGAAAAAP///woMBgAAAAD///8aDAYAAAAA////KgwGAAAAAP///z0MAwAAAAD///9KDAEAAAAA////TQwDAAAKAP///1AMAgAAAAD///9aDAEAAAAA////XQwDAAAKAP///2EMAQAAAAD///9qDAEAAAAA////bQwDAAAKAP///3EMAQAAAAD///96DAEAAAAA////fQwDAAAKAP///4EMAQAAAAD///+KDAEAAAAA////jQwDAAAKAP///5EMAQAAAAD///+aDAEAAAQA////mwwBAAAEAP///5wMAQAAAAD///+dDAMAAAoA////oQwBAAAAAP///6oMBgAACgD///+xDAEAAAAA////ugwGAAAKAP///8EMAQAAAAD////KDAYAAAoA////0QwBAAAAAP///9oMBgAACgD////hDAEAAAAA////6gwGAAAKAP////EMAQAAAAD////6DAYAAAAA////Cg0GAAAAAP///xoNBgAAAAD///8qDQYAAAAA////Og0BAAAAAP///z0NAwAAAAD///9KDQEAAAAA////TQ0DAAALAP///1ANAgAAAAD///9aDQEAAAAA////XQ0DAAALAP///2ANAgAAAAD///9qDQYAAAsA////cA0CAAAAAP///3oNAQAAAAD///99DQMAAAsA////gA0CAAAAAP///4oNAQAAAAD///+NDQMAAAsA////kA0CAAAAAP///5oNAQAAAAD///+dDQMAAAsA////oA0CAAAAAP///6oNAQAABAD///+rDQEAAAQA////rA0BAAAAAP///60NAwAACwD///+wDQIAAAAA////ug0GAAALAP///8ANAgAAAAD////KDQYAAAsA////0A0CAAAAAP///9oNBgAACwD////gDQIAAAAA////6g0GAAALAP////ANAgAAAAD////6DQYAAAAA////Cg4GAAAAAP///xoOBgAAAAD///8qDgYAAAAA////Og4BAAAAAP///z0OAwAAAAD///9KDgEAAAAA////TQ4DAAAAAP///1oOBgAAAAD///9qDgYAAAAA////eg4GAAAAAP///4oOAQAAAAD///+NDgMAAAAA////mg4BAAAAAP///50OAwAAAAD///+qDgEAAAAA////rQ4DAAAAAP///7oOAQAABAD///+7DgEAAAQA////vA4BAAAAAP///70OAwAAAAD////KDgYAAAAA////2g4GAAAAAP///+oOBgAAAAD////6DgYAAAAA////Cw8FAAAAAP///xoPBgAAAAD///8qDwYAAAAA////Og8BAAAAAP///z0PAwAAAAD///9KDwYAAAAA////Wg8GAAAAAP///2oPBgAAAAD///96DwYAAAAA////ig8GAAAAAP///5oPAQAAAAD///+dDwMAAAAA////qg8BAAAAAP///60PAwAAAAD///+6DwEAAAAA////vQ8DAAAAAP///8oPAQAABAD////LDwEAAAQA////zA8BAAAAAP///80PAwAAAAD////aDwYAAAAA////6g8GAAAAAP////oPBgAAAwDKCQAAgL8AAAAAAAAAAAAAwQkAAIC/AAAAAAAAAAAAACoJAACAvwAAAAAAAAAAAAAAAAAAAABaRAAAAMEAAKxDAAG/AAAA////AAAABwAJAP///wAHAgAACAD///8CBwgAAAAA////CgcGAAAJAP///xAHAgAACAD///8SBwgAAAAA////GgcGAAAJAP///yAHAgAACAD///8iBwgAAAAA////KgcGAAAJAP///zAHAgAACAD///8yBwgAAAAA////OgcGAAAJAP///0AHAgAACAD///9CBwgAAAAA////SgcGAAAJAP///1AHAgAACAD///9SBwgAAAAA////WgcGAAAJAP///2AHAgAACAD///9iBwgAAAAA////agcGAAAJAP///3AHAgAACAD///9yBwgAAAAA////egcGAAAJAP///4AHAgAACAD///+CBwgAAAAA////igcGAAAJAP///5AHAgAACAD///+SBwgAAAAA////mgcGAAAIAP///6AHCgAAAAD///+qBwYAAAgA////sAcKAAAAAP///7oHBgAACAD////ABwoAAAAA////ygc2AAAKAP///wEIAQAAAAD///8KCAYAAAoA////EQgBAAAAAP///xoIBgAACgD///8hCAEAAAAA////KggGAAAKAP///zEIAQAAAAD///86CAYAAAoA////QQgBAAAAAP///0oIBgAACgD///9RCAEAAAAA////WggGAAAKAP///2EIAQAAAAD///9qCAYAAAoA////cQgBAAAAAP///3oIBgAACgD///+BCAEAAAAA////iggGAAAKAP///5AIAgAAAAD///+aCAYAAAAA////qggGAAAAAP///7oIBgAAAAD////KCDYAAAoA////AQkBAAAAAP///woJBgAACgD///8RCQEAAAAA////GgkGAAAKAP///yEJAQAAAAD///8qCQYAAAoA////MQkBAAAAAP///zoJBgAACgD///9BCQEAAAAA////SgkGAAAKAP///1EJAQAAAAD///9aCQYAAAoA////YQkBAAAAAP///2oJBgAACgD///9xCQEAAAAA////egkGAAAKAP///4EJAQAAAAD///+KCQYAAAoA////kAkCAAAAAP///5oJBgAAAAD///+qCQYAAAAA////ugkGAAAAAP///8oJNgAACgD///8BCgEAAAAA////CgoGAAAKAP///xEKAQAAAAD///8aCgYAAAoA////IQoBAAAAAP///yoKBgAACgD///8xCgEAAAAA////OgoGAAAKAP///0EKAQAAAAD///9KCgYAAAoA////UQoBAAAAAP///1oKBgAACgD///9hCgEAAAAA////agoGAAAKAP///3EKAQAAAAD///96CgYAAAoA////gQoBAAAAAP///4oKBgAACgD///+QCgIAAAAA////mgoGAAAAAP///6oKBgAAAAD///+6CgYAAAAA////ygo2AAAKAP///wELAQAAAAD///8KCwYAAAoA////EQsBAAAAAP///xoLBgAACgD///8hCwEAAAAA////KgsGAAAKAP///zELAQAAAAD///86CwYAAAoA////QQsBAAAAAP///0oLBgAACgD///9RCwEAAAAA////WgsGAAAKAP///2ELAQAAAAD///9qCwYAAAoA////cQsBAAAAAP///3oLBgAACgD///+BCwEAAAAA////igsGAAAKAP///5ALAgAAAAD///+aCwYAAAAA////qgsGAAAAAP///7oLBgAAAAD////KCzYAAAoA////AQwBAAAAAP///woMBgAACgD///8RDAEAAAAA////GgwGAAAKAP///yEMAQAAAAD///8qDAYAAAoA////MQwBAAAAAP///zoMBgAACgD///9BDAEAAAAA////SgwGAAAKAP///1EMAQAAAAD///9aDAYAAAoA////YQwBAAAAAP///2oMBgAACgD///9xDAEAAAAA////egwGAAAKAP///4EMAQAAAAD///+KDAYAAAoA////kAwCAAAAAP///5oMBgAAAAD///+qDAYAAAAA////ugwGAAAAAP///8oMNgAADAD///8ADQIAAAAA////Cg0GAAAMAP///xANAgAAAAD///8aDQYAAAwA////IA0CAAAAAP///yoNBgAADAD///8wDQIAAAAA////Og0GAAAMAP///0ANAgAAAAD///9KDQYAAAwA////UA0CAAAAAP///1oNBgAADAD///9gDQIAAAAA////ag0GAAAMAP///3ANAgAAAAD///96DQYAAAwA////gA0CAAAAAP///4oNBgAADAD///+QDQIAAAAA////mg0GAAAAAP///6oNBgAAAAD///+6DQYAAAAA////yg02AAAAAP///woOBgAAAAD///8aDgYAAAAA////Kg4GAAAAAP///zoOBgAAAAD///9KDgYAAAAA////Wg4GAAAAAP///2oOBgAAAAD///96DgYAAAAA////ig4GAAAAAP///5oOBgAAAAD///+qDgYAAAAA////ug4GAAAAAP///8oONgAAAAD///8KDwYAAAAA////Gg8GAAAAAP///yoP1gAAAwDVCQAAAAAAAAAAAACAvwAAigkAAIC/AAAAAAAAAAAAAHEJAACAvwAAAAAAAAAAAAAAAAAAAABWRAAAwEEAAKxDAQFTAAMA////AAAACwAFAP///wALkAANAwD///+QCxYAAAsA////pgsGAAADAP///6wLCgAACwD///+2CwYAAAMA////vAsEAAAFAP///8ALBQANAwD////FCwEAAAsA////xgsGAAADAP///8wLBAAABQD////QCwUADQMA////1QsBAAALAP///9YLBgAAAwD////cCwMAAAQA////3wsBADAFAP///+ALBQANAwD////lCwEAAAsA////5gsGAAADAP///+wLAwAABAD////vCwEAMAUA////8AsFAA0DAP////ULAQAACwD////2CwYAAAMA/////AsEAAAGAP///5AMFgAACgD///+mDAYAAAYA////rAwKAAAKAP///7YMBgAABgD///+8DAQAAAYA////xQwBAAAKAP///8YMBgAABgD////MDAEAAAAA////zQwDAAAGAP///9UMAQAACgD////WDAYAAAYA////3AwBAAAAAP///90MAQAABAD////eDAEAMAYA////5QwBAAAKAP///+YMBgAABgD////sDAEAAAAA////7QwBAAAEAP///+4MAQAwBgD////1DAEAAAoA////9gwGAAAGAP////wMAQAAAAD////9DAMAAAsA////pg0BAAANAP///6cNBAAACwD///+rDQEAAAoA////tg0BAAAKAP///8YNAQAABAD////HDQEAAAoA////1g0CAAAKAP///9sNAQAACgD////mDQIAAAoA////6w0BAAAKAP////YNAgAACgD////7DQEAAAsA////pg4BAAANAP///6cOBAAACwD///+rDgEAAAoA////tg4BAAAKAP///8YOAQAACgD////WDgEAAAQA////1w4BAAANAP///9sOAQAACgD////mDgIAAA0A////6w4BAAAKAP////YOAgAADQD////7DgEAAAsA////pg8BAAANAP///6cPBAAACwD///+rDwEAAAoA////xg8BAAAKAP///9YPAQAADQD////bDwEAAAoA////5g8BAAAEAP///+cPAQAADQD////rDwEAAAoA////9g8CAAANAP////sPAQAAAAAAAAAAAABWRAAAwEEAALRDAQEfAAMA////AACmBgABAP///6YGAQAAAwD///+nBg8AAAEA////tgYBAAADAP///7cGtgEAAQD///9tCAEAAAMA////bggPAAABAP///30IAQAAAwD///9+CO8AAAEA////bQkBAAADAP///24JkgEABQD///8ACwUADQMA////BQsBAAALAP///wYLBgAAAwD///8MCwQAAAUA////EAsFAA0DAP///xULCwAABQD///8gC+AADQYA////BQwBAAAKAP///wYMBgAABgD///8MDAQAAAYA////FQwLAAALAP///wYNAQAACgD///8HDQQAAAsA////Cw0BAAALAP///wYOAQAACgD///8HDgQAAAsA////Cw4BAAALAP///wYPAQAACgD///8HDwQAAAsA////Cw8BAAAAAAAAAAAAAFZEAAAAwQAAnEMAAQEAAAD///8AAAAQAAAAAAAAAAAAVkQAAADBAACkQwAB5wAAAP///wAAAAcACAD///8AB04AAAkA////TgcCAAACAP///1AHAQAACAD///9RBwYAAAkA////VwcJAAAKAP///2AHAgAACAD///9iBwUAAAkA////ZwcJAAAKAP///3AHAgAACAD///9yBwUAAAkA////dwcJAAAKAP///4AHAQAACAD///+BBwYAAAkA////hwcJAAAKAP///5AHAQAACAD///+RBwYAAAkA////lwcJAAAIAP///6AHBwAACQD///+nBwkAAAgA////sAcHAAAJAP///7cHCQAACAD////ABwcAAAkA////xwcJAAAOAP///9AHBQAACAD////VBwIAAAkA////1wcJAAAOAP///+AHBQAACAD////lBwIAAAkA////5wcJAAAOAP////AHBQAACAD////1BwIAAAkA////9wcJAAANAP///1AIAQAAAgD///9RCAEAAAIA////VAgBAAAKAP///1cICAAABAD///9jCAEAAAIA////ZAgBAAAKAP///2cIAQAAAgD///9zCAIAAAoA////dwgBAAACAP///4EIAQAAAgD///+DCAIAAAoA////hwgBAAABAP///4oIBQAAAgD///+RCAQAAAoA////lwgBAAABAP///5oIBQAAAgD///+gCAUAAAoA////pwgBAAABAP///6oIBQAACgD///+3CAEAAAEA////uggFAAAKAP///8cIAQAAAQD////KCAUAAAkA////1AgBAAAKAP///9cIAQAACgD////nCAEAAAoA////9wgBAAAPAP////oIBAAADQD///9QCQEAAAIA////UQkBAAACAP///1QJAQAACgD///9XCQgAAAIA////ZAkBAAAKAP///2cJAQAABAD///9zCQEAAAIA////dAkBAAAKAP///3cJAQAAAgD///+BCQEAAAIA////gwkCAAAKAP///4cJAQAAAQD///+KCQUAAAIA////kQkEAAAKAP///5cJAQAAAQD///+aCQUAAAIA////oAkFAAAKAP///6cJAQAAAQD///+qCQUAAAoA////twkBAAABAP///7oJBQAACgD////HCQEAAAEA////ygkFAAAJAP///9QJAQAACgD////XCQEAAAoA////5wkBAAAKAP////cJAQAADQD///9QCgEAAAIA////UQoBAAACAP///1QKAQAACgD///9XCgkAAAIA////YQoBAAACAP///2QKAQAACgD///9nCgEAAAIA////cQoBAAACAP///3QKAQAACgD///93CgEAAAIA////gQoBAAAEAP///4MKAQAAAgD///+ECgEAAAoA////hwoBAAABAP///4oKAwAAAgD///+RCgQAAAoA////lwoBAAABAP///5oKAwAAAgD///+gCgUAAAoA////pwoBAAABAP///6oKAwAACgD///+3CgEAAAEA////ugoDAAAKAP///8cKAQAADQD////QCgQAAAkA////1AoBAAAKAP///9cKAQAADQD////kCgEAAAoA////5woBAAAQAP////EKAQAADQD////0CgEAAAoA////9woBAAACAP///1ALBQAACgD///9XCwsAAAIA////YgsBAAACAP///2QLAQAACgD///9nCwEAAAoA////cAsCAAACAP///3ILAQAAAgD///90CwEAAAoA////dwsBAAAKAP///4ALAQAAAgD///+BCwIAAAIA////hAsBAAAKAP///4cLAQAACgD///+QCwEAAAIA////kQsCAAAEAP///5MLAQAAAgD///+UCwEAAAoA////lwsBAAACAP///6ALBQAACgD///+nCwEAAAoA////twsBAAAKAP///8cLAQAADQD////QCwQAAAkA////1AsBAAAKAP///9cLAQAADQD////kCwEAAAoA////5wsBAAAQAP////ELAQAADQD////0CwEAAAoA////9wsBAAANAP///1AMAQAAAgD///9RDAEAAAIA////VAwBAAAKAP///1cMCQAABAD///9jDAEAAAIA////ZAwBAAAKAP///2cMAQAAAgD///90DAEAAAoA////dwwBAAACAP///4EMAQAAAgD///+EDAEAAAoA////hwwBAAACAP///5EMAQAAAgD///+UDAEAAAoA////lwwBAAACAP///6AMBQAACgD///+nDAEAAAoA////twwBAAAKAP///8cMAQAADQD////QDAQAAAkA////1AwBAAAKAP///9cMAQAADQD////kDAEAAAoA////5wwBAAANAP////QMAQAACgD////3DAEAAA0A////UA0BAAACAP///1ENAQAAAgD///9UDQEAAAsA////Vw0JAAACAP///2QNAQAACwD///9nDQkAAAQA////cw0BAAACAP///3QNAQAACwD///93DQkAAAIA////gQ0BAAACAP///4QNAQAACwD///+HDQkAAAIA////kQ0BAAACAP///5QNAQAACwD///+XDQkAAAIA////oA0FAAALAP///6cNCQAACwD///+3DQkAAAsA////xw0JAAANAP///9ANBAAACQD////UDQEAAAsA////1w0JAAANAP///+QNAQAACwD////nDQkAAA0A////9A0BAAALAP////cNCQAADQD///9QDgEAAAIA////UQ4BAAACAP///1QOAQAAAgD///9kDgEAAAIA////dA4BAAACAP///4EOAQAABAD///+DDgEAAAIA////hA4BAAACAP///5EOAQAAAgD///+UDgEAAAIA////oA4FAAAJAP///9AOBQAACQD////gDgUAAAkA////8A4FAAACAP///1APBQAACgD///9gDwIAAAIA////Yg8BAAACAP///2QPAQAACgD///9wDwIAAAIA////cg8BAAACAP///3QPAQAACgD///+ADwEAAAIA////gQ8CAAACAP///4QPAQAACgD///+QDwEAAAIA////kQ8CAAAEAP///5MPAQAAAgD///+UDwEAAAIA////oA8FAAAEAF4JAAAAAAAAAAAAAIA/AADnCQAAgD8AAAAAAAAAAAAAVAkAAAAAAAAAAAAAgL8AANQJAAAAAAAAAAAAAIA/AAAAAAAAAABWRAAAAMEAAKxDAAGtAAAA////AAAABwAOAP///wAHBQAACAD///8FBwIAAAkA////BwcJAAAOAP///xAHBQAACAD///8VBwIAAAkA////FwcJAAAOAP///yAHBQAACAD///8lBwIAAAkA////JwcJAAAOAP///zAHBQAACAD///81BwIAAAkA////NwcJAAAOAP///0AHBQAACAD///9FBwIAAAkA////RwcJAAAOAP///1AHBQAACAD///9VBwIAAAkA////VwcJAAAOAP///2AHBQAACAD///9lBwIAAAkA////ZwcJAAAOAP///3AHBQAACAD///91BwIAAAkA////dwcJAAAOAP///4AHBQAACAD///+FBwIAAAkA////hwcJAAAOAP///5AHBQAACAD///+VBwIAAAkA////lwcJAAAIAP///6AHMAAAAAD////QBzAAABEA////AQgBAAAKAP///wcIAQAADwD///8KCAQAAAoA////FwgBAAAPAP///xoIBAAACgD///8nCAEAAA8A////KggEAAAKAP///zcIAQAACgD///9HCAEAAAoA////VwgBAAASAP///1oIAwAACgD///9nCAEAABIA////aggDAAAKAP///3cIAQAACgD///+HCAEAAAkA////lAgBAAAKAP///5cICQAAAAD////QCDAAABEA////AQkBAAAKAP///wcJAQAACgD///8XCQEAAAoA////JwkBAAAKAP///zcJAQAACgD///9HCQEAAAoA////VwkBAAAKAP///2cJAQAACgD///93CQEAAAoA////hwkBAAAJAP///5QJAQAACgD///+XCQkAAAAA////0AkwAAAQAP///wAKAQAAEQD///8BCgEAABAA////AgoBAAANAP///wQKAQAACgD///8HCgEAABAA////EQoBAAANAP///xQKAQAACgD///8XCgEAAA0A////JAoBAAAKAP///ycKAQAADQD///80CgEAAAoA////NwoBAAANAP///0QKAQAACgD///9HCgEAAA0A////VAoBAAAKAP///1cKAQAADQD///9kCgEAAAoA////ZwoBAAANAP///3QKAQAACgD///93CgEAAA0A////hAoBAAAKAP///4cKAQAADQD///+QCgQAAAkA////lAoBAAAKAP///5cKCQAAAAD////QCjAAABAA////AAsBAAARAP///wELAQAAEAD///8CCwEAAA0A////BAsBAAAKAP///wcLAQAAEAD///8RCwEAAA0A////FAsBAAAKAP///xcLAQAADQD///8kCwEAAAoA////JwsBAAANAP///zQLAQAACgD///83CwEAAA0A////RAsBAAAKAP///0cLAQAADQD///9UCwEAAAoA////VwsBAAANAP///2QLAQAACgD///9nCwEAAA0A////dAsBAAAKAP///3cLAQAADQD///+ECwEAAAoA////hwsBAAANAP///5ALBAAACQD///+UCwEAAAoA////lwsJAAAAAP///9ALMAAAEAD///8BDAEAAA0A////BAwBAAAKAP///wcMAQAADQD///8UDAEAAAoA////FwwBAAANAP///yQMAQAACgD///8nDAEAAA0A////NAwBAAAKAP///zcMAQAADQD///9EDAEAAAoA////RwwBAAANAP///1QMAQAACgD///9XDAEAAA0A////ZAwBAAAKAP///2cMAQAADQD///90DAEAAAoA////dwwBAAANAP///4QMAQAACgD///+HDAEAAA0A////kAwEAAAJAP///5QMAQAACgD///+XDAkAAAAA////0AwwAAANAP///wQNAQAADAD///8HDQkAAA0A////FA0BAAAMAP///xcNCQAADQD///8kDQEAAAwA////Jw0JAAANAP///zQNAQAADAD///83DQkAAA0A////RA0BAAAMAP///0cNCQAADQD///9UDQEAAAwA////Vw0JAAANAP///2QNAQAADAD///9nDQkAAA0A////dA0BAAAMAP///3cNCQAADQD///+EDQEAAAwA////hw0JAAANAP///5ANBAAACQD///+UDQEAAAwA////lw0JAAAAAP///9ANMAAACQD///8ADgUAAAkA////EA4FAAAJAP///yAOBQAACQD///8wDgUAAAkA////QA4FAAAJAP///1AOBQAACQD///9gDgUAAAkA////cA4FAAAJAP///4AOBQAACQD///+QDgUAAAAA////0A4wAAAAAP///zAP0AAABADRCQAAAAAAAAAAAACAvwAA2wkAAAAAAAAAAAAAgL8AAJkJAAAAAAAAAAAAAIC/AACUCQAAAAAAAAAAAACAvwAAAAAAAAAAXkQAAABBAACcQwABAgAAAP///wAAAAIAAwD///8AAgAOAAAAAAAAAAAAXkQAAABBAACkQwABCgAAAP///wAAUAEAAQD///9QAQEAAAAA////UQGvAAADAP///wACUAAAAQD///9QAgEAAAMA////UQKSBwABAP///+MJAgAAAwD////lCboAAAEA////nwoCAAADAP///6EKXwUAAAAAAAAAAABSRAAAwEEAAKxDAQFlAAMA////AAAlAAABAP///yUAAwAAAwD///8oAAEKAAEA////KQoDAAADAP///ywK4QAABQD///8NCwMADQMA////EAsNAAAFAP///x0LAwANAwD///8gCw0AAAUA////LQsDAA0DAP///zALDAAABQD///88CwQADQMA////QAsMAAAFAP///0wLBAANAwD///9QCwwAAAUA////XAsEAA0DAP///2ALDAAABQD///9sCwQADQMA////cAsMAAAFAP///3wLBAANAwD///+ACwsAAAUA////iwsFAA0DAP///5ALOQAABQD////JCwcADQMA////0AsJAAAFAP///9kLBwANAwD////gCwkAAAUA////6QsHAA0DAP////ALCQAABQD////5CwcADQMA////AAwCAAAGAP///wIMCwAAAwD///8QDAIAAAYA////EgwLAAADAP///yAMAwAABgD///8jDAoAAAMA////MAwDAAAGAP///zMMCQAAAwD///9ADAMAAAYA////QwwJAAADAP///1AMAgAABgD///9SDAoAAAMA////YAwCAAAGAP///2IMCgAABgD///9wDAwAAAYA////gAwLAAAGAP///5AMOQAABgD////QDAkAAAYA////4AwJAAAGAP////AMCQAABgD///8ADQIAAAYA////EA0CAAAGAP///yANAwAAEwD///8oDQEAAAYA////MA0DAAAGAP///0ANAwAABgD///9QDQIAABMA////Vw0BAAAGAP///2ANAgAAEwD///+CDQEAABMA////xg0BAAATAP///ygOAQAAEwD///9XDgEAAAcA////cg4BAAAHAP///4EOAQAAEwD///+CDgEAAAcA////gw4BAAAHAP///5IOAQAABwD///+2DgEAAAcA////xQ4BAAATAP///8YOAQAABwD////HDgEAAAcA////1g4BAAAHAP///wcPAgAABwD///8LDwEAAAcA////EA8BAAAHAP///xcPAwAABwD///8mDwIAABMA////KA8BAAAHAP///ykPAgAABwD///83DwMAAAcA////Rg8DAAAHAP///1UPAgAAEwD///9XDwEAAAcA////WA8CAAAHAP///2IPAQAABwD///9mDwMAAAcA////cQ8DAAAHAP///3cPAQAABwD///+ADwIAABMA////gg8BAAAHAP///4MPAgAABwD///+RDwMAAAcA////og8BAAAHAP///6YPAQAABwD///+1DwMAAAcA////xA8CAAATAP///8YPAQAABwD////HDwIAAAcA////1Q8DAAAHAP///+YPAQAAAAAAAAAAAABaRAAAIEIAAKRDAQEOAAcA////XwABAAAHAP///08BAQAABwD///9eAQIAAAcA////bwEBAAAHAP///18CAQAABwD///9PAwEAAAcA////XgMCAAAHAP///28DAQAABwD///9fBAEAAAcA////TwUBAAAHAP///14FAgAABwD///9vBQEAAAcA////XwYBAAAHAP///18IAQAAAAAAAAAAAABaRAAAIEIAAKxDAQEDAAcA////bwEBAAAHAP///28DAQAABwD///9vBQEAAAAAAAAAAAAAUkQAAADBAACcQwABDQAAAP///wAAJAAAAQD///8kAAIAAAAA////JgAOAAABAP///zQAAQAAAAD///81AB8NAAEA////VA0BAAAAAP///1UN/wAAAQD///9UDgEAAAAA////VQ7/AAABAP///1QPAQAAAAD///9VDw4AAAEA////Yw8CAAAAAP///2UPmwAAAAAAAAAAAABSRAAAAMEAAKRDAAH3AAAA////AAAFBwAIAP///wUHCwAAAAD///8QBwUAAAgA////FQcLAAAAAP///yAHBQAACAD///8lBwsAAAAA////MAcFAAAIAP///zUHCwAAAAD///9ABwUAAAgA////RQcLAAAAAP///1AHBQAACAD///9VBwUAAAIA////WgcGAAAAAP///2AHBQAACAD///9lBwUAAAoA////agcGAAAAAP///3AHBQAACAD///91BwUAAAoA////egcGAAAAAP///4AHBQAACAD///+FBwUAAAoA////igcGAAAAAP///5AHBQAACAD///+VBwUAAAoA////mgcGAAAAAP///6AHBQAACAD///+lBwsAAAAA////sAcFAAAIAP///7UHCwAAAAD////ABwUAAAgA////xQcLAAAAAP///9AHBQAACAD////VBwQAAA4A////2QcHAAAAAP///+AHBQAACAD////lBwQAAA4A////6QcHAAAAAP////AHBQAACAD////1BwQAAA4A////+QcHAAAAAP///wAIBQAAAAD///8QCAUAAAAA////IAgFAAAAAP///zAIBQAAAAD///9ACAUAAAAA////UAgFAAACAP///1kIAQAADQD///9aCAYAAAAA////YAgFAAACAP///2kIAQAAAAD///9wCAUAAAIA////eQgBAAAAAP///4AIBQAAAgD///+JCAEAAAAA////kAgFAAACAP///5kIAQAAAAD///+gCAUAAAIA////qQgHAAAAAP///7AIBQAAAAD////ACAUAAAAA////0AgFAAAJAP///9kIAQAAAAD////gCAUAAAAA////8AgFAAAAAP///wAJBQAAAAD///8QCQUAAAAA////IAkFAAAAAP///zAJBQAAAAD///9ACQUAAAAA////UAkFAAACAP///1kJAQAADQD///9aCQYAAAAA////YAkFAAACAP///2kJAQAAAAD///9wCQUAAAIA////eQkBAAAAAP///4AJBQAAAgD///+JCQEAAAAA////kAkFAAACAP///5kJAQAAAAD///+gCQUAAAIA////qQkHAAAAAP///7AJBQAAAAD////ACQUAAAAA////0AkFAAAJAP///9kJAQAAAAD////gCQUAAAAA////8AkFAAAAAP///wAKBQAAAAD///8QCgUAAAAA////IAoFAAAAAP///zAKBQAAAAD///9ACgUAAAAA////UAoFAAACAP///1kKAQAADQD///9aCgYAAAAA////YAoFAAACAP///2kKAQAAAAD///9wCgUAAAIA////eQoBAAAAAP///4AKBQAAAgD///+JCgEAAAAA////kAoFAAACAP///5kKAQAAAAD///+gCgUAAAIA////qQoHAAAAAP///7AKBQAAAAD////ACgUAAAAA////0AoFAAAJAP///9kKAQAADQD////aCgYAAAAA////4AoFAAANAP///+kKAQAAAAD////wCgUAAA0A////+QoBAAAAAP///wALBQAAAAD///8QCwUAAAAA////IAsFAAAAAP///zALBQAAAAD///9ACwUAAAAA////UAsFAAACAP///1kLBwAAAAD///9gCwUAAAIA////aQsBAAAKAP///2oLBgAAAAD///9wCwUAAAIA////eQsBAAAKAP///3oLBgAAAAD///+ACwUAAAIA////iQsBAAAKAP///4oLBgAAAAD///+QCwUAAAIA////mQsBAAAKAP///5oLBgAAAAD///+gCwUAAAIA////qQsHAAAAAP///7ALBQAAAAD////ACwUAAAAA////0AsFAAAJAP///9kLAQAADQD////aCwYAAAAA////4AsFAAANAP///+kLAQAAAAD////wCwUAAA0A////+QsBAAAAAP///wAMBQAAAAD///8QDAUAAAAA////IAwFAAAAAP///zAMBQAAAAD///9ADAUAAAAA////UAwFAAACAP///1kMAQAADQD///9aDAYAAAAA////YAwFAAACAP///2kMAQAAAAD///9wDAUAAAIA////eQwBAAAAAP///4AMBQAAAgD///+JDAEAAAAA////kAwFAAACAP///5kMAQAAAAD///+gDAUAAAIA////qQwHAAAAAP///7AMBQAAAAD////ADAUAAAAA////0AwFAAAJAP///9kMAQAADQD////aDAYAAAAA////4AwFAAANAP///+kMAQAAAAD////wDAUAAA0A////+QwBAAAAAP///wANBQAAAAD///8QDQUAAAAA////IA0FAAAAAP///zANBQAAAAD///9ADQUAAAAA////UA0FAAACAP///1kNAQAADQD///9aDQYAAAAA////YA0FAAACAP///2kNAQAAAAD///9wDQUAAAIA////eQ0BAAAAAP///4ANBQAAAgD///+JDQEAAAAA////kA0FAAACAP///5kNAQAAAAD///+gDQUAAAIA////qQ0HAAAAAP///7ANBQAAAAD////ADQUAAAAA////0A0FAAAJAP///9kNAQAADQD////aDQYAAAAA////4A0FAAANAP///+kNAQAAAAD////wDQUAAA0A////+Q0BAAAAAP///wAOBQAAAAD///8QDgUAAAAA////IA4FAAAAAP///zAOBQAAAAD///9ADgUAAAAA////UA4FAAACAP///1kOAQAADQD///9aDgYAAAAA////YA4FAAACAP///2kOAQAAAAD///9wDgUAAAIA////eQ4BAAAAAP///4AOBQAAAgD///+JDgEAAAAA////kA4FAAACAP///5kOAQAAAAD///+gDgUAAAIA////qQ4HAAAAAP///7AOBQAAAAD////ADgUAAAAA////0A4FAAAJAP///9kOBwAAAAD////gDgUAAAkA////6Q4HAAAAAP////AOBQAACQD////5DgcAAAAA////AA8JAAAAAP///xAPCQAAAAD///8gDwkAAAAA////MA8JAAAAAP///0APCgAAAAD///9QDwkAAAIA////WQ8HAAAAAP///2APCQAAAgD///9pDwEAAAoA////ag8GAAAAAP///3APCQAAAgD///95DwEAAAoA////eg8GAAAAAP///4APCQAAAgD///+JDwEAAAoA////ig8GAAAAAP///5APCQAAAgD///+ZDwEAAAoA////mg8GAAAAAP///6APCQAAAgD///+pDwcAAAAA////sA9QAAACAFQJAACAPwAAAAAAAAAAAADZCQAAAAAAAAAAAACAPwAAAAAAAAAAUkQAAADBAACsQwABxQAAAP///wAABQcACAD///8FBwQAAA4A////CQcHAAAAAP///xAHBQAACAD///8VBwQAAA4A////GQcHAAAAAP///yAHBQAACAD///8lBwQAAA4A////KQcHAAAAAP///zAHBQAACAD///81BwQAAA4A////OQcHAAAAAP///0AHBQAACAD///9FBwQAAA4A////SQcHAAAAAP///1AHBQAACAD///9VBwQAAA4A////WQcHAAAAAP///2AHBQAACAD///9lBwQAAA4A////aQcHAAAAAP///3AHBQAACAD///91BwQAAA4A////eQcHAAAAAP///4AHBQAACAD///+FBwQAAA4A////iQcHAAAAAP///5AHBQAACAD///+VBwQAAA4A////mQcHAAAAAP///6AHBQAACAD///+lBwsAAAAA////sAcFAAAIAP///7UHCwAAAAD////ABwUAAAgA////xQcLAAAAAP///9AHNQAAAAD///8QCAUAAAAA////IAgFAAAAAP///zAIBQAAAAD///9ACAUAAAAA////UAgFAAAAAP///2AIBQAAEQD///9sCAEAAAAA////cAgFAAAAAP///4AIBQAAAAD///+QCAUAAAkA////mQgBAAAAAP///6AIBQAAAAD///+wCAUAAAAA////wAgFAAAAAP///9AINQAAAAD///8QCQUAAAAA////IAkFAAAAAP///zAJBQAAAAD///9ACQUAAAAA////UAkFAAAAAP///2AJBQAAEQD///9sCQEAAAAA////cAkFAAAAAP///4AJBQAAAAD///+QCQUAAAkA////mQkBAAAAAP///6AJBQAAAAD///+wCQUAAAAA////wAkFAAAAAP///9AJNQAADQD///8JCgEAAAAA////EAoFAAANAP///xkKAQAAAAD///8gCgUAAA0A////KQoBAAAAAP///zAKBQAADQD///85CgEAAAAA////QAoFAAANAP///0kKAQAAAAD///9QCgUAAA0A////WQoBAAAQAP///1wKAQAAAAD///9gCgUAAA0A////aQoBAAAQAP///2sKAQAAEQD///9sCgEAABAA////bQoBAAAAAP///3AKBQAADQD///95CgEAABAA////fAoBAAAAAP///4AKBQAADQD///+JCgEAAAAA////kAoFAAAJAP///5kKAQAADQD///+aCgYAAAAA////oAoFAAAAAP///7AKBQAAAAD////ACgUAAAAA////0Ao1AAANAP///wkLAQAAAAD///8QCwUAAA0A////GQsBAAAAAP///yALBQAADQD///8pCwEAAAAA////MAsFAAANAP///zkLAQAAAAD///9ACwUAAA0A////SQsBAAAAAP///1ALBQAADQD///9ZCwEAABAA////XAsBAAAAAP///2ALBQAADQD///9pCwEAABAA////awsBAAARAP///2wLAQAAEAD///9tCwEAAAAA////cAsFAAANAP///3kLAQAAEAD///98CwEAAAAA////gAsFAAANAP///4kLAQAAAAD///+QCwUAAAkA////mQsBAAANAP///5oLBgAAAAD///+gCwUAAAAA////sAsFAAAAAP///8ALBQAAAAD////QCzUAAA0A////CQwBAAAAAP///xAMBQAADQD///8ZDAEAAAAA////IAwFAAANAP///ykMAQAAAAD///8wDAUAAA0A////OQwBAAAAAP///0AMBQAADQD///9JDAEAAAAA////UAwFAAANAP///1kMAQAAAAD///9gDAUAAA0A////aQwBAAAQAP///2wMAQAAAAD///9wDAUAAA0A////eQwBAAAAAP///4AMBQAADQD///+JDAEAAAAA////kAwFAAAJAP///5kMAQAADQD///+aDAYAAAAA////oAwFAAAAAP///7AMBQAAAAD////ADAUAAAAA////0Aw1AAANAP///wkNAQAAAAD///8QDQUAAA0A////GQ0BAAAAAP///yANBQAADQD///8pDQEAAAAA////MA0FAAANAP///zkNAQAAAAD///9ADQUAAA0A////SQ0BAAAAAP///1ANBQAADQD///9ZDQEAAAAA////YA0FAAANAP///2kNAQAAAAD///9wDQUAAA0A////eQ0BAAAAAP///4ANBQAADQD///+JDQEAAAAA////kA0FAAAJAP///5kNAQAADQD///+aDQYAAAAA////oA0FAAAAAP///7ANBQAAAAD////ADQUAAAAA////0A01AAAJAP///wkOBwAAAAD///8QDgUAAAkA////GQ4HAAAAAP///yAOBQAACQD///8pDgcAAAAA////MA4FAAAJAP///zkOBwAAAAD///9ADgUAAAkA////SQ4HAAAAAP///1AOBQAACQD///9ZDgcAAAAA////YA4FAAAJAP///2kOBwAAAAD///9wDgUAAAkA////eQ4HAAAAAP///4AOBQAACQD///+JDgcAAAAA////kA4FAAAJAP///5kOBwAAAAD///+gDgUAAAAA////sA4FAAAAAP///8AOBQAAAAD////QDjABAAEAmQkAAAAAAAAAAAAAgL8AAAAAAAAAAFpEAAAAQQAAnEMAAQIAAAD///8AAAACAAMA////AAIADgAAAAAAAAAAAFpEAAAAQQAApEMAASAAAAD///8AAAIAAAAA////CgAJAAAAAP///xoACgAAAAD///8oAIMAAAAA////rQAOAAAAAP///70ADgAAAAD////NAA4AAAQA////2wABAAAEAP///9wAAQAAAAD////dACYAAAAA////DgEGAAAAAP///xgBAgAAAAD///8dAZ4AAAAA////vQEOAAAAAP///80BDgAAAAD////dAQ4AAAQA////6wEBAAAEAP///+wBAQAAAAD////tARMAAAMA////AALLAAADAP///80CDgAAAwD////dAg4AAAMA////7QIOAAAEAP////sCAQAABAD////8AgEAAAMA/////QLeAAADAP///90DDgAAAwD////tAw4AAAMA/////QPuAAADAP///+0EDgAAAwD////9BP4AAAMA/////QUDCgABAN0DAACAvwAAAAAAAAAAAAAAAAAAAABaRAAAAEEAAKxDAAFQAAAA////AAAAAgADAP///wACCwEABAD///8LAwEAAAQA////DAMBAAADAP///w0D/gAAAwD///8NBA4AAAQA////GwQBAAAEAP///xwEAQAAAwD///8dBO4AAAMA////DQUOAAADAP///x0FDgAABAD///8rBQEAAAQA////LAUBAAADAP///y0F3gAAAwD///8NBg4AAAMA////HQYOAAADAP///y0GDgAABAD///87BgEAAAQA////PAYBAAADAP///z0G3gAAAwD///8dBw4AAAMA////LQcOAAADAP///z0HDgAABAD///9LBwEAAAQA////TAcBAAADAP///00H3gAAAwD///8tCA4AAAMA////PQgOAAADAP///00IDgAABAD///9bCAEAAAQA////XAgBAAADAP///10I3gAAAwD///89CQ4AAAMA////TQkOAAADAP///10JDgAABAD///9rCQEAAAQA////bAkBAAADAP///20J3gAAAwD///9NCg4AAAMA////XQoOAAADAP///20KDgAABAD///97CgEAAAQA////fAoBAAADAP///30K3gAAAwD///9dCw4AAAMA////bQsOAAADAP///30LDgAABAD///+LCwEAAAQA////jAsBAAADAP///40L3gAAAwD///9tDA4AAAMA////fQwOAAADAP///40MDgAABAD///+bDAEAAAQA////nAwBAAADAP///50M3gAAAwD///99DQ4AAAMA////jQ0OAAADAP///50NDgAABAD///+rDQEAAAQA////rA0BAAADAP///60N3gAAAwD///+NDg4AAAMA////nQ4OAAADAP///60ODgAABAD///+7DgEAAAQA////vA4BAAADAP///70ODwAABAD////MDgEAAAMA////zQ7OAAADAP///50PDgAAAwD///+tDw4AAAMA////vQ8OAAAEAP///8sPAQAABAD////MDwEAAAMA////zQ8OAAAAAP///9sPAgAAAwD////dDw4AAAAA////6w8CAAADAP///+0PEwAAAAAAAAAAAABWRAAAIEIAAKRDAQEAAAAAAAAAAAAAVkQAACBCAACsQwEBRgALAP///6YABgAACwD///+2AAEAAAoA////twAEAAALAP///7sAAQAACwD////GAAEAAAoA////yAADAAALAP///8sAAQAACwD////WAAEAAAoA////2AADAAALAP///9sAAQAACwD////mAAEAAAoA////6AADAAALAP///+sAAQAACwD////2AAEAAAQA////9wABAAAKAP////gAAwAACwD////7AAEAAAsA////pgEBAAANAP///6cBBAAACwD///+rAQEAAAoA////tgEBAAANAP///7sBAQAACgD////GAQEAAAQA////xwEBAAANAP///8sBAQAACgD////WAQEAAA0A////2wEBAAAKAP///+YBAQAADQD////rAQEAAAoA////9gEBAAANAP////sBAQAACwD///+mAgEAAA0A////pwIEAAALAP///6sCAQAACgD///+2AgEAAA0A////uwIBAAAKAP///8YCAQAADQD////LAgEAAAoA////1gIBAAAEAP///9cCAQAADQD////bAgEAAAoA////5gICAAANAP///+sCAQAACgD////2AgEAAA0A////+wIBAAALAP///6YDAQAADQD///+nAwQAAAsA////qwMBAAAKAP///7YDAQAADQD///+7AwEAAAoA////xgMBAAANAP///8sDAQAACgD////WAwEAAA0A////2wMBAAAKAP///+YDAQAABAD////nAwEAAA0A////6wMBAAAKAP////YDAgAADQD////7AwEAAAsA////pgQGAAALAP///7YEBgAACwD////GBAEAAAsA////yAQEAAALAP///9YEAQAACwD////YBAQAAAsA////5gQBAAALAP///+gEBAAACwD////2BAEAAAQA////9wQBAAALAP////gEBAAAAAAAAAAAAABWRAAAIEIAALRDAQELAAsA////BgAGAAALAP///wYBAQAADQD///8HAQQAAAsA////CwEBAAALAP///wYCAQAADQD///8HAgQAAAsA////CwIBAAALAP///wYDAQAADQD///8HAwQAAAsA////CwMBAAALAP///wYEBgAAAAAAAAAAAABWRAAA0MIAAKxDAAERAAoA////qAABAAAKAP///7YBAQAACgD////IAQEAAAoA////2wEBAAAKAP////sBAQAACgD///+pAgEAAAoA////qAQBAAAKAP///+sFAQAACgD///+4BgEAAAoA////qAgCAAAKAP///6YKAQAACgD////bCgEAAAoA////qQsBAAAKAP////gLAQAACgD////7CwEAABQA////AAwAAQAAAP///wANAAMAAAAAAAAAAABWRAAAAEEAAJxDAAECAAAA////AAAAAgADAP///wACAA4AAAAAAAAAAABWRAAAAEEAAKRDAAFCAAAA////AAAeAAABAP///x4AAgAAAAD///8gADAAAAIA////UAACAAAAAP///1IADgAAAAD///9kAAwAAAAA////dAAMAAACAP///4EAAQAAAAD///+EAAwAAAIA////kQABAAAAAP///5QADAAAAgD///+gAAQAAAAA////pACsAAACAP///1ABAgAAAAD///9SAQ4AAAAA////ZAEMAAAAAP///3QBDAAAAgD///+BAQEAAAAA////hAEMAAACAP///5EBAQAAAAD///+UAQwAAAIA////oAEEAAAAAP///6QBXAAAAwD///8AAlAAAAIA////UAICAAADAP///1ICDgAAAgD///9hAgEAAAMA////ZAIMAAACAP///3ECAQAAAwD///90AgwAAAIA////gQIBAAADAP///4QCDAAAAgD///+RAgEAAAMA////lAIMAAACAP///6ACBAAAAwD///+kAqwAAAIA////UAMCAAADAP///1IDDgAAAgD///9hAwEAAAMA////ZAMMAAACAP///3EDAQAAAwD///90AwwAAAIA////gQMBAAADAP///4QDDAAAAgD///+RAwEAAAMA////lAMMAAACAP///6ADBAAAAwD///+kA6wAAAIA////UAQFAAADAP///1UECwAAAgD///9gBAUAAAMA////ZQQLAAACAP///3AEBQAAAwD///91BAsAAAIA////gAQFAAADAP///4UECwAAAgD///+QBAUAAAMA////lQQLAAACAP///6AEBQAAAwD///+lBPsBAAEA////oAYCAAADAP///6IGPgkAAQD////gDwEAAAMA////4Q8PAAABAP////APAwAAAwD////zDw0AAAAAAAAAAAAAAAA="
+      "vpSaveBase64": "DhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABADRCAAAAAAAAAAAWAA5Wb3hlbFNvbGlkUm9jawxWb3hlbE9yZUNvYWwKQmx1ZUJyaWNrcw5Wb3hlbFRhaWdhRGlydApTbG9wZVZveGVsDVZveGVsV2F0ZXJTZWENVm94ZWxUYWlnYVRvcA5Tbm93VHJlZUxlYXZlcxJWb3hlbEJ1aWxkaW5nRmxvb3IRdm94ZWxtZXRhbGljam9pc3QVVm94ZWxCdWlsZGluZ1dvb2RXYWxsDlZveGVsQnJpY2tXYWxsEVZveGVsQnVpbGRpbmdSb29mClZveGVsR2xhc3MOVm94ZWxGb3Jlc3RUb3AMVm94ZWxPcmVHb2xkEVZveGVsRm9yZXN0TGVhdmVzD1ZveGVsRm9yZXN0QmFyawxWb3hlbE9yZUdlbXMMU25vd1RyZWVCYXJrDVZveGVsQmVhY2hUb3APSFFfVm94ZWxCZWRSb2NrAQAFVG9yY2ggAAAAAABeRAAAAMEAAJxDAAENAAAA////AACICwABAP///4gLAgAAAAD///+KC44BAAEA////GA0BAAAAAP///xkNDwAAAQD///8oDQEAAAAA////KQ0tAAABAP///1YNAQAAAAD///9XDQ8AAAEA////Zg0CAAAAAP///2gN7gAAAQD///9WDgEAAAAA////Vw6pAQAAAAAAAAAAAF5EAAAAwQAApEMAAQsAAAD///8AAPUCAAEA////9QICAAAAAP////cC/wAAAQD////2AwEAAAAA////9wMPAAABAP///wYEAgAAAAD///8IBAAHAAEA////CAsBAAAAAP///wkL/wAAAQD///8IDAQAAAAA////DAz0AwAAAAAAAAAAAFJEAAAAQQAApEMAAUwAAAD///8AAFkAAAIA////WQAHAAAAAP///2AACQAAAgD///9pAAEAAAAA////cAAJAAACAP///3kAAQAAAAD///+AAAkAAAIA////iQABAAAAAP///5AACQAAAgD///+ZAAEAAAAA////oAAJAAACAP///6kABwAAAAD///+wAKkAAAIA////WQEHAAAAAP///2ABCQAAAgD///9pAQEAAAAA////cAEJAAACAP///3kBAQAAAAD///+AAQkAAAIA////iQEBAAAAAP///5ABCQAAAgD///+ZAQEAAAAA////oAEJAAACAP///6kBBwAAAAD///+wAVAAAAMA////AAJZAAACAP///1kCBwAAAwD///9gAgkAAAIA////aQIBAAADAP///3ACCQAAAgD///95AgEAAAMA////gAIJAAACAP///4kCAQAAAwD///+QAgkAAAIA////mQIBAAADAP///6ACCQAAAgD///+pAgcAAAMA////sAKpAAACAP///1kDBwAAAwD///9gAwkAAAIA////aQMHAAADAP///3ADCQAAAgD///95AwcAAAMA////gAMJAAACAP///4kDBwAAAwD///+QAwkAAAIA////mQMHAAADAP///6ADCQAAAgD///+pAwcAAAMA////sAOIAAABAP///zgEAQAAAwD///85BCAAAAIA////WQQHAAADAP///2AECQAAAgD///9pBAcAAAMA////cAQJAAACAP///3kEBwAAAwD///+ABAkAAAIA////iQQHAAADAP///5AECQAAAgD///+ZBAcAAAMA////oAQJAAACAP///6kEBwAAAwD///+wBIgAAAEA////OAUBAAADAP///zkFfAYAAQD///+1CwIAAAMA////twuaAQABAP///1ENAgAAAwD///9TDQ8AAAEA////Yg0BAAADAP///2MNqwAAAQD///8ODgEAAAMA////Dw4NAAABAP///xwOAwAAAwD///8fDuEBAAAAAAAAAAAAWkQAAMBBAACsQwEBTwADAP///wAAqwAAAwD///+tAA4AAAMA////vQAOAAADAP///80ADQAABAD////aAAEAMAMA////3QANAAAEAP///+oAAQAwAwD////tAM4AAAMA////vQEOAAADAP///80BDAAABAD////ZAQEAMAMA////3QEMAAAEAP///+kBAQAwAwD////tAc4AAAMA////vAIPAAADAP///80CCwAABAD////YAgEAMAMA////3QILAAAEAP///+gCAQAwAwD////tAuoAAAQA////1wMBADADAP///9sDDAAABAD////nAwEAMAMA////6wPrAAAEAP///9YEAQAwAwD////aBAwAAAQA////5gQBADADAP///+oE6wAABAD////VBQEAMAMA////2QUMAAAEAP///+UFAQAwAwD////pBesAAAQA////1AYBADADAP///9gGDAAABAD////kBgEAMAMA////6AbrAAAEAP///9MHAQAwAwD////XBwwAAAQA////4wcBADADAP///+cH6wAABAD////SCAEAMAMA////1ggMAAAEAP///+IIAQAwAwD////mCOsAAAQA////0QkBADADAP///9UJDAAABAD////hCQEAMAMA////5QnrAAAEAP///9AKAQAwAwD////UCgwAAAQA////4AoBADADAP///+QKHAAABQD///8AC5AADQMA////kAsEAAAFAP///5QLDAANAwD///+gCwQAAAUA////pAsMAA0DAP///7ALBAAABQD///+0CwwADQMA////wAsEAAAFAP///8QLDAANAwD////TCwEAAAUA////1AsMAA0DAP///+MLAQAABQD////kCwwADQMA////8AsEAAAFAP////QLDAANBgD///+QDAQAAAYA////oAwEAAAGAP///7AMBAAAAAD////ADAMAAAYA////wwwBAAAAAP///9IMAQAABgD////TDAEAAAAA////4gwBAAAGAP///+MMAQAAAAD////wDAMAAAYA////8wwBAAAHAP///28PAQAAAQD8AQAAAAAAAAAAAACAvwAAAAAAAAAAWkQAAMBBAAC0QwEBEgADAP///wAAaQIAAQD///9pAgEAAAMA////agIPAAABAP///3kCAQAAAwD///96Ag8AAAEA////iQIBAAADAP///4oCTgEAAQD////YAwIAAAMA////2gOeAQABAP///3gFAQAAAwD///95Bf8AAAEA////eAYBAAADAP///3kGiwQABQD///8ECwwADQMA////EAsEAAAFAP///xQL7AANBgD///8ADAQAAAYA////EAwEAAAAAAAAAAAAAFpEAAAAwQAAnEMAAQEAAAD///8AAAAQAAAAAAAAAAAAWkQAAADBAACkQwABLAEAAP///wAAXQMAAQD///9dAwEAAAAA////XgOaAAABAP////gDAQAAAAD////5Aw8AAAEA////CAQBAAAAAP///wkERAAAAQD///9NBAMAAAAA////UAQNAAABAP///10EAQAAAAD///9eBPYBAAEA////VAYCAAAAAP///1YGqgAACAD///8ABwoAAAAA////CgcGAAAIAP///xAHCgAAAAD///8aBwYAAAgA////IAcKAAAAAP///yoHBgAACAD///8wBw0AAAAA////PQcDAAAJAP///0AHAgAACAD///9CBwsAAAAA////TQcDAAAJAP///1AHAgAACAD///9SBwgAAAAA////WgcGAAAJAP///2AHAgAACAD///9iBwgAAAAA////agcGAAAJAP///3AHAgAACAD///9yBwgAAAAA////egcGAAAJAP///4AHAgAACAD///+CBwgAAAAA////igcGAAAJAP///5AHAgAACAD///+SBwgAAAAA////mgcGAAAJAP///6AHAgAACAD///+iBwgAAAAA////qgcGAAAJAP///7AHAgAACAD///+yBwgAAAAA////ugcGAAAJAP///8AHAgAACAD////CBwgAAAAA////ygcGAAAJAP///9AHAgAACAD////SBwgAAAAA////2gcGAAAJAP///+AHAgAACAD////iBwgAAAAA////6gcGAAAJAP////AHAgAACAD////yBwgAAAAA////+gcGAAAAAP///woIBgAAAAD///8aCAYAAAAA////KggGAAAAAP///z0IAwAAAAD///9NCAMAAAoA////UQgBAAAAAP///1oIAQAABAD///9bCAEAAAQA////XAgBAAAAAP///10IAwAACgD///9hCAEAAAAA////aggGAAAKAP///3EIAQAAAAD///96CAYAAAoA////gQgBAAAAAP///4oIBgAACgD///+RCAEAAAAA////mggGAAAKAP///6EIAQAAAAD///+qCAYAAAoA////sQgBAAAAAP///7oIBgAACgD////BCAEAAAAA////yggGAAAKAP///9EIAQAAAAD////aCAYAAAoA////4QgBAAAAAP///+oIBgAACgD////xCAEAAAAA////+ggGAAAAAP///woJBgAAAAD///8aCQYAAAAA////KgkGAAAAAP///z0JAwAAAAD///9NCQMAAAoA////UQkBAAAAAP///1oJAQAAAAD///9dCQMAAAoA////YQkBAAAAAP///2oJAQAABAD///9rCQEAAAQA////bAkBAAAAAP///20JAwAACgD///9xCQEAAAAA////egkGAAAKAP///4EJAQAAAAD///+KCQYAAAoA////kQkBAAAAAP///5oJBgAACgD///+hCQEAAAAA////qgkGAAAKAP///7EJAQAAAAD///+6CQYAAAoA////wQkBAAAAAP///8oJBgAACgD////RCQEAAAAA////2gkGAAAKAP///+EJAQAAAAD////qCQYAAAoA////8QkBAAAAAP////oJBgAAAAD///8KCgYAAAAA////GgoGAAAAAP///yoKBgAAAAD///89CgMAAAAA////TQoDAAAKAP///1AKAgAAAAD///9aCgEAAAAA////XQoDAAAKAP///2EKAQAAAAD///9qCgEAAAAA////bQoDAAAKAP///3EKAQAAAAD///96CgEAAAQA////ewoBAAAEAP///3wKAQAAAAD///99CgMAAAoA////gQoBAAAAAP///4oKBgAACgD///+RCgEAAAAA////mgoGAAAKAP///6EKAQAAAAD///+qCgYAAAoA////sQoBAAAAAP///7oKBgAACgD////BCgEAAAAA////ygoGAAAKAP///9EKAQAAAAD////aCgYAAAoA////4QoBAAAAAP///+oKBgAACgD////xCgEAAAAA////+goGAAAAAP///woLBgAAAAD///8aCwYAAAAA////KgsGAAAAAP///z0LAwAAAAD///9NCwMAAAoA////UAsBAAAAAP///10LAwAACgD///9hCwEAAAAA////agsBAAAAAP///20LAwAACgD///9xCwEAAAAA////egsBAAAAAP///30LAwAACgD///+BCwEAAAAA////igsBAAAEAP///4sLAQAABAD///+MCwEAAAAA////jQsDAAAKAP///5ELAQAAAAD///+aCwYAAAoA////oQsBAAAAAP///6oLBgAACgD///+xCwEAAAAA////ugsGAAAKAP///8ELAQAAAAD////KCwYAAAoA////0QsBAAAAAP///9oLBgAACgD////hCwEAAAAA////6gsGAAAKAP////ELAQAAAAD////6CwYAAAAA////CgwGAAAAAP///xoMBgAAAAD///8qDAYAAAAA////PQwDAAAAAP///0oMAQAAAAD///9NDAMAAAoA////UAwCAAAAAP///1oMAQAAAAD///9dDAMAAAoA////YQwBAAAAAP///2oMAQAAAAD///9tDAMAAAoA////cQwBAAAAAP///3oMAQAAAAD///99DAMAAAoA////gQwBAAAAAP///4oMAQAAAAD///+NDAMAAAoA////kQwBAAAAAP///5oMAQAABAD///+bDAEAAAQA////nAwBAAAAAP///50MAwAACgD///+hDAEAAAAA////qgwGAAAKAP///7EMAQAAAAD///+6DAYAAAoA////wQwBAAAAAP///8oMBgAACgD////RDAEAAAAA////2gwGAAAKAP///+EMAQAAAAD////qDAYAAAoA////8QwBAAAAAP////oMBgAAAAD///8KDQYAAAAA////Gg0GAAAAAP///yoNBgAAAAD///86DQEAAAAA////PQ0DAAAAAP///0oNAQAAAAD///9NDQMAAAsA////UA0CAAAAAP///1oNAQAAAAD///9dDQMAAAsA////YA0CAAAAAP///2oNBgAACwD///9wDQIAAAAA////eg0BAAAAAP///30NAwAACwD///+ADQIAAAAA////ig0BAAAAAP///40NAwAACwD///+QDQIAAAAA////mg0BAAAAAP///50NAwAACwD///+gDQIAAAAA////qg0BAAAEAP///6sNAQAABAD///+sDQEAAAAA////rQ0DAAALAP///7ANAgAAAAD///+6DQYAAAsA////wA0CAAAAAP///8oNBgAACwD////QDQIAAAAA////2g0GAAALAP///+ANAgAAAAD////qDQYAAAsA////8A0CAAAAAP////oNBgAAAAD///8KDgYAAAAA////Gg4GAAAAAP///yoOBgAAAAD///86DgEAAAAA////PQ4DAAAAAP///0oOAQAAAAD///9NDgMAAAAA////Wg4GAAAAAP///2oOBgAAAAD///96DgYAAAAA////ig4BAAAAAP///40OAwAAAAD///+aDgEAAAAA////nQ4DAAAAAP///6oOAQAAAAD///+tDgMAAAAA////ug4BAAAEAP///7sOAQAABAD///+8DgEAAAAA////vQ4DAAAAAP///8oOBgAAAAD////aDgYAAAAA////6g4GAAAAAP////oOBgAAAAD///8LDwUAAAAA////Gg8GAAAAAP///yoPBgAAAAD///86DwEAAAAA////PQ8DAAAAAP///0oPBgAAAAD///9aDwYAAAAA////ag8GAAAAAP///3oPBgAAAAD///+KDwYAAAAA////mg8BAAAAAP///50PAwAAAAD///+qDwEAAAAA////rQ8DAAAAAP///7oPAQAAAAD///+9DwMAAAAA////yg8BAAAEAP///8sPAQAABAD////MDwEAAAAA////zQ8DAAAAAP///9oPBgAAAAD////qDwYAAAAA////+g8GAAADAMoJAACAvwAAAAAAAAAAAADBCQAAgL8AAAAAAAAAAAAAKgkAAIC/AAAAAAAAAAAAAAAAAAAAAFpEAAAAwQAArEMAAb8AAAD///8AAAAHAAkA////AAcCAAAIAP///wIHCAAAAAD///8KBwYAAAkA////EAcCAAAIAP///xIHCAAAAAD///8aBwYAAAkA////IAcCAAAIAP///yIHCAAAAAD///8qBwYAAAkA////MAcCAAAIAP///zIHCAAAAAD///86BwYAAAkA////QAcCAAAIAP///0IHCAAAAAD///9KBwYAAAkA////UAcCAAAIAP///1IHCAAAAAD///9aBwYAAAkA////YAcCAAAIAP///2IHCAAAAAD///9qBwYAAAkA////cAcCAAAIAP///3IHCAAAAAD///96BwYAAAkA////gAcCAAAIAP///4IHCAAAAAD///+KBwYAAAkA////kAcCAAAIAP///5IHCAAAAAD///+aBwYAAAgA////oAcKAAAAAP///6oHBgAACAD///+wBwoAAAAA////ugcGAAAIAP///8AHCgAAAAD////KBzYAAAoA////AQgBAAAAAP///woIBgAACgD///8RCAEAAAAA////GggGAAAKAP///yEIAQAAAAD///8qCAYAAAoA////MQgBAAAAAP///zoIBgAACgD///9BCAEAAAAA////SggGAAAKAP///1EIAQAAAAD///9aCAYAAAoA////YQgBAAAAAP///2oIBgAACgD///9xCAEAAAAA////eggGAAAKAP///4EIAQAAAAD///+KCAYAAAoA////kAgCAAAAAP///5oIBgAAAAD///+qCAYAAAAA////uggGAAAAAP///8oINgAACgD///8BCQEAAAAA////CgkGAAAKAP///xEJAQAAAAD///8aCQYAAAoA////IQkBAAAAAP///yoJBgAACgD///8xCQEAAAAA////OgkGAAAKAP///0EJAQAAAAD///9KCQYAAAoA////UQkBAAAAAP///1oJBgAACgD///9hCQEAAAAA////agkGAAAKAP///3EJAQAAAAD///96CQYAAAoA////gQkBAAAAAP///4oJBgAACgD///+QCQIAAAAA////mgkGAAAAAP///6oJBgAAAAD///+6CQYAAAAA////ygk2AAAKAP///wEKAQAAAAD///8KCgYAAAoA////EQoBAAAAAP///xoKBgAACgD///8hCgEAAAAA////KgoGAAAKAP///zEKAQAAAAD///86CgYAAAoA////QQoBAAAAAP///0oKBgAACgD///9RCgEAAAAA////WgoGAAAKAP///2EKAQAAAAD///9qCgYAAAoA////cQoBAAAAAP///3oKBgAACgD///+BCgEAAAAA////igoGAAAKAP///5AKAgAAAAD///+aCgYAAAAA////qgoGAAAAAP///7oKBgAAAAD////KCjYAAAoA////AQsBAAAAAP///woLBgAACgD///8RCwEAAAAA////GgsGAAAKAP///yELAQAAAAD///8qCwYAAAoA////MQsBAAAAAP///zoLBgAACgD///9BCwEAAAAA////SgsGAAAKAP///1ELAQAAAAD///9aCwYAAAoA////YQsBAAAAAP///2oLBgAACgD///9xCwEAAAAA////egsGAAAKAP///4ELAQAAAAD///+KCwYAAAoA////kAsCAAAAAP///5oLBgAAAAD///+qCwYAAAAA////ugsGAAAAAP///8oLNgAACgD///8BDAEAAAAA////CgwGAAAKAP///xEMAQAAAAD///8aDAYAAAoA////IQwBAAAAAP///yoMBgAACgD///8xDAEAAAAA////OgwGAAAKAP///0EMAQAAAAD///9KDAYAAAoA////UQwBAAAAAP///1oMBgAACgD///9hDAEAAAAA////agwGAAAKAP///3EMAQAAAAD///96DAYAAAoA////gQwBAAAAAP///4oMBgAACgD///+QDAIAAAAA////mgwGAAAAAP///6oMBgAAAAD///+6DAYAAAAA////ygw2AAAMAP///wANAgAAAAD///8KDQYAAAwA////EA0CAAAAAP///xoNBgAADAD///8gDQIAAAAA////Kg0GAAAMAP///zANAgAAAAD///86DQYAAAwA////QA0CAAAAAP///0oNBgAADAD///9QDQIAAAAA////Wg0GAAAMAP///2ANAgAAAAD///9qDQYAAAwA////cA0CAAAAAP///3oNBgAADAD///+ADQIAAAAA////ig0GAAAMAP///5ANAgAAAAD///+aDQYAAAAA////qg0GAAAAAP///7oNBgAAAAD////KDTYAAAAA////Cg4GAAAAAP///xoOBgAAAAD///8qDgYAAAAA////Og4GAAAAAP///0oOBgAAAAD///9aDgYAAAAA////ag4GAAAAAP///3oOBgAAAAD///+KDgYAAAAA////mg4GAAAAAP///6oOBgAAAAD///+6DgYAAAAA////yg42AAAAAP///woPBgAAAAD///8aDwYAAAAA////Kg/WAAADANUJAAAAAAAAAAAAAIC/AACKCQAAgL8AAAAAAAAAAAAAcQkAAIC/AAAAAAAAAAAAAAAAAAAAAFZEAADAQQAApEMBAQIAAwD///8AAAALAAUAAAAAAAsAAQ0AAAAAAAAAAFZEAADAQQAArEMBAVMAAwD///8AAAALAAUA////AAuQAA0DAP///5ALFgAACwD///+mCwYAAAMA////rAsKAAALAP///7YLBgAAAwD///+8CwQAAAUA////wAsFAA0DAP///8ULAQAACwD////GCwYAAAMA////zAsEAAAFAP///9ALBQANAwD////VCwEAAAsA////1gsGAAADAP///9wLAwAABAD////fCwEAMAUA////4AsFAA0DAP///+ULAQAACwD////mCwYAAAMA////7AsDAAAEAP///+8LAQAwBQD////wCwUADQMA////9QsBAAALAP////YLBgAAAwD////8CwQAAAYA////kAwWAAAKAP///6YMBgAABgD///+sDAoAAAoA////tgwGAAAGAP///7wMBAAABgD////FDAEAAAoA////xgwGAAAGAP///8wMAQAAAAD////NDAMAAAYA////1QwBAAAKAP///9YMBgAABgD////cDAEAAAAA////3QwBAAAEAP///94MAQAwBgD////lDAEAAAoA////5gwGAAAGAP///+wMAQAAAAD////tDAEAAAQA////7gwBADAGAP////UMAQAACgD////2DAYAAAYA/////AwBAAAAAP////0MAwAACwD///+mDQEAAA0A////pw0EAAALAP///6sNAQAACgD///+2DQEAAAoA////xg0BAAAEAP///8cNAQAACgD////WDQIAAAoA////2w0BAAAKAP///+YNAgAACgD////rDQEAAAoA////9g0CAAAKAP////sNAQAACwD///+mDgEAAA0A////pw4EAAALAP///6sOAQAACgD///+2DgEAAAoA////xg4BAAAKAP///9YOAQAABAD////XDgEAAA0A////2w4BAAAKAP///+YOAgAADQD////rDgEAAAoA////9g4CAAANAP////sOAQAACwD///+mDwEAAA0A////pw8EAAALAP///6sPAQAACgD////GDwEAAAoA////1g8BAAANAP///9sPAQAACgD////mDwEAAAQA////5w8BAAANAP///+sPAQAACgD////2DwIAAA0A////+w8BAAAAAAAAAAAAAFZEAADAQQAAtEMBAR8AAwD///8AAKYGAAEA////pgYBAAADAP///6cGDwAAAQD///+2BgEAAAMA////twa2AQABAP///20IAQAAAwD///9uCA8AAAEA////fQgBAAADAP///34I7wAAAQD///9tCQEAAAMA////bgmSAQAFAP///wALBQANAwD///8FCwEAAAsA////BgsGAAADAP///wwLBAAABQD///8QCwUADQMA////FQsLAAAFAP///yAL4AANBgD///8FDAEAAAoA////BgwGAAAGAP///wwMBAAABgD///8VDAsAAAsA////Bg0BAAAKAP///wcNBAAACwD///8LDQEAAAsA////Bg4BAAAKAP///wcOBAAACwD///8LDgEAAAsA////Bg8BAAAKAP///wcPBAAACwD///8LDwEAAAAAAAAAAAAAVkQAAADBAACcQwABAQAAAP///wAAABAAAAAAAAAAAABWRAAAAMEAAKRDAAHrAAAA////AAAABwAIAP///wAHTgAACQD///9OBwIAAAIA////UAcBAAAIAP///1EHBgAACQD///9XBwkAAAoA////YAcCAAAIAP///2IHBQAACQD///9nBwkAAAoA////cAcCAAAIAP///3IHBQAACQD///93BwkAAAoA////gAcBAAAIAP///4EHBgAACQD///+HBwkAAAoA////kAcBAAAIAP///5EHBgAACQD///+XBwkAAAIA////oAcFAAAIAP///6UHAgAACQD///+nBwkAAAgA////sAcHAAAJAP///7cHCQAACAD////ABwcAAAkA////xwcJAAAOAP///9AHBQAACAD////VBwIAAAkA////1wcJAAAOAP///+AHBQAACAD////lBwIAAAkA////5wcJAAAOAP////AHBQAACAD////1BwIAAAkA////9wcJAAANAP///1AIAQAAAgD///9RCAEAAAIA////VAgBAAAKAP///1cICAAABAD///9jCAEAAAIA////ZAgBAAAKAP///2cIAQAAAgD///90CAEAAAoA////dwgBAAACAP///4EIAQAAAgD///+ECAEAAAoA////hwgBAAABAP///4oIBQAAAgD///+RCAEAAAIA////lAgBAAAKAP///5cIAQAAAQD///+aCAUAAAIA////oAgFAAAKAP///6cIAQAAAQD///+qCAUAAAoA////twgBAAABAP///7oIBQAACgD////HCAEAAAEA////yggFAAAJAP///9QIAQAACgD////XCAEAAAoA////5wgBAAAKAP////cIAQAADwD////6CAQAAA0A////UAkBAAACAP///1EJAQAAAgD///9UCQEAAAoA////VwkIAAACAP///2QJAQAACgD///9nCQEAAAQA////cwkBAAACAP///3QJAQAACgD///93CQEAAAIA////gQkBAAACAP///4QJAQAACgD///+HCQEAAAEA////igkFAAACAP///5EJAQAAAgD///+UCQEAAAoA////lwkBAAABAP///5oJBQAAAgD///+gCQUAAAoA////pwkBAAABAP///6oJBQAACgD///+3CQEAAAEA////ugkFAAAKAP///8cJAQAAAQD////KCQUAAAkA////1AkBAAAKAP///9cJAQAACgD////nCQEAAAoA////9wkBAAANAP///1AKAQAAAgD///9RCgEAAAIA////VAoBAAAKAP///1cKCQAAAgD///9kCgEAAAoA////ZwoBAAACAP///3QKAQAACgD///93CgEAAAIA////gQoBAAAEAP///4MKAQAAAgD///+ECgEAAAoA////hwoBAAABAP///4oKAwAAAgD///+RCgEAAAIA////lAoBAAAKAP///5cKAQAAAQD///+aCgMAAAIA////oAoFAAAKAP///6cKAQAAAQD///+qCgMAAAoA////twoBAAABAP///7oKAwAACgD////HCgEAAA0A////0AoEAAAJAP///9QKAQAACgD////XCgEAAA0A////5AoBAAAKAP///+cKAQAAEAD////xCgEAAA0A////9AoBAAAKAP////cKAQAAAgD///9QCwUAAAoA////VwsLAAACAP///2ILAQAAAgD///9kCwEAAAoA////ZwsBAAAKAP///3ALAgAAAgD///9yCwEAAAIA////dAsBAAAKAP///3cLAQAACgD///+ACwEAAAIA////gQsCAAACAP///4QLAQAACgD///+HCwEAAAoA////kAsBAAACAP///5ELAgAABAD///+TCwEAAAIA////lAsBAAAKAP///5cLAQAAAgD///+gCwUAAAoA////pwsBAAAKAP///7cLAQAACgD////HCwEAAA0A////0AsEAAAJAP///9QLAQAACgD////XCwEAAA0A////5AsBAAAKAP///+cLAQAAEAD////xCwEAAA0A////9AsBAAAKAP////cLAQAADQD///9QDAEAAAIA////UQwBAAACAP///1QMAQAACgD///9XDAkAAAQA////YwwBAAACAP///2QMAQAACgD///9nDAEAAAIA////dAwBAAAKAP///3cMAQAAAgD///+BDAEAAAIA////hAwBAAAKAP///4cMAQAAAgD///+RDAEAAAIA////lAwBAAAKAP///5cMAQAAAgD///+gDAUAAAoA////pwwBAAAKAP///7cMAQAACgD////HDAEAAA0A////0AwEAAAJAP///9QMAQAACgD////XDAEAAA0A////5AwBAAAKAP///+cMAQAADQD////0DAEAAAoA////9wwBAAANAP///1ANAQAAAgD///9RDQEAAAIA////VA0BAAALAP///1cNCQAAAgD///9kDQEAAAsA////Zw0JAAAEAP///3MNAQAAAgD///90DQEAAAsA////dw0JAAACAP///4ENAQAAAgD///+EDQEAAAsA////hw0JAAACAP///5ENAQAAAgD///+UDQEAAAsA////lw0JAAACAP///6ANBQAACwD///+nDQkAAAsA////tw0JAAALAP///8cNCQAADQD////QDQQAAAkA////1A0BAAALAP///9cNCQAADQD////kDQEAAAsA////5w0JAAANAP////QNAQAACwD////3DQkAAA0A////UA4BAAACAP///1EOAQAAAgD///9UDgEAAAIA////YQ4BAAACAP///2QOAQAAAgD///9xDgEAAAIA////dA4BAAACAP///4EOAQAABAD///+DDgEAAAIA////hA4BAAACAP///5EOAQAAAgD///+UDgEAAAIA////oA4FAAAJAP///9AOBQAACQD////gDgUAAAkA////8A4FAAACAP///1APBQAACgD///9gDwIAAAIA////Yg8BAAACAP///2QPAQAACgD///9wDwIAAAIA////cg8BAAACAP///3QPAQAACgD///+ADwEAAAIA////gQ8CAAACAP///4QPAQAACgD///+QDwEAAAIA////kQ8CAAAEAP///5MPAQAAAgD///+UDwEAAAIA////oA8FAAAFAF4JAAAAAAAAAAAAAIA/AADnCQAAgD8AAAAAAAAAAAAA1AkAAAAAAAAAAAAAgD8AAIENAACAPwAAAAAAAAAAAACBCQAAgD8AAAAAAAAAAAAAAAAAAAAAVkQAAADBAACsQwABrQAAAP///wAAAAcADgD///8ABwUAAAgA////BQcCAAAJAP///wcHCQAADgD///8QBwUAAAgA////FQcCAAAJAP///xcHCQAADgD///8gBwUAAAgA////JQcCAAAJAP///ycHCQAADgD///8wBwUAAAgA////NQcCAAAJAP///zcHCQAADgD///9ABwUAAAgA////RQcCAAAJAP///0cHCQAADgD///9QBwUAAAgA////VQcCAAAJAP///1cHCQAADgD///9gBwUAAAgA////ZQcCAAAJAP///2cHCQAADgD///9wBwUAAAgA////dQcCAAAJAP///3cHCQAADgD///+ABwUAAAgA////hQcCAAAJAP///4cHCQAADgD///+QBwUAAAgA////lQcCAAAJAP///5cHCQAACAD///+gBzAAAAAA////0AcwAAARAP///wEIAQAACgD///8HCAEAAA8A////CggEAAAKAP///xcIAQAADwD///8aCAQAAAoA////JwgBAAAPAP///yoIBAAACgD///83CAEAAAoA////RwgBAAAKAP///1cIAQAAEgD///9aCAMAAAoA////ZwgBAAASAP///2oIAwAACgD///93CAEAAAoA////hwgBAAAJAP///5QIAQAACgD///+XCAkAAAAA////0AgwAAARAP///wEJAQAACgD///8HCQEAAAoA////FwkBAAAKAP///ycJAQAACgD///83CQEAAAoA////RwkBAAAKAP///1cJAQAACgD///9nCQEAAAoA////dwkBAAAKAP///4cJAQAACQD///+UCQEAAAoA////lwkJAAAAAP///9AJMAAAEAD///8ACgEAABEA////AQoBAAAQAP///wIKAQAADQD///8ECgEAAAoA////BwoBAAAQAP///xEKAQAADQD///8UCgEAAAoA////FwoBAAANAP///yQKAQAACgD///8nCgEAAA0A////NAoBAAAKAP///zcKAQAADQD///9ECgEAAAoA////RwoBAAANAP///1QKAQAACgD///9XCgEAAA0A////ZAoBAAAKAP///2cKAQAADQD///90CgEAAAoA////dwoBAAANAP///4QKAQAACgD///+HCgEAAA0A////kAoEAAAJAP///5QKAQAACgD///+XCgkAAAAA////0AowAAAQAP///wALAQAAEQD///8BCwEAABAA////AgsBAAANAP///wQLAQAACgD///8HCwEAABAA////EQsBAAANAP///xQLAQAACgD///8XCwEAAA0A////JAsBAAAKAP///ycLAQAADQD///80CwEAAAoA////NwsBAAANAP///0QLAQAACgD///9HCwEAAA0A////VAsBAAAKAP///1cLAQAADQD///9kCwEAAAoA////ZwsBAAANAP///3QLAQAACgD///93CwEAAA0A////hAsBAAAKAP///4cLAQAADQD///+QCwQAAAkA////lAsBAAAKAP///5cLCQAAAAD////QCzAAABAA////AQwBAAANAP///wQMAQAACgD///8HDAEAAA0A////FAwBAAAKAP///xcMAQAADQD///8kDAEAAAoA////JwwBAAANAP///zQMAQAACgD///83DAEAAA0A////RAwBAAAKAP///0cMAQAADQD///9UDAEAAAoA////VwwBAAANAP///2QMAQAACgD///9nDAEAAA0A////dAwBAAAKAP///3cMAQAADQD///+EDAEAAAoA////hwwBAAANAP///5AMBAAACQD///+UDAEAAAoA////lwwJAAAAAP///9AMMAAADQD///8EDQEAAAwA////Bw0JAAANAP///xQNAQAADAD///8XDQkAAA0A////JA0BAAAMAP///ycNCQAADQD///80DQEAAAwA////Nw0JAAANAP///0QNAQAADAD///9HDQkAAA0A////VA0BAAAMAP///1cNCQAADQD///9kDQEAAAwA////Zw0JAAANAP///3QNAQAADAD///93DQkAAA0A////hA0BAAAMAP///4cNCQAADQD///+QDQQAAAkA////lA0BAAAMAP///5cNCQAAAAD////QDTAAAAkA////AA4FAAAJAP///xAOBQAACQD///8gDgUAAAkA////MA4FAAAJAP///0AOBQAACQD///9QDgUAAAkA////YA4FAAAJAP///3AOBQAACQD///+ADgUAAAkA////kA4FAAAAAP///9AOMAAAAAD///8wD9AAAAQA0QkAAAAAAAAAAAAAgL8AANsJAAAAAAAAAAAAAIC/AACZCQAAAAAAAAAAAACAvwAAlAkAAAAAAAAAAAAAgL8AAAAAAAAAAF5EAAAAQQAAnEMAAQIAAAD///8AAAACAAMA////AAIADgAAAAAAAAAAAF5EAAAAQQAApEMAAQoAAAD///8AAFABAAEA////UAEBAAAAAP///1EBrwAAAwD///8AAlAAAAEA////UAIBAAADAP///1ECkgcAAQD////jCQIAAAMA////5Qm6AAABAP///58KAgAAAwD///+hCl8FAAAAAAAAAAAAUkQAAMBBAACsQwEBZQADAP///wAAJQAAAQD///8lAAMAAAMA////KAABCgABAP///ykKAwAAAwD///8sCuEAAAUA////DQsDAA0DAP///xALDQAABQD///8dCwMADQMA////IAsNAAAFAP///y0LAwANAwD///8wCwwAAAUA////PAsEAA0DAP///0ALDAAABQD///9MCwQADQMA////UAsMAAAFAP///1wLBAANAwD///9gCwwAAAUA////bAsEAA0DAP///3ALDAAABQD///98CwQADQMA////gAsLAAAFAP///4sLBQANAwD///+QCzkAAAUA////yQsHAA0DAP///9ALCQAABQD////ZCwcADQMA////4AsJAAAFAP///+kLBwANAwD////wCwkAAAUA////+QsHAA0DAP///wAMAgAABgD///8CDAsAAAMA////EAwCAAAGAP///xIMCwAAAwD///8gDAMAAAYA////IwwKAAADAP///zAMAwAABgD///8zDAkAAAMA////QAwDAAAGAP///0MMCQAAAwD///9QDAIAAAYA////UgwKAAADAP///2AMAgAABgD///9iDAoAAAYA////cAwMAAAGAP///4AMCwAABgD///+QDDkAAAYA////0AwJAAAGAP///+AMCQAABgD////wDAkAAAYA////AA0CAAAGAP///xANAgAABgD///8gDQMAABMA////KA0BAAAGAP///zANAwAABgD///9ADQMAAAYA////UA0CAAATAP///1cNAQAABgD///9gDQIAABMA////gg0BAAATAP///8YNAQAAEwD///8oDgEAABMA////Vw4BAAAHAP///3IOAQAABwD///+BDgEAABMA////gg4BAAAHAP///4MOAQAABwD///+SDgEAAAcA////tg4BAAAHAP///8UOAQAAEwD////GDgEAAAcA////xw4BAAAHAP///9YOAQAABwD///8HDwIAAAcA////Cw8BAAAHAP///xAPAQAABwD///8XDwMAAAcA////Jg8CAAATAP///ygPAQAABwD///8pDwIAAAcA////Nw8DAAAHAP///0YPAwAABwD///9VDwIAABMA////Vw8BAAAHAP///1gPAgAABwD///9iDwEAAAcA////Zg8DAAAHAP///3EPAwAABwD///93DwEAAAcA////gA8CAAATAP///4IPAQAABwD///+DDwIAAAcA////kQ8DAAAHAP///6IPAQAABwD///+mDwEAAAcA////tQ8DAAAHAP///8QPAgAAEwD////GDwEAAAcA////xw8CAAAHAP///9UPAwAABwD////mDwEAAAAAAAAAAAAAWkQAACBCAACkQwEBDgAHAP///18AAQAABwD///9PAQEAAAcA////XgECAAAHAP///28BAQAABwD///9fAgEAAAcA////TwMBAAAHAP///14DAgAABwD///9vAwEAAAcA////XwQBAAAHAP///08FAQAABwD///9eBQIAAAcA////bwUBAAAHAP///18GAQAABwD///9fCAEAAAAAAAAAAAAAWkQAACBCAACsQwEBAwAHAP///28BAQAABwD///9vAwEAAAcA////bwUBAAAAAAAAAAAAAFJEAAAAwQAAnEMAAQ0AAAD///8AACQAAAEA////JAACAAAAAP///yYADgAAAQD///80AAEAAAAA////NQAfDQABAP///1QNAQAAAAD///9VDf8AAAEA////VA4BAAAAAP///1UO/wAAAQD///9UDwEAAAAA////VQ8OAAABAP///2MPAgAAAAD///9lD5sAAAAAAAAAAAAAUkQAAADBAACkQwAB/AAAAP///wAABQcACAD///8FBwsAAAAA////EAcFAAAIAP///xUHCwAAAAD///8gBwUAAAgA////JQcLAAAAAP///zAHBQAACAD///81BwsAAAAA////QAcFAAAIAP///0UHCwAAAAD///9QBwUAAAgA////VQcEAAACAP///1kHBwAAAAD///9gBwUAAAgA////ZQcEAAACAP///2kHAQAACgD///9qBwYAAAAA////cAcFAAAIAP///3UHBAAAAgD///95BwEAAAoA////egcGAAAAAP///4AHBQAACAD///+FBwQAAAIA////iQcBAAAKAP///4oHBgAAAAD///+QBwUAAAgA////lQcEAAACAP///5kHAQAACgD///+aBwYAAAAA////oAcFAAAIAP///6UHBAAAAgD///+pBwcAAAAA////sAcFAAAIAP///7UHCwAAAAD////ABwUAAAgA////xQcLAAAAAP///9AHBQAACAD////VBwQAAA4A////2QcHAAAAAP///+AHBQAACAD////lBwQAAA4A////6QcHAAAAAP////AHBQAACAD////1BwQAAA4A////+QcHAAAAAP///wAIBQAAAAD///8QCAUAAAAA////IAgFAAAAAP///zAIBQAAAAD///9ACAUAAAAA////UAgFAAACAP///1kIAQAADQD///9aCAYAAAAA////YAgFAAACAP///2kIAQAAAAD///9wCAUAAAIA////eQgBAAAAAP///4AIBQAAAgD///+JCAEAAAAA////kAgFAAACAP///5kIAQAAAAD///+gCAUAAAIA////qQgHAAAAAP///7AIBQAAAAD////ACAUAAAAA////0AgFAAAJAP///9kIAQAAAAD////gCAUAAAAA////8AgFAAAAAP///wAJBQAAAAD///8QCQUAAAAA////IAkFAAAAAP///zAJBQAAAAD///9ACQUAAAAA////UAkFAAACAP///1kJAQAADQD///9aCQYAAAAA////YAkFAAACAP///2kJAQAAAAD///9wCQUAAAIA////eQkBAAAAAP///4AJBQAAAgD///+JCQEAAAAA////kAkFAAACAP///5kJAQAAAAD///+gCQUAAAIA////qQkHAAAAAP///7AJBQAAAAD////ACQUAAAAA////0AkFAAAJAP///9kJAQAAAAD////gCQUAAAAA////8AkFAAAAAP///wAKBQAAAAD///8QCgUAAAAA////IAoFAAAAAP///zAKBQAAAAD///9ACgUAAAAA////UAoFAAACAP///1kKAQAADQD///9aCgYAAAAA////YAoFAAACAP///2kKAQAAAAD///9wCgUAAAIA////eQoBAAAAAP///4AKBQAAAgD///+JCgEAAAAA////kAoFAAACAP///5kKAQAAAAD///+gCgUAAAIA////qQoHAAAAAP///7AKBQAAAAD////ACgUAAAAA////0AoFAAAJAP///9kKAQAADQD////aCgYAAAAA////4AoFAAANAP///+kKAQAAAAD////wCgUAAA0A////+QoBAAAAAP///wALBQAAAAD///8QCwUAAAAA////IAsFAAAAAP///zALBQAAAAD///9ACwUAAAAA////UAsFAAACAP///1kLBwAAAAD///9gCwUAAAIA////aQsBAAAKAP///2oLBgAAAAD///9wCwUAAAIA////eQsBAAAKAP///3oLBgAAAAD///+ACwUAAAIA////iQsBAAAKAP///4oLBgAAAAD///+QCwUAAAIA////mQsBAAAKAP///5oLBgAAAAD///+gCwUAAAIA////qQsHAAAAAP///7ALBQAAAAD////ACwUAAAAA////0AsFAAAJAP///9kLAQAADQD////aCwYAAAAA////4AsFAAANAP///+kLAQAAAAD////wCwUAAA0A////+QsBAAAAAP///wAMBQAAAAD///8QDAUAAAAA////IAwFAAAAAP///zAMBQAAAAD///9ADAUAAAAA////UAwFAAACAP///1kMAQAADQD///9aDAYAAAAA////YAwFAAACAP///2kMAQAAAAD///9wDAUAAAIA////eQwBAAAAAP///4AMBQAAAgD///+JDAEAAAAA////kAwFAAACAP///5kMAQAAAAD///+gDAUAAAIA////qQwHAAAAAP///7AMBQAAAAD////ADAUAAAAA////0AwFAAAJAP///9kMAQAADQD////aDAYAAAAA////4AwFAAANAP///+kMAQAAAAD////wDAUAAA0A////+QwBAAAAAP///wANBQAAAAD///8QDQUAAAAA////IA0FAAAAAP///zANBQAAAAD///9ADQUAAAAA////UA0FAAACAP///1kNAQAADQD///9aDQYAAAAA////YA0FAAACAP///2kNAQAAAAD///9wDQUAAAIA////eQ0BAAAAAP///4ANBQAAAgD///+JDQEAAAAA////kA0FAAACAP///5kNAQAAAAD///+gDQUAAAIA////qQ0HAAAAAP///7ANBQAAAAD////ADQUAAAAA////0A0FAAAJAP///9kNAQAADQD////aDQYAAAAA////4A0FAAANAP///+kNAQAAAAD////wDQUAAA0A////+Q0BAAAAAP///wAOBQAAAAD///8QDgUAAAAA////IA4FAAAAAP///zAOBQAAAAD///9ADgUAAAAA////UA4FAAACAP///1kOAQAADQD///9aDgYAAAAA////YA4FAAACAP///2kOAQAAAAD///9wDgUAAAIA////eQ4BAAAAAP///4AOBQAAAgD///+JDgEAAAAA////kA4FAAACAP///5kOAQAAAAD///+gDgUAAAIA////qQ4HAAAAAP///7AOBQAAAAD////ADgUAAAAA////0A4FAAAJAP///9kOBwAAAAD////gDgUAAAkA////6Q4HAAAAAP////AOBQAACQD////5DgcAAAAA////AA8JAAAAAP///xAPCQAAAAD///8gDwkAAAAA////MA8JAAAAAP///0APCgAAAAD///9QDwkAAAIA////WQ8HAAAAAP///2APCQAAAgD///9pDwEAAAoA////ag8GAAAAAP///3APCQAAAgD///95DwEAAAoA////eg8GAAAAAP///4APCQAAAgD///+JDwEAAAoA////ig8GAAAAAP///5APCQAAAgD///+ZDwEAAAoA////mg8GAAAAAP///6APCQAAAgD///+pDwcAAAAA////sA9QAAACAFQJAACAPwAAAAAAAAAAAADZCQAAAAAAAAAAAACAPwAAAAAAAAAAUkQAAADBAACsQwAB4wAAAP///wAABQcACAD///8FBwQAAA4A////CQcHAAAAAP///xAHBQAACAD///8VBwQAAA4A////GQcHAAAAAP///yAHBQAACAD///8lBwQAAA4A////KQcHAAAAAP///zAHBQAACAD///81BwQAAA4A////OQcHAAAAAP///0AHBQAACAD///9FBwQAAA4A////SQcHAAAAAP///1AHBQAACAD///9VBwQAAA4A////WQcHAAAAAP///2AHBQAACAD///9lBwQAAA4A////aQcHAAAAAP///3AHBQAACAD///91BwQAAA4A////eQcHAAAAAP///4AHBQAACAD///+FBwQAAA4A////iQcHAAAAAP///5AHBQAACAD///+VBwQAAA4A////mQcHAAAAAP///6AHBQAACAD///+lBwsAAAAA////sAcFAAAIAP///7UHCwAAAAD////ABwUAAAgA////xQcLAAAAAP///9AHNQAAAAD///8QCAUAAAAA////IAgFAAAAAP///zAIBQAAAAD///9ACAUAAAAA////UAgFAAAAAP///2AIBQAAEQD///9sCAEAAAAA////cAgFAAAAAP///4AIBQAAAAD///+QCAUAAAkA////mQgBAAAAAP///6AIBQAAAAD///+wCAUAABQA////vQgCAAAAAP///8AIBQAAFAD////MCAQAAAAA////0AgLAAAUAP///9sIBQAAAAD////gCAsAABQA////6wgFAAAAAP////AICwAACgD////7CAEAAAoA/////ggBAAAAAP////8IBgAAAAD///8QCQUAAAAA////IAkFAAAAAP///zAJBQAAAAD///9ACQUAAAAA////UAkFAAAAAP///2AJBQAAEQD///9sCQEAAAAA////cAkFAAAAAP///4AJBQAAAAD///+QCQUAAAkA////mQkBAAAAAP///6AJBQAAAAD///+wCQUAAAAA////wAkFAAAUAP///80JAgAAAAD////QCQsAABQA////2wkFAAAAAP///+AJCwAAFAD////rCQUAAAAA////8AkLAAAKAP////sJAQAACgD////+CQEAAAAA/////wkGAAANAP///wkKAQAAAAD///8QCgUAAA0A////GQoBAAAAAP///yAKBQAADQD///8pCgEAAAAA////MAoFAAANAP///zkKAQAAAAD///9ACgUAAA0A////SQoBAAAAAP///1AKBQAADQD///9ZCgEAABAA////XAoBAAAAAP///2AKBQAADQD///9pCgEAABAA////awoBAAARAP///2wKAQAAEAD///9tCgEAAAAA////cAoFAAANAP///3kKAQAAEAD///98CgEAAAAA////gAoFAAANAP///4kKAQAAAAD///+QCgUAAAkA////mQoBAAANAP///5oKBgAAAAD///+gCgUAAAAA////sAoFAAAAAP///8AKBQAAAAD////QCgsAABQA////3AoDAAAAAP///+AKCwAAFAD////rCgUAAAAA////8AoLAAAKAP////sKAQAACgD////+CgEAAAAA/////woGAAANAP///wkLAQAAAAD///8QCwUAAA0A////GQsBAAAAAP///yALBQAADQD///8pCwEAAAAA////MAsFAAANAP///zkLAQAAAAD///9ACwUAAA0A////SQsBAAAAAP///1ALBQAADQD///9ZCwEAABAA////XAsBAAAAAP///2ALBQAADQD///9pCwEAABAA////awsBAAARAP///2wLAQAAEAD///9tCwEAAAAA////cAsFAAANAP///3kLAQAAEAD///98CwEAAAAA////gAsFAAANAP///4kLAQAAAAD///+QCwUAAAkA////mQsBAAANAP///5oLBgAAAAD///+gCwUAAAAA////sAsFAAAAAP///8ALBQAAAAD////QCwwAABQA////3QsBAAAAAP///98LDQAAFAD////sCwMAAAAA////7wsNAAAKAP////wLAgAAAAD////+CwcAAA0A////CQwBAAAAAP///xAMBQAADQD///8ZDAEAAAAA////IAwFAAANAP///ykMAQAAAAD///8wDAUAAA0A////OQwBAAAAAP///0AMBQAADQD///9JDAEAAAAA////UAwFAAANAP///1kMAQAAAAD///9gDAUAAA0A////aQwBAAAQAP///2wMAQAAAAD///9wDAUAAA0A////eQwBAAAAAP///4AMBQAADQD///+JDAEAAAAA////kAwFAAAJAP///5kMAQAADQD///+aDAYAAAAA////oAwFAAAAAP///7AMBQAAAAD////ADAUAAAAA////0Aw1AAANAP///wkNAQAAAAD///8QDQUAAA0A////GQ0BAAAAAP///yANBQAADQD///8pDQEAAAAA////MA0FAAANAP///zkNAQAAAAD///9ADQUAAA0A////SQ0BAAAAAP///1ANBQAADQD///9ZDQEAAAAA////YA0FAAANAP///2kNAQAAAAD///9wDQUAAA0A////eQ0BAAAAAP///4ANBQAADQD///+JDQEAAAAA////kA0FAAAJAP///5kNAQAADQD///+aDQYAAAAA////oA0FAAAAAP///7ANBQAAAAD////ADQUAAAAA////0A01AAAJAP///wkOBwAAAAD///8QDgUAAAkA////GQ4HAAAAAP///yAOBQAACQD///8pDgcAAAAA////MA4FAAAJAP///zkOBwAAAAD///9ADgUAAAkA////SQ4HAAAAAP///1AOBQAACQD///9ZDgcAAAAA////YA4FAAAJAP///2kOBwAAAAD///9wDgUAAAkA////eQ4HAAAAAP///4AOBQAACQD///+JDgcAAAAA////kA4FAAAJAP///5kOBwAAAAD///+gDgUAAAAA////sA4FAAAAAP///8AOBQAAAAD////QDjABAAEAmQkAAAAAAAAAAAAAgL8AAAAAAAAAAFJEAAAAwQAAtEMAATgAAAD///8AAAsIAAoA////CwgBAAAKAP///w4IAQAAAAD///8PCAwAAAoA////GwgBAAAKAP///x4IAQAAAAD///8fCAwAAAoA////KwgBAAAKAP///y4IAQAAAAD///8vCAwAAAoA////OwgBAAAKAP///z4IAQAAAAD///8/CAwAAAoA////SwgBAAAKAP///04IAQAAAAD///9PCLwAAAoA////CwkBAAAKAP///w4JAQAAAAD///8PCQwAAAoA////GwkBAAAKAP///x4JAQAAAAD///8fCQwAAAoA////KwkBAAAKAP///y4JAQAAAAD///8vCQwAAAoA////OwkBAAAKAP///z4JAQAAAAD///8/CQwAAAoA////SwkBAAAKAP///04JAQAAAAD///9PCbwAAAoA////CwoBAAAKAP///w4KAQAAAAD///8PCgwAAAoA////GwoBAAAKAP///x4KAQAAAAD///8fCgwAAAoA////KwoBAAAKAP///y4KAQAAAAD///8vCgwAAAoA////OwoBAAAKAP///z4KAQAAAAD///8/CgwAAAoA////SwoBAAAKAP///04KAQAAAAD///9PCr0AAAoA////DAsCAAAAAP///w4LDgAACgD///8cCwIAAAAA////HgsOAAAKAP///ywLAgAAAAD///8uCw4AAAoA////PAsCAAAAAP///z4LDgAACgD///9MCwIAAAAA////TguyBAABACsJAACAPwAAAAAAAAAAAAAAAAAAAABaRAAAAEEAAJxDAAECAAAA////AAAAAgADAP///wACAA4AAAAAAAAAAABaRAAAAEEAAKRDAAEgAAAA////AAACAAAAAP///woACQAAAAD///8aAAoAAAAA////KACDAAAAAP///60ADgAAAAD///+9AA4AAAAA////zQAOAAAEAP///9sAAQAABAD////cAAEAAAAA////3QAmAAAAAP///w4BBgAAAAD///8YAQIAAAAA////HQGeAAAAAP///70BDgAAAAD////NAQ4AAAAA////3QEOAAAEAP///+sBAQAABAD////sAQEAAAAA////7QETAAADAP///wACywAAAwD////NAg4AAAMA////3QIOAAADAP///+0CDgAABAD////7AgEAAAQA/////AIBAAADAP////0C3gAAAwD////dAw4AAAMA////7QMOAAADAP////0D7gAAAwD////tBA4AAAMA/////QT+AAADAP////0FAwoAAQDdAwAAgL8AAAAAAAAAAAAAAAAAAAAAWkQAAABBAACsQwABUAAAAP///wAAAAIAAwD///8AAgsBAAQA////CwMBAAAEAP///wwDAQAAAwD///8NA/4AAAMA////DQQOAAAEAP///xsEAQAABAD///8cBAEAAAMA////HQTuAAADAP///w0FDgAAAwD///8dBQ4AAAQA////KwUBAAAEAP///ywFAQAAAwD///8tBd4AAAMA////DQYOAAADAP///x0GDgAAAwD///8tBg4AAAQA////OwYBAAAEAP///zwGAQAAAwD///89Bt4AAAMA////HQcOAAADAP///y0HDgAAAwD///89Bw4AAAQA////SwcBAAAEAP///0wHAQAAAwD///9NB94AAAMA////LQgOAAADAP///z0IDgAAAwD///9NCA4AAAQA////WwgBAAAEAP///1wIAQAAAwD///9dCN4AAAMA////PQkOAAADAP///00JDgAAAwD///9dCQ4AAAQA////awkBAAAEAP///2wJAQAAAwD///9tCd4AAAMA////TQoOAAADAP///10KDgAAAwD///9tCg4AAAQA////ewoBAAAEAP///3wKAQAAAwD///99Ct4AAAMA////XQsOAAADAP///20LDgAAAwD///99Cw4AAAQA////iwsBAAAEAP///4wLAQAAAwD///+NC94AAAMA////bQwOAAADAP///30MDgAAAwD///+NDA4AAAQA////mwwBAAAEAP///5wMAQAAAwD///+dDN4AAAMA////fQ0OAAADAP///40NDgAAAwD///+dDQ4AAAQA////qw0BAAAEAP///6wNAQAAAwD///+tDd4AAAMA////jQ4OAAADAP///50ODgAAAwD///+tDg4AAAQA////uw4BAAAEAP///7wOAQAAAwD///+9Dg8AAAQA////zA4BAAADAP///80OzgAAAwD///+dDw4AAAMA////rQ8OAAADAP///70PDgAABAD////LDwEAAAQA////zA8BAAADAP///80PDgAAAAD////bDwIAAAMA////3Q8OAAAAAP///+sPAgAAAwD////tDxMAAAAAAAAAAAAAVkQAACBCAACkQwEBAAAAAAAAAAAAAFZEAAAgQgAArEMBAUYACwD///+mAAYAAAsA////tgABAAAKAP///7cABAAACwD///+7AAEAAAsA////xgABAAAKAP///8gAAwAACwD////LAAEAAAsA////1gABAAAKAP///9gAAwAACwD////bAAEAAAsA////5gABAAAKAP///+gAAwAACwD////rAAEAAAsA////9gABAAAEAP////cAAQAACgD////4AAMAAAsA////+wABAAALAP///6YBAQAADQD///+nAQQAAAsA////qwEBAAAKAP///7YBAQAADQD///+7AQEAAAoA////xgEBAAAEAP///8cBAQAADQD////LAQEAAAoA////1gEBAAANAP///9sBAQAACgD////mAQEAAA0A////6wEBAAAKAP////YBAQAADQD////7AQEAAAsA////pgIBAAANAP///6cCBAAACwD///+rAgEAAAoA////tgIBAAANAP///7sCAQAACgD////GAgEAAA0A////ywIBAAAKAP///9YCAQAABAD////XAgEAAA0A////2wIBAAAKAP///+YCAgAADQD////rAgEAAAoA////9gIBAAANAP////sCAQAACwD///+mAwEAAA0A////pwMEAAALAP///6sDAQAACgD///+2AwEAAA0A////uwMBAAAKAP///8YDAQAADQD////LAwEAAAoA////1gMBAAANAP///9sDAQAACgD////mAwEAAAQA////5wMBAAANAP///+sDAQAACgD////2AwIAAA0A////+wMBAAALAP///6YEBgAACwD///+2BAYAAAsA////xgQBAAALAP///8gEBAAACwD////WBAEAAAsA////2AQEAAALAP///+YEAQAACwD////oBAQAAAsA////9gQBAAAEAP////cEAQAACwD////4BAQAAAAAAAAAAAAAVkQAACBCAAC0QwEBCwALAP///wYABgAACwD///8GAQEAAA0A////BwEEAAALAP///wsBAQAACwD///8GAgEAAA0A////BwIEAAALAP///wsCAQAACwD///8GAwEAAA0A////BwMEAAALAP///wsDAQAACwD///8GBAYAAAAAAAAAAAAAVkQAANDCAACsQwABEQAKAP///6gAAQAACgD///+2AQEAAAoA////yAEBAAAKAP///9sBAQAACgD////7AQEAAAoA////qQIBAAAKAP///6gEAQAACgD////rBQEAAAoA////uAYBAAAKAP///6gIAgAACgD///+mCgEAAAoA////2woBAAAKAP///6kLAQAACgD////4CwEAAAoA////+wsBAAAVAP///wAMAAEAAAD///8ADQADAAAAAAAAAAAAVkQAAABBAACcQwABAgAAAP///wAAAAIAAwD///8AAgAOAAAAAAAAAAAAVkQAAABBAACkQwABTAAAAP///wAAHgAAAQD///8eAAIAAAAA////IAAwAAACAP///1AABQAAAAD///9VAAsAAAIA////ZAABAAAAAP///2UACwAAAgD///90AAEAAAAA////dQALAAACAP///4EAAQAAAgD///+EAAEAAAAA////hQALAAACAP///5EAAQAAAgD///+UAAEAAAAA////lQALAAACAP///6AABQAAAAD///+lAKsAAAIA////UAEFAAAAAP///1UBCwAAAgD///9kAQEAAAAA////ZQELAAACAP///3QBAQAAAAD///91AQsAAAIA////gQEBAAACAP///4QBAQAAAAD///+FAQsAAAIA////kQEBAAACAP///5QBAQAAAAD///+VAQsAAAIA////oAEFAAAAAP///6UBWwAAAwD///8AAlAAAAIA////UAIFAAADAP///1UCCwAAAgD///9kAgEAAAMA////ZQILAAACAP///3QCAQAAAwD///91AgsAAAIA////gQIBAAACAP///4QCAQAAAwD///+FAgsAAAIA////kQIBAAACAP///5QCAQAAAwD///+VAgsAAAIA////oAIFAAADAP///6UCqwAAAgD///9QAwUAAAMA////VQMLAAACAP///2ADBQAAAwD///9lAwsAAAIA////cAMFAAADAP///3UDCwAAAgD///+AAwUAAAMA////hQMLAAACAP///5ADBQAAAwD///+VAwsAAAIA////oAMFAAADAP///6UDqwAAAgD///9QBAUAAAMA////VQQLAAACAP///2AEBQAAAwD///9lBAsAAAIA////cAQFAAADAP///3UECwAAAgD///+ABAUAAAMA////hQQLAAACAP///5AEBQAAAwD///+VBAsAAAIA////oAQFAAADAP///6UE+wEAAQD///+gBgIAAAMA////ogY+CQABAP///+APAQAAAwD////hDw8AAAEA////8A8DAAADAP////MPDQAAAQCBAAAAgD8AAAAAAAAAAAAAAAAAAAAAAAA="
     }
   },
   "currControlledCharacter": {
@@ -290,12 +1045,12 @@
     "interactOrders": null,
     "spawnPosition": {
       "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
-      "x": 854,
+      "x": 859,
       "y": 37,
       "z": 347,
-      "magnitude": 922.547546,
-      "sqrMagnitude": 851094
+      "magnitude": 927.178,
+      "sqrMagnitude": 859659
     },
-    "guid": "98414593-9a86-4444-bd67-24ea41684b84"
+    "guid": "3dc2634d-c5c0-4f7c-b447-b0865c9c1b39"
   }
 }

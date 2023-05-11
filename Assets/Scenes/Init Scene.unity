@@ -425,6 +425,7 @@ MonoBehaviour:
   bardDrillID: {fileID: 11400000, guid: 23c7534ea505cc0489030a837a8c14e2, type: 2}
   wolfID: {fileID: 11400000, guid: 84f95ac80ccb2d5438107462b3e2fec6, type: 2}
   catID: {fileID: 11400000, guid: b07ea72c8b8d72549a206784669964aa, type: 2}
+  zombieID: {fileID: 11400000, guid: 18f9eca61a5a31247ad9ba9d7f6712af, type: 2}
   bedID: {fileID: 11400000, guid: a9e7d9935abf6ea4ea5de8c36f0726f2, type: 2}
   lampID: {fileID: 11400000, guid: 38c11cf9e808f3c48b951df72fb16914, type: 2}
   constructionToolsID: {fileID: 11400000, guid: 6d365600f67fb534d9fde6a3d3073691, type: 2}
