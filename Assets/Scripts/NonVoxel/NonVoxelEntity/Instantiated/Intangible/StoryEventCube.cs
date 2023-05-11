@@ -11,20 +11,28 @@ namespace Instantiated {
     {
         private OrderManager orderManager;
         private NonVoxelWorld nonVoxelWorld;
+        private PartyManager partyManager;
+        private InputManager inputManager;
 
         public EntityDefinition.StoryEventCube cubeInfo { get; private set; }
 
         public void Init(EntityDefinition.StoryEventCube entityDefinition, OrderManager orderManager,
-                NonVoxelWorld nonVoxelWorld) {
+                NonVoxelWorld nonVoxelWorld, PartyManager partyManager, InputManager inputManager) {
             this.entity = entityDefinition;
             this.cubeInfo = entityDefinition;
             this.orderManager = orderManager;
             this.nonVoxelWorld = nonVoxelWorld;
+            this.partyManager = partyManager;
+            this.inputManager = inputManager;
             this.transform.localScale *= entityDefinition.cubeRadius;
         }
 
         private void OnTriggerEnter(Collider other) {
-            if (other.gameObject.tag == "Player") {
+            PlayerCharacter pc = other.gameObject.GetComponent<PlayerCharacter>();
+            if (pc != null && partyManager.currControlledCharacter == pc) {
+                inputManager.LockPlayerControls();
+                pc.HaltMovement();
+
                 orderManager.ExecuteOrders(cubeInfo.orderGroup);
                 if (cubeInfo.orderGroup.destroyOnComplete) {
                     nonVoxelWorld.DestroyEntity(this);

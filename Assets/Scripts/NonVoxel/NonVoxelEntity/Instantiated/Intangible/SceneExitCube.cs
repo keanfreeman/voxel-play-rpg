@@ -22,7 +22,8 @@ namespace Instantiated {
         }
 
         private void OnTriggerEnter(Collider other) {
-            if (other.gameObject.tag == "Player") {
+            PlayerCharacter pc = other.gameObject.GetComponent<PlayerCharacter>();
+            if (pc != null && partyManager.currControlledCharacter == pc) {
                 Debug.Log($"Entered cube going to {destination.destinationTile}, " +
                     $"{destination.sceneIndex}");
                 StartCoroutine(StopPlayerAndLoadScene(other));

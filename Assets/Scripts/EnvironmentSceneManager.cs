@@ -286,6 +286,17 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             // todo - play pickup fanfare
         });
 
+        Vector3Int sceneExitTile = new Vector3Int(862, -8, 341);
+        SceneExitCube level1Exit = new(sceneExitTile,
+            new EnvChangeDestination(1, new Vector3Int(466, 29, -46)),
+            ResourceIDs.SCENE_EXIT_STRING);
+        StoryEventCube level1ExitPrevention = new(sceneExitTile - Vector3Int.one,
+            5, ResourceIDs.STORY_EVENT_CUBE_STRING, new OrderGroup(new List<Order> {
+                new DialogueOrder("I'm not sure where this goes. I probably shouldn't leave yet."),
+                // todo - make target the currcontrolled character, or the entire party.
+                new MoveOrder(sceneExitTile + new Vector3Int(1, 0, -4), mainCharacter)
+            }, false));
+
         Dictionary<int, SceneInfo> defaults = new() {
             {
                 1, new SceneInfo(new List<Entity> {
@@ -317,14 +328,12 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     battleGroup1.combatants[1],
                     battleGroup2.combatants[0],
                     battleGroup2.combatants[1],
-                    new SceneExitCube(
-                        new Vector3Int(864, 29, 351),
-                        new EnvChangeDestination(1, new Vector3Int(466, 29, -46)),
-                        ResourceIDs.SCENE_EXIT_STRING),
                     introEventCube,
                     bed,
                     lamp,
-                    constructionTools
+                    constructionTools,
+                    level1Exit,
+                    level1ExitPrevention,
                 }, null)
             }
         };
