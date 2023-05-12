@@ -21,6 +21,7 @@ MonoBehaviour:
     numDice: 1
     diceSize: 6
     modifier: 2
+  damageType: 7
   isRanged: 0
   shortRange: 0
   longRange: 0
