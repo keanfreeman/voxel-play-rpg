@@ -32,11 +32,6 @@ namespace Instantiated {
                 SetMoveAnimation(false);
                 moveFinishedTimestamp = float.MaxValue;
             }
-
-            // TODO - REMOVE
-            if (Input.GetKeyUp(KeyCode.Y)) {
-                Debug.Log(origin);
-            }
         }
 
         public void SetHP(int newValue) {

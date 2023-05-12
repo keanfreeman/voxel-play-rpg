@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ce9939ee099c7642aee7099a37f1d24, type: 3}
-  m_Name: Zombie
+  m_Name: BloodyEye
   m_EditorClassIdentifier: 
   prefab: {fileID: 6944743723035480207, guid: 8763f4ed44e10d446ba76d834eb2f67f, type: 3}
-  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 0e721b095feae2043ae6fe1128d3c09d, type: 3}
+  spriteLibraryAsset: {fileID: 0}
   offset: {x: 0.5, y: 0.5, z: 0.5}
   scale: {x: 1, y: 1, z: 1}
-  stats: {fileID: 11400000, guid: ea4f08920536b944db4775f756efd254, type: 2}
+  stats: {fileID: 11400000, guid: 3a158883fab491841b53d940f47e5a97, type: 2}

@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using VoxelPlay;
+using static UnityEngine.UI.Image;
 
 public class DetachedCamera : MonoBehaviour
 {
@@ -77,6 +78,11 @@ public class DetachedCamera : MonoBehaviour
             }
         }
         MoveCursor();
+
+        // TODO - REMOVE
+        if (Input.GetKeyUp(KeyCode.Y)) {
+            Debug.Log(currVoxel);
+        }
     }
 
     private void UpdateCursorType() {
