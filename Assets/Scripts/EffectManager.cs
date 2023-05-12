@@ -34,6 +34,10 @@ public class EffectManager : MonoBehaviour
         }
     }
 
+    public void GenerateExclaimEffectInstant(Traveller traveller) {
+        StartCoroutine(GenerateExclaimEffect(traveller));
+    }
+
     public IEnumerator GenerateExclaimEffect(Traveller traveller) {
         int creatureRadius = EntitySizeCalcs.GetRadius(traveller.GetStats().size);
         Vector3 effectLocation = traveller.origin + CENTER_OFFSET * creatureRadius + Vector3.up;

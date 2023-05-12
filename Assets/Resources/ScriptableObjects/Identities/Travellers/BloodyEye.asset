@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BloodyEye
   m_EditorClassIdentifier: 
   prefab: {fileID: 6944743723035480207, guid: 8763f4ed44e10d446ba76d834eb2f67f, type: 3}
-  spriteLibraryAsset: {fileID: 0}
+  spriteLibraryAsset: {fileID: 7108339969198208228, guid: 8cadb72edc1c4b544a72b7170b346980, type: 3}
   offset: {x: 0.5, y: 0.5, z: 0.5}
   scale: {x: 1, y: 1, z: 1}
   stats: {fileID: 11400000, guid: 3a158883fab491841b53d940f47e5a97, type: 2}

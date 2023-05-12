@@ -12,6 +12,9 @@ namespace Instantiated {
         [SerializeField] protected Animator animator;
         [SerializeField] protected CameraManager cameraManager;
         [SerializeField] protected PartyManager partyManager;
+        [SerializeField] protected FeatureManager featureManager;
+
+        public event System.Action<Traveller, Damage> onHPChanged;
 
         protected TravellerIdentitySO travellerIdentity;
         protected Vector3Int moveStartPoint;
@@ -32,6 +35,11 @@ namespace Instantiated {
                 SetMoveAnimation(false);
                 moveFinishedTimestamp = float.MaxValue;
             }
+        }
+
+        public void TakeDamage(Damage damage) {
+            currHP -= damage.amount;
+            onHPChanged?.Invoke(this, damage);
         }
 
         public void SetHP(int newValue) {

@@ -1,3 +1,4 @@
+using GameMechanics;
 using NonVoxelEntity;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ public abstract class StatsSO : ScriptableObject
     public int hitPoints;
     public EntitySize size = EntitySize.MEDIUM;
 
+    // todo - add GetSavingThrowModifier since NPCs may have special one, and PCs have additives too
     public int strength;
     public int dexterity;
     public int constitution;
@@ -18,6 +20,7 @@ public abstract class StatsSO : ScriptableObject
     public int charisma;
 
     public List<ActionSO> actions;
+    public List<Feature> features;
 
     public abstract int CalculateArmorClass();
 }

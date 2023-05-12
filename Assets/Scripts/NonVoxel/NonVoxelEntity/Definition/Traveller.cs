@@ -17,7 +17,7 @@ namespace EntityDefinition {
                 : base(startPosition, travellerIdentity, interactOrders) {
         }
 
-        public Traveller(Vector3Int startPosition, string travellerIdentity) 
+        public Traveller(Vector3Int startPosition, string travellerIdentity)
                 : base(startPosition, travellerIdentity) {
         }
     }

@@ -19,6 +19,7 @@ public class NonVoxelManager : MonoBehaviour
     [SerializeField] GameStateManager gameStateManager;
     [SerializeField] OrderManager orderManager;
     [SerializeField] SaveManager saveManager;
+    [SerializeField] FeatureManager featureManager;
 
     [SerializeField] TravellerIdentitySO mainCharacterID;
 
@@ -83,7 +84,7 @@ public class NonVoxelManager : MonoBehaviour
                         Quaternion.identity);
                     Instantiated.NPC npcInstance = npcObject.GetComponent<Instantiated.NPC>();
                     npcInstance.Init(nonVoxelWorld, spriteMovement, randomManager.rng, npcInfo, identity,
-                        cameraManager, partyManager, gameStateManager);
+                        cameraManager, partyManager, gameStateManager, featureManager);
 
                     if (npcInfo.battleGroup != null) {
                         Guid battleGroupID = npcInfo.battleGroup.groupID;
@@ -141,7 +142,7 @@ public class NonVoxelManager : MonoBehaviour
         Instantiated.PlayerCharacter playerInstance
             = playerObject.GetComponent<Instantiated.PlayerCharacter>();
         playerInstance.Init(spriteMovement, playerInfo, identity, nonVoxelWorld, cameraManager,
-            partyManager);
+            partyManager, featureManager);
         playerInstance.SetCurrPositions(playerInfo.spawnPosition, identity);
         partyManager.partyMembers.Add(playerInstance);
         if (identity == mainCharacterID) {

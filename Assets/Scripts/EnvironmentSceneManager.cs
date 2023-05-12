@@ -12,6 +12,7 @@ using NonVoxel;
 using ResourceID;
 using System.Linq;
 using static UnityEngine.EventSystems.EventTrigger;
+using GameMechanics;
 
 public class EnvironmentSceneManager : MonoBehaviour, ISaveable
 {
@@ -221,22 +222,11 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         NPC bardDrill = new(new Vector3Int(848, -8, 339), Faction.PLAYER, IdleBehavior.STAND,
             bardDrillID.name);
 
-        BattleGroup wolfBG1 = new BattleGroup(new List<NPC> {
-            new NPC(new Vector3Int(835, 29, 350), Faction.ENEMY, IdleBehavior.WANDER,
-                wolfID.name),
-            new NPC(new Vector3Int(835, 29, 347), Faction.ENEMY, IdleBehavior.WANDER,
-                wolfID.name)
+        BattleGroup tempZombieBG = new(new List<NPC> {
+            new NPC(new Vector3Int(835, 29, 350), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
+            new NPC(new Vector3Int(835, 29, 351), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
         });
-        BattleGroup wolfBG2 = new BattleGroup(new List<NPC> {
-            new NPC(new Vector3Int(825, 31, 348), Faction.ENEMY, IdleBehavior.WANDER,
-                wolfID.name),
-            new NPC(new Vector3Int(825, 31, 350), Faction.ENEMY, IdleBehavior.WANDER,
-                wolfID.name)
-        });
-        BattleGroup wolfBG3 = new BattleGroup(new List<NPC> {
-            new NPC(new Vector3Int(468, 26, -46), Faction.ENEMY, IdleBehavior.WANDER,
-                wolfID.name)
-        });
+
         BattleGroup zombieBG1 = new(new List<NPC> {
             new NPC(new Vector3Int(849, -12, 365), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
             new NPC(new Vector3Int(849, -12, 362), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
@@ -309,7 +299,6 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         Dictionary<int, SceneInfo> defaults = new() {
             {
                 1, new SceneInfo(new List<Entity> {
-                    wolfBG3.combatants[0],
                     new SceneExitCube(
                         new Vector3Int(463, 29, -46),
                         new EnvChangeDestination(2, new Vector3Int(884, 26, 348)),
@@ -318,7 +307,6 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             },
             {
                 2, new SceneInfo(new List<Entity> {
-                    wolfBG3.combatants[0],
                     new SceneExitCube(
                         new Vector3Int(884, 26, 346),
                         new EnvChangeDestination(3, new Vector3Int(858, 37, 347)),
@@ -337,10 +325,8 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     zombieBG1.combatants[1],
                     zombieBG1.combatants[2],
                     zombieBG1.combatants[3],
-                    wolfBG1.combatants[0],
-                    wolfBG1.combatants[1],
-                    wolfBG2.combatants[0],
-                    wolfBG2.combatants[1],
+                    tempZombieBG.combatants[0],
+                    tempZombieBG.combatants[1],
                     introEventCube,
                     bed,
                     lamp,

@@ -23,7 +23,7 @@ namespace EntityDefinition {
             this.idleBehavior = idleBehavior;
         }
 
-        public NPC(Vector3Int startPosition, Faction faction, 
+        public NPC(Vector3Int startPosition, Faction faction,
                 IdleBehavior idleBehavior, string travellerIdentity)
                 : base(startPosition, travellerIdentity) {
             this.faction = faction;

@@ -42,7 +42,7 @@ namespace Instantiated {
         public void Init(NonVoxelWorld nonVoxelWorld, SpriteMovement spriteMovement,
                 System.Random rng, EntityDefinition.NPC npcInfo, TravellerIdentitySO identity, 
                 CameraManager cameraManager, PartyManager partyManager, 
-                GameStateManager gameStateManager) {
+                GameStateManager gameStateManager, FeatureManager featureManager) {
             this.nonVoxelWorld = nonVoxelWorld;
             this.spriteMovement = spriteMovement;
             this.rng = rng;
@@ -55,6 +55,8 @@ namespace Instantiated {
             rotationTransform.localPosition = identity.offset;
             this.partyManager = partyManager;
             this.gameStateManager = gameStateManager;
+            this.featureManager = featureManager;
+            this.featureManager.SetUpFeatures(this);
             Vector3Int spawn = npcInfo.currSpawnPosition.HasValue ? npcInfo.currSpawnPosition.Value
                 : npcInfo.spawnPosition;
             SetCurrPositions(spawn, identity);

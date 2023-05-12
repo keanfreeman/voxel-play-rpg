@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static RandomManager;
 
 public class CombatManager : MonoBehaviour
 {
@@ -72,14 +73,13 @@ public class CombatManager : MonoBehaviour
         if (Coordinates.IsNextTo(creatureAsNPC, nearestPlayer)) {
             // TODO use less brittle attack selection method
             AttackSO npcAttack = (AttackSO)creatureAsNPC.GetStats().actions[0];
-            int attackRoll = randomManager.Roll(npcAttack.attackRoll);
+            AttackRoll attackRoll = randomManager.RollAttack(npcAttack.attackRoll);
             Debug.Log($"NPC rolled {attackRoll} for their attack roll.");
-            if (attackRoll >= nearestPlayer.GetStats().CalculateArmorClass()) {
-                int damageRoll = randomManager.Roll(npcAttack.damageRoll);
+            if (attackRoll.result >= nearestPlayer.GetStats().CalculateArmorClass()) {
+                int damageRoll = randomManager.RollDamage(npcAttack.damageRoll, attackRoll.isCritical);
                 Debug.Log($"NPC rolled {damageRoll} for their damage roll.");
-                int newHP = nearestPlayer.currHP - damageRoll;
-                nearestPlayer.SetHP(newHP);
-                if (newHP < 1) {
+                nearestPlayer.TakeDamage(new Damage(npcAttack.damageType, damageRoll));
+                if (nearestPlayer.currHP < 1) {
                     // TODO - lose on death and no party members
                     Debug.Log("Player ran out of HP.");
                 }
@@ -154,14 +154,14 @@ public class CombatManager : MonoBehaviour
             }
 
             foreach (AttackSO attack in attacksToDo) {
-                int attackRoll = randomManager.Roll(attack.attackRoll);
+                AttackRoll attackRoll = randomManager.RollAttack(attack.attackRoll);
                 Debug.Log($"Player rolled {attackRoll} for their attack roll.");
-                if (attackRoll >= npcBehavior.GetStats().CalculateArmorClass()) {
-                    int damageRoll = randomManager.Roll(attack.damageRoll);
+                if (attackRoll.result >= npcBehavior.GetStats().CalculateArmorClass()) {
+                    int damageRoll = randomManager.RollDamage(attack.damageRoll, attackRoll.isCritical);
                     Debug.Log($"Player rolled {damageRoll} for their damage roll.");
                     int newHP = npcBehavior.currHP - damageRoll;
-                    npcBehavior.SetHP(newHP);
-                    if (newHP < 1) {
+                    npcBehavior.TakeDamage(new Damage(attack.damageType, damageRoll));
+                    if (npcBehavior.currHP < 1) {
                         Debug.Log("NPC defeated");
                         foreach (KeyValuePair<int, Traveller> initiative in initiatives) {
                             if (initiative.Value == selectedEntity) {
@@ -262,7 +262,7 @@ public class CombatManager : MonoBehaviour
         foreach (PlayerCharacter playerMovement in partyManager.partyMembers) {
             int playerDexModifier = StatModifiers.GetModifierForStat(
                 playerMovement.GetStats().dexterity);
-            int playerInitiative = randomManager.Roll(1, 20, playerDexModifier);
+            int playerInitiative = randomManager.RollAbilityCheck(playerDexModifier);
             initiatives.Add(new KeyValuePair<int, Traveller>(playerInitiative,
                 playerMovement));
         }
@@ -273,7 +273,7 @@ public class CombatManager : MonoBehaviour
             
             int npcDexModifier = StatModifiers.GetModifierForStat(
                 npcBehavior.GetStats().dexterity);
-            int initiative = randomManager.Roll(1, 20, npcDexModifier);
+            int initiative = randomManager.RollAbilityCheck(npcDexModifier);
             initiatives.Add(new KeyValuePair<int, Traveller>(initiative, npcBehavior));
         }
 
