@@ -19,6 +19,7 @@ namespace GameMechanics {
     }
 
     public enum FeatureID {
-        UndeadFortitude
+        UndeadFortitude,
+        PackTactics
     }
 }

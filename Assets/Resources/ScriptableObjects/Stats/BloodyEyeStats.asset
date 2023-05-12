@@ -21,7 +21,14 @@ MonoBehaviour:
   intelligence: 3
   wisdom: 14
   charisma: 5
-  actions: []
+  actions:
+  - {fileID: 11400000, guid: bd425d5cabf221a4884f345b1c1fe1cc, type: 2}
+  features:
+  - name: Pack Tactics
+    description: "This creature has advantage on an attack roll against an enemy
+      creature if at least one of this creature's allies is within 5 feet of it and
+      the ally isn\u2019t incapacitated."
+    id: 1
   statblockName: Bloody Eye
   challengeRating: 1/8
   armorClass: 12

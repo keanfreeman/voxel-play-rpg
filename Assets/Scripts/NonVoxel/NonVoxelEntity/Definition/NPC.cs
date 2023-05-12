@@ -53,6 +53,5 @@ namespace EntityDefinition {
     public enum Faction {
         PLAYER,
         ENEMY,
-        NEUTRAL
     }
 }

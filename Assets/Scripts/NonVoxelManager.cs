@@ -84,7 +84,7 @@ public class NonVoxelManager : MonoBehaviour
                         Quaternion.identity);
                     Instantiated.NPC npcInstance = npcObject.GetComponent<Instantiated.NPC>();
                     npcInstance.Init(nonVoxelWorld, spriteMovement, randomManager.rng, npcInfo, identity,
-                        cameraManager, partyManager, gameStateManager, featureManager);
+                        cameraManager, partyManager, gameStateManager, featureManager, randomManager);
 
                     if (npcInfo.battleGroup != null) {
                         Guid battleGroupID = npcInfo.battleGroup.groupID;
@@ -142,7 +142,7 @@ public class NonVoxelManager : MonoBehaviour
         Instantiated.PlayerCharacter playerInstance
             = playerObject.GetComponent<Instantiated.PlayerCharacter>();
         playerInstance.Init(spriteMovement, playerInfo, identity, nonVoxelWorld, cameraManager,
-            partyManager, featureManager);
+            partyManager, featureManager, randomManager);
         playerInstance.SetCurrPositions(playerInfo.spawnPosition, identity);
         partyManager.partyMembers.Add(playerInstance);
         if (identity == mainCharacterID) {

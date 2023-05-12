@@ -5,6 +5,7 @@ using NonVoxel;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static RandomManager;
 
 namespace Instantiated {
     public abstract class Traveller : TangibleEntity {
@@ -13,8 +14,10 @@ namespace Instantiated {
         [SerializeField] protected CameraManager cameraManager;
         [SerializeField] protected PartyManager partyManager;
         [SerializeField] protected FeatureManager featureManager;
+        [SerializeField] protected RandomManager randomManager;
 
         public event System.Action<Traveller, Damage> onHPChanged;
+        public event System.Func<Traveller, Traveller, Advantage> onPerformAttack;
 
         protected TravellerIdentitySO travellerIdentity;
         protected Vector3Int moveStartPoint;
@@ -35,6 +38,22 @@ namespace Instantiated {
                 SetMoveAnimation(false);
                 moveFinishedTimestamp = float.MaxValue;
             }
+        }
+
+        public AttackRoll PerformAttack(AttackSO attack, Traveller target, 
+                Advantage advantage = Advantage.None) {
+            Advantage? nextAdvantageState = onPerformAttack?.Invoke(this, target);
+            Advantage finalAdvantage = advantage;
+            if (nextAdvantageState.HasValue) {
+                finalAdvantage = AdvantageCalcs.GetNewAdvantageState(advantage, nextAdvantageState.Value);
+            }
+            if (finalAdvantage == Advantage.Advantage) {
+                Debug.Log("Traveller rolled with advantage.");
+            }
+
+            AttackRoll attackRoll = randomManager.RollAttack(attack.attackRoll, finalAdvantage);
+            Debug.Log($"Traveller rolled {attackRoll} for their attack roll.");
+            return attackRoll;
         }
 
         public void TakeDamage(Damage damage) {
@@ -120,5 +139,7 @@ namespace Instantiated {
         }
 
         protected abstract Vector3Int? GetDestinationFromDirection(SpriteMoveDirection spriteMoveDirection);
+
+        public abstract Faction GetFaction();
     }
 }

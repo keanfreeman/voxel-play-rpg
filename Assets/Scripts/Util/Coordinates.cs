@@ -128,7 +128,8 @@ public static class Coordinates
     }
 
     // TODO - allow for static objects too, whose occupied coordinates may not be square
-    public static HashSet<Vector3Int> GetPositionsSurroundingTraveller(Traveller traveller, int radius) {
+    public static HashSet<Vector3Int> GetPositionsSurroundingTraveller(Traveller traveller,
+            int radius = 1) {
         if (radius < 1) {
             return new HashSet<Vector3Int>();
         }

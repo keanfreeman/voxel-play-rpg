@@ -11,11 +11,11 @@ public class RandomManager : MonoBehaviour
         rng = new System.Random();
     }
 
-    public AttackRoll RollAttack(Dice dice, Advantage advantage = Advantage.Normal) {
+    public AttackRoll RollAttack(Dice dice, Advantage advantage = Advantage.None) {
         return RollAttack(dice.modifier, advantage);
     }
 
-    public AttackRoll RollAttack(int modifier, Advantage advantage = Advantage.Normal) {
+    public AttackRoll RollAttack(int modifier, Advantage advantage = Advantage.None) {
         Dice straightD20 = new(1, 20, 0);
         int roll = rng.Next(1, 21);
         if (advantage == Advantage.Advantage) {
@@ -39,7 +39,7 @@ public class RandomManager : MonoBehaviour
         return Roll(damageRoll);
     }
 
-    public int RollAbilityCheck(int modifier, Advantage advantage = Advantage.Normal) {
+    public int RollAbilityCheck(int modifier, Advantage advantage = Advantage.None) {
         Dice straightD20 = new(1, 20, 0);
         int roll = Roll(straightD20);
         if (advantage == Advantage.Advantage) {
@@ -51,7 +51,7 @@ public class RandomManager : MonoBehaviour
         return roll + modifier;
     }
 
-    public int RollSavingThrow(int modifier, Advantage advantage = Advantage.Normal) {
+    public int RollSavingThrow(int modifier, Advantage advantage = Advantage.None) {
         return RollAbilityCheck(modifier, advantage);
     }
     
@@ -86,8 +86,29 @@ public class RandomManager : MonoBehaviour
     }
 
     public enum Advantage {
-        Normal,
+        None,
         Advantage,
-        Disadvantage
+        Disadvantage,
+        Both
+    }
+
+    public static class AdvantageCalcs {
+        public static Advantage GetNewAdvantageState(Advantage original, Advantage next) {
+            if (original == Advantage.Both || next == Advantage.Both) {
+                return Advantage.Both;
+            }
+            if (original == Advantage.None) {
+                return next;
+            }
+            if (next == Advantage.None) {
+                return original;
+            }
+            if (original == Advantage.Advantage && next == Advantage.Advantage
+                    || original == Advantage.Disadvantage && next == Advantage.Disadvantage) {
+                return original;
+            }
+
+            return Advantage.Both;
+        }
     }
 }

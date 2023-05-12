@@ -33,6 +33,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     [SerializeField] TravellerIdentitySO wolfID;
     [SerializeField] TravellerIdentitySO catID;
     [SerializeField] TravellerIdentitySO zombieID;
+    [SerializeField] TravellerIdentitySO bloodyEyeID;
     [SerializeField] ObjectIdentitySO bedID;
     [SerializeField] ObjectIdentitySO lampID;
     [SerializeField] ObjectIdentitySO constructionToolsID;
@@ -222,9 +223,11 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         NPC bardDrill = new(new Vector3Int(848, -8, 339), Faction.PLAYER, IdleBehavior.STAND,
             bardDrillID.name);
 
-        BattleGroup tempZombieBG = new(new List<NPC> {
-            new NPC(new Vector3Int(835, 29, 350), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
-            new NPC(new Vector3Int(835, 29, 351), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
+        BattleGroup convenienceBG = new(new List<NPC> {
+            new(new Vector3Int(835, 29, 348), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
+            new(new Vector3Int(835, 29, 349), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
+            new(new Vector3Int(835, 29, 350), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
+            new(new Vector3Int(835, 29, 351), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
         });
 
         BattleGroup zombieBG1 = new(new List<NPC> {
@@ -325,8 +328,10 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     zombieBG1.combatants[1],
                     zombieBG1.combatants[2],
                     zombieBG1.combatants[3],
-                    tempZombieBG.combatants[0],
-                    tempZombieBG.combatants[1],
+                    convenienceBG.combatants[0],
+                    convenienceBG.combatants[1],
+                    convenienceBG.combatants[2],
+                    convenienceBG.combatants[3],
                     introEventCube,
                     bed,
                     lamp,

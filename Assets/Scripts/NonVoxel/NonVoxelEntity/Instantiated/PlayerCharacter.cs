@@ -27,7 +27,8 @@ namespace Instantiated {
 
         public void Init(SpriteMovement spriteMovement, EntityDefinition.PlayerCharacter playerInfo,
                 TravellerIdentitySO identity, NonVoxelWorld nonVoxelWorld, 
-                CameraManager cameraManager, PartyManager partyManager, FeatureManager featureManager) {
+                CameraManager cameraManager, PartyManager partyManager, FeatureManager featureManager,
+                RandomManager randomManager) {
             this.spriteMovement = spriteMovement;
             this.entity = playerInfo;
             this.travellerIdentity = identity;
@@ -37,6 +38,7 @@ namespace Instantiated {
             this.spriteLibrary.spriteLibraryAsset = identity.spriteLibraryAsset;
             this.featureManager = featureManager;
             this.featureManager.SetUpFeatures(this);
+            this.randomManager = randomManager;
         }
 
         public void HaltMovement() {
@@ -128,6 +130,10 @@ namespace Instantiated {
 
         public new EntityDefinition.PlayerCharacter GetEntity() {
             return (EntityDefinition.PlayerCharacter)entity;
+        }
+
+        public override EntityDefinition.Faction GetFaction() {
+            return EntityDefinition.Faction.PLAYER;
         }
     }
 }

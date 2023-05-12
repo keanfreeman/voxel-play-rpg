@@ -426,6 +426,7 @@ MonoBehaviour:
   wolfID: {fileID: 11400000, guid: 84f95ac80ccb2d5438107462b3e2fec6, type: 2}
   catID: {fileID: 11400000, guid: b07ea72c8b8d72549a206784669964aa, type: 2}
   zombieID: {fileID: 11400000, guid: 18f9eca61a5a31247ad9ba9d7f6712af, type: 2}
+  bloodyEyeID: {fileID: 11400000, guid: f4d2489f90719e64ba5a3faca5da60c5, type: 2}
   bedID: {fileID: 11400000, guid: a9e7d9935abf6ea4ea5de8c36f0726f2, type: 2}
   lampID: {fileID: 11400000, guid: 38c11cf9e808f3c48b951df72fb16914, type: 2}
   constructionToolsID: {fileID: 11400000, guid: 6d365600f67fb534d9fde6a3d3073691, type: 2}
@@ -906,6 +907,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DetachedCamera
       objectReference: {fileID: 0}
+    - target: {fileID: 2781422134712558511, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
+      propertyPath: m_Intensity
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
 --- !u!114 &829311307 stripped
@@ -1078,6 +1083,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   randomManager: {fileID: 983819852}
   effectManager: {fileID: 234026431}
+  nonVoxelWorld: {fileID: 1135948956}
 --- !u!1 &983819851
 GameObject:
   m_ObjectHideFlags: 0
