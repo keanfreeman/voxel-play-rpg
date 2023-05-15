@@ -54,43 +54,45 @@ public class CombatManager : MonoBehaviour
 
         inputManager.SwitchDetachedToWatchControlState();
 
-        // find nearest enemy
-        PlayerCharacter nearestPlayer = partyManager.FindNearestPlayer(currCreature.origin);
         NPC npcInstance = (NPC) currCreature;
-        if (!Coordinates.IsNextTo(npcInstance, nearestPlayer)) {
-            // try move towards enemy
-            int maxSearchLength = (npcInstance.GetStats().baseSpeed / TILE_TO_FEET) * 3;
+        if (!npcInstance.statusEffects.IsParalyzed()) {
+            // find nearest enemy
+            PlayerCharacter nearestPlayer = partyManager.FindNearestPlayer(currCreature.origin);
+            if (!Coordinates.IsNextTo(npcInstance, nearestPlayer)) {
+                // try move towards enemy
+                int maxSearchLength = (npcInstance.GetStats().baseSpeed / TILE_TO_FEET) * 3;
 
-            CoroutineWithData coroutineWithData = new CoroutineWithData(this,
-                pathfinder.FindPath(currCreature, nearestPlayer.origin, maxSearchLength));
-            yield return coroutineWithData.coroutine;
-            Deque<Vector3Int> path = (Deque<Vector3Int>) coroutineWithData.result;
-            while (path.Count * TILE_TO_FEET > npcInstance.GetStats().baseSpeed * TILE_TO_FEET) {
-                path.RemoveFromFront();
-            }
-            yield return movementManager.MoveAlongPath(currCreature, path);
-        }
-
-        // attack enemy
-        if (Coordinates.IsNextTo(npcInstance, nearestPlayer)) {
-            List<ActionSO> npcActions = npcInstance.GetStats().actions;
-            int pickedIndex = randomManager.rng.Next(0, npcActions.Count);
-            // TODO - use less brittle attack selection method (allow for non-attacks)
-            // TODO - have preferred strategies (ranged vs melee for example)
-            AttackSO npcAttack = (AttackSO)npcActions[pickedIndex];
-            AttackRoll attackRoll = npcInstance.PerformAttack(npcAttack, nearestPlayer);
-            if (attackRoll.result >= nearestPlayer.GetStats().CalculateArmorClass()) {
-                npcInstance.OnAttackHit(npcAttack, nearestPlayer);
-
-                int damageRoll = randomManager.RollDamage(npcAttack.damageRoll, attackRoll.isCritical);
-                Debug.Log($"NPC rolled {damageRoll} for their damage roll.");
-                nearestPlayer.TakeDamage(new Damage(npcAttack.damageType, damageRoll));
-                if (nearestPlayer.currHP < 1) {
-                    // TODO - lose on death and no party members
-                    Debug.Log("Player ran out of HP.");
+                CoroutineWithData coroutineWithData = new CoroutineWithData(this,
+                    pathfinder.FindPath(currCreature, nearestPlayer.origin, maxSearchLength));
+                yield return coroutineWithData.coroutine;
+                Deque<Vector3Int> path = (Deque<Vector3Int>) coroutineWithData.result;
+                while (path.Count * TILE_TO_FEET > npcInstance.GetStats().baseSpeed * TILE_TO_FEET) {
+                    path.RemoveFromFront();
                 }
+                yield return movementManager.MoveAlongPath(currCreature, path);
+            }
 
-                yield return effectManager.GenerateHitEffect(nearestPlayer);
+            // attack enemy
+            if (Coordinates.IsNextTo(npcInstance, nearestPlayer)) {
+                List<ActionSO> npcActions = npcInstance.GetStats().actions;
+                int pickedIndex = randomManager.rng.Next(0, npcActions.Count);
+                // TODO - use less brittle attack selection method (allow for non-attacks)
+                // TODO - have preferred strategies (ranged vs melee for example)
+                AttackSO npcAttack = (AttackSO)npcActions[pickedIndex];
+                AttackRoll attackRoll = npcInstance.PerformAttack(npcAttack, nearestPlayer);
+                if (attackRoll.result >= nearestPlayer.GetStats().CalculateArmorClass()) {
+                    npcInstance.OnAttackHit(npcAttack, nearestPlayer);
+
+                    int damageRoll = randomManager.RollDamage(npcAttack.damageRoll, attackRoll.isCritical);
+                    Debug.Log($"NPC rolled {damageRoll} for their damage roll.");
+                    nearestPlayer.TakeDamage(new Damage(npcAttack.damageType, damageRoll));
+                    if (nearestPlayer.currHP < 1) {
+                        // TODO - lose on death and no party members
+                        Debug.Log("Player ran out of HP.");
+                    }
+
+                    yield return effectManager.GenerateHitEffect(nearestPlayer);
+                }
             }
         }
 
@@ -119,6 +121,12 @@ public class CombatManager : MonoBehaviour
         }
 
         PlayerCharacter playerInstance = (PlayerCharacter)currCreature;
+
+        if (playerInstance.statusEffects.IsParalyzed()) {
+            // todo - show an effect and disable UI components
+            Debug.Log("Player is paralyzed and can't act.");
+            yield break;
+        }
 
         // check if player wanted to attack
         if (selectedEntity != null && selectedEntity.GetType() == typeof(NPC)) {

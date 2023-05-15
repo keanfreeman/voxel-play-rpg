@@ -22,11 +22,10 @@ namespace Instantiated {
         public event System.Action<Traveller> onCombatTurnEnd;
         public event System.Action<AttackSO, Traveller> onAttackHit;
 
-
         public SpriteMoveDirection permanentMoveDirection { get; protected set; } = SpriteMoveDirection.NONE;
         public bool isMoving { get; protected set; } = false;
         public int currHP { get; protected set; }
-        public Dictionary<Status, StatusEffect> statusEffects { get; protected set; } = new();
+        public CurrentStatus statusEffects { get; private set; } = new();
 
         protected TravellerIdentitySO travellerIdentity;
         protected Vector3Int moveStartPoint;

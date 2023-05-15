@@ -56,11 +56,10 @@ public class FeatureManager : MonoBehaviour {
         int modifier = StatModifiers.GetModifierForStat(target.GetStats().constitution);
         int roll = randomManager.RollSavingThrow(modifier);
         if (roll < DC) {
-            StatusEffect ghoulStatusEffect = target.statusEffects
-                .GetValueOrDefault(Status.GhoulParalysis, null);
+            OngoingEffect ghoulStatusEffect = target.statusEffects.Get(StatusEffect.GhoulClaw);
             if (ghoulStatusEffect == null) {
-                target.statusEffects.Add(Status.GhoulParalysis, 
-                    new StatusEffect("Paralysis", Status.GhoulParalysis, 10));
+                target.statusEffects.Add(StatusEffect.GhoulClaw, 
+                    new OngoingEffect(StatusEffect.GhoulClaw, new List<Condition> { Condition.Paralyzed}, 10));
                 target.onCombatTurnEnd += CheckGhoulClawEnd;
             }
             else {
@@ -71,8 +70,7 @@ public class FeatureManager : MonoBehaviour {
     }
 
     private void CheckGhoulClawEnd(Traveller currTurnTraveller) {
-        StatusEffect ghoulStatusEffect = currTurnTraveller.statusEffects
-            .GetValueOrDefault(Status.GhoulParalysis, null);
+        OngoingEffect ghoulStatusEffect = currTurnTraveller.statusEffects.Get(StatusEffect.GhoulClaw);
         if (ghoulStatusEffect == null) {
             return;
         }
@@ -81,7 +79,7 @@ public class FeatureManager : MonoBehaviour {
         int modifier = StatModifiers.GetModifierForStat(currTurnTraveller.GetStats().constitution);
         int roll = randomManager.RollSavingThrow(modifier);
         if (roll >= DC || ghoulStatusEffect.turnsLeft <= 1) {
-            currTurnTraveller.statusEffects.Remove(Status.GhoulParalysis);
+            currTurnTraveller.statusEffects.Remove(StatusEffect.GhoulClaw);
             currTurnTraveller.onCombatTurnEnd -= CheckGhoulClawEnd;
         }
         else {
