@@ -18,16 +18,21 @@ namespace Instantiated {
 
         public event System.Action<Traveller, Damage> onHPChanged;
         public event System.Func<Traveller, Traveller, Advantage> onPerformAttack;
+        public event System.Action<Traveller> onCombatTurnStart;
+        public event System.Action<Traveller> onCombatTurnEnd;
+        public event System.Action<AttackSO, Traveller> onAttackHit;
+
+
+        public SpriteMoveDirection permanentMoveDirection { get; protected set; } = SpriteMoveDirection.NONE;
+        public bool isMoving { get; protected set; } = false;
+        public int currHP { get; protected set; }
+        public Dictionary<Status, StatusEffect> statusEffects { get; protected set; } = new();
 
         protected TravellerIdentitySO travellerIdentity;
         protected Vector3Int moveStartPoint;
         protected Vector3Int moveEndPoint;
         protected float moveStartTimestamp;
         private float moveFinishedTimestamp;
-        public SpriteMoveDirection permanentMoveDirection { get; protected set; } = SpriteMoveDirection.NONE;
-
-        public bool isMoving { get; protected set; } = false;
-        public int currHP { get; protected set; }
 
         protected const float TIME_TO_MOVE_A_TILE = 0.2f;
         private const float ANIMATION_COOLDOWN_TIME = 0.1f;
@@ -38,6 +43,10 @@ namespace Instantiated {
                 SetMoveAnimation(false);
                 moveFinishedTimestamp = float.MaxValue;
             }
+        }
+
+        public void OnAttackHit(AttackSO attack, Traveller target) {
+            onAttackHit?.Invoke(attack, target);
         }
 
         public AttackRoll PerformAttack(AttackSO attack, Traveller target, 
@@ -63,6 +72,14 @@ namespace Instantiated {
 
         public void SetHP(int newValue) {
             currHP = newValue;
+        }
+
+        public void OnCombatTurnStart() {
+            onCombatTurnStart?.Invoke(this);
+        }
+
+        public void OnCombatTurnEnd() {
+            onCombatTurnEnd?.Invoke(this);
         }
 
         private void AnimateMove() {

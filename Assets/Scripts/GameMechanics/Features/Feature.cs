@@ -22,4 +22,9 @@ namespace GameMechanics {
         UndeadFortitude,
         PackTactics
     }
+
+    public enum AttackFeature {
+        None,
+        GhoulClaws
+    }
 }

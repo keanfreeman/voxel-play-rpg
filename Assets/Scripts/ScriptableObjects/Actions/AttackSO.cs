@@ -1,4 +1,5 @@
 using GameMechanics;
+using Instantiated;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,4 +13,6 @@ public class AttackSO : ActionSO
     public bool isRanged = false;
     public int shortRange = 0;
     public int longRange = 0;
+
+    public AttackFeature attackFeature = AttackFeature.None;
 }

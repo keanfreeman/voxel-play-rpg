@@ -1085,6 +1085,7 @@ MonoBehaviour:
   randomManager: {fileID: 983819852}
   effectManager: {fileID: 234026431}
   nonVoxelWorld: {fileID: 1135948956}
+  combatManager: {fileID: 1613990517}
 --- !u!1 &983819851
 GameObject:
   m_ObjectHideFlags: 0

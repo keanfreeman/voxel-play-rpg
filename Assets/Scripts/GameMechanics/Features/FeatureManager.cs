@@ -3,6 +3,7 @@ using Instantiated;
 using NonVoxel;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static RandomManager;
 
@@ -10,6 +11,7 @@ public class FeatureManager : MonoBehaviour {
     [SerializeField] RandomManager randomManager;
     [SerializeField] EffectManager effectManager;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
+    [SerializeField] CombatManager combatManager;
 
     public void SetUpFeatures(Traveller traveller) {
         foreach (Feature feature in traveller.GetStats().features) {
@@ -21,8 +23,69 @@ public class FeatureManager : MonoBehaviour {
                     traveller.onHPChanged += TriggerUndeadFortitude;
                     break;
                 default:
-                    throw new System.NotImplementedException($"Did not implement traveller feature.");
+                    throw new System.NotImplementedException($"Did not implement traveller " +
+                        $"feature {feature.id}.");
             }
+        }
+
+        foreach (ActionSO action in traveller.GetStats().actions) {
+            if (action.GetType() == typeof(AttackSO)) {
+                AttackSO attack = (AttackSO)action;
+                switch (attack.attackFeature) {
+                    case AttackFeature.GhoulClaws:
+                        traveller.onAttackHit += OnGhoulClawHit;
+                        break;
+                    case AttackFeature.None:
+                        break;
+                    default:
+                        throw new System.NotImplementedException($"Did not implement attack " +
+                            $"feature {attack.attackFeature}.");
+                }
+            }
+        }
+    }
+
+    // todo - should not work on elves or undead
+    private void OnGhoulClawHit(AttackSO attack, Traveller target) {
+        // todo - implement so I don't have to check the attack type is correct
+        if (attack.attackFeature != AttackFeature.GhoulClaws) {
+            return;
+        }
+
+        const int DC = 10;
+        int modifier = StatModifiers.GetModifierForStat(target.GetStats().constitution);
+        int roll = randomManager.RollSavingThrow(modifier);
+        if (roll < DC) {
+            StatusEffect ghoulStatusEffect = target.statusEffects
+                .GetValueOrDefault(Status.GhoulParalysis, null);
+            if (ghoulStatusEffect == null) {
+                target.statusEffects.Add(Status.GhoulParalysis, 
+                    new StatusEffect("Paralysis", Status.GhoulParalysis, 10));
+                target.onCombatTurnEnd += CheckGhoulClawEnd;
+            }
+            else {
+                // reset timer if already affected
+                ghoulStatusEffect.turnsLeft = 10;
+            }
+        }
+    }
+
+    private void CheckGhoulClawEnd(Traveller currTurnTraveller) {
+        StatusEffect ghoulStatusEffect = currTurnTraveller.statusEffects
+            .GetValueOrDefault(Status.GhoulParalysis, null);
+        if (ghoulStatusEffect == null) {
+            return;
+        }
+
+        const int DC = 10;
+        int modifier = StatModifiers.GetModifierForStat(currTurnTraveller.GetStats().constitution);
+        int roll = randomManager.RollSavingThrow(modifier);
+        if (roll >= DC || ghoulStatusEffect.turnsLeft <= 1) {
+            currTurnTraveller.statusEffects.Remove(Status.GhoulParalysis);
+            currTurnTraveller.onCombatTurnEnd -= CheckGhoulClawEnd;
+        }
+        else {
+            ghoulStatusEffect.turnsLeft -= 1;
         }
     }
 

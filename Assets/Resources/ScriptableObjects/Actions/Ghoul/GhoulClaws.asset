@@ -25,3 +25,4 @@ MonoBehaviour:
   isRanged: 0
   shortRange: 0
   longRange: 0
+  attackFeature: 1

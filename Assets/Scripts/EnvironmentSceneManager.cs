@@ -228,7 +228,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             new(new Vector3Int(835, 29, 348), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
             new(new Vector3Int(835, 29, 349), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
             new(new Vector3Int(835, 29, 350), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
-            new(new Vector3Int(835, 29, 351), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
+            new(new Vector3Int(835, 29, 351), Faction.ENEMY, IdleBehavior.WANDER, ghoulID.name),
         });
         BattleGroup zombieBG1 = new(new List<NPC> {
             new NPC(new Vector3Int(849, -12, 365), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),

@@ -44,6 +44,8 @@ public class CombatManager : MonoBehaviour
         Traveller currCreature = initiatives[initiative].Value;
         yield return cameraManager.MoveCameraToTargetCreature(currCreature);
 
+        currCreature.OnCombatTurnStart();
+
         usedResources[currCreature] = new CombatResources();
         if (currCreature.GetType() == typeof(PlayerCharacter)) {
             inputManager.SwitchPlayerToDetachedControlState(currCreature.origin);
@@ -71,10 +73,15 @@ public class CombatManager : MonoBehaviour
 
         // attack enemy
         if (Coordinates.IsNextTo(npcInstance, nearestPlayer)) {
-            // TODO use less brittle attack selection method
-            AttackSO npcAttack = (AttackSO)npcInstance.GetStats().actions[0];
+            List<ActionSO> npcActions = npcInstance.GetStats().actions;
+            int pickedIndex = randomManager.rng.Next(0, npcActions.Count);
+            // TODO - use less brittle attack selection method (allow for non-attacks)
+            // TODO - have preferred strategies (ranged vs melee for example)
+            AttackSO npcAttack = (AttackSO)npcActions[pickedIndex];
             AttackRoll attackRoll = npcInstance.PerformAttack(npcAttack, nearestPlayer);
             if (attackRoll.result >= nearestPlayer.GetStats().CalculateArmorClass()) {
+                npcInstance.OnAttackHit(npcAttack, nearestPlayer);
+
                 int damageRoll = randomManager.RollDamage(npcAttack.damageRoll, attackRoll.isCritical);
                 Debug.Log($"NPC rolled {damageRoll} for their damage roll.");
                 nearestPlayer.TakeDamage(new Damage(npcAttack.damageType, damageRoll));
@@ -86,6 +93,8 @@ public class CombatManager : MonoBehaviour
                 yield return effectManager.GenerateHitEffect(nearestPlayer);
             }
         }
+
+        currCreature.OnCombatTurnEnd();
 
         inputManager.DisableWatchState();
         ResetCombatResources(currCreature);
@@ -221,6 +230,8 @@ public class CombatManager : MonoBehaviour
         if (movementManager.IsMoving(currCreature)) {
             return;
         }
+
+        currCreature.OnCombatTurnEnd();
 
         Debug.Log("Player ended turn.");
         ResetCombatResources(currCreature);
