@@ -229,12 +229,16 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             new(new Vector3Int(835, 29, 350), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
             new(new Vector3Int(835, 29, 351), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
         });
-
         BattleGroup zombieBG1 = new(new List<NPC> {
             new NPC(new Vector3Int(849, -12, 365), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
             new NPC(new Vector3Int(849, -12, 362), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
             new NPC(new Vector3Int(840, -12, 365), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
-            new NPC(new Vector3Int(840, -12, 362), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
+        });
+        BattleGroup bloodyEyeBG = new(new List<NPC> {
+            new(new Vector3Int(822, -27, 347), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
+            new(new Vector3Int(822, -27, 346), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
+            new(new Vector3Int(822, -27, 345), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
+            new(new Vector3Int(823, -27, 345), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
         });
 
         TangibleObject bed = new TangibleObject(new Vector3Int(857, 33, 348), bedID.name, Direction.EAST);
@@ -327,7 +331,10 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     zombieBG1.combatants[0],
                     zombieBG1.combatants[1],
                     zombieBG1.combatants[2],
-                    zombieBG1.combatants[3],
+                    bloodyEyeBG.combatants[0],
+                    bloodyEyeBG.combatants[1],
+                    bloodyEyeBG.combatants[2],
+                    bloodyEyeBG.combatants[3],
                     convenienceBG.combatants[0],
                     convenienceBG.combatants[1],
                     convenienceBG.combatants[2],
