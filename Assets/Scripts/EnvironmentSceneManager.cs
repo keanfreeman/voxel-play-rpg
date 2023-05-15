@@ -34,6 +34,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     [SerializeField] TravellerIdentitySO catID;
     [SerializeField] TravellerIdentitySO zombieID;
     [SerializeField] TravellerIdentitySO bloodyEyeID;
+    [SerializeField] TravellerIdentitySO ghoulID;
     [SerializeField] ObjectIdentitySO bedID;
     [SerializeField] ObjectIdentitySO lampID;
     [SerializeField] ObjectIdentitySO constructionToolsID;
@@ -240,6 +241,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             new(new Vector3Int(822, -27, 345), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
             new(new Vector3Int(823, -27, 345), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
         });
+        NPC ghoulBoss = new(new Vector3Int(798, -29, 353), Faction.ENEMY, IdleBehavior.WANDER, ghoulID.name);
 
         TangibleObject bed = new TangibleObject(new Vector3Int(857, 33, 348), bedID.name, Direction.EAST);
         TangibleObject lamp = new TangibleObject(new Vector3Int(858, 33, 351), lampID.name, Direction.NORTH);
@@ -328,6 +330,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     cat,
                     rogueGrimes,
                     bardDrill,
+
                     zombieBG1.combatants[0],
                     zombieBG1.combatants[1],
                     zombieBG1.combatants[2],
@@ -335,14 +338,17 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     bloodyEyeBG.combatants[1],
                     bloodyEyeBG.combatants[2],
                     bloodyEyeBG.combatants[3],
+                    ghoulBoss,
                     convenienceBG.combatants[0],
                     convenienceBG.combatants[1],
                     convenienceBG.combatants[2],
                     convenienceBG.combatants[3],
-                    introEventCube,
+
                     bed,
                     lamp,
                     constructionTools,
+
+                    introEventCube,
                     level1Exit,
                     level1ExitPrevention,
                 }, null)
