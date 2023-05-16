@@ -43,13 +43,30 @@ public class FeatureManager : MonoBehaviour {
                 }
             }
         }
+
+        // features for all creatures
+        traveller.onPerformAttack += CheckParalyzedAdvantage;
+        traveller.onAttackHit += CheckParalyzedCriticalHit;
+    }
+
+    private bool CheckParalyzedCriticalHit(AttackSO attack, Traveller target) {
+        return target.statusEffects.IsParalyzed();
+    }
+
+    private Advantage CheckParalyzedAdvantage(Traveller attacker, Traveller target, Advantage currAdvState) {
+        if (target.statusEffects.IsParalyzed()) {
+            Debug.Log("Attacker got advantage on a paralyzed creature.");
+            return AdvantageCalcs.GetNewAdvantageState(currAdvState, Advantage.Advantage);
+        }
+        return currAdvState;
     }
 
     // todo - should not work on elves or undead
-    private void OnGhoulClawHit(AttackSO attack, Traveller target) {
+    // return bool - irrelevant for this method
+    private bool OnGhoulClawHit(AttackSO attack, Traveller target) {
         // todo - implement so I don't have to check the attack type is correct
         if (attack.attackFeature != AttackFeature.GhoulClaws) {
-            return;
+            return false;
         }
 
         const int DC = 10;
@@ -67,6 +84,8 @@ public class FeatureManager : MonoBehaviour {
                 ghoulStatusEffect.turnsLeft = 10;
             }
         }
+
+        return false;
     }
 
     private void CheckGhoulClawEnd(Traveller currTurnTraveller) {
@@ -87,7 +106,9 @@ public class FeatureManager : MonoBehaviour {
         }
     }
 
-    public Advantage TriggerPackTactics(Traveller attacker, Traveller target) {
+    public Advantage TriggerPackTactics(Traveller attacker, Traveller target, Advantage currAdvState) {
+        Advantage nextAdvantageState = currAdvState;
+        
         EntityDefinition.Faction attackerFaction = attacker.GetFaction();
 
         HashSet<Vector3Int> adjacent = Coordinates.GetPositionsSurroundingTraveller(target);
@@ -98,12 +119,13 @@ public class FeatureManager : MonoBehaviour {
                     && attacker != instantiatedEntity) {
                 Traveller adjacentTraveller = (Traveller)instantiatedEntity;
                 if (adjacentTraveller.GetFaction() == attackerFaction) {
-                    return Advantage.Advantage;
+                    Debug.Log("Creature took advantage of pack tactics.");
+                    return AdvantageCalcs.GetNewAdvantageState(currAdvState, Advantage.Advantage);
                 }
             }
         }
 
-        return Advantage.None;
+        return nextAdvantageState;
     }
 
     // todo - do not activate on critical hit

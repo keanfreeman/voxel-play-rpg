@@ -81,9 +81,8 @@ public class CombatManager : MonoBehaviour
                 AttackSO npcAttack = (AttackSO)npcActions[pickedIndex];
                 AttackRoll attackRoll = npcInstance.PerformAttack(npcAttack, nearestPlayer);
                 if (attackRoll.result >= nearestPlayer.GetStats().CalculateArmorClass()) {
-                    npcInstance.OnAttackHit(npcAttack, nearestPlayer);
+                    int damageRoll = npcInstance.PerformDamage(npcAttack, attackRoll, nearestPlayer);
 
-                    int damageRoll = randomManager.RollDamage(npcAttack.damageRoll, attackRoll.isCritical);
                     Debug.Log($"NPC rolled {damageRoll} for their damage roll.");
                     nearestPlayer.TakeDamage(new Damage(npcAttack.damageType, damageRoll));
                     if (nearestPlayer.currHP < 1) {
@@ -172,7 +171,8 @@ public class CombatManager : MonoBehaviour
             foreach (AttackSO attack in attacksToDo) {
                 AttackRoll attackRoll = playerInstance.PerformAttack(attack, npcInstance);
                 if (attackRoll.result >= npcInstance.GetStats().CalculateArmorClass()) {
-                    int damageRoll = randomManager.RollDamage(attack.damageRoll, attackRoll.isCritical);
+                    int damageRoll = playerInstance.PerformDamage(attack, attackRoll, npcInstance);
+
                     Debug.Log($"Player rolled {damageRoll} for their damage roll.");
                     int newHP = npcInstance.currHP - damageRoll;
                     npcInstance.TakeDamage(new Damage(attack.damageType, damageRoll));

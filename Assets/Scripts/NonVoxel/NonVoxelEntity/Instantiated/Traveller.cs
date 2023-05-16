@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static RandomManager;
+using static UnityEngine.GraphicsBuffer;
 
 namespace Instantiated {
     public abstract class Traveller : TangibleEntity {
@@ -17,10 +18,10 @@ namespace Instantiated {
         [SerializeField] protected RandomManager randomManager;
 
         public event System.Action<Traveller, Damage> onHPChanged;
-        public event System.Func<Traveller, Traveller, Advantage> onPerformAttack;
+        public event System.Func<Traveller, Traveller, Advantage, Advantage> onPerformAttack;
         public event System.Action<Traveller> onCombatTurnStart;
         public event System.Action<Traveller> onCombatTurnEnd;
-        public event System.Action<AttackSO, Traveller> onAttackHit;
+        public event System.Func<AttackSO, Traveller, bool> onAttackHit;
 
         public SpriteMoveDirection permanentMoveDirection { get; protected set; } = SpriteMoveDirection.NONE;
         public bool isMoving { get; protected set; } = false;
@@ -44,22 +45,25 @@ namespace Instantiated {
             }
         }
 
-        public void OnAttackHit(AttackSO attack, Traveller target) {
-            onAttackHit?.Invoke(attack, target);
+        public int PerformDamage(AttackSO attack, AttackRoll attackRoll, Traveller target) {
+            bool isCritical = attackRoll.isCritical;
+            foreach (System.Delegate handler in onAttackHit.GetInvocationList()) {
+                var handlerCasted = (System.Func<AttackSO, Traveller, bool>)handler;
+                isCritical = handlerCasted.Invoke(attack, target);
+            }
+
+            return randomManager.RollDamage(attack.damageRoll, isCritical);
         }
 
         public AttackRoll PerformAttack(AttackSO attack, Traveller target, 
                 Advantage advantage = Advantage.None) {
-            Advantage? nextAdvantageState = onPerformAttack?.Invoke(this, target);
-            Advantage finalAdvantage = advantage;
-            if (nextAdvantageState.HasValue) {
-                finalAdvantage = AdvantageCalcs.GetNewAdvantageState(advantage, nextAdvantageState.Value);
+            Advantage currAdvantageState = advantage;
+            foreach (System.Delegate handler in onPerformAttack.GetInvocationList()) {
+                var handlerCasted = (System.Func<Traveller, Traveller, Advantage, Advantage>)handler;
+                currAdvantageState = handlerCasted.Invoke(this, target, currAdvantageState);
             }
-            if (finalAdvantage == Advantage.Advantage) {
-                Debug.Log("Traveller rolled with advantage.");
-            }
-
-            AttackRoll attackRoll = randomManager.RollAttack(attack.attackRoll, finalAdvantage);
+            
+            AttackRoll attackRoll = randomManager.RollAttack(attack.attackRoll, currAdvantageState);
             Debug.Log($"Traveller rolled {attackRoll} for their attack roll.");
             return attackRoll;
         }
