@@ -79,9 +79,13 @@ public class CombatManager : MonoBehaviour
                 // TODO - use less brittle attack selection method (allow for non-attacks)
                 // TODO - have preferred strategies (ranged vs melee for example)
                 AttackSO npcAttack = (AttackSO)npcActions[pickedIndex];
-                AttackRoll attackRoll = npcInstance.PerformAttack(npcAttack, nearestPlayer);
-                if (attackRoll.result >= nearestPlayer.GetStats().CalculateArmorClass()) {
-                    int damageRoll = npcInstance.PerformDamage(npcAttack, attackRoll, nearestPlayer);
+                CoroutineWithData cwd = new(this, npcInstance.PerformAttack(npcAttack.attackRoll.modifier,
+                    nearestPlayer));
+                yield return cwd.coroutine;
+                AttackResult attackResult = cwd.result as AttackResult;
+
+                if (attackResult.rolled >= nearestPlayer.GetStats().CalculateArmorClass()) {
+                    int damageRoll = npcInstance.PerformDamage(npcAttack, attackResult, nearestPlayer);
 
                     Debug.Log($"NPC rolled {damageRoll} for their damage roll.");
                     nearestPlayer.TakeDamage(new Damage(npcAttack.damageType, damageRoll));
@@ -133,15 +137,15 @@ public class CombatManager : MonoBehaviour
                 Debug.Log("Player tried to use action twice.");
                 yield break;
             }
-            NPC npcInstance = (NPC)selectedEntity;
+            NPC attackTarget = (NPC)selectedEntity;
 
             ActionSO validAttackAction;
-            if (!Coordinates.IsNextTo(currCreature, npcInstance)) {
+            if (!Coordinates.IsNextTo(currCreature, attackTarget)) {
                 validAttackAction = StatInfo.GetRangedAction(playerInstance.GetStats());
                 if (validAttackAction == null) {
                     // try moving towards the enemy, then attacking
                     yield return TryMovePlayer(playerInstance);
-                    if (!Coordinates.IsNextTo(currCreature, npcInstance)) {
+                    if (!Coordinates.IsNextTo(currCreature, attackTarget)) {
                         // couldn't move close enough
                         Debug.Log("Couldn't get close enough to make a melee attack.");
                         yield break;
@@ -169,14 +173,18 @@ public class CombatManager : MonoBehaviour
             }
 
             foreach (AttackSO attack in attacksToDo) {
-                AttackRoll attackRoll = playerInstance.PerformAttack(attack, npcInstance);
-                if (attackRoll.result >= npcInstance.GetStats().CalculateArmorClass()) {
-                    int damageRoll = playerInstance.PerformDamage(attack, attackRoll, npcInstance);
+                CoroutineWithData cwd = new(this, playerInstance.PerformAttack(attack.attackRoll.modifier,
+                    attackTarget));
+                yield return cwd.coroutine;
+                AttackResult attackResult = cwd.result as AttackResult;
+
+                if (attackResult.rolled >= attackTarget.GetStats().CalculateArmorClass()) {
+                    int damageRoll = playerInstance.PerformDamage(attack, attackResult, attackTarget);
 
                     Debug.Log($"Player rolled {damageRoll} for their damage roll.");
-                    int newHP = npcInstance.currHP - damageRoll;
-                    npcInstance.TakeDamage(new Damage(attack.damageType, damageRoll));
-                    if (npcInstance.currHP < 1) {
+                    int newHP = attackTarget.currHP - damageRoll;
+                    attackTarget.TakeDamage(new Damage(attack.damageType, damageRoll));
+                    if (attackTarget.currHP < 1) {
                         Debug.Log("NPC defeated");
                         foreach (KeyValuePair<int, Traveller> initiative in initiatives) {
                             if (initiative.Value == selectedEntity) {
@@ -186,14 +194,14 @@ public class CombatManager : MonoBehaviour
                                     currInitiative -= 1;
                                 }
 
-                                nonVoxelWorld.DestroyEntity(npcInstance);
+                                nonVoxelWorld.DestroyEntity(attackTarget);
                                 initiatives.Remove(initiative);
                                 break;
                             }
                         }
                     }
 
-                    yield return effectManager.GenerateHitEffect(npcInstance);
+                    yield return effectManager.GenerateHitEffect(attackTarget);
                     if (newHP < 1) {
                         // no more attacks to do
                         break;

@@ -1,3 +1,4 @@
+using DieNamespace;
 using GameMechanics;
 using Instantiated;
 using System.Collections;
@@ -7,8 +8,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Attack", menuName = "ScriptableObjects/Actions/Attack")]
 public class AttackSO : ActionSO
 {
-    public Dice attackRoll = new Dice(1, 20, 0);
-    public Dice damageRoll;
+    public Die attackRoll = new(1, 20, 0);
+    public Die damageRoll;
     public DamageType damageType = DamageType.Bludgeoning;
     public bool isRanged = false;
     public int shortRange = 0;

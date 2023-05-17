@@ -1,3 +1,4 @@
+using DieNamespace;
 using GameMechanics;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,18 +6,14 @@ using UnityEngine;
 
 public class RandomManager : MonoBehaviour
 {
-    public System.Random rng { get; private set; }
+    public System.Random rng { get; private set; } = new System.Random();
 
-    void Awake() {
-        rng = new System.Random();
+    public AttackResult RollAttack(Die die, Advantage advantage = Advantage.None) {
+        return RollAttack(die.modifier, advantage);
     }
 
-    public AttackRoll RollAttack(Dice dice, Advantage advantage = Advantage.None) {
-        return RollAttack(dice.modifier, advantage);
-    }
-
-    public AttackRoll RollAttack(int modifier, Advantage advantage = Advantage.None) {
-        Dice straightD20 = new(1, 20, 0);
+    public AttackResult RollAttack(int modifier, Advantage advantage = Advantage.None) {
+        Die straightD20 = new(1, 20, 0);
         int roll = rng.Next(1, 21);
         if (advantage == Advantage.Advantage) {
             roll = Mathf.Max(roll, Roll(straightD20));
@@ -29,10 +26,10 @@ public class RandomManager : MonoBehaviour
         if (isCritical) {
             Debug.Log("Critical hit!");
         }
-        return new AttackRoll(roll + modifier, isCritical);
+        return new AttackResult(roll + modifier, isCritical);
     }
 
-    public int RollDamage(Dice damageRoll, bool isCritical) {
+    public int RollDamage(Die damageRoll, bool isCritical) {
         if (isCritical) {
             return Roll(damageRoll.numDice * 2, damageRoll.diceSize, damageRoll.modifier);
         }
@@ -40,7 +37,7 @@ public class RandomManager : MonoBehaviour
     }
 
     public int RollAbilityCheck(int modifier, Advantage advantage = Advantage.None) {
-        Dice straightD20 = new(1, 20, 0);
+        Die straightD20 = new(1, 20, 0);
         int roll = Roll(straightD20);
         if (advantage == Advantage.Advantage) {
             roll = Mathf.Max(roll, Roll(straightD20));
@@ -67,22 +64,8 @@ public class RandomManager : MonoBehaviour
         return sum + modifier;
     }
     // todo - convey if there was a critical hit
-    private int Roll(Dice dice) {
+    private int Roll(Die dice) {
         return Roll(dice.numDice, dice.diceSize, dice.modifier);
-    }
-
-    public class AttackRoll {
-        public int result;
-        public bool isCritical;
-
-        public AttackRoll(int result, bool isCritical) {
-            this.result = result;
-            this.isCritical = isCritical;
-        }
-
-        public override string ToString() {
-            return $"{result}";
-        }
     }
 
     public enum Advantage {

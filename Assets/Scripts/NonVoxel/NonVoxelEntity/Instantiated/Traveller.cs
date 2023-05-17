@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static RandomManager;
-using static UnityEngine.GraphicsBuffer;
 
 namespace Instantiated {
     public abstract class Traveller : TangibleEntity {
@@ -16,6 +15,7 @@ namespace Instantiated {
         [SerializeField] protected PartyManager partyManager;
         [SerializeField] protected FeatureManager featureManager;
         [SerializeField] protected RandomManager randomManager;
+        [SerializeField] protected VisualRollManager visualRollManager;
 
         public event System.Action<Traveller, Damage> onHPChanged;
         public event System.Func<Traveller, Traveller, Advantage, Advantage> onPerformAttack;
@@ -45,8 +45,8 @@ namespace Instantiated {
             }
         }
 
-        public int PerformDamage(AttackSO attack, AttackRoll attackRoll, Traveller target) {
-            bool isCritical = attackRoll.isCritical;
+        public int PerformDamage(AttackSO attack, AttackResult attackResult, Traveller target) {
+            bool isCritical = attackResult.isCritical;
             foreach (System.Delegate handler in onAttackHit.GetInvocationList()) {
                 var handlerCasted = (System.Func<AttackSO, Traveller, bool>)handler;
                 isCritical = handlerCasted.Invoke(attack, target);
@@ -55,17 +55,19 @@ namespace Instantiated {
             return randomManager.RollDamage(attack.damageRoll, isCritical);
         }
 
-        public AttackRoll PerformAttack(AttackSO attack, Traveller target, 
+        public IEnumerator PerformAttack(int modifier, Traveller target, 
                 Advantage advantage = Advantage.None) {
             Advantage currAdvantageState = advantage;
             foreach (System.Delegate handler in onPerformAttack.GetInvocationList()) {
                 var handlerCasted = (System.Func<Traveller, Traveller, Advantage, Advantage>)handler;
                 currAdvantageState = handlerCasted.Invoke(this, target, currAdvantageState);
             }
-            
-            AttackRoll attackRoll = randomManager.RollAttack(attack.attackRoll, currAdvantageState);
-            Debug.Log($"Traveller rolled {attackRoll} for their attack roll.");
-            return attackRoll;
+
+            CoroutineWithData cwd = new(this, visualRollManager.RollAttack(modifier,
+                target.GetStats().CalculateArmorClass(), currAdvantageState));
+            yield return cwd.coroutine;
+            AttackResult attackResult = cwd.result as AttackResult;
+            yield return attackResult;
         }
 
         public void TakeDamage(Damage damage) {

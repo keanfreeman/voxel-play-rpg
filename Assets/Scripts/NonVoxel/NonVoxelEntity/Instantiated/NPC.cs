@@ -43,7 +43,7 @@ namespace Instantiated {
                 System.Random rng, EntityDefinition.NPC npcInfo, TravellerIdentitySO identity, 
                 CameraManager cameraManager, PartyManager partyManager, 
                 GameStateManager gameStateManager, FeatureManager featureManager, 
-                RandomManager randomManager) {
+                RandomManager randomManager, VisualRollManager visualRollManager) {
             this.nonVoxelWorld = nonVoxelWorld;
             this.spriteMovement = spriteMovement;
             this.rng = rng;
@@ -59,6 +59,7 @@ namespace Instantiated {
             this.featureManager = featureManager;
             this.featureManager.SetUpFeatures(this);
             this.randomManager = randomManager;
+            this.visualRollManager = visualRollManager;
             Vector3Int spawn = npcInfo.currSpawnPosition.HasValue ? npcInfo.currSpawnPosition.Value
                 : npcInfo.spawnPosition;
             SetCurrPositions(spawn, identity);

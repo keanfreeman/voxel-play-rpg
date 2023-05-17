@@ -6,8 +6,8 @@ Any questions? -> loop_knot
 
 == loop_knot ==
 * [Where are we? What year is it? I feel like I'm losing it.]
-    ... Wow. Times are dire indeed. But I'll humor you.
-    Your name is Kean and you're our good friend. You live in the house above us in a land of desolate wilderness. You're (usually) brilliant.
+    Yikes. Times are dire indeed. But I'll humor you.
+    Your name is Kean and you're our good friend. You live in the house above us in a land of desolate wilderness. You're brilliant. Well, usually.
     It's no problem though. As long as we've got the mine, our connection to the outside world, and each other, we'll be fine.
     Capiche? -> loop_knot
 * [Are the mines dangerous?]

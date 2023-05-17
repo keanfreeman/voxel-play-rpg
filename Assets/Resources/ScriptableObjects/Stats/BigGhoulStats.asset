@@ -22,7 +22,6 @@ MonoBehaviour:
   wisdom: 10
   charisma: 6
   actions:
-  - {fileID: 11400000, guid: caac77f76a2a1d24588fdb7155b60ef5, type: 2}
   - {fileID: 11400000, guid: 2ea72949f07c85040a471fb49c58031c, type: 2}
   features: []
   statblockName: Big Ghoul

@@ -47,6 +47,8 @@ public class MovementManager : MonoBehaviour
 
             if (nonVoxelWorld.IsPositionOccupied(currDestination.Value, traveller)) {
                 Debug.Log("Movement was interrupted along path.");
+                // todo - try to find new path
+
                 traveller.SetMoveAnimation(false);
                 creaturePaths.Remove(traveller);
                 yield break;

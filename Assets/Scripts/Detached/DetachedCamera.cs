@@ -1,3 +1,4 @@
+using DieNamespace;
 using EntityDefinition;
 using GameMechanics;
 using Nito.Collections;
