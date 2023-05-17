@@ -1,3 +1,4 @@
+using DieNamespace;
 using EntityDefinition;
 using GameMechanics;
 using MovementDirection;
@@ -45,14 +46,17 @@ namespace Instantiated {
             }
         }
 
-        public int PerformDamage(AttackSO attack, AttackResult attackResult, Traveller target) {
+        public IEnumerator PerformDamage(AttackSO attack, AttackResult attackResult, Traveller target) {
             bool isCritical = attackResult.isCritical;
             foreach (System.Delegate handler in onAttackHit.GetInvocationList()) {
                 var handlerCasted = (System.Func<AttackSO, Traveller, bool>)handler;
                 isCritical = handlerCasted.Invoke(attack, target);
             }
 
-            return randomManager.RollDamage(attack.damageRoll, isCritical);
+            CoroutineWithData damageCoroutine = new(this, 
+                visualRollManager.RollDamage(new List<Die> { attack.damageRoll }, isCritical));
+            yield return damageCoroutine.coroutine;
+            yield return damageCoroutine.result;
         }
 
         public IEnumerator PerformAttack(int modifier, Traveller target, 

@@ -79,13 +79,16 @@ public class CombatManager : MonoBehaviour
                 // TODO - use less brittle attack selection method (allow for non-attacks)
                 // TODO - have preferred strategies (ranged vs melee for example)
                 AttackSO npcAttack = (AttackSO)npcActions[pickedIndex];
-                CoroutineWithData cwd = new(this, npcInstance.PerformAttack(npcAttack.attackRoll.modifier,
-                    nearestPlayer));
-                yield return cwd.coroutine;
-                AttackResult attackResult = cwd.result as AttackResult;
+                CoroutineWithData attackRollCoroutine = new(this, 
+                    npcInstance.PerformAttack(npcAttack.attackRoll.modifier, nearestPlayer));
+                yield return attackRollCoroutine.coroutine;
+                AttackResult attackResult = attackRollCoroutine.result as AttackResult;
 
                 if (attackResult.rolled >= nearestPlayer.GetStats().CalculateArmorClass()) {
-                    int damageRoll = npcInstance.PerformDamage(npcAttack, attackResult, nearestPlayer);
+                    CoroutineWithData damageCoroutine = new(this,
+                        npcInstance.PerformDamage(npcAttack, attackResult, nearestPlayer));
+                    yield return damageCoroutine.coroutine;
+                    int damageRoll = (int)damageCoroutine.result;
 
                     Debug.Log($"NPC rolled {damageRoll} for their damage roll.");
                     nearestPlayer.TakeDamage(new Damage(npcAttack.damageType, damageRoll));
@@ -179,7 +182,10 @@ public class CombatManager : MonoBehaviour
                 AttackResult attackResult = cwd.result as AttackResult;
 
                 if (attackResult.rolled >= attackTarget.GetStats().CalculateArmorClass()) {
-                    int damageRoll = playerInstance.PerformDamage(attack, attackResult, attackTarget);
+                    CoroutineWithData damageCoroutine = new(this,
+                        playerInstance.PerformDamage(attack, attackResult, attackTarget));
+                    yield return damageCoroutine.coroutine;
+                    int damageRoll = (int)damageCoroutine.result;
 
                     Debug.Log($"Player rolled {damageRoll} for their damage roll.");
                     int newHP = attackTarget.currHP - damageRoll;

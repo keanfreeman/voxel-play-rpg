@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static RandomManager;
 
-public class VisualRollManager : MonoBehaviour
-{
+public class VisualRollManager : MonoBehaviour {
     [SerializeField] DiceThrowerManager diceThrowerManager;
     [SerializeField] DiceRollerUIController diceUIController;
 
@@ -55,6 +54,31 @@ public class VisualRollManager : MonoBehaviour
         yield return diceUIController.Hide();
 
         yield return new AttackResult(finalNum, isCritical);
+    }
+
+    public IEnumerator RollDamage(List<Die> damageRolls, bool isCritical) {
+        yield return diceUIController.DisplayText("Rolling damage");
+
+        int modifiersSum = 0;
+        List<Die> totalRolls = new();
+        foreach (Die dieGroup in damageRolls) {
+            modifiersSum += dieGroup.modifier;
+            if (isCritical) {
+                totalRolls.Add(new Die(dieGroup.numDice * 2, dieGroup.diceSize));
+            }
+            else totalRolls.Add(dieGroup);
+        }
+
+        CoroutineWithData coroutineWithData = new(this, diceThrowerManager.RollDice(totalRolls));
+        yield return coroutineWithData.coroutine;
+        DiceResult rollResult = (DiceResult)coroutineWithData.result;
+
+        int totalDamage = rollResult.sum + modifiersSum;
+        yield return diceUIController.DisplayText($"Rolled {totalDamage} damage!");
+        yield return new WaitForSeconds(TEXT_DISPLAY_WAIT);
+        yield return diceUIController.Hide();
+
+        yield return totalDamage;
     }
 }
 

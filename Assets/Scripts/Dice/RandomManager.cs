@@ -8,34 +8,6 @@ public class RandomManager : MonoBehaviour
 {
     public System.Random rng { get; private set; } = new System.Random();
 
-    public AttackResult RollAttack(Die die, Advantage advantage = Advantage.None) {
-        return RollAttack(die.modifier, advantage);
-    }
-
-    public AttackResult RollAttack(int modifier, Advantage advantage = Advantage.None) {
-        Die straightD20 = new(1, 20, 0);
-        int roll = rng.Next(1, 21);
-        if (advantage == Advantage.Advantage) {
-            roll = Mathf.Max(roll, Roll(straightD20));
-        }
-        else if (advantage == Advantage.Disadvantage) {
-            roll = Mathf.Min(roll, Roll(straightD20));
-        }
-
-        bool isCritical = roll == 20;
-        if (isCritical) {
-            Debug.Log("Critical hit!");
-        }
-        return new AttackResult(roll + modifier, isCritical);
-    }
-
-    public int RollDamage(Die damageRoll, bool isCritical) {
-        if (isCritical) {
-            return Roll(damageRoll.numDice * 2, damageRoll.diceSize, damageRoll.modifier);
-        }
-        return Roll(damageRoll);
-    }
-
     public int RollAbilityCheck(int modifier, Advantage advantage = Advantage.None) {
         Die straightD20 = new(1, 20, 0);
         int roll = Roll(straightD20);

@@ -1,6 +1,7 @@
 using Instantiated;
 using MovementDirection;
 using NonVoxel;
+using NonVoxelEntity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,9 +47,12 @@ public class CameraManager : MonoBehaviour {
     }
 
     public IEnumerator MoveCameraToTargetCreature(Traveller traveller) {
+        int creatureRadius = EntitySizeCalcs.GetRadius(traveller.GetStats().size);
+        Vector3 cameraOffset = new Vector3(0.5f, 0.5f, 0.5f) * creatureRadius;
+
         DeParentCamera();
         Vector3 start = mainCameraTarget.transform.position;
-        Vector3 end = traveller.transform.position + new Vector3(0.5f, 0.5f, 0.5f);
+        Vector3 end = traveller.transform.position + cameraOffset;
         float startTime = Time.time;
 
         float fractionDone = 0f;
@@ -61,7 +65,7 @@ public class CameraManager : MonoBehaviour {
 
         mainCameraTarget.transform.parent = traveller.transform;
         attachedEntity = traveller;
-        mainCameraTarget.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
+        mainCameraTarget.transform.localPosition = cameraOffset;
     }
 
     public Direction GetCameraApproximateDirection() {
