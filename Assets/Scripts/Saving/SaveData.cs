@@ -13,6 +13,8 @@ namespace Saving {
 
         public PlayerCharacter currControlledCharacter;
 
+        public TimeRemaining timeRemaining;
+
         public SaveData() { }
 
         public SaveData(string jsonSave) {
@@ -32,6 +34,7 @@ namespace Saving {
             this.currDestination = saveData.currDestination;
             this.sceneEntityState = saveData.sceneEntityState;
             this.currControlledCharacter = saveData.currControlledCharacter;
+            this.timeRemaining = saveData.timeRemaining;
         }
     }
 }

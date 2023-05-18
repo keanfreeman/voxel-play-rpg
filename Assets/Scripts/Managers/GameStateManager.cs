@@ -78,7 +78,7 @@ public class GameStateManager : MonoBehaviour
     }
 
     public void EnterCombat(NPC npcInCombat) {
-        if (combatManager.isInCombat()) {
+        if (combatManager.IsInCombat()) {
             return;
         }
 

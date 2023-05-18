@@ -225,13 +225,13 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             bardDrillID.name);
 
         BattleGroup convenienceBG = new(new List<NPC> {
-            new(new Vector3Int(835, 29, 351), Faction.ENEMY, IdleBehavior.WANDER, ghoulID.name),
-            new NPC(new Vector3Int(835, 29, 350), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
+            new(new Vector3Int(835, 29, 351), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
+            new(new Vector3Int(835, 29, 350), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
         });
         BattleGroup zombieBG1 = new(new List<NPC> {
-            new NPC(new Vector3Int(849, -12, 365), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
-            new NPC(new Vector3Int(849, -12, 362), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
-            new NPC(new Vector3Int(840, -12, 365), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
+            new(new Vector3Int(849, -12, 365), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
+            new(new Vector3Int(849, -12, 362), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
+            new(new Vector3Int(840, -12, 365), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
         });
         BattleGroup bloodyEyeBG = new(new List<NPC> {
             new(new Vector3Int(822, -27, 347), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),

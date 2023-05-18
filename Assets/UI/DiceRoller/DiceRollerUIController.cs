@@ -13,8 +13,6 @@ public class DiceRollerUIController : MonoBehaviour
     const float FADE_TIME = 0.3f;
 
     void Awake() {
-        DontDestroyOnLoad(this);
-
         wholeScreen = diceUIDocument.rootVisualElement.Q<VisualElement>("WholeScreen");
         rollerText = wholeScreen.Q<Label>("RollerText");
 

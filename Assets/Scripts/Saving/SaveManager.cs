@@ -15,6 +15,7 @@ namespace Saving {
         [SerializeField] CameraManager cameraManager;
         [SerializeField] GameStateManager gameStateManager;
         [SerializeField] OrderManager orderManager;
+        [SerializeField] TimerUIController timerUIController;
 
         private void Update() {
             if (Input.GetKeyUp(KeyCode.F5)) {
@@ -52,8 +53,20 @@ namespace Saving {
                 sceneInfo.entities.RemoveAll(e => entitiesToRemove.Contains(e));
             }
 
+            saveData.timeRemaining = null;
+
             FileManager.WriteSaveJson(saveData.ToJson());
             Debug.Log("Reset entities");
+        }
+
+        public SaveData ReadFileState() {
+            string json = FileManager.ReadSaveJson();
+            if (json == null) {
+                Debug.LogError("Tried to load a nonexistent file.");
+                return null;
+            }
+
+            return new(json);
         }
 
         public IEnumerator Load() {
@@ -75,14 +88,17 @@ namespace Saving {
             // load new information
             yield return environmentSceneManager.LoadFromSaveData(saveData);
             yield return partyManager.LoadFromSaveData(saveData);
+            yield return timerUIController.LoadFromSaveData(saveData);
 
             Debug.Log("Loaded");
         }
 
         private void Save() {
-            SaveData saveData = new SaveData();
+            SaveData saveData = new();
             environmentSceneManager.PopulateSaveData(saveData);
             partyManager.PopulateSaveData(saveData);
+            timerUIController.PopulateSaveData(saveData);
+
             FileManager.WriteSaveJson(saveData.ToJson());
             Debug.Log("Saved");
         }

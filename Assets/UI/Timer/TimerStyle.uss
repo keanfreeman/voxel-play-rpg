@@ -1,0 +1,7 @@
+.TimeCategoryText {
+    font-size: 28px;
+}
+
+.TimeNumberText {
+    font-size: 52px;
+}

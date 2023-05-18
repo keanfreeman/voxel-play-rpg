@@ -12,10 +12,6 @@ public class MainGameUI : MonoBehaviour
     [SerializeField] DialogueUI dialogueUI;
     [SerializeField] ConstructionUI constructionUI;
 
-    void Awake(){
-        DontDestroyOnLoad(gameObject);
-    }
-
     void Update()
     {
         //if (Input.GetKeyUp(KeyCode.K)) {

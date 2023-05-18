@@ -4,6 +4,7 @@ using Nito.Collections;
 using NonVoxel;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static RandomManager;
@@ -21,6 +22,9 @@ public class CombatManager : MonoBehaviour
     [SerializeField] NonVoxelWorld nonVoxelWorld;
     [SerializeField] Pathfinder pathfinder;
     [SerializeField] EffectManager effectManager;
+    [SerializeField] TimerUIController timerUIController;
+
+    public event System.Action roundEnded;
 
     NPC firstCombatant;
     List<KeyValuePair<int, Traveller>> initiatives;
@@ -29,12 +33,13 @@ public class CombatManager : MonoBehaviour
 
     private const int TILE_TO_FEET = 5;
 
-    public bool isInCombat() {
+    public bool IsInCombat() {
         return initiatives != null;
     }
 
     public void StartCombat() {
         if (initiatives == null) {
+            timerUIController.PauseTimer();
             SetCombatantsAndInitiativeOrder();
             StartCoroutine(RunTurn(currInitiative));
         }
@@ -247,8 +252,8 @@ public class CombatManager : MonoBehaviour
         }
 
         yield return gameStateManager.ExitCombat();
+        timerUIController.StartTimer();
     }
-
 
     public void HandleDetachedCancel(InputAction.CallbackContext obj) {
         StartCoroutine(ExecuteHandleDetachedCancel());
@@ -322,6 +327,7 @@ public class CombatManager : MonoBehaviour
     private void IncrementInitiative() {
         if (currInitiative >= initiatives.Count - 1) {
             currInitiative = 0;
+            roundEnded?.Invoke();
         }
         else {
             currInitiative += 1;

@@ -1,0 +1,34 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/CommonStyle.uss?fileID=7433441132597879392&amp;guid=026a39900ed2bf348b8b1fcf8b7c191b&amp;type=3#CommonStyle" />
+    <Style src="project://database/Assets/UI/Timer/TimerStyle.uss?fileID=7433441132597879392&amp;guid=d9995a064a533464092727edf154abc9&amp;type=3#TimerStyle" />
+    <ui:VisualElement name="WholeScreen" style="flex-grow: 1; flex-direction: row-reverse; align-items: flex-start;">
+        <ui:VisualElement name="TimerBox" class="TextBackground" style="align-items: center; margin-top: 20px; margin-right: 20px;">
+            <ui:Label text="Time Remaining&#x9;" display-tooltip-when-elided="true" name="Title" style="-unity-font-style: bold; font-size: 54px;" />
+            <ui:VisualElement style="flex-direction: row; align-items: flex-end;">
+                <ui:VisualElement name="Days" style="align-items: center;">
+                    <ui:Label text="Days" display-tooltip-when-elided="true" class="TimeCategoryText" />
+                    <ui:Label text="000" display-tooltip-when-elided="true" name="DaysLabel" class="TimeNumberText" />
+                </ui:VisualElement>
+                <ui:VisualElement name="EmptySpace" style="width: 20px;" />
+                <ui:VisualElement name="Hours" style="align-items: center;">
+                    <ui:Label text="Hours" display-tooltip-when-elided="true" class="TimeCategoryText" />
+                    <ui:Label text="00" display-tooltip-when-elided="true" name="HoursLabel" class="TimeNumberText" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Colon">
+                    <ui:Label text=":" display-tooltip-when-elided="true" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Minutes" style="align-items: center;">
+                    <ui:Label text="Minutes" display-tooltip-when-elided="true" class="TimeCategoryText" />
+                    <ui:Label text="00" display-tooltip-when-elided="true" name="MinutesLabel" class="TimeNumberText" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Colon">
+                    <ui:Label text=":" display-tooltip-when-elided="true" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Seconds" style="align-items: center;">
+                    <ui:Label text="Seconds" display-tooltip-when-elided="true" class="TimeCategoryText" />
+                    <ui:Label text="00" display-tooltip-when-elided="true" name="SecondsLabel" class="TimeNumberText" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
