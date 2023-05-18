@@ -1,15 +1,22 @@
 * {
     font-size: 64px;
-    color: rgba(244, 235, 232, 255);
+    color: rgb(244, 235, 232);
 }
 
 Button {
     font-size: 32px;
-    background-color: rgba(57, 147, 221, 255);
-    border-left-color: rgba(106, 62, 55, 255);
-    border-right-color: rgba(106, 62, 55, 255);
-    border-top-color: rgba(106, 62, 55, 255);
-    border-bottom-color: rgba(106, 62, 55, 255);
+    background-color: rgb(57, 147, 221);
+    border-left-color: rgb(106, 62, 55);
+    border-right-color: rgb(106, 62, 55);
+    border-top-color: rgb(106, 62, 55);
+    border-bottom-color: rgb(106, 62, 55);
+}
+
+Button:focus {
+    border-left-color: rgba(224, 172, 213, 255);
+    border-right-color: rgba(224, 172, 213, 255);
+    border-top-color: rgba(224, 172, 213, 255);
+    border-bottom-color: rgba(224, 172, 213, 255);
 }
 
 .TextBackground {
@@ -22,8 +29,8 @@ Button {
     border-bottom-left-radius: 10px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
-    border-left-color: rgba(0, 0, 0, 255);
-    border-right-color: rgba(0, 0, 0, 255);
-    border-top-color: rgba(0, 0, 0, 255);
-    border-bottom-color: rgba(0, 0, 0, 255);
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
 }

@@ -639,6 +639,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   promptUIDocument: {fileID: 539451387}
+  gameStateManager: {fileID: 955022268}
 --- !u!1 &582458976
 GameObject:
   m_ObjectHideFlags: 0
@@ -1868,6 +1869,8 @@ MonoBehaviour:
   voxelWorldManager: {fileID: 1568004907}
   constructionUI: {fileID: 1861321071}
   nonVoxelWorld: {fileID: 1135948956}
+  promptUIController: {fileID: 539451388}
+  timerUIController: {fileID: 134436095}
   genericNonVoxelObjectPrefab: {fileID: 100008, guid: 1df8fdc65931cd340beda593a897f605, type: 3}
 --- !u!1 &1785101421
 GameObject:

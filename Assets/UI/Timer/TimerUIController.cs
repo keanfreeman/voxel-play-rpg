@@ -56,12 +56,17 @@ public class TimerUIController : MonoBehaviour, ISaveable
         timeRemaining = null;
     }
 
+    public bool DeductMinutes(int minutesToDeduct) {
+        timeRemaining.minutes -= minutesToDeduct;
+        bool outOfTime = FixTime();
+        UpdateClockDisplay();
+        return outOfTime;
+    }
+
     public bool DeductSeconds(int secondsToDeduct) {
         timeRemaining.seconds -= secondsToDeduct;
         bool outOfTime = FixTime();
-
         UpdateClockDisplay();
-
         return outOfTime;
     }
 

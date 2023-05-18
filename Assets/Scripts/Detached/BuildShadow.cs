@@ -20,6 +20,8 @@ public class BuildShadow : MonoBehaviour
     [SerializeField] VoxelWorldManager voxelWorldManager;
     [SerializeField] ConstructionUI constructionUI;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
+    [SerializeField] PromptUIController promptUIController;
+    [SerializeField] TimerUIController timerUIController;
 
     [SerializeField] GameObject genericNonVoxelObjectPrefab;
 
@@ -30,8 +32,13 @@ public class BuildShadow : MonoBehaviour
     private int dPadRotationDirection = 0;
     private Coroutine rotateObjectCoroutine;
 
+    private const string CONSTRUCTION_TIME_COST = "Construction Time Cost";
+    private const string CONSTRUCTION_PROMPT_BODY = "Building this will cost you {0}. Are you sure " +
+        "you want to build it?";
+
     private void Update() {
-        if (Input.GetKeyUp(KeyCode.P)) {
+        // todo - replace with more practical placement logic
+        if (Input.GetKeyUp(KeyCode.L)) {
             Debug.Log("placing torch");
             Vector3 torchDirection = rotation == Direction.NORTH
                 ? Vector3.back : rotation == Direction.EAST
@@ -43,77 +50,132 @@ public class BuildShadow : MonoBehaviour
     }
 
     public void HandleBuildSelect() {
-        VoxelPlayEnvironment vpEnv = voxelWorldManager.GetEnvironment();
         ConstructionOptions constructionOptions = constructionUI.constructionOptions;
         Vector3Int currVoxel = detachedCamera.currVoxel;
         TopBuildOption buildOption = constructionOptions.GetCurrTopBuildOption();
+        VoxelDefinition currVD = constructionOptions.GetCurrVoxelDefinition();
 
-        if (buildOption == TopBuildOption.Voxels) {
-            VoxelDefinition currVD = constructionOptions.GetCurrVoxelDefinition();
-            if (drawStart.HasValue) {
-                if (constructionOptions.GetCurrVoxelBuildModeOption() == VoxelBuildModeOption.Cuboid) {
-                    Dictionary<Vector3Int, VoxelDefinition> points 
-                        = Coordinates.GetPointsInCuboid(drawStart.Value, currVoxel, currVD);
-                    foreach (KeyValuePair<Vector3Int, VoxelDefinition> point in points) {
-                        if (currVD.name == "Null" || currVD.name == "DefaultVoxelHole") {
-                            vpEnv.VoxelDestroy(point.Key);
-                        }
-                        else {
-                            vpEnv.VoxelPlace(point.Key, currVD);
-                            if (currVD.name == "SlopeVoxel") {
-                                vpEnv.VoxelSetTexturesRotation(point.Key, (int)rotation);
-                            }
-                        }
+        // display build time cost prompt
+        if (buildOption != TopBuildOption.Voxels || drawStart.HasValue) {
+            string timeCostString;
+            switch (buildOption) {
+                case TopBuildOption.Voxels:
+                    int numVoxels;
+                    if (constructionOptions.GetCurrVoxelBuildModeOption() == VoxelBuildModeOption.Cuboid) {
+                        Dictionary<Vector3Int, VoxelDefinition> points = Coordinates.GetPointsInCuboid(
+                            drawStart.Value, currVoxel, currVD);
+                        numVoxels = points.Count;
                     }
-                }
-                else {
-                    Dictionary<Vector3Int, VoxelDefinition> positions 
-                        = GetTunnelPositions(drawStart.Value, currVoxel, currVD);
-                    foreach (KeyValuePair<Vector3Int, VoxelDefinition> pair in positions) {
-                        Vector3Int point = pair.Key;
-                        VoxelDefinition tunnelVD = pair.Value;
-                        if (tunnelVD.name == "Null" || tunnelVD.name == "DefaultVoxelHole") {
-                            vpEnv.VoxelDestroy(point);
-                        }
-                        else {
-                            vpEnv.VoxelPlace(point, tunnelVD);
-                            if (tunnelVD.name == "SlopeVoxel") {
-                                vpEnv.VoxelSetTexturesRotation(point, (int)rotation);
-                            }
-                        }
+                    else {
+                        Dictionary<Vector3Int, VoxelDefinition> positions = GetTunnelPositions(
+                            drawStart.Value, currVoxel, currVD);
+                        numVoxels = positions.Count;
                     }
-                }
 
-                StopDrawingModel();
-                return;
+                    timeCostString = promptUIController.GetTimeCostStringFromTimes(
+                        0, 0, numVoxels * 30, 0);
+                    StartCoroutine(promptUIController.DisplayPrompt(CONSTRUCTION_TIME_COST, 
+                        string.Format(CONSTRUCTION_PROMPT_BODY, timeCostString), BuildVoxels));
+                    break;
+                case TopBuildOption.Objects:
+                    timeCostString = promptUIController.GetTimeCostStringFromTimes(
+                        0, 0, 30, 0);
+                    StartCoroutine(promptUIController.DisplayPrompt(CONSTRUCTION_TIME_COST, 
+                        string.Format(CONSTRUCTION_PROMPT_BODY, timeCostString), BuildObject));
+                    break;
+                case TopBuildOption.Destroy:
+                    timeCostString = promptUIController.GetTimeCostStringFromTimes(
+                        0, 0, 30, 0);
+                    StartCoroutine(promptUIController.DisplayPrompt(CONSTRUCTION_TIME_COST,
+                        string.Format(CONSTRUCTION_PROMPT_BODY, timeCostString), DestroyVoxel));
+                    break;
+                default:
+                    throw new NotImplementedException($"Did not implement prompt for {buildOption}");
             }
-
+        }
+        else {
             drawStart = currVoxel;
             DrawVoxelShadow(currVD, drawStart.Value, drawStart.Value, rotation);
         }
-        else if (buildOption == TopBuildOption.Objects) {
-            objectShadow.transform.parent = null;
-            objectShadow.transform.position = currVoxel;
-            Instantiated.TangibleObject script = objectShadow.GetComponent<Instantiated.TangibleObject>();
+    }
 
-            ObjectIdentitySO objectID = constructionOptions.GetCurrObject();
-            TangibleObject definition = new TangibleObject(currVoxel, objectID.name, rotation);
-            script.Init(nonVoxelWorld, definition, objectID);
+    private void DestroyVoxel() {
+        VoxelPlayEnvironment vpEnv = voxelWorldManager.GetEnvironment();
+        Vector3Int currVoxel = detachedCamera.currVoxel;
 
-            nonVoxelWorld.AddTangibleEntity(definition, script);
-
-            objectShadow = null;
-            DrawBuildModeShadow();
+        vpEnv.VoxelDestroy(currVoxel);
+        Instantiated.InstantiatedEntity entity = nonVoxelWorld.GetEntityFromPosition(currVoxel);
+        if (entity != null && TypeUtils.IsSameTypeOrIsSubclass(entity,
+                typeof(Instantiated.TangibleObject))) {
+            nonVoxelWorld.DestroyEntity(entity);
         }
-        else {
-            vpEnv.VoxelDestroy(currVoxel);
-            Instantiated.InstantiatedEntity entity = nonVoxelWorld.GetEntityFromPosition(currVoxel);
-            if (entity != null && TypeUtils.IsSameTypeOrIsSubclass(entity, 
-                    typeof(Instantiated.TangibleObject))) {
-                nonVoxelWorld.DestroyEntity(entity);
+
+        timerUIController.DeductMinutes(30);
+    }
+
+    private void BuildObject() {
+        ConstructionOptions constructionOptions = constructionUI.constructionOptions;
+        Vector3Int currVoxel = detachedCamera.currVoxel;
+
+        objectShadow.transform.parent = null;
+        objectShadow.transform.position = currVoxel;
+        Instantiated.TangibleObject script = objectShadow.GetComponent<Instantiated.TangibleObject>();
+
+        ObjectIdentitySO objectID = constructionOptions.GetCurrObject();
+        TangibleObject definition = new TangibleObject(currVoxel, objectID.name, rotation);
+        script.Init(nonVoxelWorld, definition, objectID);
+
+        nonVoxelWorld.AddTangibleEntity(definition, script);
+
+        timerUIController.DeductMinutes(30);
+        objectShadow = null;
+        DrawBuildModeShadow();
+    }
+
+    private void BuildVoxels() {
+        VoxelPlayEnvironment vpEnv = voxelWorldManager.GetEnvironment();
+        ConstructionOptions constructionOptions = constructionUI.constructionOptions;
+        Vector3Int currVoxel = detachedCamera.currVoxel;
+        VoxelDefinition currVD = constructionOptions.GetCurrVoxelDefinition();
+
+        int numVoxels;
+        if (constructionOptions.GetCurrVoxelBuildModeOption() == VoxelBuildModeOption.Cuboid) {
+            Dictionary<Vector3Int, VoxelDefinition> points
+                = Coordinates.GetPointsInCuboid(drawStart.Value, currVoxel, currVD);
+            numVoxels = points.Count;
+            foreach (KeyValuePair<Vector3Int, VoxelDefinition> point in points) {
+                if (currVD.name == "Null" || currVD.name == "DefaultVoxelHole") {
+                    vpEnv.VoxelDestroy(point.Key);
+                }
+                else {
+                    vpEnv.VoxelPlace(point.Key, currVD);
+                    if (currVD.name == "SlopeVoxel") {
+                        vpEnv.VoxelSetTexturesRotation(point.Key, (int)rotation);
+                    }
+                }
             }
         }
-        return;
+        else {
+            Dictionary<Vector3Int, VoxelDefinition> positions
+                = GetTunnelPositions(drawStart.Value, currVoxel, currVD);
+            numVoxels = positions.Count;
+            foreach (KeyValuePair<Vector3Int, VoxelDefinition> pair in positions) {
+                Vector3Int point = pair.Key;
+                VoxelDefinition tunnelVD = pair.Value;
+                if (tunnelVD.name == "Null" || tunnelVD.name == "DefaultVoxelHole") {
+                    vpEnv.VoxelDestroy(point);
+                }
+                else {
+                    vpEnv.VoxelPlace(point, tunnelVD);
+                    if (tunnelVD.name == "SlopeVoxel") {
+                        vpEnv.VoxelSetTexturesRotation(point, (int)rotation);
+                    }
+                }
+            }
+        }
+
+        timerUIController.DeductMinutes(30 * numVoxels);
+        StopDrawingModel();
     }
 
     private Dictionary<Vector3Int, VoxelDefinition> GetTunnelPositions(Vector3Int start, 

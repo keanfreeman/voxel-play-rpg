@@ -19,7 +19,8 @@ public enum ControlState {
     DIALOGUE,
     COMBAT,
     FOLLOWING_ORDERS,
-    LOADING
+    LOADING,
+    UI
 }
 
 public class GameStateManager : MonoBehaviour
@@ -66,6 +67,14 @@ public class GameStateManager : MonoBehaviour
         }
         else if (controlState == ControlState.LOADING && newState == ControlState.SPRITE_NEUTRAL) {
             inputManager.UnlockPlayerControls();
+        }
+        else if (newState == ControlState.UI) {
+            inputManager.LockPlayerControls();
+            inputManager.UnlockUIControls(null);
+        }
+        else if (controlState == ControlState.UI && newState == ControlState.DETACHED) {
+            inputManager.UnlockDetachedControls();
+            inputManager.LockUIControls();
         }
 
         controlState = newState;
