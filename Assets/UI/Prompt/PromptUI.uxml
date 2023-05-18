@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/CommonStyle.uss?fileID=7433441132597879392&amp;guid=026a39900ed2bf348b8b1fcf8b7c191b&amp;type=3#CommonStyle" />
+    <Style src="project://database/Assets/UI/Prompt/PromptStyle.uss?fileID=7433441132597879392&amp;guid=e3653dfaa5479614293c39bb42bc2e92&amp;type=3#PromptStyle" />
+    <ui:VisualElement name="WholeScreen" style="flex-grow: 1; align-items: center; justify-content: center;">
+        <ui:VisualElement name="PromptBox" class="TextBackground" style="align-items: center; width: 50%; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px;">
+            <ui:Label text="Build Time Cost" display-tooltip-when-elided="true" name="Title" style="-unity-font-style: bold;" />
+            <ui:Label text="Building this will cost X minutes. Are you sure?" display-tooltip-when-elided="true" name="Body" style="white-space: normal; -unity-text-align: upper-center;" />
+            <ui:VisualElement style="flex-direction: row; justify-content: center; width: 100%;">
+                <ui:Button text="Yes" display-tooltip-when-elided="true" name="YesButton" class="PromptButton" style="background-color: rgba(0, 43, 102, 255); color: rgba(255, 255, 255, 255);" />
+                <ui:VisualElement name="EmptySpace" style="width: 100px; height: 10px;" />
+                <ui:Button text="No" display-tooltip-when-elided="true" name="NoButton" class="PromptButton" style="background-color: rgba(255, 255, 255, 255); color: rgba(0, 0, 0, 255);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

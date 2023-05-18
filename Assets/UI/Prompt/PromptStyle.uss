@@ -1,0 +1,5 @@
+.PromptButton {
+    width: 200px;
+    height: 100px;
+    font-size: 64px;
+}

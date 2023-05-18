@@ -1,3 +1,5 @@
+color palette - base blue #3993DD, dark blue #002B66, yellow #DF9F1F, almost white #E6F4F1
+
 there's a bug where if the level's loading and blocks are made transparent (e.g. the player moves),
 those blocks will become empty voxels.
 - possibly, the same issue happens when saving and voxels are currently transparent. 
