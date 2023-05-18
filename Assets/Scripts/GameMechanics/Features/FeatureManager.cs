@@ -12,6 +12,7 @@ public class FeatureManager : MonoBehaviour {
     [SerializeField] EffectManager effectManager;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
     [SerializeField] CombatManager combatManager;
+    [SerializeField] VisualRollManager visualRollManager;
 
     public void SetUpFeatures(Traveller traveller) {
         foreach (Feature feature in traveller.GetStats().features) {
@@ -33,7 +34,7 @@ public class FeatureManager : MonoBehaviour {
                 AttackSO attack = (AttackSO)action;
                 switch (attack.attackFeature) {
                     case AttackFeature.GhoulClaws:
-                        traveller.onAttackHit += OnGhoulClawHit;
+                        traveller.afterDamageDealt += ApplyGhoulClaw;
                         break;
                     case AttackFeature.None:
                         break;
@@ -49,8 +50,8 @@ public class FeatureManager : MonoBehaviour {
         traveller.onAttackHit += CheckParalyzedCriticalHit;
     }
 
-    private bool CheckParalyzedCriticalHit(AttackSO attack, Traveller target) {
-        return target.statusEffects.IsParalyzed();
+    private IEnumerator CheckParalyzedCriticalHit(AttackSO attack, Traveller target) {
+        yield return target.statusEffects.IsParalyzed();
     }
 
     private Advantage CheckParalyzedAdvantage(Traveller attacker, Traveller target, Advantage currAdvState) {
@@ -62,21 +63,26 @@ public class FeatureManager : MonoBehaviour {
     }
 
     // todo - should not work on elves or undead
-    // return bool - irrelevant for this method
-    private bool OnGhoulClawHit(AttackSO attack, Traveller target) {
+    private IEnumerator ApplyGhoulClaw(AttackSO attack, Traveller target) {
         // todo - implement so I don't have to check the attack type is correct
         if (attack.attackFeature != AttackFeature.GhoulClaws) {
-            return false;
+            yield break;
         }
 
         const int DC = 10;
         int modifier = StatModifiers.GetModifierForStat(target.GetStats().constitution);
-        int roll = randomManager.RollSavingThrow(modifier);
+
+        CoroutineWithData savingThrowCoroutine = new(this, visualRollManager.RollSavingThrow(
+            "Rolling CON saving throw for Ghoul Claw", modifier, DC));
+        yield return savingThrowCoroutine.coroutine;
+        int roll = (int)savingThrowCoroutine.result;
+
         if (roll < DC) {
             OngoingEffect ghoulStatusEffect = target.statusEffects.Get(StatusEffect.GhoulClaw);
             if (ghoulStatusEffect == null) {
                 target.statusEffects.Add(StatusEffect.GhoulClaw, 
-                    new OngoingEffect(StatusEffect.GhoulClaw, new List<Condition> { Condition.Paralyzed}, 10));
+                    new OngoingEffect(StatusEffect.GhoulClaw, 
+                    new List<Condition> { Condition.Paralyzed}, 10));
                 target.onCombatTurnEnd += CheckGhoulClawEnd;
             }
             else {
@@ -84,19 +90,22 @@ public class FeatureManager : MonoBehaviour {
                 ghoulStatusEffect.turnsLeft = 10;
             }
         }
-
-        return false;
     }
 
-    private void CheckGhoulClawEnd(Traveller currTurnTraveller) {
+    private IEnumerator CheckGhoulClawEnd(Traveller currTurnTraveller) {
         OngoingEffect ghoulStatusEffect = currTurnTraveller.statusEffects.Get(StatusEffect.GhoulClaw);
         if (ghoulStatusEffect == null) {
-            return;
+            yield break;
         }
 
         const int DC = 10;
         int modifier = StatModifiers.GetModifierForStat(currTurnTraveller.GetStats().constitution);
-        int roll = randomManager.RollSavingThrow(modifier);
+
+        CoroutineWithData savingThrowCoroutine = new(this, visualRollManager.RollSavingThrow(
+            "Rolling CON saving throw to end Paralysis from Ghoul Claw", modifier, 10));
+        yield return savingThrowCoroutine.coroutine;
+        int roll = (int)savingThrowCoroutine.result;
+
         if (roll >= DC || ghoulStatusEffect.turnsLeft <= 1) {
             currTurnTraveller.statusEffects.Remove(StatusEffect.GhoulClaw);
             currTurnTraveller.onCombatTurnEnd -= CheckGhoulClawEnd;
@@ -128,18 +137,24 @@ public class FeatureManager : MonoBehaviour {
         return nextAdvantageState;
     }
 
-    // todo - do not activate on critical hit
-    public void TriggerUndeadFortitude(Traveller instance, Damage damage) {
+    public IEnumerator TriggerUndeadFortitude(Traveller instance, Damage damage) {
         if (instance.currHP > 0 
-                // todo - convey that radiant damage overrides this feature
-                || damage.damageType == DamageType.Radiant) {
-            return;
+                // todo - convey that these have happened
+                || damage.damageType == DamageType.Radiant
+                || damage.isCriticalHit) {
+            yield break;
         }
 
         int difficultyClass = 5 + damage.amount;
 
         int modifier = StatModifiers.GetModifierForStat(instance.GetStats().constitution);
-        int roll = randomManager.RollSavingThrow(modifier);
+
+        CoroutineWithData savingThrowCoroutine = new(this, visualRollManager.RollSavingThrow(
+            "Rolling CON saving throw for Zombie's Undead Fortitude", modifier, difficultyClass));
+        yield return savingThrowCoroutine.coroutine;
+        int roll = (int)savingThrowCoroutine.result;
+
+        // todo - revert
         if (roll >= difficultyClass) {
             instance.SetHP(1);
             // todo - make a message of what happened instead of a random effect

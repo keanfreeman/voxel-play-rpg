@@ -44,7 +44,7 @@ public class CombatManager : MonoBehaviour
         Traveller currCreature = initiatives[initiative].Value;
         yield return cameraManager.MoveCameraToTargetCreature(currCreature);
 
-        currCreature.OnCombatTurnStart();
+        yield return currCreature.OnCombatTurnStart();
 
         usedResources[currCreature] = new CombatResources();
         if (currCreature.GetType() == typeof(PlayerCharacter)) {
@@ -80,7 +80,7 @@ public class CombatManager : MonoBehaviour
                 // TODO - have preferred strategies (ranged vs melee for example)
                 AttackSO npcAttack = (AttackSO)npcActions[pickedIndex];
                 CoroutineWithData attackRollCoroutine = new(this, 
-                    npcInstance.PerformAttack(npcAttack.attackRoll.modifier, nearestPlayer));
+                    npcInstance.PerformAttack(npcAttack, nearestPlayer));
                 yield return attackRollCoroutine.coroutine;
                 AttackResult attackResult = attackRollCoroutine.result as AttackResult;
 
@@ -91,7 +91,8 @@ public class CombatManager : MonoBehaviour
                     int damageRoll = (int)damageCoroutine.result;
 
                     Debug.Log($"NPC rolled {damageRoll} for their damage roll.");
-                    nearestPlayer.TakeDamage(new Damage(npcAttack.damageType, damageRoll));
+                    yield return npcInstance.DealDamage(npcAttack, new Damage(npcAttack.damageType,
+                        damageRoll), nearestPlayer);
                     if (nearestPlayer.currHP < 1) {
                         // TODO - lose on death and no party members
                         Debug.Log("Player ran out of HP.");
@@ -102,7 +103,7 @@ public class CombatManager : MonoBehaviour
             }
         }
 
-        currCreature.OnCombatTurnEnd();
+        yield return currCreature.OnCombatTurnEnd();
 
         inputManager.DisableWatchState();
         ResetCombatResources(currCreature);
@@ -176,7 +177,7 @@ public class CombatManager : MonoBehaviour
             }
 
             foreach (AttackSO attack in attacksToDo) {
-                CoroutineWithData cwd = new(this, playerInstance.PerformAttack(attack.attackRoll.modifier,
+                CoroutineWithData cwd = new(this, playerInstance.PerformAttack(attack,
                     attackTarget));
                 yield return cwd.coroutine;
                 AttackResult attackResult = cwd.result as AttackResult;
@@ -189,7 +190,8 @@ public class CombatManager : MonoBehaviour
 
                     Debug.Log($"Player rolled {damageRoll} for their damage roll.");
                     int newHP = attackTarget.currHP - damageRoll;
-                    attackTarget.TakeDamage(new Damage(attack.damageType, damageRoll));
+                    yield return playerInstance.DealDamage(attack,
+                        new Damage(attack.damageType, damageRoll), attackTarget);
                     if (attackTarget.currHP < 1) {
                         Debug.Log("NPC defeated");
                         foreach (KeyValuePair<int, Traveller> initiative in initiatives) {
@@ -247,13 +249,18 @@ public class CombatManager : MonoBehaviour
         yield return gameStateManager.ExitCombat();
     }
 
+
     public void HandleDetachedCancel(InputAction.CallbackContext obj) {
+        StartCoroutine(ExecuteHandleDetachedCancel());
+    }
+
+    public IEnumerator ExecuteHandleDetachedCancel() {
         Traveller currCreature = initiatives[currInitiative].Value;
         if (movementManager.IsMoving(currCreature)) {
-            return;
+            yield break;
         }
 
-        currCreature.OnCombatTurnEnd();
+        yield return currCreature.OnCombatTurnEnd();
 
         Debug.Log("Player ended turn.");
         ResetCombatResources(currCreature);

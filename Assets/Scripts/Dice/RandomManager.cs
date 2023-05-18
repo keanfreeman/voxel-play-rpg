@@ -19,10 +19,6 @@ public class RandomManager : MonoBehaviour
         }
         return roll + modifier;
     }
-
-    public int RollSavingThrow(int modifier, Advantage advantage = Advantage.None) {
-        return RollAbilityCheck(modifier, advantage);
-    }
     
     // todo - convey if there was a critical hit (e.g. have damageroll method instead)
     private int Roll(int numDice, int diceSize, int modifier) {

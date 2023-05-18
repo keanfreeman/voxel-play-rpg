@@ -46,14 +46,53 @@ public class VisualRollManager : MonoBehaviour {
             if (isCritical) {
                 displayText = "Critical Hit!";
             }
-            else displayText = "Hit!";
+            else displayText = $"{finalNum} Hits!";
         }
-        else displayText = $"Miss! {finalNum} vs {targetAC}";
+        else displayText = $"{finalNum} Misses!";
         yield return diceUIController.DisplayText(displayText);
         yield return new WaitForSeconds(TEXT_DISPLAY_WAIT);
         yield return diceUIController.Hide();
 
         yield return new AttackResult(finalNum, isCritical);
+    }
+
+    public IEnumerator RollSavingThrow(string displayText, int modifier, int targetDC, 
+            Advantage advantage = Advantage.None) {
+        List<Die> diceToBeRolled = new();
+        if (advantage != Advantage.Advantage && advantage != Advantage.Disadvantage) {
+            diceToBeRolled.Add(new(1, 20));
+        }
+        else {
+            diceToBeRolled.Add(new(2, 20));
+            displayText += advantage == Advantage.Advantage ? " with Advantage" : " with Disadvantage";
+        }
+        yield return diceUIController.DisplayText(displayText);
+
+        CoroutineWithData coroutineWithData = new(this, diceThrowerManager.RollDice(diceToBeRolled));
+        yield return coroutineWithData.coroutine;
+        DiceResult rollResult = (DiceResult)coroutineWithData.result;
+
+        int finalNum;
+        if (advantage == Advantage.Advantage) {
+            finalNum = Mathf.Max(rollResult.rolls[0].Item2, rollResult.rolls[1].Item2);
+        }
+        else if (advantage == Advantage.Disadvantage) {
+            finalNum = Mathf.Min(rollResult.rolls[0].Item2, rollResult.rolls[1].Item2);
+        }
+        else {
+            finalNum = rollResult.rolls[0].Item2;
+        }
+        finalNum += modifier;
+
+        if (finalNum >= targetDC) {
+            displayText = $"{finalNum} Succeeds!";
+        }
+        else displayText = $"{finalNum} Fails! DC{targetDC}";
+        yield return diceUIController.DisplayText(displayText);
+        yield return new WaitForSeconds(TEXT_DISPLAY_WAIT);
+        yield return diceUIController.Hide();
+
+        yield return finalNum;
     }
 
     public IEnumerator RollDamage(List<Die> damageRolls, bool isCritical) {

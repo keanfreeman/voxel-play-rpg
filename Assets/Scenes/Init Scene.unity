@@ -992,14 +992,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Table
       objectReference: {fileID: 0}
-    - target: {fileID: 412238, guid: 98cd19d91298f434f889856e917858f7, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.09179167
-      objectReference: {fileID: 0}
-    - target: {fileID: 440840, guid: 98cd19d91298f434f889856e917858f7, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.09179167
-      objectReference: {fileID: 0}
     - target: {fileID: 445706, guid: 98cd19d91298f434f889856e917858f7, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -1042,42 +1034,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 445706, guid: 98cd19d91298f434f889856e917858f7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 474382, guid: 98cd19d91298f434f889856e917858f7, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.09179164
-      objectReference: {fileID: 0}
-    - target: {fileID: 484250, guid: 98cd19d91298f434f889856e917858f7, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.09179165
-      objectReference: {fileID: 0}
-    - target: {fileID: 2327800, guid: 98cd19d91298f434f889856e917858f7, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2330674, guid: 98cd19d91298f434f889856e917858f7, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2331744, guid: 98cd19d91298f434f889856e917858f7, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2389708, guid: 98cd19d91298f434f889856e917858f7, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2396496, guid: 98cd19d91298f434f889856e917858f7, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11427270, guid: 98cd19d91298f434f889856e917858f7, type: 3}
-      propertyPath: SpinPower
-      value: 1e+20
-      objectReference: {fileID: 0}
-    - target: {fileID: 4244284862068958446, guid: 98cd19d91298f434f889856e917858f7, type: 3}
-      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1254,6 +1210,7 @@ MonoBehaviour:
   effectManager: {fileID: 234026431}
   nonVoxelWorld: {fileID: 1135948956}
   combatManager: {fileID: 1613990517}
+  visualRollManager: {fileID: 2076388858}
 --- !u!1 &983819851
 GameObject:
   m_ObjectHideFlags: 0

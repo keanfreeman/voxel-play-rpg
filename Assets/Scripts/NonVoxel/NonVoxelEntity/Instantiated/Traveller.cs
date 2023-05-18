@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static RandomManager;
+using static UnityEngine.GraphicsBuffer;
 
 namespace Instantiated {
     public abstract class Traveller : TangibleEntity {
@@ -18,11 +19,12 @@ namespace Instantiated {
         [SerializeField] protected RandomManager randomManager;
         [SerializeField] protected VisualRollManager visualRollManager;
 
-        public event System.Action<Traveller, Damage> onHPChanged;
+        public event System.Func<Traveller, Damage, IEnumerator> onHPChanged;
         public event System.Func<Traveller, Traveller, Advantage, Advantage> onPerformAttack;
-        public event System.Action<Traveller> onCombatTurnStart;
-        public event System.Action<Traveller> onCombatTurnEnd;
-        public event System.Func<AttackSO, Traveller, bool> onAttackHit;
+        public event System.Func<Traveller, IEnumerator> onCombatTurnStart;
+        public event System.Func<Traveller, IEnumerator> onCombatTurnEnd;
+        public event System.Func<AttackSO, Traveller, IEnumerator> onAttackHit;
+        public event System.Func<AttackSO, Traveller, IEnumerator> afterDamageDealt;
 
         public SpriteMoveDirection permanentMoveDirection { get; protected set; } = SpriteMoveDirection.NONE;
         public bool isMoving { get; protected set; } = false;
@@ -47,48 +49,84 @@ namespace Instantiated {
         }
 
         public IEnumerator PerformDamage(AttackSO attack, AttackResult attackResult, Traveller target) {
-            bool isCritical = attackResult.isCritical;
-            foreach (System.Delegate handler in onAttackHit.GetInvocationList()) {
-                var handlerCasted = (System.Func<AttackSO, Traveller, bool>)handler;
-                isCritical = handlerCasted.Invoke(attack, target);
+            bool isCurrentlyCritical = attackResult.isCritical;
+            if (onAttackHit != null) {
+                foreach (System.Delegate handler in onAttackHit.GetInvocationList()) {
+                    var handlerCasted = (System.Func<AttackSO, Traveller, IEnumerator>)handler;
+                    CoroutineWithData attackHitCoroutine = new(this, handlerCasted.Invoke(attack, target));
+                    yield return attackHitCoroutine.coroutine;
+
+                    bool isNewlyCritical = (bool)attackHitCoroutine.result;
+                    if (!isCurrentlyCritical && isNewlyCritical) isCurrentlyCritical = true;
+                }
             }
 
             CoroutineWithData damageCoroutine = new(this, 
-                visualRollManager.RollDamage(new List<Die> { attack.damageRoll }, isCritical));
+                visualRollManager.RollDamage(new List<Die> { attack.damageRoll }, isCurrentlyCritical));
             yield return damageCoroutine.coroutine;
             yield return damageCoroutine.result;
         }
 
-        public IEnumerator PerformAttack(int modifier, Traveller target, 
+        public IEnumerator PerformAttack(AttackSO attack, Traveller target, 
                 Advantage advantage = Advantage.None) {
             Advantage currAdvantageState = advantage;
-            foreach (System.Delegate handler in onPerformAttack.GetInvocationList()) {
-                var handlerCasted = (System.Func<Traveller, Traveller, Advantage, Advantage>)handler;
-                currAdvantageState = handlerCasted.Invoke(this, target, currAdvantageState);
+            if (onPerformAttack != null) {
+                foreach (System.Delegate handler in onPerformAttack.GetInvocationList()) {
+                    var handlerCasted = (System.Func<Traveller, Traveller, Advantage, Advantage>)handler;
+                    currAdvantageState = handlerCasted.Invoke(this, target, currAdvantageState);
+                }
             }
 
-            CoroutineWithData cwd = new(this, visualRollManager.RollAttack(modifier,
+            CoroutineWithData rollAttackCoroutine = new(this, 
+                visualRollManager.RollAttack(attack.attackRoll.modifier,
                 target.GetStats().CalculateArmorClass(), currAdvantageState));
-            yield return cwd.coroutine;
-            AttackResult attackResult = cwd.result as AttackResult;
+            yield return rollAttackCoroutine.coroutine;
+            AttackResult attackResult = rollAttackCoroutine.result as AttackResult;
             yield return attackResult;
         }
 
-        public void TakeDamage(Damage damage) {
+        public IEnumerator DealDamage(AttackSO attack, Damage damage, Traveller target) {
+            yield return target.TakeDamage(damage);
+
+            if (afterDamageDealt != null) {
+                foreach (System.Delegate handler in afterDamageDealt.GetInvocationList()) {
+                    var handlerCasted = (System.Func<AttackSO, Traveller, IEnumerator>)handler;
+                    yield return handlerCasted.Invoke(attack, target);
+                }
+            }
+        }
+
+        private IEnumerator TakeDamage(Damage damage) {
             currHP -= damage.amount;
-            onHPChanged?.Invoke(this, damage);
+
+            if (onHPChanged != null) {
+                foreach (System.Delegate handler in onHPChanged.GetInvocationList()) {
+                    var handlerCasted = (System.Func<Traveller, Damage, IEnumerator>)handler;
+                    yield return handlerCasted.Invoke(this, damage);
+                }
+            }
         }
 
         public void SetHP(int newValue) {
             currHP = newValue;
         }
 
-        public void OnCombatTurnStart() {
-            onCombatTurnStart?.Invoke(this);
+        public IEnumerator OnCombatTurnStart() {
+            if (onCombatTurnStart != null) {
+                foreach (var handler in onCombatTurnStart.GetInvocationList()) {
+                    var handlerCasted = (System.Func<Traveller, IEnumerator>)handler;
+                    yield return handlerCasted.Invoke(this);
+                }
+            }
         }
 
-        public void OnCombatTurnEnd() {
-            onCombatTurnEnd?.Invoke(this);
+        public IEnumerator OnCombatTurnEnd() {
+            if (onCombatTurnEnd != null) {
+                foreach (var handler in onCombatTurnEnd.GetInvocationList()) {
+                    var handlerCasted = (System.Func<Traveller, IEnumerator>)handler;
+                    yield return handlerCasted.Invoke(this);
+                }
+            }
         }
 
         private void AnimateMove() {

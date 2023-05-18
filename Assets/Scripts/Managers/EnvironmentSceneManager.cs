@@ -226,6 +226,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
 
         BattleGroup convenienceBG = new(new List<NPC> {
             new(new Vector3Int(835, 29, 351), Faction.ENEMY, IdleBehavior.WANDER, ghoulID.name),
+            new NPC(new Vector3Int(835, 29, 350), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
         });
         BattleGroup zombieBG1 = new(new List<NPC> {
             new NPC(new Vector3Int(849, -12, 365), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
@@ -337,6 +338,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     bloodyEyeBG.combatants[3],
                     ghoulBoss,
                     convenienceBG.combatants[0],
+                    convenienceBG.combatants[1],
 
                     bed,
                     lamp,
