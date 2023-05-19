@@ -9,6 +9,7 @@ public class PromptUIController : MonoBehaviour
 {
     [SerializeField] UIDocument promptUIDocument;
     [SerializeField] GameStateManager gameStateManager;
+    [SerializeField] ConstructionUI constructionUI;
 
     VisualElement wholeScreen;
     Label titleLabel;
@@ -31,6 +32,8 @@ public class PromptUIController : MonoBehaviour
     }
 
     public IEnumerator DisplayPrompt(string title, string body, Action yesHandler) {
+        constructionUI.SetDisplayState(false);
+
         titleLabel.text = title;
         bodyLabel.text = body;
         currYesHandler = yesHandler;
@@ -84,11 +87,13 @@ public class PromptUIController : MonoBehaviour
         currYesHandler = null;
         Hide();
         StartCoroutine(gameStateManager.SetControlState(ControlState.DETACHED));
+        constructionUI.SetDisplayState(true);
     }
 
     private void OnNoPress() {
         Hide();
         StartCoroutine(gameStateManager.SetControlState(ControlState.DETACHED));
+        constructionUI.SetDisplayState(true);
     }
 
     private void Hide() {

@@ -640,6 +640,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   promptUIDocument: {fileID: 539451387}
   gameStateManager: {fileID: 955022268}
+  constructionUI: {fileID: 1861321071}
 --- !u!1 &582458976
 GameObject:
   m_ObjectHideFlags: 0
