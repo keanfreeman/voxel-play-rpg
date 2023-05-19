@@ -33,14 +33,11 @@ public class InputManager : MonoBehaviour
         playerInputActions.Detached.RotateCamera.performed += cameraManager.RotateDetached;
         playerInputActions.Detached.RotateCamera.canceled += cameraManager.StopRotatingDetached;
 
-        // TODO - only hook these up to the combat manager when combat is active
-        playerInputActions.Detached.Select.performed += combatManager.HandleDetachedSelect;
-        playerInputActions.Detached.Cancel.performed += combatManager.HandleDetachedCancel;
-
         playerInputActions.Player.SwitchCharacter.performed += partyManager.SwitchToNextCharacter;
         playerInputActions.Detached.SwitchCharacter.performed += partyManager.SwitchToNextCharacter;
 
         playerInputActions.Detached.Select.performed += detachedCamera.HandleSelect;
+        playerInputActions.Detached.Cancel.performed += detachedCamera.HandleCancel;
 
         playerInputActions.Watch.RotateCamera.performed += cameraManager.RotateDetached;
         playerInputActions.Watch.RotateCamera.canceled += cameraManager.StopRotatingDetached;
@@ -60,6 +57,22 @@ public class InputManager : MonoBehaviour
 
         playerInputActions.Player.Enable();
         eventSystem.sendNavigationEvents = false;
+    }
+
+    public void SetDetachedToCombat() {
+        playerInputActions.Detached.Select.performed -= detachedCamera.HandleSelect;
+        playerInputActions.Detached.Cancel.performed -= detachedCamera.HandleCancel;
+
+        playerInputActions.Detached.Select.performed += combatManager.HandleDetachedSelect;
+        playerInputActions.Detached.Cancel.performed += combatManager.HandleDetachedCancel;
+    }
+
+    public void SetDetachedToNormal() {
+        playerInputActions.Detached.Select.performed -= combatManager.HandleDetachedSelect;
+        playerInputActions.Detached.Cancel.performed -= combatManager.HandleDetachedCancel;
+
+        playerInputActions.Detached.Select.performed += detachedCamera.HandleSelect;
+        playerInputActions.Detached.Cancel.performed += detachedCamera.HandleCancel;
     }
 
     private void SetUIHandlers(UIHandler uiHandler) {

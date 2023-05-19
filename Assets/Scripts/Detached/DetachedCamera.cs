@@ -156,11 +156,6 @@ public class DetachedCamera : MonoBehaviour
 
     // TODO - handle multiple button presses gracefully
     public void HandleSelect(InputAction.CallbackContext obj) {
-        // TODO - switch where input is directed rather than checking against state
-        if (gameStateManager.controlState != ControlState.DETACHED) {
-            return;
-        }
-
         if (isBuildMode) {
             buildShadow.HandleBuildSelect();
             return;
@@ -169,7 +164,20 @@ public class DetachedCamera : MonoBehaviour
         StartCoroutine(ExecuteHandleSelect());
     }
 
+    public void HandleCancel(InputAction.CallbackContext obj) {
+        if (isBuildMode) {
+            buildShadow.HandleBuildCancel();
+        }
+        else {
+            // todo - stop movement of selected character
+        }
+    }
+
     public void HandleToggleBuildMode(InputAction.CallbackContext obj) {
+        ToggleBuildMode();
+    }
+
+    public void ToggleBuildMode() {
         isBuildMode = !isBuildMode;
         combatUI.SetDisplayState(!isBuildMode);
         constructionUI.SetDisplayState(isBuildMode);

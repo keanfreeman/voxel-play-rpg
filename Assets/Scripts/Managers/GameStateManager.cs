@@ -96,11 +96,13 @@ public class GameStateManager : MonoBehaviour
         controlState = ControlState.COMBAT;
         Debug.Log("Entered combat");
         combatManager.StartCombat();
+        inputManager.SetDetachedToCombat();
     }
 
     public IEnumerator ExitCombat() {
         yield return SetControlState(ControlState.SPRITE_NEUTRAL);
         inputManager.SwitchDetachedToPlayerControlState();
+        inputManager.SetDetachedToNormal();
     }
 
     public void HandleCombatBar(InputAction.CallbackContext obj) {
@@ -123,6 +125,9 @@ public class GameStateManager : MonoBehaviour
         else {
             controlState = ControlState.SPRITE_NEUTRAL;
             inputManager.SwitchDetachedToPlayerControlState();
+            if (detachedCamera.isBuildMode) {
+                detachedCamera.ToggleBuildMode();
+            }
         }
     }
     

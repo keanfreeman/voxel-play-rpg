@@ -59,10 +59,10 @@ public class PromptUIController : MonoBehaviour
         }
 
         List<string> stringsToAdd = new();
-        if (days > 0) stringsToAdd.Add(days.ToString() + (days > 2 ? " days" : "day"));
-        if (hours > 0) stringsToAdd.Add(hours.ToString() + (hours > 2 ? " hours" : "hour"));
-        if (minutes > 0) stringsToAdd.Add(minutes.ToString() + (minutes > 2 ? " minutes" : "minute"));
-        if (seconds > 0) stringsToAdd.Add(seconds.ToString() + (seconds > 2 ? " seconds" : "second"));
+        if (days > 0) stringsToAdd.Add(days.ToString() + (days > 1 ? " days" : " day"));
+        if (hours > 0) stringsToAdd.Add(hours.ToString() + (hours > 1 ? " hours" : " hour"));
+        if (minutes > 0) stringsToAdd.Add(minutes.ToString() + (minutes > 1 ? " minutes" : " minute"));
+        if (seconds > 0) stringsToAdd.Add(seconds.ToString() + (seconds > 1 ? " seconds" : " second"));
 
         if (stringsToAdd.Count > 1) {
             int lastIndex = stringsToAdd.Count - 1;

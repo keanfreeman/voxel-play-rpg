@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Security.Principal;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.ProBuilder.Shapes;
@@ -96,6 +97,14 @@ public class BuildShadow : MonoBehaviour
         else {
             drawStart = currVoxel;
             DrawVoxelShadow(currVD, drawStart.Value, drawStart.Value, rotation);
+        }
+    }
+
+    public void HandleBuildCancel() {
+        ConstructionOptions constructionOptions = constructionUI.constructionOptions;
+        TopBuildOption buildOption = constructionOptions.GetCurrTopBuildOption();
+        if (buildOption == TopBuildOption.Voxels && drawStart.HasValue) {
+            StopDrawingModel();
         }
     }
 
