@@ -10,6 +10,9 @@ using UnityEngine.UIElements;
 public class CombatUI : UIHandler {
     [SerializeField] UIDocument uiDocument;
     [SerializeField] GameStateManager gameStateManager;
+    [SerializeField] ActionManager actionManager;
+    [SerializeField] PartyManager partyManager;
+
     public const string COMBAT_UI_ROOT = "CombatUI";
     public const string COMBAT_BAR = "CombatBar";
     public const string ACTION_BUTTON = "ActionButton";
@@ -22,7 +25,7 @@ public class CombatUI : UIHandler {
     Label choiceInfoBody;
 
     private List<ActionChoice> actionButtons = new();
-    private int currFocus = 0;
+    private ActionChoice currHighlightedButton;
 
     void Awake() {
         combatUIRoot = uiDocument.rootVisualElement.Q<VisualElement>(COMBAT_UI_ROOT);
@@ -38,6 +41,7 @@ public class CombatUI : UIHandler {
             actionButtons.Add(button);
             button.gainedFocus += OnButtonGainedFocus;
             button.lostFocus += OnButtonLostFocus;
+            button.selected += OnButtonSelected;
             iterator++;
         }
         SetChoiceInfoBoxDisplayState(false);
@@ -56,11 +60,16 @@ public class CombatUI : UIHandler {
         }
     }
 
+    private void OnButtonSelected(ActionChoice button) {
+        actionManager.PerformAction(partyManager.currControlledCharacter, button.currAction);
+    }
+
     private void OnButtonLostFocus(ActionChoice button) {
         SetChoiceInfoBoxDisplayState(false);
     }
 
     private void OnButtonGainedFocus(ActionChoice button) {
+        currHighlightedButton = button;
         if (button.currAction == null) {
             SetChoiceInfoBoxDisplayState(false);
             return;
@@ -87,7 +96,7 @@ public class CombatUI : UIHandler {
     }
 
     public void SetFocus() {
-        actionButtons[currFocus].Focus();
+        currHighlightedButton.Focus();
     }
 
     private void SetChoiceInfoBoxDisplayState(bool isVisible) {
