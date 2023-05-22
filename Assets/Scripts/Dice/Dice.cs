@@ -22,5 +22,9 @@ namespace DieNamespace {
             this.diceSize = diceSize;
             this.modifier = modifier;
         }
+
+        public override string ToString() {
+            return $"{numDice}d{diceSize}+{modifier}";
+        }
     }
 }

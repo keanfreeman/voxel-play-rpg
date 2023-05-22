@@ -205,5 +205,21 @@ namespace Instantiated {
         protected abstract Vector3Int? GetDestinationFromDirection(SpriteMoveDirection spriteMoveDirection);
 
         public abstract Faction GetFaction();
+
+        public List<ActionSO> GetActions() {
+            List<ActionSO> totalActions = new();
+            StatsSO stats = GetStats();
+            foreach (ActionSO action in stats.actions) {
+                totalActions.Add(action);
+            }
+            List<Feature> features = stats.features;
+            foreach (Feature feature in features) {
+                foreach (ActionSO action in feature.providedActions) {
+                    totalActions.Add(action);
+                }
+            }
+
+            return totalActions;
+        }
     }
 }

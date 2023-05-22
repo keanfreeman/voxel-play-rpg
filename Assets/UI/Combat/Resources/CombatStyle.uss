@@ -1,10 +1,6 @@
-.action_button {
-}
-
-.action_choice_bar {
-    width: 100%;
-}
-
-.action_holder {
-    flex-direction: row;
+.ActionButton {
+    white-space: normal;
+    width: 120px;
+    height: 120px;
+    font-size: 28px;
 }

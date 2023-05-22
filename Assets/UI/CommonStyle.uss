@@ -13,10 +13,10 @@ Button {
 }
 
 Button:focus {
-    border-left-color: rgba(224, 172, 213, 255);
-    border-right-color: rgba(224, 172, 213, 255);
-    border-top-color: rgba(224, 172, 213, 255);
-    border-bottom-color: rgba(224, 172, 213, 255);
+    border-left-color: rgb(224, 172, 213);
+    border-right-color: rgb(224, 172, 213);
+    border-top-color: rgb(224, 172, 213);
+    border-bottom-color: rgb(224, 172, 213);
 }
 
 .TextBackground {
@@ -33,4 +33,8 @@ Button:focus {
     border-right-color: rgb(0, 0, 0);
     border-top-color: rgb(0, 0, 0);
     border-bottom-color: rgb(0, 0, 0);
+}
+
+.MediumText {
+    font-size: 32px;
 }

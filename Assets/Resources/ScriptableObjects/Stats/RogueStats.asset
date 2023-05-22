@@ -24,4 +24,6 @@ MonoBehaviour:
   actions:
   - {fileID: 11400000, guid: 014ef2fe746cad144bc10c18a3f91798, type: 2}
   - {fileID: 11400000, guid: 441b8db769431a148ab3a80c374cc475, type: 2}
+  features: []
   level: 1
+  armorClass: 14

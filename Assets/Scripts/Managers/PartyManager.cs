@@ -14,6 +14,7 @@ public class PartyManager : MonoBehaviour, ISaveable
     [SerializeField] GameStateManager gameStateManager;
     [SerializeField] Pathfinder pathfinder;
     [SerializeField] MovementManager movementManager;
+    [SerializeField] CombatUI combatUI;
     
     public PlayerCharacter mainCharacter { get; private set; }
     public List<PlayerCharacter> partyMembers { get; private set; } = new List<PlayerCharacter>();
@@ -47,6 +48,7 @@ public class PartyManager : MonoBehaviour, ISaveable
         inputManager.SetPlayerMovementControls(currControlledCharacter, playerMovement);
         currControlledCharacter = playerMovement;
         cameraManager.AttachCameraToPlayer(currControlledCharacter);
+        combatUI.SetActions(currControlledCharacter);
     }
 
     public void SwitchToNextCharacter(InputAction.CallbackContext obj) {

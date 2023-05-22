@@ -16,4 +16,4 @@ MonoBehaviour:
   spriteLibraryAsset: {fileID: 7108339969198208228, guid: 256bf7f1da7f39a41811d6775592b976, type: 3}
   offset: {x: 0.5, y: 0.5, z: 0.5}
   scale: {x: 1, y: 1, z: 1}
-  stats: {fileID: 11400000, guid: 26880ce264f5b614da344f889395c044, type: 2}
+  stats: {fileID: 11400000, guid: 8a61ad058de568843ac284237e20a73e, type: 2}

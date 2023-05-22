@@ -210,8 +210,8 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     private Dictionary<int, SceneInfo> SetUpDefaultWorldEntities() {
         PlayerCharacter mainCharacter = new PlayerCharacter(new Vector3Int(859, 37, 347),
             mainCharacterID.name);
-        PlayerCharacter sidekick = new PlayerCharacter(new Vector3Int(850, -8, 345),
-            sidekickID.name);
+        PlayerCharacter testFighter = new(new Vector3Int(862, 29, 345), friendID.name);
+        PlayerCharacter testFighter2 = new(new Vector3Int(850, -8, 345), friendID.name);
 
         NPC fighterCorey = new NPC(new Vector3Int(862, 29, 346), Faction.PLAYER, IdleBehavior.STAND,
             friendID.name);
@@ -323,7 +323,8 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             {
                 3, new SceneInfo(new List<Entity> {
                     mainCharacter,
-                    sidekick,
+                    testFighter,
+                    testFighter2,
                     fighterCorey,
                     cat,
                     rogueGrimes,

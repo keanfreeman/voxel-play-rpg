@@ -23,4 +23,6 @@ MonoBehaviour:
   charisma: 16
   actions:
   - {fileID: 11400000, guid: 2beb54f70032455489ff89bd96c11331, type: 2}
+  features: []
   level: 1
+  armorClass: 13

@@ -23,6 +23,11 @@ public class FeatureManager : MonoBehaviour {
                 case FeatureID.UndeadFortitude:
                     traveller.onHPChanged += TriggerUndeadFortitude;
                     break;
+                case FeatureID.FightingStyleDefense:
+                    // todo - make this feature work dynamically
+                    break;
+                case FeatureID.SecondWind:
+                    break;
                 default:
                     throw new System.NotImplementedException($"Did not implement traveller " +
                         $"feature {feature.id}.");
