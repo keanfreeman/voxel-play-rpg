@@ -192,7 +192,12 @@ public class DetachedCamera : MonoBehaviour
     public void HandleSwitchToUI(InputAction.CallbackContext obj) {
         inputManager.LockPlayerControls();
         inputManager.UnlockUIControls(constructionUI);
-        constructionUI.ApplyFocus();
+        if (isBuildMode) {
+            constructionUI.ApplyFocus();
+        }
+        else {
+            combatUI.SetFocus();
+        }
     }
 
     public void HandleSwitchFromUIToDetached() {

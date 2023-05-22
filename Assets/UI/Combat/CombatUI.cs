@@ -80,6 +80,10 @@ public class CombatUI : UIHandler {
             SpecialActionSO specialActionSO = (SpecialActionSO)button.currAction;
             choiceInfoBody.text = specialActionSO.description;
         }
+        else {
+            throw new System.NotImplementedException($"Need to implement a description for " +
+                $"{button.currAction.GetType()}");
+        }
     }
 
     public void SetFocus() {

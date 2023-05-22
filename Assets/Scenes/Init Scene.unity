@@ -1873,6 +1873,7 @@ MonoBehaviour:
   pathfinder: {fileID: 1169761465}
   effectManager: {fileID: 234026431}
   timerUIController: {fileID: 134436095}
+  combatUI: {fileID: 829311307}
 --- !u!4 &1613990518
 Transform:
   m_ObjectHideFlags: 0

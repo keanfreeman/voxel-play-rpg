@@ -23,6 +23,7 @@ public class CombatManager : MonoBehaviour
     [SerializeField] Pathfinder pathfinder;
     [SerializeField] EffectManager effectManager;
     [SerializeField] TimerUIController timerUIController;
+    [SerializeField] CombatUI combatUI;
 
     public event System.Action roundEnded;
 
@@ -54,6 +55,7 @@ public class CombatManager : MonoBehaviour
         usedResources[currCreature] = new CombatResources();
         if (currCreature.GetType() == typeof(PlayerCharacter)) {
             inputManager.SwitchPlayerToDetachedControlState(currCreature.origin);
+            combatUI.SetActions((PlayerCharacter)currCreature);
             yield break;
         }
 
