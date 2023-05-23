@@ -2,7 +2,7 @@
     <Style src="project://database/Assets/UI/CommonStyle.uss?fileID=7433441132597879392&amp;guid=026a39900ed2bf348b8b1fcf8b7c191b&amp;type=3#CommonStyle" />
     <ui:VisualElement name="WholeScreen" style="flex-grow: 1; align-items: center;">
         <ui:VisualElement class="TextBackground" style="margin-top: 5%;">
-            <ui:Label text="Rolling saving throw for {}..." display-tooltip-when-elided="true" name="RollerText" />
+            <ui:Label text="Rolling saving throw for {}..." display-tooltip-when-elided="true" name="MessageText" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

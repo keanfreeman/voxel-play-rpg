@@ -793,7 +793,7 @@ GameObject:
   - component: {fileID: 591587889}
   - component: {fileID: 591587888}
   m_Layer: 5
-  m_Name: DiceUI
+  m_Name: MessageUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -811,7 +811,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1843d45bdaa2ef841846c3c9879d8cce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  diceUIDocument: {fileID: 591587889}
+  messageUIDocument: {fileID: 591587889}
+  FADE_TIME: 0.2
 --- !u!114 &591587889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1645,6 +1646,7 @@ Transform:
   - {fileID: 1146237438}
   - {fileID: 2076388857}
   - {fileID: 31192986}
+  - {fileID: 1627379085}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1893,6 +1895,52 @@ Transform:
   m_Father: {fileID: 1341391871}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1627379084
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1627379085}
+  - component: {fileID: 1627379086}
+  m_Layer: 0
+  m_Name: MessageManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1627379085
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627379084}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341391871}
+  m_RootOrder: 21
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1627379086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627379084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc154d9683b2cc24daf2bac8171d76c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  messageUIController: {fileID: 591587888}
+  displayTime: 1.4
 --- !u!114 &1702908726 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2893097453921135557, guid: 874745ef182559848a96ae759b288aca, type: 3}
@@ -2278,7 +2326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diceThrowerManager: {fileID: 1146237439}
-  diceUIController: {fileID: 591587888}
+  messageManager: {fileID: 1627379086}
   TEXT_DISPLAY_WAIT: 1
 --- !u!1 &2106943937
 GameObject:

@@ -3,25 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class DiceRollerUIController : MonoBehaviour
+public class MessageUIController : MonoBehaviour
 {
-    [SerializeField] UIDocument diceUIDocument;
+    [SerializeField] UIDocument messageUIDocument;
+    [SerializeField] float FADE_TIME = 0.3f;
 
     VisualElement wholeScreen;
-    Label rollerText;
-
-    const float FADE_TIME = 0.3f;
+    Label messageText;
 
     void Awake() {
-        wholeScreen = diceUIDocument.rootVisualElement.Q<VisualElement>("WholeScreen");
-        rollerText = wholeScreen.Q<Label>("RollerText");
+        wholeScreen = messageUIDocument.rootVisualElement.Q<VisualElement>("WholeScreen");
+        messageText = wholeScreen.Q<Label>("MessageText");
 
         wholeScreen.style.opacity = 0;
-        rollerText.text = "";
+        messageText.text = "";
     }
 
     public IEnumerator DisplayText(string text) {
-        rollerText.text = text;
+        messageText.text = text;
         if (wholeScreen.style.opacity.value == 0) {
             yield return Fade(fadeIn: true);
         }
@@ -31,7 +30,7 @@ public class DiceRollerUIController : MonoBehaviour
         if (wholeScreen.style.opacity.value != 0) {
             yield return Fade(fadeIn: false);
         }
-        rollerText.text = "";
+        messageText.text = "";
     }
 
     private IEnumerator Fade(bool fadeIn) {

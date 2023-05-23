@@ -7,10 +7,9 @@ using static RandomManager;
 
 public class VisualRollManager : MonoBehaviour {
     [SerializeField] DiceThrowerManager diceThrowerManager;
-    [SerializeField] DiceRollerUIController diceUIController;
+    [SerializeField] MessageManager messageManager;
 
-    // adjustable
-    [SerializeField] float TEXT_DISPLAY_WAIT = 0.5f;
+    [SerializeField] float TEXT_DISPLAY_WAIT = 1.8f;
 
     public IEnumerator RollAttack(int modifier, int targetAC, Advantage advantage) {
         string displayText = "Rolling attack roll";
@@ -23,7 +22,7 @@ public class VisualRollManager : MonoBehaviour {
             diceToBeRolled.Add(new(2, 20));
             displayText += advantage == Advantage.Advantage ? " with Advantage" : " with Disadvantage";
         }
-        yield return diceUIController.DisplayText(displayText);
+        messageManager.DisplayMessage(new Message(displayText, true));
 
         CoroutineWithData coroutineWithData = new(this, diceThrowerManager.RollDice(diceToBeRolled));
         yield return coroutineWithData.coroutine;
@@ -49,9 +48,9 @@ public class VisualRollManager : MonoBehaviour {
             else displayText = $"{finalNum} Hits!";
         }
         else displayText = $"{finalNum} Misses!";
-        yield return diceUIController.DisplayText(displayText);
-        yield return new WaitForSeconds(TEXT_DISPLAY_WAIT);
-        yield return diceUIController.Hide();
+
+        messageManager.StopDisplayingPermanentMessage();
+        yield return messageManager.DisplayMessageCoroutine(new Message(displayText));
 
         yield return new AttackResult(finalNum, isCritical);
     }
@@ -66,7 +65,7 @@ public class VisualRollManager : MonoBehaviour {
             diceToBeRolled.Add(new(2, 20));
             displayText += advantage == Advantage.Advantage ? " with Advantage" : " with Disadvantage";
         }
-        yield return diceUIController.DisplayText(displayText);
+        messageManager.DisplayMessage(new Message(displayText, true));
 
         CoroutineWithData coroutineWithData = new(this, diceThrowerManager.RollDice(diceToBeRolled));
         yield return coroutineWithData.coroutine;
@@ -88,15 +87,15 @@ public class VisualRollManager : MonoBehaviour {
             displayText = $"{finalNum} Succeeds!";
         }
         else displayText = $"{finalNum} Fails! DC{targetDC}";
-        yield return diceUIController.DisplayText(displayText);
-        yield return new WaitForSeconds(TEXT_DISPLAY_WAIT);
-        yield return diceUIController.Hide();
+
+        messageManager.StopDisplayingPermanentMessage();
+        yield return messageManager.DisplayMessageCoroutine(new Message(displayText));
 
         yield return finalNum;
     }
 
     public IEnumerator RollDamage(List<Die> damageRolls, bool isCritical) {
-        yield return diceUIController.DisplayText("Rolling damage");
+        messageManager.DisplayMessage(new Message("Rolling damage", true));
 
         int modifiersSum = 0;
         List<Die> totalRolls = new();
@@ -113,9 +112,8 @@ public class VisualRollManager : MonoBehaviour {
         DiceResult rollResult = (DiceResult)coroutineWithData.result;
 
         int totalDamage = rollResult.sum + modifiersSum;
-        yield return diceUIController.DisplayText($"Rolled {totalDamage} damage!");
-        yield return new WaitForSeconds(TEXT_DISPLAY_WAIT);
-        yield return diceUIController.Hide();
+        messageManager.StopDisplayingPermanentMessage();
+        yield return messageManager.DisplayMessageCoroutine(new Message($"Rolled {totalDamage} damage!"));
 
         yield return totalDamage;
     }
