@@ -25,17 +25,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d2fd2616d9b41cb44bb677fbcbec5a51, type: 2}
   - {fileID: 11400000, guid: 0b97667b4fd1dbf4bb39300af308b5de, type: 2}
   features:
-  - name: Fighting Style - Defense
-    description: While you are wearing armor, you gain a +1 bonus to AC.
-    id: 2
-    providedActions: []
-  - name: Second Wind
-    description: You have a limited well of stamina that you can draw on to protect
-      yourself from harm. On your turn, you can use a bonus action to regain hit
-      points equal to 1d10 + your fighter level. Once you use this feature, you must
-      finish a short or long rest before you can use it again.
-    id: 3
-    providedActions:
-    - {fileID: 11400000, guid: 7e15a145dc34d3c47938be2c67221092, type: 2}
+  - {fileID: 11400000, guid: c6f9f7f5478382847aa2c555be641a22, type: 2}
+  - {fileID: 11400000, guid: 020570def4faf0844a57fa32f1fe2337, type: 2}
   level: 1
   armorClass: 19

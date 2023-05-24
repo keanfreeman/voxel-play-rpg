@@ -8,7 +8,7 @@ public abstract class StatsSO : ScriptableObject
 {
     // Speed in feet per 6 seconds
     public int baseSpeed = 30;
-    public int hitPoints;
+    public int maxHP;
     public EntitySize size = EntitySize.MEDIUM;
 
     // todo - add GetSavingThrowModifier since NPCs may have special one, and PCs have additives too
@@ -20,7 +20,7 @@ public abstract class StatsSO : ScriptableObject
     public int charisma;
 
     public List<ActionSO> actions;
-    public List<Feature> features;
+    public List<FeatureSO> features;
 
     public abstract int CalculateArmorClass();
 }

@@ -10,7 +10,7 @@ public class EffectManager : MonoBehaviour
     [SerializeField] CameraManager cameraManager;
     [SerializeField] GameObject exclaimEffect;
 
-    Vector3 CENTER_OFFSET = new Vector3(0.5f, 0.5f, 0.5f);
+    Vector3 CENTER_OFFSET = new Vector3(0.5f, 0.6f, 0.5f);
 
     public IEnumerator GenerateHitEffect(Vector3 location) {
         Vector3 particleLocation = location + CENTER_OFFSET;

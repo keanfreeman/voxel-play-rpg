@@ -17,8 +17,10 @@ namespace EntityDefinition {
 
         [JsonConstructor]
         public NPC(Vector3Int startPosition, Faction faction,
-                IdleBehavior idleBehavior, string travellerIdentity, OrderGroup interactOrders)
-                : base(startPosition, travellerIdentity, interactOrders) {
+                IdleBehavior idleBehavior, string travellerIdentity, OrderGroup interactOrders,
+                List<Resource> consumedResources, int currHP, CurrentStatus statusEffects)
+                : base(startPosition, travellerIdentity, interactOrders, consumedResources,
+                      currHP, statusEffects) {
             this.faction = faction;
             this.idleBehavior = idleBehavior;
         }

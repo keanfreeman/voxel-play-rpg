@@ -40,6 +40,7 @@ namespace Instantiated {
             this.featureManager.SetUpFeatures(this);
             this.randomManager = randomManager;
             this.visualRollManager = visualRollManager;
+            base.Init();
         }
 
         public void HaltMovement() {

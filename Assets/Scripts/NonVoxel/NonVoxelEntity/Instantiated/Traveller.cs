@@ -28,8 +28,6 @@ namespace Instantiated {
 
         public SpriteMoveDirection permanentMoveDirection { get; protected set; } = SpriteMoveDirection.NONE;
         public bool isMoving { get; protected set; } = false;
-        public int currHP { get; protected set; }
-        public CurrentStatus statusEffects { get; private set; } = new();
 
         protected TravellerIdentitySO travellerIdentity;
         protected Vector3Int moveStartPoint;
@@ -40,11 +38,26 @@ namespace Instantiated {
         protected const float TIME_TO_MOVE_A_TILE = 0.2f;
         private const float ANIMATION_COOLDOWN_TIME = 0.1f;
 
+        public int CurrHP {
+            get {return GetEntity().currHP;}
+            set { GetEntity().currHP = value; }
+        }
+
+        public CurrentStatus StatusEffects {
+            get { return GetEntity().statusEffects; }
+        }
+
         private void Update() {
             AnimateMove();
             if (!isMoving && Time.time - moveFinishedTimestamp > ANIMATION_COOLDOWN_TIME) {
                 SetMoveAnimation(false);
                 moveFinishedTimestamp = float.MaxValue;
+            }
+        }
+
+        protected void Init() {
+            if (GetEntity().currHP < 0) {
+                GetEntity().currHP = GetStats().maxHP;
             }
         }
 
@@ -97,7 +110,7 @@ namespace Instantiated {
         }
 
         private IEnumerator TakeDamage(Damage damage) {
-            currHP -= damage.amount;
+            GetEntity().currHP -= damage.amount;
 
             if (onHPChanged != null) {
                 foreach (System.Delegate handler in onHPChanged.GetInvocationList()) {
@@ -108,7 +121,7 @@ namespace Instantiated {
         }
 
         public void SetHP(int newValue) {
-            currHP = newValue;
+            GetEntity().currHP = newValue;
         }
 
         public IEnumerator OnCombatTurnStart() {
@@ -202,6 +215,10 @@ namespace Instantiated {
             return travellerIdentity.stats;
         }
 
+        public new EntityDefinition.Traveller GetEntity() {
+            return (EntityDefinition.Traveller)entity;
+        }
+
         protected abstract Vector3Int? GetDestinationFromDirection(SpriteMoveDirection spriteMoveDirection);
 
         public abstract Faction GetFaction();
@@ -212,14 +229,22 @@ namespace Instantiated {
             foreach (ActionSO action in stats.actions) {
                 totalActions.Add(action);
             }
-            List<Feature> features = stats.features;
-            foreach (Feature feature in features) {
+            List<FeatureSO> features = stats.features;
+            foreach (FeatureSO feature in features) {
                 foreach (ActionSO action in feature.providedActions) {
                     totalActions.Add(action);
                 }
             }
 
             return totalActions;
+        }
+
+        public List<Resource> GetConsumedResources() {
+            return GetEntity().consumedResources;
+        }
+
+        public void AddConsumedResource(Resource consumed) {
+            GetEntity().consumedResources.Add(consumed);
         }
     }
 }

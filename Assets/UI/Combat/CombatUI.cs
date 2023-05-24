@@ -62,6 +62,10 @@ public class CombatUI : UIHandler {
     }
 
     private void OnButtonSelected(ActionChoice button) {
+        if (button.currAction == null) {
+            return;
+        }
+
         PlayerCharacter currPC = gameStateManager.controlState == ControlState.COMBAT
             ? combatManager.GetCurrTurnPlayer() : partyManager.currControlledCharacter;
         StartCoroutine(actionManager.PerformAction(currPC, button.currAction));

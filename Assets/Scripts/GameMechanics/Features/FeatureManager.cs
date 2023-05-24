@@ -15,7 +15,7 @@ public class FeatureManager : MonoBehaviour {
     [SerializeField] VisualRollManager visualRollManager;
 
     public void SetUpFeatures(Traveller traveller) {
-        foreach (Feature feature in traveller.GetStats().features) {
+        foreach (FeatureSO feature in traveller.GetStats().features) {
             switch (feature.id) {
                 case FeatureID.PackTactics:
                     traveller.onPerformAttack += TriggerPackTactics;
@@ -56,11 +56,11 @@ public class FeatureManager : MonoBehaviour {
     }
 
     private IEnumerator CheckParalyzedCriticalHit(AttackSO attack, Traveller target) {
-        yield return target.statusEffects.IsParalyzed();
+        yield return target.StatusEffects.IsParalyzed();
     }
 
     private Advantage CheckParalyzedAdvantage(Traveller attacker, Traveller target, Advantage currAdvState) {
-        if (target.statusEffects.IsParalyzed()) {
+        if (target.StatusEffects.IsParalyzed()) {
             Debug.Log("Attacker got advantage on a paralyzed creature.");
             return AdvantageCalcs.GetNewAdvantageState(currAdvState, Advantage.Advantage);
         }
@@ -83,9 +83,9 @@ public class FeatureManager : MonoBehaviour {
         int roll = (int)savingThrowCoroutine.result;
 
         if (roll < DC) {
-            OngoingEffect ghoulStatusEffect = target.statusEffects.Get(StatusEffect.GhoulClaw);
+            OngoingEffect ghoulStatusEffect = target.StatusEffects.Get(StatusEffect.GhoulClaw);
             if (ghoulStatusEffect == null) {
-                target.statusEffects.Add(StatusEffect.GhoulClaw, 
+                target.StatusEffects.Add(StatusEffect.GhoulClaw, 
                     new OngoingEffect(StatusEffect.GhoulClaw, 
                     new List<Condition> { Condition.Paralyzed}, 10));
                 target.onCombatTurnEnd += CheckGhoulClawEnd;
@@ -98,7 +98,7 @@ public class FeatureManager : MonoBehaviour {
     }
 
     private IEnumerator CheckGhoulClawEnd(Traveller currTurnTraveller) {
-        OngoingEffect ghoulStatusEffect = currTurnTraveller.statusEffects.Get(StatusEffect.GhoulClaw);
+        OngoingEffect ghoulStatusEffect = currTurnTraveller.StatusEffects.Get(StatusEffect.GhoulClaw);
         if (ghoulStatusEffect == null) {
             yield break;
         }
@@ -112,7 +112,7 @@ public class FeatureManager : MonoBehaviour {
         int roll = (int)savingThrowCoroutine.result;
 
         if (roll >= DC || ghoulStatusEffect.turnsLeft <= 1) {
-            currTurnTraveller.statusEffects.Remove(StatusEffect.GhoulClaw);
+            currTurnTraveller.StatusEffects.Remove(StatusEffect.GhoulClaw);
             currTurnTraveller.onCombatTurnEnd -= CheckGhoulClawEnd;
         }
         else {
@@ -143,7 +143,7 @@ public class FeatureManager : MonoBehaviour {
     }
 
     public IEnumerator TriggerUndeadFortitude(Traveller instance, Damage damage) {
-        if (instance.currHP > 0 
+        if (instance.CurrHP > 0 
                 // todo - convey that these have happened
                 || damage.damageType == DamageType.Radiant
                 || damage.isCriticalHit) {

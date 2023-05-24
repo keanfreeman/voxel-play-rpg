@@ -63,7 +63,7 @@ public class CombatManager : MonoBehaviour
         inputManager.SwitchDetachedToWatchControlState();
 
         NPC npcInstance = (NPC) currCreature;
-        if (!npcInstance.statusEffects.IsParalyzed()) {
+        if (!npcInstance.StatusEffects.IsParalyzed()) {
             // find nearest enemy
             PlayerCharacter nearestPlayer = partyManager.FindNearestPlayer(currCreature.origin);
             if (!Coordinates.IsNextTo(npcInstance, nearestPlayer)) {
@@ -118,7 +118,7 @@ public class CombatManager : MonoBehaviour
 
         PlayerCharacter playerInstance = (PlayerCharacter)currCreature;
 
-        if (playerInstance.statusEffects.IsParalyzed()) {
+        if (playerInstance.StatusEffects.IsParalyzed()) {
             // todo - show an effect and disable UI components
             Debug.Log("Player is paralyzed and can't act.");
             yield break;
@@ -197,7 +197,7 @@ public class CombatManager : MonoBehaviour
                 new Damage(attack.damageType, damageRoll), target);
             yield return effectManager.GenerateHitEffect(target);
 
-            if (target.currHP < 1) {
+            if (target.CurrHP < 1) {
                 if (target.GetType() == typeof(PlayerCharacter)) {
                     // todo - defeat players too
                     Debug.Log("Player ran out of HP.");

@@ -2,12 +2,25 @@ using DieNamespace;
 using Instantiated;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static RandomManager;
 
 public class VisualRollManager : MonoBehaviour {
     [SerializeField] DiceThrowerManager diceThrowerManager;
     [SerializeField] MessageManager messageManager;
+
+    public IEnumerator RollGeneric(string message, List<Die> diceToBeRolled) {
+        messageManager.DisplayMessage(new Message(message, true));
+
+        CoroutineWithData coroutineWithData = new(this, diceThrowerManager.RollDice(diceToBeRolled));
+        yield return coroutineWithData.coroutine;
+        DiceResult rollResult = (DiceResult)coroutineWithData.result;
+
+        rollResult.sum += diceToBeRolled.Select((Die die) => die.modifier).Aggregate((a, b) => a + b);
+        messageManager.StopDisplayingPermanentMessage();
+        yield return rollResult;
+    }
 
     public IEnumerator RollAttack(int modifier, int targetAC, Advantage advantage) {
         string displayText = "Rolling attack roll";

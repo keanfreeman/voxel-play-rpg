@@ -172,6 +172,10 @@ MonoBehaviour:
   nonVoxelWorld: {fileID: 1135948956}
   gameStateManager: {fileID: 955022268}
   combatManager: {fileID: 1613990517}
+  visualRollManager: {fileID: 2076388858}
+  inputManager: {fileID: 2066669309}
+  combatUI: {fileID: 829311307}
+  secondWindFeature: {fileID: 11400000, guid: 020570def4faf0844a57fa32f1fe2337, type: 2}
 --- !u!20 &93897885 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 8437904166148341729, guid: 0e2c4cd17b179e24fac4d72c6206c8a9, type: 3}

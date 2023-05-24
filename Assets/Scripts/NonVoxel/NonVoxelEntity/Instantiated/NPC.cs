@@ -50,7 +50,6 @@ namespace Instantiated {
             this.rng = rng;
             this.entity = npcInfo;
             this.travellerIdentity = identity;
-            currHP = GetStats().hitPoints;
             this.cameraManager = cameraManager;
             this.spriteLibrary.spriteLibraryAsset = identity.spriteLibraryAsset;
             spriteObjectTransform.localScale = identity.scale;
@@ -68,6 +67,8 @@ namespace Instantiated {
             if (GetEntity().idleBehavior == IdleBehavior.WANDER) {
                 StartCoroutine(MoveCoroutine());
             }
+
+            base.Init();
         }
 
         private IEnumerator MoveCoroutine() {

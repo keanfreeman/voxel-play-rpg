@@ -24,11 +24,7 @@ MonoBehaviour:
   actions:
   - {fileID: 11400000, guid: eb028baca86757f40af3ffbca8b17f50, type: 2}
   features:
-  - name: Undead Fortitude
-    description: If damage reduces the zombie to 0 hit points, it must make a Constitution
-      saving throw with a DC of 5 + the damage taken, unless the damage is radiant
-      or from a critical hit. On a success, the zombie drops to 1 hit point instead.
-    id: 0
+  - {fileID: 11400000, guid: 73b46a6dbd86e364cb975bd6b66b2801, type: 2}
   statblockName: Zombie
   challengeRating: 1/4
   armorClass: 8
