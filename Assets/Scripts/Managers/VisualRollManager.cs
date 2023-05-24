@@ -9,8 +9,6 @@ public class VisualRollManager : MonoBehaviour {
     [SerializeField] DiceThrowerManager diceThrowerManager;
     [SerializeField] MessageManager messageManager;
 
-    [SerializeField] float TEXT_DISPLAY_WAIT = 1.8f;
-
     public IEnumerator RollAttack(int modifier, int targetAC, Advantage advantage) {
         string displayText = "Rolling attack roll";
 

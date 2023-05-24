@@ -24,6 +24,10 @@ public class MessageManager : MonoBehaviour
     //    }
     //}
 
+    public void DisplayMessage(string message) {
+        DisplayMessage(new Message(message));
+    }
+
     public void DisplayMessage(Message message) {
         messages.Enqueue(message);
         if (messageCoroutine == null) {

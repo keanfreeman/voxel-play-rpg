@@ -92,7 +92,7 @@ public class GameStateManager : MonoBehaviour
         }
 
         inputManager.LockPlayerControls();
-        combatManager.SetFirstCombatant(npcInCombat);
+        if (npcInCombat != null) combatManager.SetEnemies(npcInCombat.teammates);
         controlState = ControlState.COMBAT;
         Debug.Log("Entered combat");
         combatManager.StartCombat();
@@ -113,7 +113,12 @@ public class GameStateManager : MonoBehaviour
 
     public void CloseCombatBar() {
         inputManager.LockUIControls();
-        inputManager.UnlockPlayerControls();
+        if (controlState == ControlState.COMBAT) {
+            inputManager.UnlockDetachedControls();
+        }
+        else {
+            inputManager.UnlockPlayerControls();
+        }
     }
 
     public void HandleSwitchInputMode(InputAction.CallbackContext obj) {

@@ -24,10 +24,11 @@ public class CombatManager : MonoBehaviour
     [SerializeField] EffectManager effectManager;
     [SerializeField] TimerUIController timerUIController;
     [SerializeField] CombatUI combatUI;
+    [SerializeField] MessageManager messageManager;
 
     public event System.Action roundEnded;
 
-    NPC firstCombatant;
+    ICollection<NPC> enemies;
     List<KeyValuePair<int, Traveller>> initiatives;
     int currInitiative = -1;
     Dictionary<Traveller, CombatResources> usedResources = new Dictionary<Traveller, CombatResources>();
@@ -73,7 +74,7 @@ public class CombatManager : MonoBehaviour
                     pathfinder.FindPath(currCreature, nearestPlayer.origin, maxSearchLength));
                 yield return coroutineWithData.coroutine;
                 Deque<Vector3Int> path = (Deque<Vector3Int>) coroutineWithData.result;
-                while (path.Count * TILE_TO_FEET > npcInstance.GetStats().baseSpeed * TILE_TO_FEET) {
+                while (path.Count * TILE_TO_FEET > npcInstance.GetStats().baseSpeed) {
                     path.RemoveFromFront();
                 }
                 yield return movementManager.MoveAlongPath(currCreature, path);
@@ -86,27 +87,8 @@ public class CombatManager : MonoBehaviour
                 // TODO - use less brittle attack selection method (allow for non-attacks)
                 // TODO - have preferred strategies (ranged vs melee for example)
                 AttackSO npcAttack = (AttackSO)npcActions[pickedIndex];
-                CoroutineWithData attackRollCoroutine = new(this, 
-                    npcInstance.PerformAttack(npcAttack, nearestPlayer));
-                yield return attackRollCoroutine.coroutine;
-                AttackResult attackResult = attackRollCoroutine.result as AttackResult;
 
-                if (attackResult.rolled >= nearestPlayer.GetStats().CalculateArmorClass()) {
-                    CoroutineWithData damageCoroutine = new(this,
-                        npcInstance.PerformDamage(npcAttack, attackResult, nearestPlayer));
-                    yield return damageCoroutine.coroutine;
-                    int damageRoll = (int)damageCoroutine.result;
-
-                    Debug.Log($"NPC rolled {damageRoll} for their damage roll.");
-                    yield return npcInstance.DealDamage(npcAttack, new Damage(npcAttack.damageType,
-                        damageRoll), nearestPlayer);
-                    if (nearestPlayer.currHP < 1) {
-                        // TODO - lose on death and no party members
-                        Debug.Log("Player ran out of HP.");
-                    }
-
-                    yield return effectManager.GenerateHitEffect(nearestPlayer);
-                }
+                yield return PerformAttack(npcInstance, npcAttack, nearestPlayer);
             }
         }
 
@@ -144,10 +126,6 @@ public class CombatManager : MonoBehaviour
 
         // check if player wanted to attack
         if (selectedEntity != null && selectedEntity.GetType() == typeof(NPC)) {
-            if (usedResources[currCreature].usedAction) {
-                Debug.Log("Player tried to use action twice.");
-                yield break;
-            }
             NPC attackTarget = (NPC)selectedEntity;
 
             ActionSO validAttackAction;
@@ -171,7 +149,7 @@ public class CombatManager : MonoBehaviour
             }
 
             if (validAttackAction == null) {
-                Debug.Log("Player had no attack action they could use.");
+                messageManager.DisplayMessage("You have no basic attack action. Try using the combat bar.");
                 yield break;
             }
 
@@ -184,59 +162,74 @@ public class CombatManager : MonoBehaviour
             }
 
             foreach (AttackSO attack in attacksToDo) {
-                CoroutineWithData cwd = new(this, playerInstance.PerformAttack(attack,
-                    attackTarget));
-                yield return cwd.coroutine;
-                AttackResult attackResult = cwd.result as AttackResult;
-
-                if (attackResult.rolled >= attackTarget.GetStats().CalculateArmorClass()) {
-                    CoroutineWithData damageCoroutine = new(this,
-                        playerInstance.PerformDamage(attack, attackResult, attackTarget));
-                    yield return damageCoroutine.coroutine;
-                    int damageRoll = (int)damageCoroutine.result;
-
-                    Debug.Log($"Player rolled {damageRoll} for their damage roll.");
-                    int newHP = attackTarget.currHP - damageRoll;
-                    yield return playerInstance.DealDamage(attack,
-                        new Damage(attack.damageType, damageRoll), attackTarget);
-                    if (attackTarget.currHP < 1) {
-                        Debug.Log("NPC defeated");
-                        foreach (KeyValuePair<int, Traveller> initiative in initiatives) {
-                            if (initiative.Value == selectedEntity) {
-                                // ensure initiative number is not incorrect after deleting item
-                                int currCreatureInitiative = initiatives[currInitiative].Key;
-                                if (initiative.Key > currCreatureInitiative) {
-                                    currInitiative -= 1;
-                                }
-
-                                nonVoxelWorld.DestroyEntity(attackTarget);
-                                initiatives.Remove(initiative);
-                                break;
-                            }
-                        }
-                    }
-
-                    yield return effectManager.GenerateHitEffect(attackTarget);
-                    if (newHP < 1) {
-                        // no more attacks to do
-                        break;
-                    }
-                }
+                yield return PerformAttack(playerInstance, attack, attackTarget);
             }
-
-            usedResources[currCreature].usedAction = true;
         }
         else {
             yield return TryMovePlayer(playerInstance);
         }
 
-        if (initiatives.Count == partyManager.partyMembers.Count) {
-            initiatives = null;
+        if (initiatives.Count <= partyManager.partyMembers.Count) {
             yield return ExitCombat();
         }
     }
 
+    public IEnumerator PerformAttack(Traveller attacker, AttackSO attack, Traveller target) {
+        if (gameStateManager.controlState == ControlState.COMBAT 
+                && usedResources[attacker].usedAction) {
+            messageManager.DisplayMessage("You cannot take two actions.");
+            yield break;
+        }
+
+        CoroutineWithData cwd = new(this, attacker.PerformAttack(attack,
+                    target));
+        yield return cwd.coroutine;
+        AttackResult attackResult = cwd.result as AttackResult;
+
+        if (attackResult.rolled >= target.GetStats().CalculateArmorClass()) {
+            CoroutineWithData damageCoroutine = new(this,
+                attacker.PerformDamage(attack, attackResult, target));
+            yield return damageCoroutine.coroutine;
+            int damageRoll = (int)damageCoroutine.result;
+
+            Debug.Log($"Traveller rolled {damageRoll} for their damage roll.");
+            yield return attacker.DealDamage(attack,
+                new Damage(attack.damageType, damageRoll), target);
+            yield return effectManager.GenerateHitEffect(target);
+
+            if (target.currHP < 1) {
+                if (target.GetType() == typeof(PlayerCharacter)) {
+                    // todo - defeat players too
+                    Debug.Log("Player ran out of HP.");
+                    yield break;
+                }
+                if (initiatives != null) {
+                    foreach (KeyValuePair<int, Traveller> initiative in initiatives) {
+                        if (initiative.Value == target) {
+                            // ensure initiative number is not incorrect after deleting item
+                            int currCreatureInitiative = initiatives[currInitiative].Key;
+                            if (initiative.Key > currCreatureInitiative) {
+                                currInitiative -= 1;
+                            }
+                            initiatives.Remove(initiative);
+                            break;
+                        }
+                    }
+                }
+                nonVoxelWorld.DestroyEntity(target);
+            }
+        }
+
+        if (gameStateManager.controlState == ControlState.COMBAT) {
+            usedResources[attacker].usedAction = true;
+            if (initiatives.Count <= partyManager.partyMembers.Count) {
+                yield return ExitCombat();
+            }
+        }
+    }
+
     private IEnumerator ExitCombat() {
+        initiatives = null;
         inputManager.LockPlayerControls();
 
         // move party next to leader
@@ -296,11 +289,13 @@ public class CombatManager : MonoBehaviour
         yield return movementManager.MoveAlongPath(playerMovement, path);
     }
     
-    public void SetFirstCombatant(NPC firstCombatant) {
-        this.firstCombatant = firstCombatant;
+    public void SetEnemies(ICollection<NPC> enemies) {
+        this.enemies = enemies;
     }
 
     private void SetCombatantsAndInitiativeOrder() {
+        messageManager.DisplayMessage("Rolling initiative!");
+
         initiatives = new List<KeyValuePair<int, Traveller>>();
 
         // add players
@@ -313,7 +308,7 @@ public class CombatManager : MonoBehaviour
         }
 
         // add NPCs
-        foreach (NPC npcBehavior in firstCombatant.teammates) {
+        foreach (NPC npcBehavior in enemies) {
             npcBehavior.inCombat = true;
             
             int npcDexModifier = StatModifiers.GetModifierForStat(

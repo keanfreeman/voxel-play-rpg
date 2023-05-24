@@ -21,6 +21,7 @@ namespace Instantiated {
         private SpriteMovement spriteMovement;
         private GameStateManager gameStateManager;
 
+        // includes the npc itself
         public HashSet<NPC> teammates;
         public bool inCombat { get; set; } = false;
 

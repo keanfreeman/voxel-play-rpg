@@ -24,7 +24,8 @@ namespace CustomComponents {
             this.text = "Prestidigitation";
             RegisterCallback<FocusInEvent>(OnActionButtonFocusGained);
             RegisterCallback<FocusOutEvent>(OnActionButtonLostFocus);
-            RegisterCallback<ClickEvent>(OnActionButtonClicked);
+            clicked += OnActionButtonClicked;
+
             AddToClassList(classActionButton);
         }
 
@@ -50,7 +51,7 @@ namespace CustomComponents {
             lostFocus?.Invoke(this);
         }
 
-        private void OnActionButtonClicked(ClickEvent evt) {
+        private void OnActionButtonClicked() {
             selected?.Invoke(this);
         }
     }

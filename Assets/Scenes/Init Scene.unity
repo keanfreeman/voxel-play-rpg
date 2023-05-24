@@ -167,6 +167,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f5ce5c9feb0d184798838a920d89aaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  messageManager: {fileID: 1627379086}
+  detachedCamera: {fileID: 848129494}
+  nonVoxelWorld: {fileID: 1135948956}
+  gameStateManager: {fileID: 955022268}
+  combatManager: {fileID: 1613990517}
 --- !u!20 &93897885 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 8437904166148341729, guid: 0e2c4cd17b179e24fac4d72c6206c8a9, type: 3}
@@ -375,9 +380,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1568004907}
     - target: {fileID: 3839151275677363832, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+      propertyPath: partyManager
+      value: 
+      objectReference: {fileID: 683280036}
+    - target: {fileID: 3839151275677363832, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
       propertyPath: actionManager
       value: 
       objectReference: {fileID: 31192987}
+    - target: {fileID: 3839151275677363832, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+      propertyPath: combatManager
+      value: 
+      objectReference: {fileID: 1613990517}
     - target: {fileID: 3839151275677363832, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
       propertyPath: gameStateManager
       value: 
@@ -1880,6 +1893,7 @@ MonoBehaviour:
   effectManager: {fileID: 234026431}
   timerUIController: {fileID: 134436095}
   combatUI: {fileID: 829311307}
+  messageManager: {fileID: 1627379086}
 --- !u!4 &1613990518
 Transform:
   m_ObjectHideFlags: 0
@@ -2327,7 +2341,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   diceThrowerManager: {fileID: 1146237439}
   messageManager: {fileID: 1627379086}
-  TEXT_DISPLAY_WAIT: 1
 --- !u!1 &2106943937
 GameObject:
   m_ObjectHideFlags: 0

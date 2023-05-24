@@ -5,18 +5,12 @@ using UnityEngine;
 
 public static class TypeUtils
 {
-    public static bool IsSameTypeOrSubclass(object object1, object object2) {
-        Type type1 = object1.GetType();
-        Type type2 = object2.GetType();
-        return IsSameTypeOrSubclass(type1, type2);
-    }
-
     public static bool IsSameTypeOrIsSubclass(object object1, Type type2) {
         Type type1 = object1.GetType();
-        return IsSameTypeOrSubclass(type1, type2);
+        return AreTypesSameOrSubclass(type1, type2);
     }
 
-    public static bool IsSameTypeOrSubclass(Type type1, Type type2) {
+    private static bool AreTypesSameOrSubclass(Type type1, Type type2) {
         return type1 == type2 || type1.IsSubclassOf(type2);
     }
 }

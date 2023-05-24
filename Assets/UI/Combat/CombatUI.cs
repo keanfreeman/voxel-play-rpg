@@ -12,6 +12,7 @@ public class CombatUI : UIHandler {
     [SerializeField] GameStateManager gameStateManager;
     [SerializeField] ActionManager actionManager;
     [SerializeField] PartyManager partyManager;
+    [SerializeField] CombatManager combatManager;
 
     public const string COMBAT_UI_ROOT = "CombatUI";
     public const string COMBAT_BAR = "CombatBar";
@@ -61,7 +62,9 @@ public class CombatUI : UIHandler {
     }
 
     private void OnButtonSelected(ActionChoice button) {
-        actionManager.PerformAction(partyManager.currControlledCharacter, button.currAction);
+        PlayerCharacter currPC = gameStateManager.controlState == ControlState.COMBAT
+            ? combatManager.GetCurrTurnPlayer() : partyManager.currControlledCharacter;
+        StartCoroutine(actionManager.PerformAction(currPC, button.currAction));
     }
 
     private void OnButtonLostFocus(ActionChoice button) {
@@ -96,7 +99,12 @@ public class CombatUI : UIHandler {
     }
 
     public void SetFocus() {
+        currHighlightedButton ??= actionButtons[0];
         currHighlightedButton.Focus();
+    }
+
+    public void StopFocus() {
+        currHighlightedButton.Blur();
     }
 
     private void SetChoiceInfoBoxDisplayState(bool isVisible) {

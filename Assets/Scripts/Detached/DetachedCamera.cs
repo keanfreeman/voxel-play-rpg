@@ -44,6 +44,13 @@ public class DetachedCamera : MonoBehaviour
     private const float VOXEL_CHANGE_DISTANCE = 0.51f;
     private const float CURSOR_CENTER_SPEED = 1.5f;
     private const int TILE_TO_FEET = 5;
+    private VoxelSelection voxelSelectionMode = VoxelSelection.NotSelecting;
+    private enum VoxelSelection {
+        NotSelecting,
+        Selected,
+        Waiting,
+        Cancel
+    }
 
     void Awake() {
         DontDestroyOnLoad(gameObject);
@@ -158,15 +165,21 @@ public class DetachedCamera : MonoBehaviour
     public void HandleSelect(InputAction.CallbackContext obj) {
         if (isBuildMode) {
             buildShadow.HandleBuildSelect();
-            return;
         }
-
-        StartCoroutine(ExecuteHandleSelect());
+        else if (voxelSelectionMode == VoxelSelection.Waiting) {
+            voxelSelectionMode = VoxelSelection.Selected;
+        }
+        else {
+            StartCoroutine(ExecuteHandleSelect());
+        }
     }
 
     public void HandleCancel(InputAction.CallbackContext obj) {
         if (isBuildMode) {
             buildShadow.HandleBuildCancel();
+        }
+        else if (voxelSelectionMode == VoxelSelection.Waiting) {
+            voxelSelectionMode = VoxelSelection.Cancel;
         }
         else {
             // todo - stop movement of selected character
@@ -174,7 +187,9 @@ public class DetachedCamera : MonoBehaviour
     }
 
     public void HandleToggleBuildMode(InputAction.CallbackContext obj) {
-        ToggleBuildMode();
+        if (voxelSelectionMode == VoxelSelection.NotSelecting) {
+            ToggleBuildMode();
+        }
     }
 
     public void ToggleBuildMode() {
@@ -191,11 +206,12 @@ public class DetachedCamera : MonoBehaviour
 
     public void HandleSwitchToUI(InputAction.CallbackContext obj) {
         inputManager.LockPlayerControls();
-        inputManager.UnlockUIControls(constructionUI);
         if (isBuildMode) {
+            inputManager.UnlockUIControls(constructionUI);
             constructionUI.ApplyFocus();
         }
         else {
+            inputManager.UnlockUIControls(combatUI);
             combatUI.SetFocus();
         }
     }
@@ -217,6 +233,33 @@ public class DetachedCamera : MonoBehaviour
             yield return coroutineWithData.coroutine;
             Deque<Vector3Int> path = (Deque<Vector3Int>)coroutineWithData.result;
             yield return movementManager.MoveAlongPath(partyManager.currControlledCharacter, path);
+        }
+    }
+
+    public IEnumerator EnterSelectMode(Vector3Int startPosition) {
+        voxelSelectionMode = VoxelSelection.Waiting;
+        combatUI.StopFocus();
+        inputManager.LockUIControls();
+        inputManager.SwitchPlayerToDetachedControlState(startPosition);
+        inputManager.SetDetachedToNormal();
+
+        while (voxelSelectionMode == VoxelSelection.Waiting) {
+            yield return null;
+        }
+
+        if (voxelSelectionMode == VoxelSelection.Selected) {
+            yield return currVoxel;
+        }
+        else {
+            yield return null;
+        }
+
+        voxelSelectionMode = VoxelSelection.NotSelecting;
+        if (gameStateManager.controlState == ControlState.COMBAT) {
+            inputManager.SetDetachedToCombat();
+        }
+        else {
+            inputManager.SwitchDetachedToPlayerControlState();
         }
     }
 }
