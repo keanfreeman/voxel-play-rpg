@@ -2,6 +2,8 @@ using DieNamespace;
 using GameMechanics;
 using Instantiated;
 using NonVoxel;
+using Spells;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,8 +24,11 @@ public class ActionManager : MonoBehaviour
     [SerializeField] FeatureSO secondWindFeature;
 
     public IEnumerator PerformAction(Traveller performer, ActionSO action) {
-        if (action.GetType() == typeof(AttackSO)) {
-            AttackSO attack = (AttackSO)action;
+        Type actionType = action.GetType();
+        if (actionType == typeof(AttackSO) || (actionType == typeof(SpellSO) 
+                && ((SpellSO)action).IsSpellAttack())) {
+            AttackSO attack = actionType == typeof(AttackSO)
+                ? (AttackSO)action : ((SpellSO)action).providedAttack;
 
             if (!attack.isRanged && gameStateManager.controlState != ControlState.COMBAT) {
                 messageManager.DisplayMessage("Cannot perform melee attack outside of combat.");
@@ -39,7 +44,7 @@ public class ActionManager : MonoBehaviour
                 EnterCombatAfterAttacking(enemies);
             }
         }
-        else if (action.GetType() == typeof(SpecialActionSO)) {
+        else if (actionType == typeof(SpecialActionSO)) {
             SpecialActionSO specialActionSO = (SpecialActionSO)action;
             // todo - use non-string identifier
             if (specialActionSO.actionName == "Second Wind") {

@@ -27,6 +27,7 @@ namespace GameMechanics {
 
     public enum AttackFeature {
         None,
-        GhoulClaws
+        GhoulClaws,
+        ShockingGrasp // todo implement
     }
 }

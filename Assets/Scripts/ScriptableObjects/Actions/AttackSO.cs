@@ -16,4 +16,11 @@ public class AttackSO : ActionSO
     public int longRange = 0;
 
     public AttackFeature attackFeature = AttackFeature.None;
+
+    public string GetDescription() {
+        string rangeString = isRanged ? $"{shortRange}/{longRange}" : "None";
+        return $"Attack Roll: {attackRoll}\n" +
+                $"Damage: {damageRoll} {damageType}\n" +
+                $"Range: {rangeString}";
+    }
 }

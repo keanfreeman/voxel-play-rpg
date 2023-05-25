@@ -47,6 +47,9 @@ public class FeatureManager : MonoBehaviour {
                     case AttackFeature.GhoulClaws:
                         traveller.afterDamageDealt += ApplyGhoulClaw;
                         break;
+                    case AttackFeature.ShockingGrasp:
+                        // todo implement
+                        break;
                     case AttackFeature.None:
                         break;
                     default:

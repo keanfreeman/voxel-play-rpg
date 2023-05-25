@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BloodyEyeStats
   m_EditorClassIdentifier: 
   baseSpeed: 60
-  hitPoints: 7
+  maxHP: 7
   size: 1
   strength: 6
   dexterity: 14

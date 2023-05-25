@@ -1,5 +1,6 @@
 using CustomComponents;
 using Instantiated;
+using Spells;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,14 +88,17 @@ public class CombatUI : UIHandler {
 
         if (button.currAction.GetType() == typeof(AttackSO)) {
             AttackSO attack = (AttackSO)button.currAction;
-            string rangeString = attack.isRanged ? $"{attack.shortRange}/{attack.longRange}" : "None";
-            choiceInfoBody.text = $"Attack Roll: {attack.attackRoll}\n" +
-                $"Damage: {attack.damageRoll} {attack.damageType}\n" +
-                $"Range: {rangeString}";
+            choiceInfoBody.text = attack.GetDescription();
         }
         else if (button.currAction.GetType() == typeof(SpecialActionSO)) {
             SpecialActionSO specialActionSO = (SpecialActionSO)button.currAction;
             choiceInfoBody.text = specialActionSO.description;
+        }
+        else if (button.currAction.GetType() == typeof(SpellSO)) {
+            SpellSO spell = (SpellSO)button.currAction;
+            string bodyText = $"{spell.description}";
+            bodyText += spell.providedAttack != null ? $"\n\n{spell.providedAttack.GetDescription()}" : "";
+            choiceInfoBody.text = bodyText;
         }
         else {
             throw new System.NotImplementedException($"Need to implement a description for " +

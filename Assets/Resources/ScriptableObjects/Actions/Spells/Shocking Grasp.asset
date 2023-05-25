@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 900b392c5615089479f9dc261eac44b7, type: 3}
+  m_Name: Shocking Grasp
+  m_EditorClassIdentifier: 
+  actionName: Shocking Grasp
+  castingTime: 0
+  range: Touch
+  spellComponents:
+    isVerbal: 1
+    isSomatic: 1
+    materialComponents: []
+  isConcentration: 0
+  duration: Instantaneous
+  description: "Lightning springs from your hand to deliver a shock to a creature
+    you try to touch. Make a melee spell attack against the target. You have advantage
+    on the attack roll if the target is wearing armor made of metal. On a hit, the
+    target takes 1d8 lightning damage, and it can\u2019t take reactions until the
+    start of its next turn. The spell\u2019s damage increases by 1d8 when you reach
+    5th level (2d8), 11th level (3d8), and 17th level (4d8)."
+  providedAttack: {fileID: 11400000, guid: 69b893a106f190a4f9ca49e79ee0e817, type: 2}
