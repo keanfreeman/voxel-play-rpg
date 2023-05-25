@@ -73,10 +73,10 @@ public class OrderManager : MonoBehaviour
             }
 
             Traveller traveller = (Traveller)mover;
-            CoroutineWithData coroutineWithData = new CoroutineWithData(this,
+            CoroutineWithData<Deque<Vector3Int>> coroutineWithData = new(this,
                 pathfinder.FindPath(traveller, moveOrder.destination));
             yield return coroutineWithData.coroutine;
-            Deque<Vector3Int> path = (Deque<Vector3Int>)coroutineWithData.result;
+            Deque<Vector3Int> path = coroutineWithData.GetResult();
 
             if (moveOrder.waitForCompletion) {
                 yield return movementManager.MoveAlongPath(traveller, path);

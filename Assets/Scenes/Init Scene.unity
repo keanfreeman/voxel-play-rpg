@@ -1407,6 +1407,7 @@ MonoBehaviour:
   nonVoxelWorld: {fileID: 1135948956}
   combatManager: {fileID: 1613990517}
   visualRollManager: {fileID: 2076388858}
+  messageManager: {fileID: 1627379086}
 --- !u!1 &983819851
 GameObject:
   m_ObjectHideFlags: 0

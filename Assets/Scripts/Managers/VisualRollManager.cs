@@ -13,12 +13,13 @@ public class VisualRollManager : MonoBehaviour {
     public IEnumerator RollGeneric(string message, List<Die> diceToBeRolled) {
         messageManager.DisplayMessage(new Message(message, true));
 
-        CoroutineWithData coroutineWithData = new(this, diceThrowerManager.RollDice(diceToBeRolled));
+        CoroutineWithData<DiceResult> coroutineWithData = new(this, 
+            diceThrowerManager.RollDice(diceToBeRolled));
         yield return coroutineWithData.coroutine;
-        DiceResult rollResult = (DiceResult)coroutineWithData.result;
+        DiceResult rollResult = coroutineWithData.GetResult();
 
         rollResult.sum += diceToBeRolled.Select((Die die) => die.modifier).Aggregate((a, b) => a + b);
-        messageManager.StopDisplayingPermanentMessage();
+        messageManager.StopDisplayingPermanentMessages();
         yield return rollResult;
     }
 
@@ -35,9 +36,10 @@ public class VisualRollManager : MonoBehaviour {
         }
         messageManager.DisplayMessage(new Message(displayText, true));
 
-        CoroutineWithData coroutineWithData = new(this, diceThrowerManager.RollDice(diceToBeRolled));
+        CoroutineWithData<DiceResult> coroutineWithData = new(this, 
+            diceThrowerManager.RollDice(diceToBeRolled));
         yield return coroutineWithData.coroutine;
-        DiceResult rollResult = (DiceResult)coroutineWithData.result;
+        DiceResult rollResult = coroutineWithData.GetResult();
 
         int finalNum;
         if (advantage == Advantage.Advantage) {
@@ -60,10 +62,10 @@ public class VisualRollManager : MonoBehaviour {
         }
         else displayText = $"{finalNum} Misses!";
 
-        messageManager.StopDisplayingPermanentMessage();
+        messageManager.StopDisplayingPermanentMessages();
         yield return messageManager.DisplayMessageCoroutine(new Message(displayText));
 
-        yield return new AttackResult(finalNum, isCritical);
+        yield return new AttackResult(finalNum, isCritical, advantage);
     }
 
     public IEnumerator RollSavingThrow(string displayText, int modifier, int targetDC, 
@@ -78,9 +80,10 @@ public class VisualRollManager : MonoBehaviour {
         }
         messageManager.DisplayMessage(new Message(displayText, true));
 
-        CoroutineWithData coroutineWithData = new(this, diceThrowerManager.RollDice(diceToBeRolled));
+        CoroutineWithData<DiceResult> coroutineWithData = new(this,
+            diceThrowerManager.RollDice(diceToBeRolled));
         yield return coroutineWithData.coroutine;
-        DiceResult rollResult = (DiceResult)coroutineWithData.result;
+        DiceResult rollResult = coroutineWithData.GetResult();
 
         int finalNum;
         if (advantage == Advantage.Advantage) {
@@ -99,13 +102,21 @@ public class VisualRollManager : MonoBehaviour {
         }
         else displayText = $"{finalNum} Fails! DC{targetDC}";
 
-        messageManager.StopDisplayingPermanentMessage();
+        messageManager.StopDisplayingPermanentMessages();
         yield return messageManager.DisplayMessageCoroutine(new Message(displayText));
 
         yield return finalNum;
     }
 
     public IEnumerator RollDamage(List<Die> damageRolls, bool isCritical) {
+        // for flat damage
+        if (damageRolls.Count == 1 && damageRolls[0].numDice == 0) {
+            int damage = damageRolls[0].modifier;
+            messageManager.DisplayMessage($"Did {damage} damage!");
+            yield return damage;
+            yield break;
+        }
+
         messageManager.DisplayMessage(new Message("Rolling damage", true));
 
         int modifiersSum = 0;
@@ -118,12 +129,12 @@ public class VisualRollManager : MonoBehaviour {
             else totalRolls.Add(dieGroup);
         }
 
-        CoroutineWithData coroutineWithData = new(this, diceThrowerManager.RollDice(totalRolls));
+        CoroutineWithData<DiceResult> coroutineWithData = new(this, diceThrowerManager.RollDice(totalRolls));
         yield return coroutineWithData.coroutine;
-        DiceResult rollResult = (DiceResult)coroutineWithData.result;
+        DiceResult rollResult = coroutineWithData.GetResult();
 
         int totalDamage = rollResult.sum + modifiersSum;
-        messageManager.StopDisplayingPermanentMessage();
+        messageManager.StopDisplayingPermanentMessages();
         yield return messageManager.DisplayMessageCoroutine(new Message($"Rolled {totalDamage} damage!"));
 
         yield return totalDamage;
@@ -133,10 +144,12 @@ public class VisualRollManager : MonoBehaviour {
 public class AttackResult {
     public int rolled;
     public bool isCritical;
+    public Advantage advantageState;
 
-    public AttackResult(int result, bool isCritical) {
+    public AttackResult(int result, bool isCritical, Advantage advantageState) {
         this.rolled = result;
         this.isCritical = isCritical;
+        this.advantageState = advantageState;
     }
 
     public override string ToString() {

@@ -70,10 +70,10 @@ public class CombatManager : MonoBehaviour
                 // try move towards enemy
                 int maxSearchLength = (npcInstance.GetStats().baseSpeed / TILE_TO_FEET) * 3;
 
-                CoroutineWithData coroutineWithData = new CoroutineWithData(this,
+                CoroutineWithData<Deque<Vector3Int>> coroutineWithData = new(this,
                     pathfinder.FindPath(currCreature, nearestPlayer.origin, maxSearchLength));
                 yield return coroutineWithData.coroutine;
-                Deque<Vector3Int> path = (Deque<Vector3Int>) coroutineWithData.result;
+                Deque<Vector3Int> path = coroutineWithData.GetResult();
                 while (path.Count * TILE_TO_FEET > npcInstance.GetStats().baseSpeed) {
                     path.RemoveFromFront();
                 }
@@ -181,16 +181,15 @@ public class CombatManager : MonoBehaviour
             yield break;
         }
 
-        CoroutineWithData cwd = new(this, attacker.PerformAttack(attack,
-                    target));
+        CoroutineWithData<AttackResult> cwd = new(this, attacker.PerformAttack(attack, target));
         yield return cwd.coroutine;
-        AttackResult attackResult = cwd.result as AttackResult;
+        AttackResult attackResult = cwd.GetResult();
 
         if (attackResult.rolled >= target.GetStats().CalculateArmorClass()) {
-            CoroutineWithData damageCoroutine = new(this,
+            CoroutineWithData<int> damageCoroutine = new(this,
                 attacker.PerformDamage(attack, attackResult, target));
             yield return damageCoroutine.coroutine;
-            int damageRoll = (int)damageCoroutine.result;
+            int damageRoll = damageCoroutine.GetResult();
 
             Debug.Log($"Traveller rolled {damageRoll} for their damage roll.");
             yield return attacker.DealDamage(attack,
@@ -238,10 +237,10 @@ public class CombatManager : MonoBehaviour
                 continue;
             }
 
-            CoroutineWithData coroutineWithData = new CoroutineWithData(this,
+            CoroutineWithData<Deque<Vector3Int>> coroutineWithData = new(this,
             pathfinder.FindPath(pc, partyManager.currControlledCharacter.origin));
             yield return coroutineWithData.coroutine;
-            Deque<Vector3Int> path = (Deque<Vector3Int>)coroutineWithData.result;
+            Deque<Vector3Int> path = coroutineWithData.GetResult();
 
             yield return movementManager.MoveAlongPath(pc, path);
         }
@@ -274,10 +273,10 @@ public class CombatManager : MonoBehaviour
 
     private IEnumerator TryMovePlayer(PlayerCharacter playerMovement) {
         int maxSearchLength = (playerMovement.GetStats().baseSpeed / TILE_TO_FEET) * 3;
-        CoroutineWithData coroutineWithData = new CoroutineWithData(this,
+        CoroutineWithData<Deque<Vector3Int>> coroutineWithData = new(this,
             pathfinder.FindPath(playerMovement, detachedCamera.currVoxel, maxSearchLength));
         yield return coroutineWithData.coroutine;
-        Deque<Vector3Int> path = (Deque<Vector3Int>)coroutineWithData.result;
+        Deque<Vector3Int> path = coroutineWithData.GetResult();
 
         int remainingSpeed = playerMovement.GetStats().baseSpeed
             - usedResources[playerMovement].consumedMovement;

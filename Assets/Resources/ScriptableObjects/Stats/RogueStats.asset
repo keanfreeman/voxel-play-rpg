@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RogueStats
   m_EditorClassIdentifier: 
   baseSpeed: 30
-  hitPoints: 10
+  maxHP: 0
   size: 2
   strength: 12
   dexterity: 16
@@ -24,6 +24,7 @@ MonoBehaviour:
   actions:
   - {fileID: 11400000, guid: 014ef2fe746cad144bc10c18a3f91798, type: 2}
   - {fileID: 11400000, guid: 441b8db769431a148ab3a80c374cc475, type: 2}
-  features: []
+  features:
+  - {fileID: 11400000, guid: cc610b18072f0e9479b1faf588dc2a7d, type: 2}
   level: 1
   armorClass: 14

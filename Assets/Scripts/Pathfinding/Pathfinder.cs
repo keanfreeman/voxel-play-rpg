@@ -18,17 +18,15 @@ public class Pathfinder : MonoBehaviour
     private const int MAX_PATH_LENGTH = 1000;
     private const float MAX_SEARCH_TIME = 0.1f;
 
-    PriorityQueue<Node, float> frontier1 = new PriorityQueue<Node, float>();
-    Dictionary<Vector3Int, Node> positionToNode1 = new Dictionary<Vector3Int, Node>();
+    PriorityQueue<Node, float> frontier1 = new();
+    Dictionary<Vector3Int, Node> positionToNode1 = new();
     // keeps track of changed values since we can't update them directly in the priority queue
-    Dictionary<Node, KeyValuePair<float, float>> changedNodes1
-        = new Dictionary<Node, KeyValuePair<float, float>>();
-    PriorityQueue<Node, float> frontier2 = new PriorityQueue<Node, float>();
-    Dictionary<Vector3Int, Node> positionToNode2 = new Dictionary<Vector3Int, Node>();
-    Dictionary<Node, KeyValuePair<float, float>> changedNodes2
-        = new Dictionary<Node, KeyValuePair<float, float>>();
+    Dictionary<Node, KeyValuePair<float, float>> changedNodes1 = new();
+    PriorityQueue<Node, float> frontier2 = new();
+    Dictionary<Vector3Int, Node> positionToNode2 = new();
+    Dictionary<Node, KeyValuePair<float, float>> changedNodes2 = new();
 
-    private Deque<Vector3Int> EMPTY_RESULTS = new Deque<Vector3Int>(0);
+    private Deque<Vector3Int> EMPTY_RESULTS = new(0);
 
     private void ClearDataStructures() {
         frontier1.Clear();
@@ -42,7 +40,7 @@ public class Pathfinder : MonoBehaviour
     public IEnumerator FindPath(Traveller traveller, Vector3Int endPosition,
             int maxSearchDepth = MAX_PATH_LENGTH) {
         // when the traveller is large or greater, we need to allow movement onto tiles occupied by itself
-        List<TangibleEntity> ignoredCreatures = new List<TangibleEntity> { traveller };
+        List<TangibleEntity> ignoredCreatures = new() { traveller };
 
         // check if any position in the target is occupied by someone else
         HashSet<Vector3Int> endPositions = traveller.GetPositionsIfOriginAtPosition(endPosition);
@@ -55,10 +53,10 @@ public class Pathfinder : MonoBehaviour
         }
 
         if (occupyingEntity == null) {
-            CoroutineWithData coroutineWithData = new CoroutineWithData(this,
+            CoroutineWithData<Deque<Vector3Int>> coroutineWithData = new(this,
                 FindPathInternal(traveller.origin, endPosition, traveller, ignoredCreatures, maxSearchDepth));
             yield return coroutineWithData.coroutine;
-            yield return coroutineWithData.result;
+            yield return coroutineWithData.GetResult();
             yield break;
         }
 
@@ -87,14 +85,14 @@ public class Pathfinder : MonoBehaviour
         }
 
         // find smallest path out of reachable origins
-        PriorityQueue<Deque<Vector3Int>, int> pathLengths = new PriorityQueue<Deque<Vector3Int>, int>();
+        PriorityQueue<Deque<Vector3Int>, int> pathLengths = new();
         foreach (Vector3Int targetOrigin in reachableOriginsNextToTarget) {
             int newMaxSearch = pathLengths.Count > 0 ? pathLengths.Peek().Count : maxSearchDepth;
-            CoroutineWithData coroutineWithData = new CoroutineWithData(this,
+            CoroutineWithData<Deque<Vector3Int>> coroutineWithData = new(this,
                 FindPathInternal(traveller.origin, targetOrigin, traveller, ignoredCreatures,
                 newMaxSearch));
             yield return coroutineWithData.coroutine;
-            Deque<Vector3Int> result = (Deque<Vector3Int>)coroutineWithData.result;
+            Deque<Vector3Int> result = coroutineWithData.GetResult();
             if (result.Count != 0) {
                 pathLengths.Enqueue(result, result.Count);
             }
@@ -112,12 +110,12 @@ public class Pathfinder : MonoBehaviour
             Vector3Int endPosition, Traveller traveller, List<TangibleEntity> ignoredCreatures,
             int maxSearchDepth) {
         ClearDataStructures();
-        Deque<Vector3Int> result = new Deque<Vector3Int>();
+        Deque<Vector3Int> result = new();
 
-        Node start1 = new Node(startPosition);
-        Node end1 = new Node(endPosition);
-        Node start2 = new Node(endPosition);
-        Node end2 = new Node(startPosition);
+        Node start1 = new(startPosition);
+        Node end1 = new(endPosition);
+        Node start2 = new(endPosition);
+        Node end2 = new(startPosition);
 
         if (!spriteMovement.IsReachablePosition(end1.origin, traveller, ignoredCreatures)) {
             Debug.Log("End position isn't reachable.");
@@ -173,7 +171,7 @@ public class Pathfinder : MonoBehaviour
             foreach (Vector3Int coordinate in Coordinates.GetAdjacentCoordinates(currNode1.origin)) {
                 Node neighbor;
                 if (!positionToNode1.ContainsKey(coordinate)) {
-                    neighbor = new Node(coordinate);
+                    neighbor = new(coordinate);
                     positionToNode1[coordinate] = neighbor;
                 }
                 neighbor = positionToNode1[coordinate];
@@ -182,7 +180,7 @@ public class Pathfinder : MonoBehaviour
             foreach (Vector3Int coordinate in Coordinates.GetAdjacentCoordinates(currNode2.origin)) {
                 Node neighbor;
                 if (!positionToNode2.ContainsKey(coordinate)) {
-                    neighbor = new Node(coordinate);
+                    neighbor = new(coordinate);
                     positionToNode2[coordinate] = neighbor;
                 }
                 neighbor = positionToNode2[coordinate];

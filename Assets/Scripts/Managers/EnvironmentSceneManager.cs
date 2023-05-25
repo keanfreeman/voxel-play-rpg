@@ -211,7 +211,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         PlayerCharacter mainCharacter = new PlayerCharacter(new Vector3Int(859, 37, 347),
             mainCharacterID.name);
         PlayerCharacter testFighter = new(new Vector3Int(862, 29, 345), friendID.name);
-        PlayerCharacter testFighter2 = new(new Vector3Int(850, -8, 345), friendID.name);
+        PlayerCharacter testRogue = new(new Vector3Int(850, -8, 345), rogueGrimesID.name);
 
         NPC fighterCorey = new NPC(new Vector3Int(862, 29, 346), Faction.PLAYER, IdleBehavior.STAND,
             friendID.name);
@@ -324,7 +324,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                 3, new SceneInfo(new List<Entity> {
                     mainCharacter,
                     testFighter,
-                    testFighter2,
+                    testRogue,
                     fighterCorey,
                     cat,
                     rogueGrimes,

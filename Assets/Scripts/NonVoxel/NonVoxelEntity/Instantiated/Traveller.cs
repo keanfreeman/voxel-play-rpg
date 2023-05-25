@@ -23,7 +23,7 @@ namespace Instantiated {
         public event System.Func<Traveller, Traveller, Advantage, Advantage> onPerformAttack;
         public event System.Func<Traveller, IEnumerator> onCombatTurnStart;
         public event System.Func<Traveller, IEnumerator> onCombatTurnEnd;
-        public event System.Func<AttackSO, Traveller, IEnumerator> onAttackHit;
+        public event System.Func<Traveller, Advantage, IEnumerator> onAttackHit;
         public event System.Func<AttackSO, Traveller, IEnumerator> afterDamageDealt;
 
         public SpriteMoveDirection permanentMoveDirection { get; protected set; } = SpriteMoveDirection.NONE;
@@ -62,22 +62,27 @@ namespace Instantiated {
         }
 
         public IEnumerator PerformDamage(AttackSO attack, AttackResult attackResult, Traveller target) {
+            List<Die> bonusDamage = new();
             bool isCurrentlyCritical = attackResult.isCritical;
             if (onAttackHit != null) {
-                foreach (System.Delegate handler in onAttackHit.GetInvocationList()) {
-                    var handlerCasted = (System.Func<AttackSO, Traveller, IEnumerator>)handler;
-                    CoroutineWithData attackHitCoroutine = new(this, handlerCasted.Invoke(attack, target));
+                foreach (System.Func<Traveller, Advantage, IEnumerator> handler 
+                        in onAttackHit.GetInvocationList()) {
+                    CoroutineWithData<AttackHitModifications> attackHitCoroutine = new(this,
+                        handler.Invoke(target, attackResult.advantageState));
                     yield return attackHitCoroutine.coroutine;
 
-                    bool isNewlyCritical = (bool)attackHitCoroutine.result;
-                    if (!isCurrentlyCritical && isNewlyCritical) isCurrentlyCritical = true;
+                    AttackHitModifications modifications = attackHitCoroutine.GetResult();
+                    if (modifications.isNewlyCritical) isCurrentlyCritical = true;
+                    if (modifications.bonusDamage.Count > 0) bonusDamage.AddRange(modifications.bonusDamage);
                 }
             }
 
-            CoroutineWithData damageCoroutine = new(this, 
-                visualRollManager.RollDamage(new List<Die> { attack.damageRoll }, isCurrentlyCritical));
+            List<Die> finalDamage = new() { attack.damageRoll };
+            finalDamage.AddRange(bonusDamage);
+            CoroutineWithData<int> damageCoroutine = new(this, 
+                visualRollManager.RollDamage(finalDamage, isCurrentlyCritical));
             yield return damageCoroutine.coroutine;
-            yield return damageCoroutine.result;
+            yield return damageCoroutine.GetResult();
         }
 
         public IEnumerator PerformAttack(AttackSO attack, Traveller target, 
@@ -90,11 +95,11 @@ namespace Instantiated {
                 }
             }
 
-            CoroutineWithData rollAttackCoroutine = new(this, 
+            CoroutineWithData<AttackResult> rollAttackCoroutine = new(this, 
                 visualRollManager.RollAttack(attack.attackRoll.modifier,
                 target.GetStats().CalculateArmorClass(), currAdvantageState));
             yield return rollAttackCoroutine.coroutine;
-            AttackResult attackResult = rollAttackCoroutine.result as AttackResult;
+            AttackResult attackResult = rollAttackCoroutine.GetResult();
             yield return attackResult;
         }
 

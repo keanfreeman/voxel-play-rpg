@@ -63,10 +63,12 @@ public class MessageManager : MonoBehaviour
         messageCoroutine = null;
     }
 
-    public void StopDisplayingPermanentMessage() {
+    public void StopDisplayingPermanentMessages() {
+        foreach (Message message in messages) {
+            message.isPermanent = false;
+        }
         erasePermanentMessage = true;
     }
-
 }
 
 public class Message {

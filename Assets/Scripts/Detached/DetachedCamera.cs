@@ -228,10 +228,10 @@ public class DetachedCamera : MonoBehaviour
         }
         else {
             // move currently selected to target
-            CoroutineWithData coroutineWithData = new CoroutineWithData(this,
+            CoroutineWithData<Deque<Vector3Int>> coroutineWithData = new(this,
                 pathfinder.FindPath(partyManager.currControlledCharacter, currVoxel));
             yield return coroutineWithData.coroutine;
-            Deque<Vector3Int> path = (Deque<Vector3Int>)coroutineWithData.result;
+            Deque<Vector3Int> path = coroutineWithData.GetResult();
             yield return movementManager.MoveAlongPath(partyManager.currControlledCharacter, path);
         }
     }
@@ -243,15 +243,17 @@ public class DetachedCamera : MonoBehaviour
         inputManager.SwitchPlayerToDetachedControlState(startPosition);
         inputManager.SetDetachedToNormal();
 
+        Vector3Int? result = null;
         while (voxelSelectionMode == VoxelSelection.Waiting) {
-            yield return null;
+            yield return result;
         }
 
         if (voxelSelectionMode == VoxelSelection.Selected) {
-            yield return currVoxel;
+            result = currVoxel;
+            yield return result;
         }
         else {
-            yield return null;
+            yield return result;
         }
 
         voxelSelectionMode = VoxelSelection.NotSelecting;

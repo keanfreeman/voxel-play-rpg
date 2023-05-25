@@ -30,12 +30,12 @@ public class ActionManager : MonoBehaviour
                 yield break;
             }
 
-            CoroutineWithData rangedAttackCoroutine = new(this, PerformRangedAttack(performer, attack));
+            CoroutineWithData<HashSet<NPC>> rangedAttackCoroutine = new(this, 
+                PerformRangedAttack(performer, attack));
             yield return rangedAttackCoroutine.coroutine;
-            HashSet<NPC> enemies = rangedAttackCoroutine.result == null ? null 
-                : (HashSet<NPC>)rangedAttackCoroutine.result;
-            if (enemies != null && enemies.Count > 0 
-                    && gameStateManager.controlState != ControlState.COMBAT) {
+            HashSet<NPC> enemies = rangedAttackCoroutine.HasResult()
+                ? rangedAttackCoroutine.GetResult() : new();
+            if (enemies.Count > 0 && gameStateManager.controlState != ControlState.COMBAT) {
                 EnterCombatAfterAttacking(enemies);
             }
         }
@@ -55,17 +55,17 @@ public class ActionManager : MonoBehaviour
     private IEnumerator PerformRangedAttack(Traveller performer, AttackSO attack) {
         messageManager.DisplayMessage(new Message(
             "Please select a creature to attack", isPermanent: true));
-        CoroutineWithData cwd = new(this, detachedCamera.EnterSelectMode(performer.origin));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer.origin));
         yield return cwd.coroutine;
 
-        messageManager.StopDisplayingPermanentMessage();
-        if (cwd.result == null) {
+        messageManager.StopDisplayingPermanentMessages();
+        if (!cwd.HasResult()) {
             messageManager.DisplayMessage("No creature at that position.");
             yield return null;
             yield break;
         }
+        Vector3Int targetPosition = cwd.GetResult();
 
-        Vector3Int targetPosition = (Vector3Int)cwd.result;
         InstantiatedEntity entity = nonVoxelWorld.GetEntityFromPosition(targetPosition);
         if (entity == null || !TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(NPC))) {
             messageManager.DisplayMessage("Must choose an NPC as a target.");
@@ -113,10 +113,10 @@ public class ActionManager : MonoBehaviour
 
         performer.AddConsumedResource(secondWindFeature.providedResources[0]);
 
-        CoroutineWithData secondWindCoroutine = new(this, visualRollManager.RollGeneric(
+        CoroutineWithData<DiceResult> secondWindCoroutine = new(this, visualRollManager.RollGeneric(
             "Rolling for Second Wind", new List<Die> { new(1, 10, 1) }));
         yield return secondWindCoroutine.coroutine;
-        DiceResult result = (DiceResult)secondWindCoroutine.result;
+        DiceResult result = secondWindCoroutine.GetResult();
 
         // todo - display healing effect
         int newHP = Mathf.Min(maxHP, initialHP + result.sum);

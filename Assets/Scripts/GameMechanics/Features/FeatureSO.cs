@@ -19,7 +19,10 @@ namespace GameMechanics {
 
         // fighter
         FightingStyleDefense,
-        SecondWind
+        SecondWind,
+
+        // rogue
+        SneakAttack
     }
 
     public enum AttackFeature {

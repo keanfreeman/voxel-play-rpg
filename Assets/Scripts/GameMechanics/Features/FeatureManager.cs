@@ -1,9 +1,11 @@
+using DieNamespace;
 using GameMechanics;
 using Instantiated;
 using NonVoxel;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static RandomManager;
 
@@ -13,6 +15,7 @@ public class FeatureManager : MonoBehaviour {
     [SerializeField] NonVoxelWorld nonVoxelWorld;
     [SerializeField] CombatManager combatManager;
     [SerializeField] VisualRollManager visualRollManager;
+    [SerializeField] MessageManager messageManager;
 
     public void SetUpFeatures(Traveller traveller) {
         foreach (FeatureSO feature in traveller.GetStats().features) {
@@ -27,6 +30,9 @@ public class FeatureManager : MonoBehaviour {
                     // todo - make this feature work dynamically
                     break;
                 case FeatureID.SecondWind:
+                    break;
+                case FeatureID.SneakAttack:
+                    traveller.onAttackHit += TriggerSneakAttack;
                     break;
                 default:
                     throw new System.NotImplementedException($"Did not implement traveller " +
@@ -55,8 +61,44 @@ public class FeatureManager : MonoBehaviour {
         traveller.onAttackHit += CheckParalyzedCriticalHit;
     }
 
-    private IEnumerator CheckParalyzedCriticalHit(AttackSO attack, Traveller target) {
-        yield return target.StatusEffects.IsParalyzed();
+    // attack is unused
+    private IEnumerator TriggerSneakAttack(Traveller target, Advantage advantageState) {
+        bool shouldTriggerSneakAttack = false;
+
+        // check if an enemy is next to the target
+        if (advantageState == Advantage.Advantage) {
+            shouldTriggerSneakAttack = true;
+        }
+        else if (advantageState != Advantage.Disadvantage) {
+            EntityDefinition.Faction targetFaction = target.GetFaction();
+            HashSet<Vector3Int> adjacent = Coordinates.GetPositionsSurroundingTraveller(target);
+            foreach (Vector3Int position in adjacent) {
+                InstantiatedEntity instantiatedEntity = nonVoxelWorld.GetEntityFromPosition(position);
+                if (instantiatedEntity != null
+                        && TypeUtils.IsSameTypeOrIsSubclass(instantiatedEntity, typeof(Traveller))
+                        && target != instantiatedEntity) {
+                    Traveller adjacentTraveller = (Traveller)instantiatedEntity;
+                    // todo - check that this person is not incapacitated
+                    if (adjacentTraveller.GetFaction() != targetFaction) {
+                        shouldTriggerSneakAttack = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (shouldTriggerSneakAttack) {
+            messageManager.DisplayMessage("Rogue's sneak attack triggered!");
+            Die sneakAttackBonus = new(1, 6);
+            yield return new AttackHitModifications() { bonusDamage = new() { sneakAttackBonus } };
+        }
+        else {
+            yield return new AttackHitModifications();
+        }
+    }
+
+    private IEnumerator CheckParalyzedCriticalHit(Traveller target, Advantage _) {
+        yield return new AttackHitModifications() { isNewlyCritical = target.StatusEffects.IsParalyzed() };
     }
 
     private Advantage CheckParalyzedAdvantage(Traveller attacker, Traveller target, Advantage currAdvState) {
@@ -77,10 +119,10 @@ public class FeatureManager : MonoBehaviour {
         const int DC = 10;
         int modifier = StatModifiers.GetModifierForStat(target.GetStats().constitution);
 
-        CoroutineWithData savingThrowCoroutine = new(this, visualRollManager.RollSavingThrow(
+        CoroutineWithData<int> savingThrowCoroutine = new(this, visualRollManager.RollSavingThrow(
             "Rolling CON saving throw for Ghoul Claw", modifier, DC));
         yield return savingThrowCoroutine.coroutine;
-        int roll = (int)savingThrowCoroutine.result;
+        int roll = savingThrowCoroutine.GetResult();
 
         if (roll < DC) {
             OngoingEffect ghoulStatusEffect = target.StatusEffects.Get(StatusEffect.GhoulClaw);
@@ -106,10 +148,10 @@ public class FeatureManager : MonoBehaviour {
         const int DC = 10;
         int modifier = StatModifiers.GetModifierForStat(currTurnTraveller.GetStats().constitution);
 
-        CoroutineWithData savingThrowCoroutine = new(this, visualRollManager.RollSavingThrow(
+        CoroutineWithData<int> savingThrowCoroutine = new(this, visualRollManager.RollSavingThrow(
             "Rolling CON saving throw to end Paralysis from Ghoul Claw", modifier, 10));
         yield return savingThrowCoroutine.coroutine;
-        int roll = (int)savingThrowCoroutine.result;
+        int roll = savingThrowCoroutine.GetResult();
 
         if (roll >= DC || ghoulStatusEffect.turnsLeft <= 1) {
             currTurnTraveller.StatusEffects.Remove(StatusEffect.GhoulClaw);
@@ -154,10 +196,10 @@ public class FeatureManager : MonoBehaviour {
 
         int modifier = StatModifiers.GetModifierForStat(instance.GetStats().constitution);
 
-        CoroutineWithData savingThrowCoroutine = new(this, visualRollManager.RollSavingThrow(
+        CoroutineWithData<int> savingThrowCoroutine = new(this, visualRollManager.RollSavingThrow(
             "Rolling CON saving throw for Zombie's Undead Fortitude", modifier, difficultyClass));
         yield return savingThrowCoroutine.coroutine;
-        int roll = (int)savingThrowCoroutine.result;
+        int roll = savingThrowCoroutine.GetResult();
 
         // todo - revert
         if (roll >= difficultyClass) {
@@ -166,4 +208,9 @@ public class FeatureManager : MonoBehaviour {
             effectManager.GenerateExclaimEffectInstant(instance);
         }
     }
+}
+
+public class AttackHitModifications {
+    public bool isNewlyCritical = false;
+    public List<Die> bonusDamage = new();
 }
