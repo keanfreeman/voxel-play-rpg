@@ -1,0 +1,5 @@
+StatusComponent {
+    font-size: 40px;
+    background-color: rgba(223, 159, 31, 255);
+    color: rgba(0, 0, 0, 255);
+}

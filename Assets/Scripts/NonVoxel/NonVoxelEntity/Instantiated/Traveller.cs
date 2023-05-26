@@ -6,6 +6,7 @@ using NonVoxel;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static RandomManager;
 using static UnityEngine.GraphicsBuffer;
 
@@ -18,6 +19,7 @@ namespace Instantiated {
         [SerializeField] protected FeatureManager featureManager;
         [SerializeField] protected RandomManager randomManager;
         [SerializeField] protected VisualRollManager visualRollManager;
+        [SerializeField] protected StatusUIController statusUIController;
         private TimerUIController timerUIController;
 
         public event System.Func<Traveller, Damage, IEnumerator> onHPChanged;
