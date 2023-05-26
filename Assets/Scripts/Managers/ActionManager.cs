@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using static DetachedCamera;
 
 public class ActionManager : MonoBehaviour
 {
@@ -44,6 +45,13 @@ public class ActionManager : MonoBehaviour
                 EnterCombatAfterAttacking(enemies);
             }
         }
+        else if (actionType == typeof(SpellSO)) {
+            SpellSO spell = (SpellSO)action;
+            // todo - use non-string identifier
+            if (spell.actionName == "Longstrider") {
+                yield return PerformLongstrider(performer);
+            }
+        }
         else if (actionType == typeof(SpecialActionSO)) {
             SpecialActionSO specialActionSO = (SpecialActionSO)action;
             // todo - use non-string identifier
@@ -65,7 +73,7 @@ public class ActionManager : MonoBehaviour
 
         messageManager.StopDisplayingPermanentMessages();
         if (!cwd.HasResult()) {
-            messageManager.DisplayMessage("No creature at that position.");
+            messageManager.DisplayMessage("Cancelled selection.");
             yield return null;
             yield break;
         }
@@ -97,6 +105,32 @@ public class ActionManager : MonoBehaviour
         combatManager.SetEnemies(enemies);
         gameStateManager.EnterCombat(null);
         combatManager.StartCombat();
+    }
+
+    private IEnumerator PerformLongstrider(Traveller performer) {
+        // get a target
+        messageManager.DisplayMessage(new Message("Please select an adjacent creature.", isPermanent: true));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer.origin));
+        yield return cwd.coroutine;
+
+        messageManager.StopDisplayingPermanentMessages();
+        if (!cwd.HasResult()) {
+            messageManager.DisplayMessage("Cancelled selection.");
+            yield return null;
+            yield break;
+        }
+        Vector3Int targetPosition = cwd.GetResult();
+
+        InstantiatedEntity entity = nonVoxelWorld.GetEntityFromPosition(targetPosition);
+        if (entity == null || !TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(Traveller))) {
+            messageManager.DisplayMessage("Must choose a creature as a target.");
+            yield return null;
+            yield break;
+        }
+        Traveller target = (Traveller)entity;
+
+        // apply a status
+        target.AddStatus(new OngoingEffect(StatusEffect.Longstrider, TimeUtil.HOUR));
     }
 
     private IEnumerator PerformSecondWind(Traveller performer) {

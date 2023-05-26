@@ -1,17 +1,44 @@
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace GameMechanics {
+    [Serializable]
     public class CurrentStatus {
-        private Dictionary<StatusEffect, OngoingEffect> ongoingEffects = new();
+        private Dictionary<StatusEffect, OngoingEffect> ongoingEffects;
+
+        [JsonConstructor]
+        public CurrentStatus(Dictionary<StatusEffect, OngoingEffect> ongoingEffects) {
+            this.ongoingEffects = ongoingEffects;
+        }
+
+        public CurrentStatus() {
+            this.ongoingEffects = new();
+        }
+
+        public int NumStatuses() {
+            return ongoingEffects.Count;
+        }
+
+        public void DeductTime(int seconds) {
+            List<StatusEffect> keysToRemove = new();
+            foreach (OngoingEffect ongoingEffect in ongoingEffects.Values) {
+                ongoingEffect.secondsLeft -= seconds;
+                if (ongoingEffect.secondsLeft <= 0) keysToRemove.Add(ongoingEffect.cause);
+            }
+            foreach (StatusEffect statusEffect in keysToRemove) {
+                ongoingEffects.Remove(statusEffect);
+            }
+        }
 
         public OngoingEffect Get(StatusEffect statusEffect) {
             return ongoingEffects.GetValueOrDefault(statusEffect, null);
         }
 
-        public void Add(StatusEffect statusEffect, OngoingEffect ongoingEffect) {
+        public void Set(StatusEffect statusEffect, OngoingEffect ongoingEffect) {
             ongoingEffects[statusEffect] = ongoingEffect;
         }
 
@@ -19,6 +46,12 @@ namespace GameMechanics {
             if (ongoingEffects.ContainsKey(statusEffect)) {
                 ongoingEffects.Remove(statusEffect);
             }
+        }
+
+        public HashSet<Condition> GetConditions() {
+            return ongoingEffects.Values
+                .SelectMany(ongoingEffect => ongoingEffect.conditions)
+                .ToHashSet();
         }
 
         public bool IsParalyzed() {
@@ -50,19 +83,25 @@ namespace GameMechanics {
     // describes a specific effect, e.g. (a ghoul's claw and everything associated), rather
     // than the condition game mechanic (e.g. paralysis)
     public enum StatusEffect {
-        GhoulClaw
+        GhoulClaw,
+        Longstrider
     }
 
+    [Serializable]
     public class OngoingEffect {
         public StatusEffect cause;
         public HashSet<Condition> conditions;
-        public int turnsLeft;
+        public int secondsLeft;
 
-        public OngoingEffect(StatusEffect cause, IEnumerable<Condition> conditions, int turnsLeft) {
+        [JsonConstructor]
+        public OngoingEffect(StatusEffect cause, int secondsLeft, IEnumerable<Condition> conditions) {
             this.cause = cause;
+            this.secondsLeft = secondsLeft;
             this.conditions = conditions.ToHashSet();
-            this.turnsLeft = turnsLeft;
         }
+
+        public OngoingEffect(StatusEffect cause, int secondsLeft) 
+            : this(cause, secondsLeft, new HashSet<Condition>()) {}
     }
 
     public static class ConditionEnumExtension {

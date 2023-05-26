@@ -11,6 +11,7 @@ namespace Spells {
         public string range;
         public SpellComponents spellComponents;
         public bool isConcentration;
+        // todo - use something more useful, like ints for time above instantaneous
         public string duration;
         public string description;
         public AttackSO providedAttack;

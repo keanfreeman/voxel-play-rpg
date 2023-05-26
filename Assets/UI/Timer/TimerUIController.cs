@@ -11,6 +11,8 @@ public class TimerUIController : MonoBehaviour, ISaveable
     [SerializeField] SaveManager saveManager;
     [SerializeField] CombatManager combatManager;
 
+    public event Action<int> OnSecondsPassed;
+
     VisualElement wholeScreen;
     Label daysLabel;
     Label hoursLabel;
@@ -27,10 +29,10 @@ public class TimerUIController : MonoBehaviour, ISaveable
         minutesLabel = wholeScreen.Q<Label>("MinutesLabel");
         secondsLabel = wholeScreen.Q<Label>("SecondsLabel");
 
-        combatManager.roundEnded += CombatManager_roundEnded;
+        combatManager.roundEnded += CombatManagerRoundEnded;
     }
 
-    private void CombatManager_roundEnded() {
+    private void CombatManagerRoundEnded() {
         // todo - lose game when time runs out
         bool outOfTime = DeductSeconds(6);
     }
@@ -57,16 +59,15 @@ public class TimerUIController : MonoBehaviour, ISaveable
     }
 
     public bool DeductMinutes(int minutesToDeduct) {
-        timeRemaining.minutes -= minutesToDeduct;
-        bool outOfTime = FixTime();
-        UpdateClockDisplay();
-        return outOfTime;
+        return DeductSeconds(minutesToDeduct * 60);
     }
 
     public bool DeductSeconds(int secondsToDeduct) {
         timeRemaining.seconds -= secondsToDeduct;
         bool outOfTime = FixTime();
         UpdateClockDisplay();
+
+        OnSecondsPassed?.Invoke(secondsToDeduct);
         return outOfTime;
     }
 

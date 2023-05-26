@@ -63,18 +63,23 @@ public class CombatManager : MonoBehaviour
         inputManager.SwitchDetachedToWatchControlState();
 
         NPC npcInstance = (NPC) currCreature;
-        if (!npcInstance.StatusEffects.IsParalyzed()) {
-            // find nearest enemy
+        if (!npcInstance.HasCondition(Condition.Paralyzed)) {
             PlayerCharacter nearestPlayer = partyManager.FindNearestPlayer(currCreature.origin);
             if (!Coordinates.IsNextTo(npcInstance, nearestPlayer)) {
-                // try move towards enemy
-                int maxSearchLength = (npcInstance.GetStats().baseSpeed / TILE_TO_FEET) * 3;
+                int maxSearchLength = (npcInstance.GetStats().baseSpeed / TILE_TO_FEET) * 5;
 
                 CoroutineWithData<Deque<Vector3Int>> coroutineWithData = new(this,
                     pathfinder.FindPath(currCreature, nearestPlayer.origin, maxSearchLength));
                 yield return coroutineWithData.coroutine;
                 Deque<Vector3Int> path = coroutineWithData.GetResult();
-                while (path.Count * TILE_TO_FEET > npcInstance.GetStats().baseSpeed) {
+
+                // todo - use events instead of conditional
+                int movementBudget = npcInstance.GetStats().baseSpeed;
+                if (npcInstance.GetStatus(StatusEffect.Longstrider) != null) {
+                    movementBudget += 10;
+                }
+
+                while (path.Count * TILE_TO_FEET > movementBudget) {
                     path.RemoveFromFront();
                 }
                 yield return movementManager.MoveAlongPath(currCreature, path);
@@ -118,7 +123,7 @@ public class CombatManager : MonoBehaviour
 
         PlayerCharacter playerInstance = (PlayerCharacter)currCreature;
 
-        if (playerInstance.StatusEffects.IsParalyzed()) {
+        if (playerInstance.HasCondition(Condition.Paralyzed)) {
             // todo - show an effect and disable UI components
             Debug.Log("Player is paralyzed and can't act.");
             yield break;
@@ -272,15 +277,19 @@ public class CombatManager : MonoBehaviour
     }
 
     private IEnumerator TryMovePlayer(PlayerCharacter playerMovement) {
-        int maxSearchLength = (playerMovement.GetStats().baseSpeed / TILE_TO_FEET) * 3;
+        int maxSearchLength = (playerMovement.GetStats().baseSpeed / TILE_TO_FEET) * 5;
         CoroutineWithData<Deque<Vector3Int>> coroutineWithData = new(this,
             pathfinder.FindPath(playerMovement, detachedCamera.currVoxel, maxSearchLength));
         yield return coroutineWithData.coroutine;
         Deque<Vector3Int> path = coroutineWithData.GetResult();
 
-        int remainingSpeed = playerMovement.GetStats().baseSpeed
-            - usedResources[playerMovement].consumedMovement;
-        while (path.Count * TILE_TO_FEET > remainingSpeed) {
+        // todo - use events instead of conditional
+        int movementBudget = playerMovement.GetStats().baseSpeed;
+        if (playerMovement.GetStatus(StatusEffect.Longstrider) != null) {
+            movementBudget += 10;
+        }
+        movementBudget -= usedResources[playerMovement].consumedMovement;
+        while (path.Count * TILE_TO_FEET > movementBudget) {
             path.RemoveFromFront();
         }
 

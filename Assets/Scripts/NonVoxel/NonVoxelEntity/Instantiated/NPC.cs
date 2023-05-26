@@ -44,7 +44,8 @@ namespace Instantiated {
                 System.Random rng, EntityDefinition.NPC npcInfo, TravellerIdentitySO identity, 
                 CameraManager cameraManager, PartyManager partyManager, 
                 GameStateManager gameStateManager, FeatureManager featureManager, 
-                RandomManager randomManager, VisualRollManager visualRollManager) {
+                RandomManager randomManager, VisualRollManager visualRollManager, 
+                TimerUIController timerUIController) {
             this.nonVoxelWorld = nonVoxelWorld;
             this.spriteMovement = spriteMovement;
             this.rng = rng;
@@ -68,7 +69,7 @@ namespace Instantiated {
                 StartCoroutine(MoveCoroutine());
             }
 
-            base.Init();
+            base.Init(timerUIController);
         }
 
         private IEnumerator MoveCoroutine() {

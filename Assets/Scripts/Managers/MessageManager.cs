@@ -11,19 +11,6 @@ public class MessageManager : MonoBehaviour
     private bool erasePermanentMessage = false;
     Coroutine messageCoroutine = null;
 
-    // todo remove
-    //private void Update() {
-    //    if (Input.GetKeyUp(KeyCode.Keypad0)) {
-    //        DisplayMessage(new Message("asdf", false));
-    //    }
-    //    if (Input.GetKeyUp(KeyCode.Keypad1)) {
-    //        DisplayMessage(new Message("asdf2", true));
-    //    }
-    //    if (Input.GetKeyUp(KeyCode.Keypad2)) {
-    //        StopDisplayingPermanentMessage();
-    //    }
-    //}
-
     public void DisplayMessage(string message) {
         DisplayMessage(new Message(message));
     }

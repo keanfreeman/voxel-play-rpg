@@ -18,6 +18,7 @@ namespace Instantiated {
         [SerializeField] protected FeatureManager featureManager;
         [SerializeField] protected RandomManager randomManager;
         [SerializeField] protected VisualRollManager visualRollManager;
+        private TimerUIController timerUIController;
 
         public event System.Func<Traveller, Damage, IEnumerator> onHPChanged;
         public event System.Func<Traveller, Traveller, Advantage, Advantage> onPerformAttack;
@@ -43,7 +44,7 @@ namespace Instantiated {
             set { GetEntity().currHP = value; }
         }
 
-        public CurrentStatus StatusEffects {
+        private CurrentStatus StatusEffects {
             get { return GetEntity().statusEffects; }
         }
 
@@ -55,9 +56,44 @@ namespace Instantiated {
             }
         }
 
-        protected void Init() {
+        protected void Init(TimerUIController timerUIController) {
+            this.timerUIController = timerUIController;
+
             if (GetEntity().currHP < 0) {
                 GetEntity().currHP = GetStats().maxHP;
+            }
+
+            if (StatusEffects.NumStatuses() > 0) {
+                timerUIController.OnSecondsPassed += HandleTimeDeductedForStatuses;
+            }
+        }
+
+        public bool HasCondition(Condition condition) {
+            return StatusEffects.GetConditions().Contains(condition);
+        }
+
+        public OngoingEffect GetStatus(StatusEffect statusEffect) {
+            return StatusEffects.Get(statusEffect);
+        }
+
+        public void AddStatus(OngoingEffect ongoingEffect) {
+            if (StatusEffects.NumStatuses() < 1) {
+                timerUIController.OnSecondsPassed += HandleTimeDeductedForStatuses;
+            }
+            StatusEffects.Set(ongoingEffect.cause, ongoingEffect);
+        }
+
+        public void RemoveStatus(StatusEffect statusEffect) {
+            StatusEffects.Remove(statusEffect);
+            if (StatusEffects.NumStatuses() < 1) {
+                timerUIController.OnSecondsPassed -= HandleTimeDeductedForStatuses;
+            }
+        }
+
+        private void HandleTimeDeductedForStatuses(int secondsDeducted) {
+            StatusEffects.DeductTime(secondsDeducted);
+            if (StatusEffects.NumStatuses() < 1) {
+                timerUIController.OnSecondsPassed -= HandleTimeDeductedForStatuses;
             }
         }
 
