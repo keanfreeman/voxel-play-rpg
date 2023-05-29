@@ -13,7 +13,9 @@ namespace CustomComponents {
 
         public StatusComponent() {
             styleSheets.Add(Resources.Load<StyleSheet>(styleResource));
-            this.text = "Status Effect (Condition1, Condition2)";
+            AddToClassList("TextBackground");
+
+            text = "Status Effect (Condition1, Condition2)";
         }
 
         public StatusComponent(string statusName) : this() {

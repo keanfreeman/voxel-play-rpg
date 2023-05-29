@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 188043091457283627}
   - component: {fileID: 188043091457283624}
   - component: {fileID: 188043091457283625}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: StatusUIQuad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 188043092835285018}
   - component: {fileID: 188043092835284996}
   - component: {fileID: 188043092835284997}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: StatusUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}

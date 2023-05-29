@@ -1,3 +1,4 @@
+using Combat;
 using GameMechanics;
 using Instantiated;
 using Nito.Collections;
@@ -27,11 +28,11 @@ public class CombatManager : MonoBehaviour
     [SerializeField] MessageManager messageManager;
 
     public event System.Action roundEnded;
+    public CombatResources CombatResources { get; private set; } = new();
 
     ICollection<NPC> enemies;
     List<KeyValuePair<int, Traveller>> initiatives;
     int currInitiative = -1;
-    Dictionary<Traveller, CombatResources> usedResources = new Dictionary<Traveller, CombatResources>();
 
     private const int TILE_TO_FEET = 5;
 
@@ -53,7 +54,7 @@ public class CombatManager : MonoBehaviour
 
         yield return currCreature.OnCombatTurnStart();
 
-        usedResources[currCreature] = new CombatResources();
+        CombatResources.AddTraveller(currCreature);
         if (currCreature.GetType() == typeof(PlayerCharacter)) {
             inputManager.SwitchPlayerToDetachedControlState(currCreature.origin);
             combatUI.SetActions((PlayerCharacter)currCreature);
@@ -100,7 +101,7 @@ public class CombatManager : MonoBehaviour
         yield return currCreature.OnCombatTurnEnd();
 
         inputManager.DisableWatchState();
-        ResetCombatResources(currCreature);
+        CombatResources.ResetCombatResources(currCreature);
         IncrementInitiative();
         StartCoroutine(RunTurn(currInitiative));
     }
@@ -181,7 +182,7 @@ public class CombatManager : MonoBehaviour
 
     public IEnumerator PerformAttack(Traveller attacker, AttackSO attack, Traveller target) {
         if (gameStateManager.controlState == ControlState.COMBAT 
-                && usedResources[attacker].usedAction) {
+                && !CombatResources.HasResource(attacker, ActionType.Action)) {
             messageManager.DisplayMessage("You cannot take two actions.");
             yield break;
         }
@@ -225,7 +226,7 @@ public class CombatManager : MonoBehaviour
         }
 
         if (gameStateManager.controlState == ControlState.COMBAT) {
-            usedResources[attacker].usedAction = true;
+            CombatResources.ConsumeResource(attacker, ActionType.Action);
             if (initiatives.Count <= partyManager.partyMembers.Count) {
                 yield return ExitCombat();
             }
@@ -267,7 +268,7 @@ public class CombatManager : MonoBehaviour
         yield return currCreature.OnCombatTurnEnd();
 
         Debug.Log("Player ended turn.");
-        ResetCombatResources(currCreature);
+        CombatResources.ResetCombatResources(currCreature);
         IncrementInitiative();
         StartCoroutine(RunTurn(currInitiative));
     }
@@ -288,12 +289,12 @@ public class CombatManager : MonoBehaviour
         if (playerMovement.GetStatus(StatusEffect.Longstrider) != null) {
             movementBudget += 10;
         }
-        movementBudget -= usedResources[playerMovement].consumedMovement;
+        movementBudget -= CombatResources.GetConsumedMovement(playerMovement);
         while (path.Count * TILE_TO_FEET > movementBudget) {
             path.RemoveFromFront();
         }
 
-        usedResources[playerMovement].consumedMovement += path.Count * TILE_TO_FEET;
+        CombatResources.AddConsumedMovement(playerMovement, path.Count * TILE_TO_FEET);
         yield return movementManager.MoveAlongPath(playerMovement, path);
     }
     
@@ -338,16 +339,51 @@ public class CombatManager : MonoBehaviour
             currInitiative += 1;
         }
     }
+}
 
-    private void ResetCombatResources(Traveller traveller) {
-        usedResources.Remove(traveller);
+namespace Combat {
+    public class CombatResources {
+        private Dictionary<Traveller, CombatResourceState> UsedResources = new();
+
+        public void AddTraveller(Traveller traveller) {
+            UsedResources[traveller] = new();
+        }
+
+        public int GetConsumedMovement(Traveller traveller) {
+            return UsedResources[traveller].ConsumedMovement;
+        }
+
+        public void AddConsumedMovement(Traveller traveller, int movement) {
+            UsedResources[traveller].ConsumedMovement += movement;
+        }
+
+        public bool HasResource(Traveller traveller, ActionType actionType) {
+            return UsedResources[traveller].IsActionTypeAvailable[actionType];
+        }
+
+        public void ConsumeResource(Traveller traveller, ActionType actionType) {
+            UsedResources[traveller].IsActionTypeAvailable[actionType] = false;
+        }
+
+        public void ResetCombatResources(Traveller traveller) {
+            UsedResources[traveller].ResetCombatResources();
+        }
     }
 
-    private class CombatResources {
-        public bool usedAction = false;
-        public bool usedBonusAction = false;
-        public bool usedReaction = false;
-        public bool usedFreeAction = false;
-        public int consumedMovement = 0;
+    public class CombatResourceState {
+        public Dictionary<ActionType, bool> IsActionTypeAvailable { get; private set; } = new() {
+            { ActionType.Action, true },
+            { ActionType.BonusAction, true },
+            { ActionType.Reaction, true },
+            { ActionType.FreeAction, true }
+        };
+        public int ConsumedMovement = 0;
+
+        public void ResetCombatResources() {
+            // must use tolist to avoid modifying the actual dictionary
+            foreach (ActionType actionType in IsActionTypeAvailable.Keys.ToList()) {
+                IsActionTypeAvailable[actionType] = true;
+            }
+        }
     }
 }

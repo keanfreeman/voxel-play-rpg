@@ -1,3 +1,4 @@
+using Combat;
 using DieNamespace;
 using GameMechanics;
 using Instantiated;
@@ -21,6 +22,12 @@ public class ActionManager : MonoBehaviour
     [SerializeField] CombatUI combatUI;
 
     public IEnumerator PerformAction(Traveller performer, ActionSO action) {
+        if (gameStateManager.controlState == ControlState.COMBAT
+                && !combatManager.CombatResources.HasResource(performer, action.actionType)) {
+            messageManager.DisplayMessage($"Cannot use this resource twice: {action.actionType}");
+            yield break;
+        }
+
         Type actionType = action.GetType();
         if (actionType == typeof(AttackSO) || (actionType == typeof(SpellSO) 
                 && ((SpellSO)action).IsSpellAttack())) {
@@ -136,6 +143,10 @@ public class ActionManager : MonoBehaviour
         target.AddStatus(new OngoingEffect(StatusEffect.Longstrider, TimeUtil.HOUR));
 
         resourceStatus.DecrementUses();
+        // todo - use action type specified in spell
+        if (gameStateManager.controlState == ControlState.COMBAT) {
+            combatManager.CombatResources.ConsumeResource(performer, ActionType.Action);
+        }
     }
 
     private IEnumerator PerformSecondWind(Traveller performer) {
@@ -156,7 +167,11 @@ public class ActionManager : MonoBehaviour
         inputManager.LockUIControls();
 
         resourceStatus.DecrementUses();
+        if (gameStateManager.controlState == ControlState.COMBAT) {
+            combatManager.CombatResources.ConsumeResource(performer, ActionType.BonusAction);
+        }
 
+        // todo - scale with fighter level
         CoroutineWithData<DiceResult> secondWindCoroutine = new(this, visualRollManager.RollGeneric(
             "Rolling for Second Wind", new List<Die> { new(1, 10, 1) }));
         yield return secondWindCoroutine.coroutine;

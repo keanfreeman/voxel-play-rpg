@@ -21,7 +21,7 @@ public class CoroutineWithData<T> {
     }
 
     public bool HasResult() {
-        return TypeUtils.IsSameTypeOrIsSubclass(result, typeof(T));
+        return result != null && TypeUtils.IsSameTypeOrIsSubclass(result, typeof(T));
     }
 
     public T GetResult() {
