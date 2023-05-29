@@ -24,3 +24,4 @@ MonoBehaviour:
   - id: 0
     recoversOnShortRest: 1
     recoversOnLongRest: 1
+    maxUses: 1

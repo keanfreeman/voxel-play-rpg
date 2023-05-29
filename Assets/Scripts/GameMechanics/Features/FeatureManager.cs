@@ -18,6 +18,7 @@ public class FeatureManager : MonoBehaviour {
     [SerializeField] MessageManager messageManager;
 
     public void SetUpFeatures(Traveller traveller) {
+        List<Resource> resourcesToAdd = new();
         foreach (FeatureSO feature in traveller.GetStats().features) {
             switch (feature.id) {
                 case FeatureID.PackTactics:
@@ -30,6 +31,10 @@ public class FeatureManager : MonoBehaviour {
                     // todo - make this feature work dynamically
                     break;
                 case FeatureID.SecondWind:
+                    resourcesToAdd.Add(feature.providedResources[0]);
+                    break;
+                case FeatureID.SpellSlots:
+                    resourcesToAdd.Add(feature.providedResources[0]);
                     break;
                 case FeatureID.SneakAttack:
                     traveller.onAttackHit += TriggerSneakAttack;
@@ -38,6 +43,9 @@ public class FeatureManager : MonoBehaviour {
                     throw new System.NotImplementedException($"Did not implement traveller " +
                         $"feature {feature.id}.");
             }
+        }
+        if (traveller.GetResources() == null) {
+            traveller.InitResources(resourcesToAdd);
         }
 
         foreach (ActionSO action in traveller.GetStats().actions) {
@@ -131,8 +139,8 @@ public class FeatureManager : MonoBehaviour {
             OngoingEffect ghoulStatusEffect = target.GetStatus(StatusEffect.GhoulClaw);
             if (ghoulStatusEffect == null) {
                 // todo - permanently associate ghoul claws with its conditions somehow
-                target.AddStatus(new OngoingEffect(StatusEffect.GhoulClaw, TimeUtil.MINUTE, 
-                    new List<Condition> { Condition.Paralyzed}));
+                target.AddStatus(new OngoingEffect(StatusEffect.GhoulClaw, 
+                    new HashSet<Condition> { Condition.Paralyzed }, TimeUtil.MINUTE));
                 target.onCombatTurnEnd += CheckGhoulClawEnd;
             }
             else {

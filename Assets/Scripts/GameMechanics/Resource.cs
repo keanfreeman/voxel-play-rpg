@@ -11,14 +11,14 @@ namespace GameMechanics {
         public ResourceID id;
         public bool recoversOnShortRest;
         public bool recoversOnLongRest;
-        public int remainingUses;
+        public int maxUses;
 
         [JsonConstructor]
-        public Resource(ResourceID id, bool recoversOnShortRest, bool recoversOnLongRest, int remainingUses) {
+        public Resource(ResourceID id, bool recoversOnShortRest, bool recoversOnLongRest, int maxUses) {
             this.id = id;
             this.recoversOnShortRest = recoversOnShortRest;
             this.recoversOnLongRest = recoversOnLongRest;
-            this.remainingUses = remainingUses;
+            this.maxUses = maxUses;
         }
     }
 

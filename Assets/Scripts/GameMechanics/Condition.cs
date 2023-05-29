@@ -8,7 +8,7 @@ using UnityEngine;
 namespace GameMechanics {
     [Serializable]
     public class CurrentStatus {
-        private Dictionary<StatusEffect, OngoingEffect> ongoingEffects;
+        public Dictionary<StatusEffect, OngoingEffect> ongoingEffects { get; private set; }
 
         [JsonConstructor]
         public CurrentStatus(Dictionary<StatusEffect, OngoingEffect> ongoingEffects) {
@@ -101,14 +101,14 @@ namespace GameMechanics {
         public int secondsLeft;
 
         [JsonConstructor]
-        public OngoingEffect(StatusEffect cause, int secondsLeft, IEnumerable<Condition> conditions) {
+        public OngoingEffect(StatusEffect cause, HashSet<Condition> conditions, int secondsLeft) {
             this.cause = cause;
+            this.conditions = conditions;
             this.secondsLeft = secondsLeft;
-            this.conditions = conditions.ToHashSet();
         }
 
         public OngoingEffect(StatusEffect cause, int secondsLeft) 
-            : this(cause, secondsLeft, new HashSet<Condition>()) {}
+            : this(cause, new HashSet<Condition>(), secondsLeft) {}
     }
 
     public static class ConditionEnumExtension {

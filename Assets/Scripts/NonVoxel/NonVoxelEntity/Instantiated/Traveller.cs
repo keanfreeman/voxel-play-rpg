@@ -45,8 +45,8 @@ namespace Instantiated {
             set { GetEntity().currHP = value; }
         }
 
-        private CurrentStatus StatusEffects {
-            get { return GetEntity().statusEffects; }
+        private CurrentStatus GetStatusEffects() {
+            return GetEntity().statusEffects;
         }
 
         private void Update() {
@@ -64,43 +64,43 @@ namespace Instantiated {
                 GetEntity().currHP = GetStats().maxHP;
             }
 
-            statusUIController.SetStatuses(StatusEffects);
-            if (StatusEffects.NumStatuses() > 0) {
+            statusUIController.SetStatuses(GetStatusEffects());
+            if (GetStatusEffects().NumStatuses() > 0) {
                 timerUIController.OnSecondsPassed += HandleTimeDeductedForStatuses;
             }
         }
 
         public bool HasCondition(Condition condition) {
-            return StatusEffects.GetConditions().Contains(condition);
+            return GetStatusEffects().GetConditions().Contains(condition);
         }
 
         public OngoingEffect GetStatus(StatusEffect statusEffect) {
-            return StatusEffects.Get(statusEffect);
+            return GetStatusEffects().Get(statusEffect);
         }
 
         public void AddStatus(OngoingEffect ongoingEffect) {
-            if (StatusEffects.NumStatuses() < 1) {
+            if (GetStatusEffects().NumStatuses() < 1) {
                 timerUIController.OnSecondsPassed += HandleTimeDeductedForStatuses;
             }
             // todo, unify these controls
-            StatusEffects.Set(ongoingEffect.cause, ongoingEffect);
-            statusUIController.SetStatuses(StatusEffects);
+            GetStatusEffects().Set(ongoingEffect.cause, ongoingEffect);
+            statusUIController.SetStatuses(GetStatusEffects());
         }
 
         public void RemoveStatus(StatusEffect statusEffect) {
-            StatusEffects.Remove(statusEffect);
-            if (StatusEffects.NumStatuses() < 1) {
+            GetStatusEffects().Remove(statusEffect);
+            if (GetStatusEffects().NumStatuses() < 1) {
                 timerUIController.OnSecondsPassed -= HandleTimeDeductedForStatuses;
             }
-            statusUIController.SetStatuses(StatusEffects);
+            statusUIController.SetStatuses(GetStatusEffects());
         }
 
         private void HandleTimeDeductedForStatuses(int secondsDeducted) {
-            bool statusEffectsRemoved = StatusEffects.DeductTime(secondsDeducted);
-            if (StatusEffects.NumStatuses() < 1) {
+            bool statusEffectsRemoved = GetStatusEffects().DeductTime(secondsDeducted);
+            if (GetStatusEffects().NumStatuses() < 1) {
                 timerUIController.OnSecondsPassed -= HandleTimeDeductedForStatuses;
             }
-            if (statusEffectsRemoved) statusUIController.SetStatuses(StatusEffects);
+            if (statusEffectsRemoved) statusUIController.SetStatuses(GetStatusEffects());
         }
 
         public IEnumerator PerformDamage(AttackSO attack, AttackResult attackResult, Traveller target) {
@@ -286,12 +286,12 @@ namespace Instantiated {
             return totalActions;
         }
 
-        public List<Resource> GetConsumedResources() {
-            return GetEntity().consumedResources;
+        public CurrentResources GetResources() {
+            return GetEntity().resources;
         }
 
-        public void AddConsumedResource(Resource consumed) {
-            GetEntity().consumedResources.Add(consumed);
+        public void InitResources(List<Resource> resourceDefinitions) {
+            GetEntity().resources = new(resourceDefinitions);
         }
     }
 }

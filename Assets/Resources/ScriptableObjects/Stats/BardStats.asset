@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BardStats
   m_EditorClassIdentifier: 
   baseSpeed: 30
-  hitPoints: 10
+  maxHP: 0
   size: 2
   strength: 14
   dexterity: 14
@@ -23,6 +23,7 @@ MonoBehaviour:
   charisma: 16
   actions:
   - {fileID: 11400000, guid: 2beb54f70032455489ff89bd96c11331, type: 2}
-  features: []
+  features:
+  - {fileID: 11400000, guid: 8462bc0736c34ed47b0b0447c868d3e6, type: 2}
   level: 1
   armorClass: 13

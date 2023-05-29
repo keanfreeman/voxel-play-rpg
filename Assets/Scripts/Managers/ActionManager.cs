@@ -7,9 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using static DetachedCamera;
 
 public class ActionManager : MonoBehaviour
 {
@@ -21,8 +19,6 @@ public class ActionManager : MonoBehaviour
     [SerializeField] VisualRollManager visualRollManager;
     [SerializeField] InputManager inputManager;
     [SerializeField] CombatUI combatUI;
-
-    [SerializeField] FeatureSO secondWindFeature;
 
     public IEnumerator PerformAction(Traveller performer, ActionSO action) {
         Type actionType = action.GetType();
@@ -108,6 +104,13 @@ public class ActionManager : MonoBehaviour
     }
 
     private IEnumerator PerformLongstrider(Traveller performer) {
+        ResourceStatus resourceStatus = performer.GetResources().resourceStatuses
+            .GetValueOrDefault(GameMechanics.ResourceID.SpellSlots, null);
+        if (resourceStatus.remainingUses < 1) {
+            messageManager.DisplayMessage("No more remaining spell slots.");
+            yield break;
+        }
+
         // get a target
         messageManager.DisplayMessage(new Message("Please select an adjacent creature.", isPermanent: true));
         CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer.origin));
@@ -131,16 +134,18 @@ public class ActionManager : MonoBehaviour
 
         // apply a status
         target.AddStatus(new OngoingEffect(StatusEffect.Longstrider, TimeUtil.HOUR));
+
+        resourceStatus.DecrementUses();
     }
 
     private IEnumerator PerformSecondWind(Traveller performer) {
-        bool resourceConsumed = performer.GetConsumedResources()
-            .Where((Resource resource) => resource.id == GameMechanics.ResourceID.SecondWind)
-            .Count() > 0;
-        if (resourceConsumed) {
-            messageManager.DisplayMessage("Cannot use Second Wind twice before resting.");
+        ResourceStatus resourceStatus = performer.GetResources().resourceStatuses
+            .GetValueOrDefault(GameMechanics.ResourceID.SecondWind, null);
+        if (resourceStatus.remainingUses < 1) {
+            messageManager.DisplayMessage("Ran out of uses of Second Wind.");
             yield break;
         }
+
         int maxHP = performer.GetStats().maxHP;
         int initialHP = performer.CurrHP;
         if (initialHP == maxHP) {
@@ -150,7 +155,7 @@ public class ActionManager : MonoBehaviour
 
         inputManager.LockUIControls();
 
-        performer.AddConsumedResource(secondWindFeature.providedResources[0]);
+        resourceStatus.DecrementUses();
 
         CoroutineWithData<DiceResult> secondWindCoroutine = new(this, visualRollManager.RollGeneric(
             "Rolling for Second Wind", new List<Die> { new(1, 10, 1) }));

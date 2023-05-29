@@ -54,6 +54,7 @@ namespace Saving {
             }
 
             saveData.timeRemaining = null;
+            saveData.currControlledCharacter = null;
 
             FileManager.WriteSaveJson(saveData.ToJson());
             Debug.Log("Reset entities");

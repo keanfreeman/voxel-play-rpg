@@ -22,7 +22,10 @@ namespace GameMechanics {
         SecondWind,
 
         // rogue
-        SneakAttack
+        SneakAttack,
+
+        // wizard
+        SpellSlots
     }
 
     public enum AttackFeature {
