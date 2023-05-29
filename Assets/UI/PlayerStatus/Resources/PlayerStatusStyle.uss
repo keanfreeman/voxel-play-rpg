@@ -1,5 +1,7 @@
 StatusComponent {
-    font-size: 40px;
+    font-size: 35px;
     background-color: rgba(223, 159, 31, 255);
     color: rgba(0, 0, 0, 255);
+    white-space: normal;
+    margin-top: 5px;
 }

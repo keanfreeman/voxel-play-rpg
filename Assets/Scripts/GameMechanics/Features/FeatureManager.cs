@@ -130,6 +130,7 @@ public class FeatureManager : MonoBehaviour {
         if (roll < DC) {
             OngoingEffect ghoulStatusEffect = target.GetStatus(StatusEffect.GhoulClaw);
             if (ghoulStatusEffect == null) {
+                // todo - permanently associate ghoul claws with its conditions somehow
                 target.AddStatus(new OngoingEffect(StatusEffect.GhoulClaw, TimeUtil.MINUTE, 
                     new List<Condition> { Condition.Paralyzed}));
                 target.onCombatTurnEnd += CheckGhoulClawEnd;

@@ -125,7 +125,7 @@ public class CombatManager : MonoBehaviour
 
         if (playerInstance.HasCondition(Condition.Paralyzed)) {
             // todo - show an effect and disable UI components
-            Debug.Log("Player is paralyzed and can't act.");
+            messageManager.DisplayMessage("Player is paralyzed and can't act.");
             yield break;
         }
 

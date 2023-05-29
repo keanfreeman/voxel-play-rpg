@@ -23,15 +23,18 @@ namespace GameMechanics {
             return ongoingEffects.Count;
         }
 
-        public void DeductTime(int seconds) {
+        public bool DeductTime(int seconds) {
             List<StatusEffect> keysToRemove = new();
             foreach (OngoingEffect ongoingEffect in ongoingEffects.Values) {
                 ongoingEffect.secondsLeft -= seconds;
                 if (ongoingEffect.secondsLeft <= 0) keysToRemove.Add(ongoingEffect.cause);
             }
+            bool statusEffectsRemoved = false;
             foreach (StatusEffect statusEffect in keysToRemove) {
                 ongoingEffects.Remove(statusEffect);
+                statusEffectsRemoved = true;
             }
+            return statusEffectsRemoved;
         }
 
         public OngoingEffect Get(StatusEffect statusEffect) {
@@ -52,6 +55,10 @@ namespace GameMechanics {
             return ongoingEffects.Values
                 .SelectMany(ongoingEffect => ongoingEffect.conditions)
                 .ToHashSet();
+        }
+
+        public List<OngoingEffect> GetOngoingEffects() {
+            return ongoingEffects.Values.ToList();
         }
 
         public bool IsParalyzed() {

@@ -11,16 +11,19 @@ namespace GameMechanics {
         public ResourceID id;
         public bool recoversOnShortRest;
         public bool recoversOnLongRest;
+        public int remainingUses;
 
         [JsonConstructor]
-        protected Resource(ResourceID resourceID, bool recoversOnShortRest, bool recoversOnLongRest) {
-            this.id = resourceID;
+        public Resource(ResourceID id, bool recoversOnShortRest, bool recoversOnLongRest, int remainingUses) {
+            this.id = id;
             this.recoversOnShortRest = recoversOnShortRest;
             this.recoversOnLongRest = recoversOnLongRest;
+            this.remainingUses = remainingUses;
         }
     }
 
     public enum ResourceID {
-        SecondWind
+        SecondWind,
+        SpellSlots
     }
 }

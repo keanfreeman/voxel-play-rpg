@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static RandomManager;
-using static UnityEngine.GraphicsBuffer;
 
 namespace Instantiated {
     public abstract class Traveller : TangibleEntity {
@@ -65,6 +64,7 @@ namespace Instantiated {
                 GetEntity().currHP = GetStats().maxHP;
             }
 
+            statusUIController.SetStatuses(StatusEffects);
             if (StatusEffects.NumStatuses() > 0) {
                 timerUIController.OnSecondsPassed += HandleTimeDeductedForStatuses;
             }
@@ -82,7 +82,9 @@ namespace Instantiated {
             if (StatusEffects.NumStatuses() < 1) {
                 timerUIController.OnSecondsPassed += HandleTimeDeductedForStatuses;
             }
+            // todo, unify these controls
             StatusEffects.Set(ongoingEffect.cause, ongoingEffect);
+            statusUIController.SetStatuses(StatusEffects);
         }
 
         public void RemoveStatus(StatusEffect statusEffect) {
@@ -90,13 +92,15 @@ namespace Instantiated {
             if (StatusEffects.NumStatuses() < 1) {
                 timerUIController.OnSecondsPassed -= HandleTimeDeductedForStatuses;
             }
+            statusUIController.SetStatuses(StatusEffects);
         }
 
         private void HandleTimeDeductedForStatuses(int secondsDeducted) {
-            StatusEffects.DeductTime(secondsDeducted);
+            bool statusEffectsRemoved = StatusEffects.DeductTime(secondsDeducted);
             if (StatusEffects.NumStatuses() < 1) {
                 timerUIController.OnSecondsPassed -= HandleTimeDeductedForStatuses;
             }
+            if (statusEffectsRemoved) statusUIController.SetStatuses(StatusEffects);
         }
 
         public IEnumerator PerformDamage(AttackSO attack, AttackResult attackResult, Traveller target) {

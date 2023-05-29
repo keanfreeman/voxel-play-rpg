@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 19101, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: PlayerStatusPanelSettings
+  m_Name: StatusPanelSettings
   m_EditorClassIdentifier: 
   themeUss: {fileID: -4733365628477956816, guid: 69c00ed200b49c143ad08dfced5659be, type: 3}
-  m_TargetTexture: {fileID: 8400000, guid: 0e66c8e9a165f3d4587dd596c9265db6, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_ScaleMode: 2
   m_Scale: 1
   m_ReferenceDpi: 96
@@ -25,7 +25,7 @@ MonoBehaviour:
   m_TargetDisplay: 0
   m_ClearDepthStencil: 1
   m_ClearColor: 1
-  m_ColorClearValue: {r: 1, g: 1, b: 1, a: 0}
+  m_ColorClearValue: {r: 0, g: 0, b: 0, a: 0.8509804}
   m_DynamicAtlasSettings:
     m_MinAtlasSize: 64
     m_MaxAtlasSize: 4096
