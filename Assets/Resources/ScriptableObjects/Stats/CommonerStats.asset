@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CommonerStats
   m_EditorClassIdentifier: 
   baseSpeed: 30
-  hitPoints: 4
+  maxHP: 4
   size: 2
   strength: 10
   dexterity: 10
@@ -23,6 +23,7 @@ MonoBehaviour:
   charisma: 10
   actions:
   - {fileID: 11400000, guid: 21f38368950d4ee41888e7c6c8a7e7bc, type: 2}
+  features: []
   statblockName: Commoner
   challengeRating: 0
   armorClass: 10

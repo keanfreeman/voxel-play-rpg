@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WolfStats
   m_EditorClassIdentifier: 
   baseSpeed: 40
-  hitPoints: 11
+  maxHP: 11
   size: 3
   strength: 12
   dexterity: 15
@@ -23,6 +23,7 @@ MonoBehaviour:
   charisma: 6
   actions:
   - {fileID: 11400000, guid: e1df9838278e5a846831feea2015bb79, type: 2}
+  features: []
   statblockName: Wolf
   challengeRating: 1/4
   armorClass: 13

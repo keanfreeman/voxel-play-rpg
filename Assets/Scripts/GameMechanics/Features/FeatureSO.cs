@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameMechanics {
-    [CreateAssetMenu(fileName = "New Feature", menuName = "ScriptableObjects/Feature")]
+    [CreateAssetMenu(fileName = "New Feature", menuName = "ScriptableObjects/Features/Feature")]
     public class FeatureSO : ScriptableObject
     {
         public FeatureID id;

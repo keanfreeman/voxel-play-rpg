@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ScoutStats
   m_EditorClassIdentifier: 
   baseSpeed: 30
-  hitPoints: 16
+  maxHP: 16
   size: 2
   strength: 11
   dexterity: 14
@@ -24,6 +24,7 @@ MonoBehaviour:
   actions:
   - {fileID: 11400000, guid: 93377b16fe658c44c85a901dabd99f00, type: 2}
   - {fileID: 11400000, guid: a1328b43987673f48977887ae32de653, type: 2}
+  features: []
   statblockName: Scout
   challengeRating: 1/2
   armorClass: 16

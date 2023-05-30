@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CatStats
   m_EditorClassIdentifier: 
   baseSpeed: 40
-  hitPoints: 2
+  maxHP: 2
   size: 0
   strength: 3
   dexterity: 15
@@ -23,6 +23,7 @@ MonoBehaviour:
   charisma: 7
   actions:
   - {fileID: 11400000, guid: 5e95e9cdb9b958f439cbbfc0559e673a, type: 2}
+  features: []
   statblockName: Cat
   challengeRating: 0
   armorClass: 12

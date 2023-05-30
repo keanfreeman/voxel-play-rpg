@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BigGhoulStats
   m_EditorClassIdentifier: 
   baseSpeed: 30
-  hitPoints: 22
+  maxHP: 22
   size: 3
   strength: 13
   dexterity: 15

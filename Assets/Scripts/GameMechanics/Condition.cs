@@ -23,18 +23,13 @@ namespace GameMechanics {
             return ongoingEffects.Count;
         }
 
-        public bool DeductTime(int seconds) {
+        public List<StatusEffect> DeductTime(int seconds) {
             List<StatusEffect> keysToRemove = new();
             foreach (OngoingEffect ongoingEffect in ongoingEffects.Values) {
                 ongoingEffect.secondsLeft -= seconds;
                 if (ongoingEffect.secondsLeft <= 0) keysToRemove.Add(ongoingEffect.cause);
             }
-            bool statusEffectsRemoved = false;
-            foreach (StatusEffect statusEffect in keysToRemove) {
-                ongoingEffects.Remove(statusEffect);
-                statusEffectsRemoved = true;
-            }
-            return statusEffectsRemoved;
+            return keysToRemove;
         }
 
         public OngoingEffect Get(StatusEffect statusEffect) {
@@ -91,7 +86,8 @@ namespace GameMechanics {
     // than the condition game mechanic (e.g. paralysis)
     public enum StatusEffect {
         GhoulClaw,
-        Longstrider
+        Longstrider,
+        Light
     }
 
     [Serializable]

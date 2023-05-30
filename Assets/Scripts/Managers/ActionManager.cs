@@ -61,6 +61,9 @@ public class ActionManager : MonoBehaviour
             if (spell.actionName == "Longstrider") {
                 yield return PerformLongstrider(performer);
             }
+            else if (spell.actionName == "Light") {
+                yield return PerformLight(performer);
+            }
         }
         else if (actionType == typeof(SpecialActionSO)) {
             SpecialActionSO specialActionSO = (SpecialActionSO)action;
@@ -150,6 +153,49 @@ public class ActionManager : MonoBehaviour
         target.AddStatus(new OngoingEffect(StatusEffect.Longstrider, TimeUtil.HOUR));
 
         resourceStatus.DecrementUses();
+        // todo - use action type specified in spell
+        if (gameStateManager.controlState == ControlState.COMBAT) {
+            combatManager.CombatResources.ConsumeResource(performer, ActionType.Action);
+        }
+    }
+
+    private IEnumerator PerformLight(Traveller performer) {
+        messageManager.DisplayMessage(new Message("Please select an adjacent creature.", isPermanent: true));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer.origin));
+        yield return cwd.coroutine;
+
+        messageManager.StopDisplayingPermanentMessages();
+        if (!cwd.HasResult()) {
+            messageManager.DisplayMessage("Cancelled selection.");
+            yield return null;
+            yield break;
+        }
+        Vector3Int targetPosition = cwd.GetResult();
+
+        InstantiatedEntity entity = nonVoxelWorld.GetEntityFromPosition(targetPosition);
+        if (entity == null || !TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(Traveller))) {
+            messageManager.DisplayMessage("Must choose a creature as a target.");
+            yield return null;
+            yield break;
+        }
+        Traveller target = (Traveller)entity;
+
+        if (target.GetFaction() != EntityDefinition.Faction.PLAYER) {
+            int spellSaveDC = performer.GetStats().GetSpellcastingFeature().spellSaveDC;
+            CoroutineWithData<int> dexSaveCoroutine = new(this, visualRollManager.RollSavingThrow(
+                "Rolling saving throw for Light", 
+                StatModifiers.GetModifierForStat(target.GetStats().dexterity), spellSaveDC));
+            yield return dexSaveCoroutine.coroutine;
+            int result = dexSaveCoroutine.GetResult();
+            if (result < spellSaveDC) {
+                messageManager.DisplayMessage("Enemy saved against Light!");
+                yield break;
+            }
+        }
+
+        // apply a status
+        target.AddStatus(new OngoingEffect(StatusEffect.Light, TimeUtil.HOUR));
+
         // todo - use action type specified in spell
         if (gameStateManager.controlState == ControlState.COMBAT) {
             combatManager.CombatResources.ConsumeResource(performer, ActionType.Action);

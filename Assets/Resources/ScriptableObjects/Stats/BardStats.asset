@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BardStats
   m_EditorClassIdentifier: 
   baseSpeed: 30
-  maxHP: 0
+  maxHP: 10
   size: 2
   strength: 14
   dexterity: 14
@@ -24,6 +24,6 @@ MonoBehaviour:
   actions:
   - {fileID: 11400000, guid: 2beb54f70032455489ff89bd96c11331, type: 2}
   features:
-  - {fileID: 11400000, guid: 8462bc0736c34ed47b0b0447c868d3e6, type: 2}
+  - {fileID: 11400000, guid: 846b95795e3412440a13ac1f1c3c3333, type: 2}
   level: 1
   armorClass: 13

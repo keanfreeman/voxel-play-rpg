@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ZombieStats
   m_EditorClassIdentifier: 
   baseSpeed: 20
-  hitPoints: 22
+  maxHP: 22
   size: 2
   strength: 13
   dexterity: 6

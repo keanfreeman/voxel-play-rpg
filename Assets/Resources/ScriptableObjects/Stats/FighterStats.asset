@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FighterStats
   m_EditorClassIdentifier: 
   baseSpeed: 30
-  hitPoints: 12
+  maxHP: 13
   size: 2
   strength: 16
   dexterity: 12

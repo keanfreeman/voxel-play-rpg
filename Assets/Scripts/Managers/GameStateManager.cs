@@ -92,7 +92,13 @@ public class GameStateManager : MonoBehaviour
         }
 
         inputManager.LockPlayerControls();
-        if (npcInCombat != null) combatManager.SetEnemies(npcInCombat.teammates);
+        if (npcInCombat != null) {
+            HashSet<NPC> enemies = npcInCombat.teammates;
+            if (npcInCombat.teammates == null) {
+                enemies = new HashSet<NPC> { npcInCombat };
+            }
+            combatManager.SetEnemies(enemies);
+        }
         controlState = ControlState.COMBAT;
         Debug.Log("Entered combat");
         combatManager.StartCombat();

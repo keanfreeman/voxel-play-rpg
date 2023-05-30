@@ -7,10 +7,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using VoxelPlay;
 using static RandomManager;
 
 namespace Instantiated {
     public abstract class Traveller : TangibleEntity {
+        [SerializeField] public VoxelPlayLight vpLight;
         [SerializeField] public SpriteRenderer spriteRenderer;
         [SerializeField] protected Animator animator;
         [SerializeField] protected CameraManager cameraManager;
@@ -79,6 +81,11 @@ namespace Instantiated {
         }
 
         public void AddStatus(OngoingEffect ongoingEffect) {
+            // todo - move to status manager
+            if (ongoingEffect.cause == StatusEffect.Light) {
+                vpLight.enabled = true;
+            }
+
             if (GetStatusEffects().NumStatuses() < 1) {
                 timerUIController.OnSecondsPassed += HandleTimeDeductedForStatuses;
             }
@@ -87,20 +94,31 @@ namespace Instantiated {
             statusUIController.SetStatuses(GetStatusEffects());
         }
 
-        public void RemoveStatus(StatusEffect statusEffect) {
+        public void RemoveStatus(StatusEffect statusEffect, bool rerender = true) {
+            // todo - move to status manager
+            if (statusEffect == StatusEffect.Light) {
+                vpLight.enabled = false;
+            }
+
             GetStatusEffects().Remove(statusEffect);
             if (GetStatusEffects().NumStatuses() < 1) {
                 timerUIController.OnSecondsPassed -= HandleTimeDeductedForStatuses;
             }
-            statusUIController.SetStatuses(GetStatusEffects());
+            if (rerender) statusUIController.SetStatuses(GetStatusEffects());
         }
 
         private void HandleTimeDeductedForStatuses(int secondsDeducted) {
-            bool statusEffectsRemoved = GetStatusEffects().DeductTime(secondsDeducted);
+            List<StatusEffect> toRemove = GetStatusEffects().DeductTime(secondsDeducted);
+            if (toRemove.Count < 1) {
+                return;
+            }
+            foreach (StatusEffect statusEffect in toRemove) {
+                RemoveStatus(statusEffect, rerender: false);
+            }
+            statusUIController.SetStatuses(GetStatusEffects());
             if (GetStatusEffects().NumStatuses() < 1) {
                 timerUIController.OnSecondsPassed -= HandleTimeDeductedForStatuses;
             }
-            if (statusEffectsRemoved) statusUIController.SetStatuses(GetStatusEffects());
         }
 
         public IEnumerator PerformDamage(AttackSO attack, AttackResult attackResult, Traveller target) {

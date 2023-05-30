@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RogueStats
   m_EditorClassIdentifier: 
   baseSpeed: 30
-  maxHP: 0
+  maxHP: 10
   size: 2
   strength: 12
   dexterity: 16

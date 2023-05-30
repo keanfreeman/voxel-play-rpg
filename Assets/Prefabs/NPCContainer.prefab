@@ -81,6 +81,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nonVoxelWorld: {fileID: 0}
   rotationTransform: {fileID: 2748450979791656774}
+  vpLight: {fileID: 8140549081904199565}
   spriteRenderer: {fileID: 6944743724923771679}
   animator: {fileID: 2231892887192972477}
   cameraManager: {fileID: 0}
@@ -135,7 +136,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7369319054141620546}
   m_Father: {fileID: 2748450979791656774}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
@@ -241,6 +243,54 @@ MonoBehaviour:
   m_CategoryHash: 0.009161512
   m_labelHash: 0.034215245
   m_SpriteKey: 0
+--- !u!1 &8963531910173308301
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7369319054141620546}
+  - component: {fileID: 8140549081904199565}
+  m_Layer: 0
+  m_Name: Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7369319054141620546
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8963531910173308301}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.25, z: -0.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6944743724923771676}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8140549081904199565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8963531910173308301}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d857770a549475d9506964ab368650, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  virtualLight: 1
+  lightColor: {r: 1, g: 1, b: 1, a: 1}
+  lightIntensity: 5
+  lightRange: 100
 --- !u!1001 &8134776110224746057
 PrefabInstance:
   m_ObjectHideFlags: 0

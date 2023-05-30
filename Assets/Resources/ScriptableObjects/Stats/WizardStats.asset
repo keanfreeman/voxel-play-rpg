@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WizardStats
   m_EditorClassIdentifier: 
   baseSpeed: 30
-  maxHP: 0
+  maxHP: 9
   size: 2
   strength: 9
   dexterity: 14
@@ -24,8 +24,9 @@ MonoBehaviour:
   actions:
   - {fileID: 11400000, guid: 8d2338f506bc30344991a275af9ff88e, type: 2}
   - {fileID: 11400000, guid: 7b719a538d9a9454fae30060484161b0, type: 2}
+  - {fileID: 11400000, guid: 76b5974ddbde4f24ba6a1f4eb66c45e9, type: 2}
   - {fileID: 11400000, guid: 726f8087416656f42a56cba759305950, type: 2}
   features:
-  - {fileID: 11400000, guid: 8462bc0736c34ed47b0b0447c868d3e6, type: 2}
+  - {fileID: 11400000, guid: 5712cabc48503ff44966ff1bced1241c, type: 2}
   level: 1
   armorClass: 12

@@ -2,6 +2,7 @@ using GameMechanics;
 using NonVoxelEntity;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public abstract class StatsSO : ScriptableObject
@@ -21,6 +22,14 @@ public abstract class StatsSO : ScriptableObject
 
     public List<ActionSO> actions;
     public List<FeatureSO> features;
+
+    public SpellcastingFeatureSO GetSpellcastingFeature() {
+        return features
+            .Where((FeatureSO feature) => TypeUtils
+                .IsSameTypeOrIsSubclass(feature, typeof(SpellcastingFeatureSO)))
+            .Select((FeatureSO feature) => (SpellcastingFeatureSO)feature)
+            .First();
+    }
 
     public abstract int CalculateArmorClass();
 }

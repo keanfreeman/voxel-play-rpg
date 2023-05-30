@@ -9,15 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d97cce2095b5cc4d97109aa3bfcb18d, type: 3}
-  m_Name: Spellcasting
+  m_Script: {fileID: 11500000, guid: 2bbb32d96aa7dfe43bd82566a7585fe7, type: 3}
+  m_Name: WizardSpellcasting
   m_EditorClassIdentifier: 
   id: 5
-  featureName: Spellcasting
-  description: Provides spell slots.
+  featureName: Wizard Spellcasting
+  description: Wizard Spellcasting
   providedActions: []
   providedResources:
   - id: 1
     recoversOnShortRest: 0
     recoversOnLongRest: 1
     maxUses: 2
+  spellSaveDC: 13
