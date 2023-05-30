@@ -32,10 +32,10 @@ public class StatusUIController : MonoBehaviour
         // bug with ui toolkit - must grab from a panelsettings from the editor:
         // https://forum.unity.com/threads/can-i-create-panelsettings-and-rendertexture-at-runtime-for-using-with-uitoolkit.995317/
         newPanelSettings.themeStyleSheet = defaultThemeStyleSheet;
-        //newPanelSettings.scaleMode = referencePanelSettings.scaleMode;
-        //newPanelSettings.referenceResolution = referencePanelSettings.referenceResolution;
-        //newPanelSettings.clearColor = referencePanelSettings.clearColor;
-        //newPanelSettings.colorClearValue = referencePanelSettings.colorClearValue;
+        newPanelSettings.scaleMode = referencePanelSettings.scaleMode;
+        newPanelSettings.referenceResolution = referencePanelSettings.referenceResolution;
+        newPanelSettings.clearColor = referencePanelSettings.clearColor;
+        newPanelSettings.colorClearValue = referencePanelSettings.colorClearValue;
         statusUIDocument.panelSettings = newPanelSettings;
 
         statusUIDocument.enabled = true;

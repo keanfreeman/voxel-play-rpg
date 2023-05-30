@@ -39,8 +39,10 @@ public class ActionManager : MonoBehaviour
                     messageManager.DisplayMessage("Cannot perform melee attack outside of combat.");
                     yield break;
                 }
-                if (nonVoxelWorld.GetAdjacentTravellers(performer, 
-                        EntityDefinition.Faction.ENEMY).Count < 1) {
+                EntityDefinition.Faction oppositeFaction = performer.GetFaction() 
+                    == EntityDefinition.Faction.PLAYER ? EntityDefinition.Faction.ENEMY 
+                    : EntityDefinition.Faction.PLAYER;
+                if (nonVoxelWorld.GetAdjacentTravellers(performer, oppositeFaction).Count < 1) {
                     messageManager.DisplayMessage("No adjacent enemies for melee attack.");
                     yield break;
                 }
@@ -59,10 +61,13 @@ public class ActionManager : MonoBehaviour
             SpellSO spell = (SpellSO)action;
             // todo - use non-string identifier
             if (spell.actionName == "Longstrider") {
-                yield return PerformLongstrider(performer);
+                yield return PerformLongstrider(performer, spell);
             }
             else if (spell.actionName == "Light") {
-                yield return PerformLight(performer);
+                yield return PerformLight(performer, spell);
+            }
+            else if (spell.actionName == "Mage Armor") {
+                yield return PerformMageArmor(performer, spell);
             }
         }
         else if (actionType == typeof(SpecialActionSO)) {
@@ -120,7 +125,7 @@ public class ActionManager : MonoBehaviour
         combatManager.StartCombat();
     }
 
-    private IEnumerator PerformLongstrider(Traveller performer) {
+    private IEnumerator PerformLongstrider(Traveller performer, SpellSO spell) {
         ResourceStatus resourceStatus = performer.GetResources().resourceStatuses
             .GetValueOrDefault(GameMechanics.ResourceID.SpellSlots, null);
         if (resourceStatus.remainingUses < 1) {
@@ -153,13 +158,56 @@ public class ActionManager : MonoBehaviour
         target.AddStatus(new OngoingEffect(StatusEffect.Longstrider, TimeUtil.HOUR));
 
         resourceStatus.DecrementUses();
-        // todo - use action type specified in spell
         if (gameStateManager.controlState == ControlState.COMBAT) {
-            combatManager.CombatResources.ConsumeResource(performer, ActionType.Action);
+            combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
         }
     }
 
-    private IEnumerator PerformLight(Traveller performer) {
+    private IEnumerator PerformMageArmor(Traveller performer, SpellSO spell) {
+        ResourceStatus spellSlotResource = performer.GetResources().resourceStatuses
+            .GetValueOrDefault(GameMechanics.ResourceID.SpellSlots, null);
+        if (spellSlotResource.remainingUses < 1) {
+            messageManager.DisplayMessage("No more remaining spell slots.");
+            yield break;
+        }
+
+        messageManager.DisplayMessage(new Message("Please select a willing creature in range.", 
+            isPermanent: true));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer.origin));
+        yield return cwd.coroutine;
+
+        messageManager.StopDisplayingPermanentMessages();
+        if (!cwd.HasResult()) {
+            messageManager.DisplayMessage("Cancelled selection.");
+            yield return null;
+            yield break;
+        }
+        Vector3Int targetPosition = cwd.GetResult();
+
+        InstantiatedEntity entity = nonVoxelWorld.GetEntityFromPosition(targetPosition);
+        if (entity == null || !TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(Traveller))) {
+            messageManager.DisplayMessage("Must choose a creature as a target.");
+            yield return null;
+            yield break;
+        }
+        Traveller target = (Traveller)entity;
+
+        if (target.GetFaction() != performer.GetFaction()) {
+            messageManager.DisplayMessage("Must choose a willing creature.");
+            yield return null;
+            yield break;
+        }
+
+        // todo - use time specified in spell
+        target.AddStatus(new OngoingEffect(StatusEffect.MageArmor, TimeUtil.HOUR * 8));
+
+        spellSlotResource.DecrementUses();
+        if (gameStateManager.controlState == ControlState.COMBAT) {
+            combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
+        }
+    }
+
+    private IEnumerator PerformLight(Traveller performer, SpellSO spell) {
         messageManager.DisplayMessage(new Message("Please select an adjacent creature.", isPermanent: true));
         CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer.origin));
         yield return cwd.coroutine;
@@ -196,9 +244,8 @@ public class ActionManager : MonoBehaviour
         // apply a status
         target.AddStatus(new OngoingEffect(StatusEffect.Light, TimeUtil.HOUR));
 
-        // todo - use action type specified in spell
         if (gameStateManager.controlState == ControlState.COMBAT) {
-            combatManager.CombatResources.ConsumeResource(performer, ActionType.Action);
+            combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
         }
     }
 

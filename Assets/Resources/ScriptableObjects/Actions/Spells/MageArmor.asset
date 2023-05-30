@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 900b392c5615089479f9dc261eac44b7, type: 3}
+  m_Name: MageArmor
+  m_EditorClassIdentifier: 
+  actionName: Mage Armor
+  actionType: 0
+  castingTime: 0
+  range: Touch
+  spellComponents:
+    isVerbal: 1
+    isSomatic: 1
+    materialComponents:
+    - name: a piece of cured leather
+      goldCost: 0
+  isConcentration: 0
+  duration: 8 Hours
+  description: "You touch a willing creature who isn\u2019t wearing armor, and a
+    protective magical force surrounds it until the spell ends. The target\u2019s
+    base AC becomes 13 + its Dexterity modifier. The spell ends if the target dons
+    armor or if you dismiss the spell as an action."
+  providedAttack: {fileID: 0}

@@ -1,3 +1,4 @@
+using GameMechanics;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,7 @@ public class NPCStatsSO : StatsSO
     public string challengeRating;
     public int armorClass;
 
-    public override int CalculateArmorClass() {
+    public override int CalculateArmorClass(CurrentStatus _) {
         return armorClass;
     }
 }

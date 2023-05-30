@@ -191,7 +191,7 @@ public class CombatManager : MonoBehaviour
         yield return cwd.coroutine;
         AttackResult attackResult = cwd.GetResult();
 
-        if (attackResult.rolled >= target.GetStats().CalculateArmorClass()) {
+        if (attackResult.rolled >= target.GetStats().CalculateArmorClass(target.GetStatusEffects())) {
             CoroutineWithData<int> damageCoroutine = new(this,
                 attacker.PerformDamage(attack, attackResult, target));
             yield return damageCoroutine.coroutine;

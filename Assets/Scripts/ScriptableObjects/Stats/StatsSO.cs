@@ -31,5 +31,5 @@ public abstract class StatsSO : ScriptableObject
             .First();
     }
 
-    public abstract int CalculateArmorClass();
+    public abstract int CalculateArmorClass(CurrentStatus currentStatus);
 }

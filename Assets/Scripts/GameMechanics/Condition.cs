@@ -87,7 +87,8 @@ namespace GameMechanics {
     public enum StatusEffect {
         GhoulClaw,
         Longstrider,
-        Light
+        Light,
+        MageArmor
     }
 
     [Serializable]

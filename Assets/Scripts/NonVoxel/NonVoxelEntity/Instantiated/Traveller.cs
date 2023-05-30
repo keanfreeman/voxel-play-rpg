@@ -47,7 +47,7 @@ namespace Instantiated {
             set { GetEntity().currHP = value; }
         }
 
-        private CurrentStatus GetStatusEffects() {
+        public CurrentStatus GetStatusEffects() {
             return GetEntity().statusEffects;
         }
 
@@ -157,7 +157,7 @@ namespace Instantiated {
 
             CoroutineWithData<AttackResult> rollAttackCoroutine = new(this, 
                 visualRollManager.RollAttack(attack.attackRoll.modifier,
-                target.GetStats().CalculateArmorClass(), currAdvantageState));
+                target.GetStats().CalculateArmorClass(GetStatusEffects()), currAdvantageState));
             yield return rollAttackCoroutine.coroutine;
             AttackResult attackResult = rollAttackCoroutine.GetResult();
             yield return attackResult;
