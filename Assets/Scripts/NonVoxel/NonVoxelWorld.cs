@@ -129,5 +129,18 @@ namespace NonVoxel {
 
             return adjacentTravellers;
         }
+
+        public HashSet<Traveller> GetTravellersInPoints(List<Vector3Int> points) {
+            HashSet<Traveller> affectedCreatures = new();
+            foreach (Vector3Int position in points) {
+                InstantiatedEntity entity = GetEntityFromPosition(position);
+                if (entity != null && TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(Traveller))
+                        && !affectedCreatures.Contains(entity)) {
+                    affectedCreatures.Add((Traveller)entity);
+                }
+            }
+
+            return affectedCreatures;
+        }
     }
 }

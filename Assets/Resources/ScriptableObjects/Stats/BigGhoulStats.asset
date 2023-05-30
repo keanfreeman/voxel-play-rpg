@@ -15,6 +15,7 @@ MonoBehaviour:
   baseSpeed: 30
   maxHP: 22
   size: 3
+  creatureType: 13
   strength: 13
   dexterity: 15
   constitution: 10

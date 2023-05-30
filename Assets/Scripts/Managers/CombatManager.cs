@@ -64,7 +64,9 @@ public class CombatManager : MonoBehaviour
         inputManager.SwitchDetachedToWatchControlState();
 
         NPC npcInstance = (NPC) currCreature;
-        if (!npcInstance.HasCondition(Condition.Paralyzed)) {
+        // todo - use events for this rather than checking individual statuses
+        if (!npcInstance.HasCondition(Condition.Paralyzed) 
+                && !npcInstance.HasCondition(Condition.Unconscious)) {
             PlayerCharacter nearestPlayer = partyManager.FindNearestPlayer(currCreature.origin);
             if (!Coordinates.IsNextTo(npcInstance, nearestPlayer)) {
                 int maxSearchLength = (npcInstance.GetStats().baseSpeed / TILE_TO_FEET) * 5;
@@ -124,9 +126,14 @@ public class CombatManager : MonoBehaviour
 
         PlayerCharacter playerInstance = (PlayerCharacter)currCreature;
 
-        if (playerInstance.HasCondition(Condition.Paralyzed)) {
-            // todo - show an effect and disable UI components
-            messageManager.DisplayMessage("Player is paralyzed and can't act.");
+        // todo - use events for this rather than checking individual statuses
+        Condition? preventActionCondition = playerInstance.HasCondition(Condition.Paralyzed)
+            ? Condition.Paralyzed : playerInstance.HasCondition(Condition.Unconscious) 
+            ? Condition.Unconscious 
+            : null;
+        if (preventActionCondition.HasValue) {
+            // todo - show an effect and disable UI components. also, explain what status is preventing action
+            messageManager.DisplayMessage($"Player is {preventActionCondition.Value} and cannot act.");
             yield break;
         }
 

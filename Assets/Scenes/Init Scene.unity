@@ -175,6 +175,7 @@ MonoBehaviour:
   visualRollManager: {fileID: 2076388858}
   inputManager: {fileID: 2066669309}
   combatUI: {fileID: 829311307}
+  featureManager: {fileID: 963889380}
 --- !u!20 &93897885 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 8437904166148341729, guid: 0e2c4cd17b179e24fac4d72c6206c8a9, type: 3}

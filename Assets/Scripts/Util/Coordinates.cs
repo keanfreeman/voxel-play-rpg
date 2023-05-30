@@ -1,6 +1,7 @@
 using Instantiated;
 using MovementDirection;
 using NonVoxelEntity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,27 @@ using VoxelPlay;
 
 public static class Coordinates
 {
+    // diagonals are considered to be more than 1 point away
+    public static List<Vector3Int> GetPointsInSphereCenteredOn(Vector3Int center, int radius) {
+        if (radius < 0) throw new ArgumentException("Must provide nonnegative radius.");
+
+        List<Vector3Int> points = new();
+
+        Vector3Int bottomLeft = center - (Vector3Int.one * radius);
+        Vector3Int topRight = center + (Vector3Int.one * radius);
+        for (int x = bottomLeft.x; x <= topRight.x; x++) {
+            for (int y = bottomLeft.y; y <= topRight.y; y++) {
+                for (int z = bottomLeft.z; z <= topRight.z; z++) {
+                    Vector3Int currPoint = new(x, y, z);
+                    float distance = GetDirectLineLength(currPoint, center);
+                    if (distance <= radius) points.Add(currPoint);
+                }
+            }
+        }
+
+        return points;
+    }
+
     public static Vector3Int GetBottomLeftOfCuboid(Vector3Int start, Vector3Int end) {
         return new(Mathf.Min(start.x, end.x), Mathf.Min(start.y, end.y), Mathf.Min(start.z, end.z));
     }

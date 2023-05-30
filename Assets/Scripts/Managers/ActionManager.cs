@@ -20,11 +20,23 @@ public class ActionManager : MonoBehaviour
     [SerializeField] VisualRollManager visualRollManager;
     [SerializeField] InputManager inputManager;
     [SerializeField] CombatUI combatUI;
+    [SerializeField] FeatureManager featureManager;
 
     public IEnumerator PerformAction(Traveller performer, ActionSO action) {
         if (gameStateManager.controlState == ControlState.COMBAT
                 && !combatManager.CombatResources.HasResource(performer, action.actionType)) {
             messageManager.DisplayMessage($"Cannot use this resource twice: {action.actionType}");
+            yield break;
+        }
+
+        // todo - unify this logic with combatmanager
+        Condition? preventActionCondition = performer.HasCondition(Condition.Paralyzed)
+            ? Condition.Paralyzed : performer.HasCondition(Condition.Unconscious)
+            ? Condition.Unconscious
+            : null;
+        if (preventActionCondition.HasValue) {
+            // todo - show an effect and disable UI components.
+            messageManager.DisplayMessage($"Player is {preventActionCondition.Value} and cannot act.");
             yield break;
         }
 
@@ -68,6 +80,9 @@ public class ActionManager : MonoBehaviour
             }
             else if (spell.actionName == "Mage Armor") {
                 yield return PerformMageArmor(performer, spell);
+            }
+            else if (spell.actionName == "Sleep") {
+                yield return PerformSleep(performer, spell);
             }
         }
         else if (actionType == typeof(SpecialActionSO)) {
@@ -156,6 +171,67 @@ public class ActionManager : MonoBehaviour
 
         // apply a status
         target.AddStatus(new OngoingEffect(StatusEffect.Longstrider, TimeUtil.HOUR));
+
+        resourceStatus.DecrementUses();
+        if (gameStateManager.controlState == ControlState.COMBAT) {
+            combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
+        }
+    }
+
+    private IEnumerator PerformSleep(Traveller performer, SpellSO spell) {
+        ResourceStatus resourceStatus = performer.GetResources().resourceStatuses
+            .GetValueOrDefault(GameMechanics.ResourceID.SpellSlots, null);
+        if (resourceStatus.remainingUses < 1) {
+            messageManager.DisplayMessage("No more remaining spell slots.");
+            yield break;
+        }
+
+        // todo - show radius preview
+        messageManager.DisplayMessage(new Message("Please select a point in range.", isPermanent: true));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer.origin));
+        yield return cwd.coroutine;
+
+        messageManager.StopDisplayingPermanentMessages();
+        if (!cwd.HasResult()) {
+            messageManager.DisplayMessage("Cancelled selection.");
+            yield break;
+        }
+        Vector3Int targetPosition = cwd.GetResult();
+
+        // get creatures in radius
+        int sleepRadius = 20;
+        int radiusInPoints = sleepRadius / 5;
+        List<Vector3Int> pointsInSphere = Coordinates.GetPointsInSphereCenteredOn(targetPosition, 
+            radiusInPoints);
+        HashSet<Traveller> affectedCreatures = nonVoxelWorld.GetTravellersInPoints(pointsInSphere);
+
+        if (affectedCreatures.Count < 1) {
+            messageManager.DisplayMessage("No creatures in radius.");
+            yield break;
+        }
+
+        // roll HP amount
+        CoroutineWithData<DiceResult> sleepCoroutine = new(this, visualRollManager.RollGeneric(
+            "Rolling for Sleep", new List<Die> { new(5, 8) }));
+        yield return sleepCoroutine.coroutine;
+        int sleepSum = sleepCoroutine.GetResult().sum;
+
+        List<Traveller> sorted = affectedCreatures.ToList();
+        sorted.Sort((x, y) => -x.CurrHP.CompareTo(y.CurrHP));
+        foreach (Traveller affectedCreature in sorted) {
+            if (sleepSum < affectedCreature.CurrHP) {
+                break;
+            }
+
+            sleepSum -= affectedCreature.CurrHP;
+
+            // todo - do not affect undead / creatures immune to charmed
+            affectedCreature.AddStatus(new OngoingEffect(StatusEffect.SleepSpell,
+                new HashSet<Condition> { Condition.Unconscious }, TimeUtil.MINUTE));
+            affectedCreature.onTakeDamage += featureManager.CheckSleepSpellEnd;
+        }
+
+        // todo - play debuff effect
 
         resourceStatus.DecrementUses();
         if (gameStateManager.controlState == ControlState.COMBAT) {

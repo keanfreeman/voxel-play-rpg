@@ -11,6 +11,7 @@ public abstract class StatsSO : ScriptableObject
     public int baseSpeed = 30;
     public int maxHP;
     public EntitySize size = EntitySize.MEDIUM;
+    public CreatureType creatureType = CreatureType.Humanoid;
 
     // todo - add GetSavingThrowModifier since NPCs may have special one, and PCs have additives too
     public int strength;
@@ -32,4 +33,21 @@ public abstract class StatsSO : ScriptableObject
     }
 
     public abstract int CalculateArmorClass(CurrentStatus currentStatus);
+}
+
+public enum CreatureType {
+    Aberration,
+    Beast,
+    Celestial,
+    Construct,
+    Dragon,
+    Elemental,
+    Fey,
+    Fiend,
+    Giant,
+    Humanoid,
+    Monstrosity,
+    Ooze,
+    Plant,
+    Undead
 }

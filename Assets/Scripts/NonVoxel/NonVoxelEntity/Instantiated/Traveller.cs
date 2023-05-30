@@ -23,12 +23,12 @@ namespace Instantiated {
         [SerializeField] protected StatusUIController statusUIController;
         private TimerUIController timerUIController;
 
-        public event System.Func<Traveller, Damage, IEnumerator> onHPChanged;
+        public event System.Func<Traveller, Damage, IEnumerator> onTakeDamage;
         public event System.Func<Traveller, Traveller, Advantage, Advantage> onPerformAttack;
         public event System.Func<Traveller, IEnumerator> onCombatTurnStart;
         public event System.Func<Traveller, IEnumerator> onCombatTurnEnd;
         public event System.Func<Traveller, Advantage, IEnumerator> onAttackHit;
-        public event System.Func<AttackSO, Traveller, IEnumerator> afterDamageDealt;
+        public event System.Func<AttackSO, Traveller, IEnumerator> onDealDamage;
 
         public SpriteMoveDirection permanentMoveDirection { get; protected set; } = SpriteMoveDirection.NONE;
         public bool isMoving { get; protected set; } = false;
@@ -166,8 +166,8 @@ namespace Instantiated {
         public IEnumerator DealDamage(AttackSO attack, Damage damage, Traveller target) {
             yield return target.TakeDamage(damage);
 
-            if (afterDamageDealt != null) {
-                foreach (System.Delegate handler in afterDamageDealt.GetInvocationList()) {
+            if (onDealDamage != null) {
+                foreach (System.Delegate handler in onDealDamage.GetInvocationList()) {
                     var handlerCasted = (System.Func<AttackSO, Traveller, IEnumerator>)handler;
                     yield return handlerCasted.Invoke(attack, target);
                 }
@@ -177,8 +177,8 @@ namespace Instantiated {
         private IEnumerator TakeDamage(Damage damage) {
             GetEntity().currHP -= damage.amount;
 
-            if (onHPChanged != null) {
-                foreach (System.Delegate handler in onHPChanged.GetInvocationList()) {
+            if (onTakeDamage != null) {
+                foreach (System.Delegate handler in onTakeDamage.GetInvocationList()) {
                     var handlerCasted = (System.Func<Traveller, Damage, IEnumerator>)handler;
                     yield return handlerCasted.Invoke(this, damage);
                 }

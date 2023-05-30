@@ -25,7 +25,7 @@ public class FeatureManager : MonoBehaviour {
                     traveller.onPerformAttack += TriggerPackTactics;
                     break;
                 case FeatureID.UndeadFortitude:
-                    traveller.onHPChanged += TriggerUndeadFortitude;
+                    traveller.onTakeDamage += TriggerUndeadFortitude;
                     break;
                 case FeatureID.FightingStyleDefense:
                     // todo - make this feature work dynamically
@@ -53,7 +53,7 @@ public class FeatureManager : MonoBehaviour {
                 AttackSO attack = (AttackSO)action;
                 switch (attack.attackFeature) {
                     case AttackFeature.GhoulClaws:
-                        traveller.afterDamageDealt += ApplyGhoulClaw;
+                        traveller.onDealDamage += ApplyGhoulClaw;
                         break;
                     case AttackFeature.ShockingGrasp:
                         // todo implement
@@ -68,8 +68,8 @@ public class FeatureManager : MonoBehaviour {
         }
 
         // features for all creatures
-        traveller.onPerformAttack += CheckParalyzedAdvantage;
-        traveller.onAttackHit += CheckParalyzedCriticalHit;
+        traveller.onPerformAttack += CheckAdvantageFromStatus;
+        traveller.onAttackHit += CheckCriticalHitFromStatus;
     }
 
     // attack is unused
@@ -108,19 +108,32 @@ public class FeatureManager : MonoBehaviour {
         }
     }
 
-    private IEnumerator CheckParalyzedCriticalHit(Traveller target, Advantage _) {
-        yield return new AttackHitModifications() { isNewlyCritical = target.HasCondition(Condition.Paralyzed) };
+    private IEnumerator CheckCriticalHitFromStatus(Traveller target, Advantage _) {
+        yield return new AttackHitModifications() { isNewlyCritical 
+            = target.HasCondition(Condition.Paralyzed) || target.HasCondition(Condition.Unconscious)
+        };
     }
 
-    private Advantage CheckParalyzedAdvantage(Traveller attacker, Traveller target, Advantage currAdvState) {
-        if (target.HasCondition(Condition.Paralyzed)) {
-            Debug.Log("Attacker got advantage on a paralyzed creature.");
+    private Advantage CheckAdvantageFromStatus(Traveller attacker, Traveller target, Advantage currAdvState) {
+        if (target.HasCondition(Condition.Paralyzed) || target.HasCondition(Condition.Unconscious)) {
             return AdvantageCalcs.GetNewAdvantageState(currAdvState, Advantage.Advantage);
         }
         return currAdvState;
     }
 
-    // todo - should not work on elves or undead
+    public IEnumerator CheckSleepSpellEnd(Traveller victim, Damage damage) {
+        OngoingEffect ongoingEffect = victim.GetStatus(StatusEffect.SleepSpell);
+        if (ongoingEffect == null) {
+            victim.onTakeDamage -= CheckSleepSpellEnd;
+            yield break;
+        }
+
+        if (damage.amount > 0) {
+            victim.RemoveStatus(StatusEffect.SleepSpell);
+        }
+    }
+
+    // todo - should not work on elves/undead
     private IEnumerator ApplyGhoulClaw(AttackSO attack, Traveller target) {
         // todo - implement so I don't have to check the attack type is correct
         if (attack.attackFeature != AttackFeature.GhoulClaws) {
@@ -167,9 +180,6 @@ public class FeatureManager : MonoBehaviour {
         if (roll >= DC || ghoulStatusEffect.secondsLeft <= TimeUtil.ONE_TURN) {
             currTurnTraveller.RemoveStatus(StatusEffect.GhoulClaw);
             currTurnTraveller.onCombatTurnEnd -= CheckGhoulClawEnd;
-        }
-        else {
-            ghoulStatusEffect.secondsLeft -= TimeUtil.ONE_TURN;
         }
     }
 
