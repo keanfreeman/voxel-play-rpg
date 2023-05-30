@@ -109,5 +109,25 @@ namespace NonVoxel {
             }
             return null;
         }
+
+        public List<Traveller> GetAdjacentTravellers(Traveller traveller,
+                EntityDefinition.Faction? adjacentFaction = null) {
+            List<Traveller> adjacentTravellers = new();
+
+            HashSet<Vector3Int> adjacents = Coordinates.GetPositionsSurroundingTraveller(traveller);
+            foreach (Vector3Int adjacent in adjacents) {
+                InstantiatedEntity entity = positionToEntity.GetValueOrDefault(adjacent, null);
+                if (entity != null && TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(Traveller))) {
+                    Traveller adjacentTraveller = (Traveller)entity;
+                    if (adjacentFaction.HasValue 
+                            && adjacentFaction.Value != adjacentTraveller.GetFaction()) {
+                        continue;
+                    }
+                    adjacentTravellers.Add((Traveller)entity);
+                }
+            }
+
+            return adjacentTravellers;
+        }
     }
 }

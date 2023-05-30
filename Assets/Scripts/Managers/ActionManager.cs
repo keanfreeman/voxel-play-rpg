@@ -34,9 +34,16 @@ public class ActionManager : MonoBehaviour
             AttackSO attack = actionType == typeof(AttackSO)
                 ? (AttackSO)action : ((SpellSO)action).providedAttack;
 
-            if (!attack.isRanged && gameStateManager.controlState != ControlState.COMBAT) {
-                messageManager.DisplayMessage("Cannot perform melee attack outside of combat.");
-                yield break;
+            if (!attack.isRanged) {
+                if (gameStateManager.controlState != ControlState.COMBAT) {
+                    messageManager.DisplayMessage("Cannot perform melee attack outside of combat.");
+                    yield break;
+                }
+                if (nonVoxelWorld.GetAdjacentTravellers(performer, 
+                        EntityDefinition.Faction.ENEMY).Count < 1) {
+                    messageManager.DisplayMessage("No adjacent enemies for melee attack.");
+                    yield break;
+                }
             }
 
             CoroutineWithData<HashSet<NPC>> rangedAttackCoroutine = new(this, 
