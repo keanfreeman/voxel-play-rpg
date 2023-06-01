@@ -23,6 +23,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5d8a0486439ec8d44a93262f924366f1, type: 2}
   - {fileID: 11400000, guid: 72b760a54d68b1541b01572cb67e67af, type: 2}
   - {fileID: 11400000, guid: f29c59013bbfa544da0b727f8e96674c, type: 2}
+  - {fileID: 11400000, guid: 91c55c3d4cb227c4e9a8efac52795963, type: 2}
   providedResources:
   - id: 1
     recoversOnShortRest: 0

@@ -142,7 +142,11 @@ public class FeatureManager : MonoBehaviour {
     }
 
     // todo - should not work on elves/undead
-    private IEnumerator ApplyGhoulClaw(AttackSO attack, Traveller target) {
+    private IEnumerator ApplyGhoulClaw(ActionSO damageAction, Traveller target) {
+        if (!TypeUtils.IsSameTypeOrIsSubclass(damageAction, typeof(AttackSO))) {
+            yield break;
+        }
+        AttackSO attack = (AttackSO)damageAction;
         // todo - implement so I don't have to check the attack type is correct
         if (attack.attackFeature != AttackFeature.GhoulClaws) {
             yield break;

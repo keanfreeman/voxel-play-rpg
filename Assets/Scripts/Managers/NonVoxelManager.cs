@@ -22,6 +22,7 @@ public class NonVoxelManager : MonoBehaviour
     [SerializeField] FeatureManager featureManager;
     [SerializeField] VisualRollManager visualRollManager;
     [SerializeField] TimerUIController timerUIController;
+    [SerializeField] CombatManager combatManager;
 
     [SerializeField] TravellerIdentitySO mainCharacterID;
 
@@ -87,7 +88,7 @@ public class NonVoxelManager : MonoBehaviour
                     Instantiated.NPC npcInstance = npcObject.GetComponent<Instantiated.NPC>();
                     npcInstance.Init(nonVoxelWorld, spriteMovement, randomManager.rng, npcInfo, identity,
                         cameraManager, partyManager, gameStateManager, featureManager, randomManager,
-                        visualRollManager, timerUIController);
+                        visualRollManager, timerUIController, combatManager);
 
                     if (npcInfo.battleGroup != null) {
                         Guid battleGroupID = npcInfo.battleGroup.groupID;
@@ -145,7 +146,8 @@ public class NonVoxelManager : MonoBehaviour
         Instantiated.PlayerCharacter playerInstance
             = playerObject.GetComponent<Instantiated.PlayerCharacter>();
         playerInstance.Init(spriteMovement, playerInfo, identity, nonVoxelWorld, cameraManager,
-            partyManager, featureManager, randomManager, visualRollManager, timerUIController);
+            partyManager, featureManager, randomManager, visualRollManager, timerUIController,
+            combatManager);
         playerInstance.SetCurrPositions(playerInfo.spawnPosition, identity);
         partyManager.partyMembers.Add(playerInstance);
         if (identity == mainCharacterID) {

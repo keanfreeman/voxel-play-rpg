@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 900b392c5615089479f9dc261eac44b7, type: 3}
+  m_Name: BurningHands
+  m_EditorClassIdentifier: 
+  actionName: Burning Hands
+  actionType: 0
+  spellLevel: 1
+  spellSchool: 4
+  castingTime: 0
+  range: Self (15-foot cone)
+  spellComponents:
+    isVerbal: 1
+    isSomatic: 1
+    materialComponents: []
+  isConcentration: 0
+  duration: Instantaneous
+  description: "As you hold your hands with thumbs touching and fingers spread, a
+    thin sheet of flames shoots forth from your outstretched fingertips. Each creature
+    in a 15-foot cone must make a Dexterity saving throw. A creature takes 3d6 fire
+    damage on a failed save, or half as much damage on a successful one. The fire
+    ignites any flammable objects in the area that aren\u2019t being worn or carried.
+    At Higher Levels. When you cast this spell using a spell slot of 2nd level or
+    higher, the damage increases by 1d6 for each slot level above 1st."
+  providedAttack: {fileID: 0}

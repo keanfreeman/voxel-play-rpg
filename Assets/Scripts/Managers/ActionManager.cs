@@ -7,8 +7,10 @@ using Spells;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using UnityEngine;
+using VoxelPlayDemos;
 
 public class ActionManager : MonoBehaviour
 {
@@ -95,6 +97,9 @@ public class ActionManager : MonoBehaviour
             }
             else if (spell.actionName == "Color Spray") {
                 yield return PerformColorSpray(performer, spell, spellSlots);
+            }
+            else if (spell.actionName == "Burning Hands") {
+                yield return PerformBurningHands(performer, spell, spellSlots);
             }
         }
         else if (actionType == typeof(SpecialActionSO)) {
@@ -238,6 +243,58 @@ public class ActionManager : MonoBehaviour
         }
     }
 
+    private IEnumerator PerformBurningHands(Traveller performer, SpellSO spell, ResourceStatus spellSlots) {
+        int burningHandsConeLength = 15;
+        int lengthInPoints = burningHandsConeLength / 5;
+        messageManager.DisplayMessage(new Message("Please select a point in range.", isPermanent: true));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer,
+            SelectModeShape.Cone, lengthInPoints));
+        yield return cwd.coroutine;
+
+        messageManager.StopDisplayingPermanentMessages();
+        if (!cwd.HasResult()) {
+            messageManager.DisplayMessage("Cancelled selection.");
+            yield break;
+        }
+        Vector3Int targetPosition = cwd.GetResult();
+
+        // get creatures in radius
+        List<Vector3Int> pointsInCone = Coordinates.GetPointsInCone(performer, targetPosition,
+            lengthInPoints);
+        HashSet<Traveller> affectedCreatures = nonVoxelWorld.GetTravellersInPoints(pointsInCone);
+        if (affectedCreatures.Count < 1) {
+            messageManager.DisplayMessage("No creatures in radius.");
+            yield break;
+        }
+
+        // roll damage, then check saves
+        CoroutineWithData<int> damageCoroutine = new(this, visualRollManager.RollDamage(
+                new List<Die> { new(3, 6) }, isCritical: false));
+        yield return damageCoroutine.coroutine;
+        int damageSum = damageCoroutine.GetResult();
+
+        int saveDC = performer.GetStats().GetSpellcastingFeature().spellSaveDC;
+        foreach (Traveller affectedCreature in affectedCreatures) {
+            int dexMod = StatModifiers.GetModifierForStat(affectedCreature.GetStats().dexterity);
+            CoroutineWithData<int> burningHandsCoroutine = new(this, visualRollManager.RollSavingThrow(
+                "Rolling Dexterity saving throw.", dexMod, saveDC));
+            yield return burningHandsCoroutine.coroutine;
+            int saveResult = burningHandsCoroutine.GetResult();
+
+            int damageAmount = damageSum;
+            if (saveResult < saveDC) {
+                damageAmount /= 2;
+            }
+            yield return performer.DealDamage(spell, new Damage(DamageType.Fire, damageAmount), 
+                affectedCreature);
+        }
+
+        spellSlots.DecrementUses();
+        if (gameStateManager.controlState == ControlState.COMBAT) {
+            combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
+        }
+    }
+
     private IEnumerator PerformColorSpray(Traveller performer, SpellSO spell, ResourceStatus spellSlots) {
         int colorSprayConeLength = 15;
         int lengthInPoints = colorSprayConeLength / 5;
@@ -254,9 +311,9 @@ public class ActionManager : MonoBehaviour
         Vector3Int targetPosition = cwd.GetResult();
 
         // get creatures in radius
-        List<Vector3Int> pointsInSphere = Coordinates.GetPointsInCone(performer, targetPosition,
+        List<Vector3Int> pointsInCone = Coordinates.GetPointsInCone(performer, targetPosition,
             lengthInPoints);
-        HashSet<Traveller> affectedCreatures = nonVoxelWorld.GetTravellersInPoints(pointsInSphere);
+        HashSet<Traveller> affectedCreatures = nonVoxelWorld.GetTravellersInPoints(pointsInCone);
 
         if (affectedCreatures.Count < 1) {
             messageManager.DisplayMessage("No creatures in radius.");

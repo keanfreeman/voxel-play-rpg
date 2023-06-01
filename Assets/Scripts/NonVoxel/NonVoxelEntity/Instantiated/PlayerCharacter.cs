@@ -29,7 +29,7 @@ namespace Instantiated {
                 TravellerIdentitySO identity, NonVoxelWorld nonVoxelWorld, 
                 CameraManager cameraManager, PartyManager partyManager, FeatureManager featureManager,
                 RandomManager randomManager, VisualRollManager visualRollManager,
-                TimerUIController timerUIController) {
+                TimerUIController timerUIController, CombatManager combatManager) {
             this.spriteMovement = spriteMovement;
             this.entity = playerInfo;
             this.travellerIdentity = identity;
@@ -41,7 +41,7 @@ namespace Instantiated {
             this.featureManager.SetUpFeatures(this);
             this.randomManager = randomManager;
             this.visualRollManager = visualRollManager;
-            base.Init(timerUIController);
+            base.Init(timerUIController, combatManager);
         }
 
         public void HaltMovement() {

@@ -9,6 +9,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static RandomManager;
+using static UnityEngine.GraphicsBuffer;
 
 public class CombatManager : MonoBehaviour
 {
@@ -182,7 +183,7 @@ public class CombatManager : MonoBehaviour
             yield return TryMovePlayer(playerInstance);
         }
 
-        if (initiatives.Count <= partyManager.partyMembers.Count) {
+        if (initiatives == null || initiatives.Count <= partyManager.partyMembers.Count) {
             yield return ExitCombat();
         }
     }
@@ -208,28 +209,6 @@ public class CombatManager : MonoBehaviour
             yield return attacker.DealDamage(attack,
                 new Damage(attack.damageType, damageRoll), target);
             yield return effectManager.GenerateHitEffect(target);
-
-            if (target.CurrHP < 1) {
-                if (target.GetType() == typeof(PlayerCharacter)) {
-                    // todo - defeat players too
-                    Debug.Log("Player ran out of HP.");
-                    yield break;
-                }
-                if (initiatives != null) {
-                    foreach (KeyValuePair<int, Traveller> initiative in initiatives) {
-                        if (initiative.Value == target) {
-                            // ensure initiative number is not incorrect after deleting item
-                            int currCreatureInitiative = initiatives[currInitiative].Key;
-                            if (initiative.Key > currCreatureInitiative) {
-                                currInitiative -= 1;
-                            }
-                            initiatives.Remove(initiative);
-                            break;
-                        }
-                    }
-                }
-                nonVoxelWorld.DestroyEntity(target);
-            }
         }
 
         if (gameStateManager.controlState == ControlState.COMBAT) {
@@ -335,6 +314,24 @@ public class CombatManager : MonoBehaviour
 
         initiatives.Sort((x, y) => -x.Key.CompareTo(y.Key));
         currInitiative = 0;
+    }
+
+    public IEnumerator DestroyCombatant(Traveller traveller) {
+        if (initiatives != null) {
+            foreach (KeyValuePair<int, Traveller> initiative in initiatives) {
+                if (initiative.Value == traveller) {
+                    // ensure initiative number is not incorrect after deleting item
+                    int currCreatureInitiative = initiatives[currInitiative].Key;
+                    if (initiative.Key > currCreatureInitiative) {
+                        currInitiative -= 1;
+                    }
+                    initiatives.Remove(initiative);
+                    break;
+                }
+            }
+        }
+        nonVoxelWorld.DestroyEntity(traveller);
+        yield break;
     }
 
     private void IncrementInitiative() {

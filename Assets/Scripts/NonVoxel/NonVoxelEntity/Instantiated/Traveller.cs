@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using VoxelPlay;
 using static RandomManager;
+using static UnityEngine.GraphicsBuffer;
 
 namespace Instantiated {
     public abstract class Traveller : TangibleEntity {
@@ -22,13 +23,14 @@ namespace Instantiated {
         [SerializeField] protected VisualRollManager visualRollManager;
         [SerializeField] protected StatusUIController statusUIController;
         private TimerUIController timerUIController;
+        private CombatManager combatManager;
 
         public event System.Func<Traveller, Damage, IEnumerator> onTakeDamage;
         public event System.Func<Traveller, Traveller, Advantage, Advantage> onPerformAttack;
         public event System.Func<Traveller, IEnumerator> onCombatTurnStart;
         public event System.Func<Traveller, IEnumerator> onCombatTurnEnd;
         public event System.Func<Traveller, Advantage, IEnumerator> onAttackHit;
-        public event System.Func<AttackSO, Traveller, IEnumerator> onDealDamage;
+        public event System.Func<ActionSO, Traveller, IEnumerator> onDealDamage;
 
         public SpriteMoveDirection permanentMoveDirection { get; protected set; } = SpriteMoveDirection.NONE;
         public bool isMoving { get; protected set; } = false;
@@ -59,8 +61,9 @@ namespace Instantiated {
             }
         }
 
-        protected void Init(TimerUIController timerUIController) {
+        protected void Init(TimerUIController timerUIController, CombatManager combatManager) {
             this.timerUIController = timerUIController;
+            this.combatManager = combatManager;
 
             if (GetEntity().currHP < 0) {
                 GetEntity().currHP = GetStats().maxHP;
@@ -163,17 +166,18 @@ namespace Instantiated {
             yield return attackResult;
         }
 
-        public IEnumerator DealDamage(AttackSO attack, Damage damage, Traveller target) {
+        public IEnumerator DealDamage(ActionSO damageAction, Damage damage, Traveller target) {
             yield return target.TakeDamage(damage);
 
             if (onDealDamage != null) {
                 foreach (System.Delegate handler in onDealDamage.GetInvocationList()) {
-                    var handlerCasted = (System.Func<AttackSO, Traveller, IEnumerator>)handler;
-                    yield return handlerCasted.Invoke(attack, target);
+                    var handlerCasted = (System.Func<ActionSO, Traveller, IEnumerator>)handler;
+                    yield return handlerCasted.Invoke(damageAction, target);
                 }
             }
         }
 
+        // todo - damage icon, indicator or particle effect
         private IEnumerator TakeDamage(Damage damage) {
             GetEntity().currHP -= damage.amount;
 
@@ -182,6 +186,17 @@ namespace Instantiated {
                     var handlerCasted = (System.Func<Traveller, Damage, IEnumerator>)handler;
                     yield return handlerCasted.Invoke(this, damage);
                 }
+            }
+
+            if (CurrHP < 1) {
+                if (GetType() == typeof(PlayerCharacter)) {
+                    // todo - defeat players too
+                    Debug.Log("Player ran out of HP.");
+                    yield break;
+                }
+
+                // to avoid issue of destroying something whose code is running
+                StartCoroutine(combatManager.DestroyCombatant(this));
             }
         }
 
