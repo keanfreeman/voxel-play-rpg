@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: Mage Armor
   actionType: 0
+  spellLevel: 1
+  spellSchool: 0
   castingTime: 0
   range: Touch
   spellComponents:

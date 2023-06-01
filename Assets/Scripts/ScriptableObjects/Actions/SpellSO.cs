@@ -7,6 +7,8 @@ namespace Spells {
     [CreateAssetMenu(fileName = "New Spell", menuName = "ScriptableObjects/Actions/Spell")]
     public class SpellSO : ActionSO
     {
+        public int spellLevel;
+        public SpellSchool spellSchool;
         public CastingTime castingTime;
         public string range;
         public SpellComponents spellComponents;
@@ -19,6 +21,17 @@ namespace Spells {
         public bool IsSpellAttack() {
             return providedAttack != null;
         }
+    }
+
+    public enum SpellSchool {
+        Abjuration,
+        Conjuration,
+        Divination,
+        Enchantment,
+        Evocation,
+        Illusion,
+        Necromancy,
+        Transmutation
     }
 
     public enum CastingTime {

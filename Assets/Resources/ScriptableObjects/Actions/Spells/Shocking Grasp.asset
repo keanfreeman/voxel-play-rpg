@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Shocking Grasp
   m_EditorClassIdentifier: 
   actionName: Shocking Grasp
+  actionType: 0
+  spellLevel: 0
+  spellSchool: 4
   castingTime: 0
   range: Touch
   spellComponents:

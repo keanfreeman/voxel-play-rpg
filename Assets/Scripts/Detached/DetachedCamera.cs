@@ -1,5 +1,4 @@
 using DieNamespace;
-using EntityDefinition;
 using GameMechanics;
 using Nito.Collections;
 using NonVoxel;
@@ -30,6 +29,7 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] CombatUI combatUI;
     [SerializeField] ConstructionUI constructionUI;
     [SerializeField] BuildShadow buildShadow;
+    [SerializeField] AreaEffectPreview areaEffectPreview;
 
     // sprites
     [SerializeField] Sprite grabIcon;
@@ -45,6 +45,8 @@ public class DetachedCamera : MonoBehaviour
     private const float CURSOR_CENTER_SPEED = 1.5f;
     private const int TILE_TO_FEET = 5;
     private VoxelSelection voxelSelectionMode = VoxelSelection.NotSelecting;
+    private AreaEffectPreviewInfo areaEffectPreviewInfo = null;
+
     private enum VoxelSelection {
         NotSelecting,
         Selected,
@@ -84,6 +86,10 @@ public class DetachedCamera : MonoBehaviour
             if (isBuildMode) {
                 buildShadow.DrawBuildModeShadow();
             }
+            if (areaEffectPreviewInfo != null) {
+                areaEffectPreviewInfo.target = currVoxel;
+                areaEffectPreview.Display(areaEffectPreviewInfo);
+            }
         }
         MoveCursor();
 
@@ -97,7 +103,7 @@ public class DetachedCamera : MonoBehaviour
         if (nonVoxelWorld.IsPositionOccupied(currVoxel)) {
             Instantiated.InstantiatedEntity entity = nonVoxelWorld.GetEntityFromPosition(currVoxel);
             if (gameStateManager.controlState == ControlState.COMBAT
-                    && entity.GetType() == typeof(NPC)) {
+                    && entity.GetType() == typeof(EntityDefinition.NPC)) {
                 ActionSO rangedAction = StatInfo.GetRangedAction(
                     combatManager.GetCurrTurnPlayer().GetStats());
                 detachedModeSprite.sprite = rangedAction == null ? meleeAttackIcon : rangedAttackIcon;
@@ -236,12 +242,17 @@ public class DetachedCamera : MonoBehaviour
         }
     }
 
-    public IEnumerator EnterSelectMode(Vector3Int startPosition) {
+    public IEnumerator EnterSelectMode(Instantiated.Traveller performer, 
+            SelectModeShape selectModeShape = SelectModeShape.None, int radius = -1) {
         voxelSelectionMode = VoxelSelection.Waiting;
         combatUI.StopFocus();
         inputManager.LockUIControls();
-        inputManager.SwitchPlayerToDetachedControlState(startPosition);
+        inputManager.SwitchPlayerToDetachedControlState(performer.origin);
         inputManager.SetDetachedToNormal();
+
+        if (selectModeShape != SelectModeShape.None) {
+            areaEffectPreviewInfo = new(performer, Vector3Int.zero, selectModeShape, radius);
+        }
 
         Vector3Int? result = null;
         while (voxelSelectionMode == VoxelSelection.Waiting) {
@@ -263,5 +274,14 @@ public class DetachedCamera : MonoBehaviour
         else {
             inputManager.SwitchDetachedToPlayerControlState();
         }
+
+        areaEffectPreviewInfo = null;
+        areaEffectPreview.Clear();
     }
+}
+
+public enum SelectModeShape {
+    None,
+    Sphere,
+    Cone
 }

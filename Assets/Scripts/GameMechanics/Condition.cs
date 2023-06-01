@@ -65,6 +65,7 @@ namespace GameMechanics {
     }
 
     public enum Condition {
+        // todo - fail ability check requiring sight
         Blinded,
         Charmed,
         Deafened,
@@ -87,10 +88,12 @@ namespace GameMechanics {
     // than the condition game mechanic (e.g. paralysis)
     public enum StatusEffect {
         GhoulClaw,
+        // Spells
         Longstrider,
         Light,
         MageArmor,
-        SleepSpell
+        SleepSpell,
+        ColorSpray
     }
 
     [Serializable]
@@ -130,11 +133,15 @@ namespace GameMechanics {
             "Any attack that hits the creature is a critical hit if the attacker is " +
                 "within 5 feet of the creature."
         };
+        private static readonly IReadOnlyCollection<string> blindedDescription = new List<string> {
+            "A blinded creature can’t see and automatically fails any ability check that requires sight.",
+            "Attack rolls against the creature have advantage, and the creature’s attack rolls have disadvantage.",
+        };
 
         public static IReadOnlyCollection<string> GetDescription(Condition condition) {
             switch (condition) {
                 case Condition.Blinded:
-                    return new List<string>{};
+                    return blindedDescription;
                 case Condition.Charmed:
                     return new List<string> {};
                 case Condition.Deafened:

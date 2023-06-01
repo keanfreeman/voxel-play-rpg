@@ -71,18 +71,30 @@ public class ActionManager : MonoBehaviour
         }
         else if (actionType == typeof(SpellSO)) {
             SpellSO spell = (SpellSO)action;
+
+            // check spell slots remaining
+            ResourceStatus spellSlots = performer.GetResources().resourceStatuses
+                .GetValueOrDefault(GameMechanics.ResourceID.SpellSlots, null);
+            if (spell.spellLevel > 0 && spellSlots.remainingUses < 1) {
+                messageManager.DisplayMessage("No more remaining spell slots.");
+                yield break;
+            }
+
             // todo - use non-string identifier
             if (spell.actionName == "Longstrider") {
-                yield return PerformLongstrider(performer, spell);
+                yield return PerformLongstrider(performer, spell, spellSlots);
             }
             else if (spell.actionName == "Light") {
                 yield return PerformLight(performer, spell);
             }
             else if (spell.actionName == "Mage Armor") {
-                yield return PerformMageArmor(performer, spell);
+                yield return PerformMageArmor(performer, spell, spellSlots);
             }
             else if (spell.actionName == "Sleep") {
-                yield return PerformSleep(performer, spell);
+                yield return PerformSleepSpell(performer, spell, spellSlots);
+            }
+            else if (spell.actionName == "Color Spray") {
+                yield return PerformColorSpray(performer, spell, spellSlots);
             }
         }
         else if (actionType == typeof(SpecialActionSO)) {
@@ -101,7 +113,7 @@ public class ActionManager : MonoBehaviour
     private IEnumerator PerformRangedAttack(Traveller performer, AttackSO attack) {
         messageManager.DisplayMessage(new Message(
             "Please select a creature to attack", isPermanent: true));
-        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer.origin));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer));
         yield return cwd.coroutine;
 
         messageManager.StopDisplayingPermanentMessages();
@@ -140,17 +152,10 @@ public class ActionManager : MonoBehaviour
         combatManager.StartCombat();
     }
 
-    private IEnumerator PerformLongstrider(Traveller performer, SpellSO spell) {
-        ResourceStatus resourceStatus = performer.GetResources().resourceStatuses
-            .GetValueOrDefault(GameMechanics.ResourceID.SpellSlots, null);
-        if (resourceStatus.remainingUses < 1) {
-            messageManager.DisplayMessage("No more remaining spell slots.");
-            yield break;
-        }
-
+    private IEnumerator PerformLongstrider(Traveller performer, SpellSO spell, ResourceStatus spellSlots) {
         // get a target
         messageManager.DisplayMessage(new Message("Please select an adjacent creature.", isPermanent: true));
-        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer.origin));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer));
         yield return cwd.coroutine;
 
         messageManager.StopDisplayingPermanentMessages();
@@ -172,23 +177,18 @@ public class ActionManager : MonoBehaviour
         // apply a status
         target.AddStatus(new OngoingEffect(StatusEffect.Longstrider, TimeUtil.HOUR));
 
-        resourceStatus.DecrementUses();
+        spellSlots.DecrementUses();
         if (gameStateManager.controlState == ControlState.COMBAT) {
             combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
         }
     }
 
-    private IEnumerator PerformSleep(Traveller performer, SpellSO spell) {
-        ResourceStatus resourceStatus = performer.GetResources().resourceStatuses
-            .GetValueOrDefault(GameMechanics.ResourceID.SpellSlots, null);
-        if (resourceStatus.remainingUses < 1) {
-            messageManager.DisplayMessage("No more remaining spell slots.");
-            yield break;
-        }
-
-        // todo - show radius preview
+    private IEnumerator PerformSleepSpell(Traveller performer, SpellSO spell, ResourceStatus spellSlots) {
+        int sleepRadius = 20;
+        int radiusInPoints = sleepRadius / 5;
         messageManager.DisplayMessage(new Message("Please select a point in range.", isPermanent: true));
-        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer.origin));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer, 
+            SelectModeShape.Sphere, radiusInPoints));
         yield return cwd.coroutine;
 
         messageManager.StopDisplayingPermanentMessages();
@@ -199,8 +199,6 @@ public class ActionManager : MonoBehaviour
         Vector3Int targetPosition = cwd.GetResult();
 
         // get creatures in radius
-        int sleepRadius = 20;
-        int radiusInPoints = sleepRadius / 5;
         List<Vector3Int> pointsInSphere = Coordinates.GetPointsInSphereCenteredOn(targetPosition, 
             radiusInPoints);
         HashSet<Traveller> affectedCreatures = nonVoxelWorld.GetTravellersInPoints(pointsInSphere);
@@ -215,6 +213,7 @@ public class ActionManager : MonoBehaviour
             "Rolling for Sleep", new List<Die> { new(5, 8) }));
         yield return sleepCoroutine.coroutine;
         int sleepSum = sleepCoroutine.GetResult().sum;
+        messageManager.DisplayMessage($"Rolled {sleepSum} HP for Sleep!");
 
         List<Traveller> sorted = affectedCreatures.ToList();
         sorted.Sort((x, y) => -x.CurrHP.CompareTo(y.CurrHP));
@@ -233,23 +232,73 @@ public class ActionManager : MonoBehaviour
 
         // todo - play debuff effect
 
-        resourceStatus.DecrementUses();
+        spellSlots.DecrementUses();
         if (gameStateManager.controlState == ControlState.COMBAT) {
             combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
         }
     }
 
-    private IEnumerator PerformMageArmor(Traveller performer, SpellSO spell) {
-        ResourceStatus spellSlotResource = performer.GetResources().resourceStatuses
-            .GetValueOrDefault(GameMechanics.ResourceID.SpellSlots, null);
-        if (spellSlotResource.remainingUses < 1) {
-            messageManager.DisplayMessage("No more remaining spell slots.");
+    private IEnumerator PerformColorSpray(Traveller performer, SpellSO spell, ResourceStatus spellSlots) {
+        int colorSprayConeLength = 15;
+        int lengthInPoints = colorSprayConeLength / 5;
+        messageManager.DisplayMessage(new Message("Please select a point in range.", isPermanent: true));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer,
+            SelectModeShape.Cone, lengthInPoints));
+        yield return cwd.coroutine;
+
+        messageManager.StopDisplayingPermanentMessages();
+        if (!cwd.HasResult()) {
+            messageManager.DisplayMessage("Cancelled selection.");
+            yield break;
+        }
+        Vector3Int targetPosition = cwd.GetResult();
+
+        // get creatures in radius
+        List<Vector3Int> pointsInSphere = Coordinates.GetPointsInCone(performer, targetPosition,
+            lengthInPoints);
+        HashSet<Traveller> affectedCreatures = nonVoxelWorld.GetTravellersInPoints(pointsInSphere);
+
+        if (affectedCreatures.Count < 1) {
+            messageManager.DisplayMessage("No creatures in radius.");
             yield break;
         }
 
+        // roll HP amount
+        CoroutineWithData<DiceResult> colorSprayCoroutine = new(this, visualRollManager.RollGeneric(
+            "Rolling for Color Spray", new List<Die> { new(6, 10) }));
+        yield return colorSprayCoroutine.coroutine;
+        int colorSpraySum = colorSprayCoroutine.GetResult().sum;
+        messageManager.DisplayMessage($"Rolled {colorSpraySum} HP for Color Spray.");
+
+        List<Traveller> sorted = affectedCreatures.ToList();
+        sorted.Sort((x, y) => -x.CurrHP.CompareTo(y.CurrHP));
+        foreach (Traveller affectedCreature in sorted) {
+            if (colorSpraySum < affectedCreature.CurrHP) {
+                break;
+            }
+
+            colorSpraySum -= affectedCreature.CurrHP;
+
+            // todo - do not affect unconscious creatures / creatures who can't see
+            // todo - make it possible to specify when a status ends beyond raw time (e.g.
+            // start of X creature's turn)
+            affectedCreature.AddStatus(new OngoingEffect(StatusEffect.ColorSpray,
+                new HashSet<Condition> { Condition.Blinded }, TimeUtil.MINUTE));
+            performer.onCombatTurnStart += featureManager.EndColorSpray;
+        }
+
+        // todo - play debuff effect
+
+        spellSlots.DecrementUses();
+        if (gameStateManager.controlState == ControlState.COMBAT) {
+            combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
+        }
+    }
+
+    private IEnumerator PerformMageArmor(Traveller performer, SpellSO spell, ResourceStatus spellSlots) {
         messageManager.DisplayMessage(new Message("Please select a willing creature in range.", 
             isPermanent: true));
-        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer.origin));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer));
         yield return cwd.coroutine;
 
         messageManager.StopDisplayingPermanentMessages();
@@ -277,7 +326,7 @@ public class ActionManager : MonoBehaviour
         // todo - use time specified in spell
         target.AddStatus(new OngoingEffect(StatusEffect.MageArmor, TimeUtil.HOUR * 8));
 
-        spellSlotResource.DecrementUses();
+        spellSlots.DecrementUses();
         if (gameStateManager.controlState == ControlState.COMBAT) {
             combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
         }
@@ -285,7 +334,7 @@ public class ActionManager : MonoBehaviour
 
     private IEnumerator PerformLight(Traveller performer, SpellSO spell) {
         messageManager.DisplayMessage(new Message("Please select an adjacent creature.", isPermanent: true));
-        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer.origin));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer));
         yield return cwd.coroutine;
 
         messageManager.StopDisplayingPermanentMessages();

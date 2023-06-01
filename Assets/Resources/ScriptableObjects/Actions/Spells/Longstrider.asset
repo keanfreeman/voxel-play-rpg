@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Longstrider
   m_EditorClassIdentifier: 
   actionName: Longstrider
+  actionType: 0
+  spellLevel: 1
+  spellSchool: 7
   castingTime: 0
   range: Touch
   spellComponents:

@@ -10,10 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 900b392c5615089479f9dc261eac44b7, type: 3}
-  m_Name: Light
+  m_Name: LightSpell
   m_EditorClassIdentifier: 
   actionName: Light
   actionType: 0
+  spellLevel: 0
+  spellSchool: 4
   castingTime: 0
   range: Touch
   spellComponents:

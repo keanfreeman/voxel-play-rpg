@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Fire Bolt
   m_EditorClassIdentifier: 
   actionName: Fire Bolt
+  actionType: 0
+  spellLevel: 0
+  spellSchool: 4
   castingTime: 0
   range: 120 feet
   spellComponents:

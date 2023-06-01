@@ -109,14 +109,22 @@ public class FeatureManager : MonoBehaviour {
     }
 
     private IEnumerator CheckCriticalHitFromStatus(Traveller target, Advantage _) {
-        yield return new AttackHitModifications() { isNewlyCritical 
+        yield return new AttackHitModifications() { isNewlyCritical
             = target.HasCondition(Condition.Paralyzed) || target.HasCondition(Condition.Unconscious)
         };
     }
 
-    private Advantage CheckAdvantageFromStatus(Traveller attacker, Traveller target, Advantage currAdvState) {
-        if (target.HasCondition(Condition.Paralyzed) || target.HasCondition(Condition.Unconscious)) {
-            return AdvantageCalcs.GetNewAdvantageState(currAdvState, Advantage.Advantage);
+    // todo - have the conditions themselves intervene and change the advantage rather than checking them all 
+    // individually
+    private Advantage CheckAdvantageFromStatus(Traveller attacker, Traveller target, Advantage startAdvState) {
+        Advantage currAdvState = startAdvState;
+        if (attacker.HasCondition(Condition.Blinded)) {
+            currAdvState = AdvantageCalcs.GetNewAdvantageState(currAdvState, Advantage.Disadvantage);
+        }
+
+        if (target.HasCondition(Condition.Paralyzed) || target.HasCondition(Condition.Unconscious)
+                || target.HasCondition(Condition.Blinded)) {
+            currAdvState = AdvantageCalcs.GetNewAdvantageState(currAdvState, Advantage.Advantage);
         }
         return currAdvState;
     }
@@ -181,6 +189,21 @@ public class FeatureManager : MonoBehaviour {
             currTurnTraveller.RemoveStatus(StatusEffect.GhoulClaw);
             currTurnTraveller.onCombatTurnEnd -= CheckGhoulClawEnd;
         }
+    }
+
+    // todo - associate color spray status with a caster so if two people cast it I can 
+    // disambiguate whose condition should end
+    public IEnumerator EndColorSpray(Traveller spellPerformer) {
+        foreach (var pair in combatManager.initiatives) {
+            Traveller combatant = pair.Value;
+            OngoingEffect colorSprayEffect = combatant.GetStatus(StatusEffect.ColorSpray);
+            if (colorSprayEffect != null) {
+                combatant.RemoveStatus(StatusEffect.ColorSpray);
+            }
+        }
+
+        spellPerformer.onCombatTurnStart -= EndColorSpray;
+        yield break;
     }
 
     public Advantage TriggerPackTactics(Traveller attacker, Traveller target, Advantage currAdvState) {

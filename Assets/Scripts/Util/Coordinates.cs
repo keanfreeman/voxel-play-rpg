@@ -11,6 +11,192 @@ using VoxelPlay;
 
 public static class Coordinates
 {
+    // target must not be in caster, and cone length must be above 0
+    public static List<Vector3Int> GetPointsInCone(Traveller caster, Vector3Int target, int coneLength) {
+        List<Vector3Int> EMPTY_LIST = new();
+        if (caster.occupiedPositions.Contains(target) || coneLength < 1) {
+            return EMPTY_LIST;
+        }
+
+        // get point closest to target
+        float closestDist = float.MaxValue;
+        Vector3Int coneOrigin = caster.occupiedPositions.First();
+        foreach (Vector3Int position in caster.occupiedPositions) {
+            float lineLength = GetDirectLineLength(position, target);
+            if (lineLength < closestDist) {
+                closestDist = lineLength;
+                coneOrigin = position;
+            }
+        }
+
+        // cone spreads in the direction closest to both the origin and the target. the cone cannot 
+        // spread from a diagonal corner, though.
+        HashSet<Vector3Int> surrounding = GetPositionsSurroundingTraveller(caster);
+        Vector3Int coneSpreadStart = surrounding.First();
+        closestDist = float.MaxValue;
+        float diagCornerDistance = Mathf.Sqrt(3);
+        foreach (Vector3Int position in surrounding) {
+            float distToOrigin = GetDirectLineLength(position, coneOrigin);
+            if (distToOrigin >= diagCornerDistance) {
+                // do not support for diagonal corner
+                continue;
+            }
+            float distToTarget = GetDirectLineLength(position, target);
+            float sum = distToOrigin + distToTarget;
+            if (sum < closestDist) {
+                closestDist = sum;
+                coneSpreadStart = position;
+            }
+        }
+        Vector3Int coneDirection = coneSpreadStart - coneOrigin;
+
+        List<Vector3Int> conePoints = new();
+        int currConeRadius = 0;
+        while (currConeRadius < coneLength) {
+            Vector3Int currConeCenter = coneSpreadStart + (coneDirection * currConeRadius);
+            conePoints.AddRange(GetPointsInPlaneTangent(currConeCenter, coneDirection, currConeRadius));
+            currConeRadius++;
+        }
+
+        return conePoints;
+    }
+
+    private static List<Vector3Int> GetPointsInPlaneTangent(Vector3Int planeCenter, Vector3Int direction,
+            int planeRadius) {
+        if (planeRadius < 1) {
+            return new() { planeCenter };
+        }
+
+        List<Vector3Int> points = new();
+        // there are 3 face planes (x, y, z)
+        if (direction.x == 0 && direction.y == 0) {
+            for (int x = planeCenter.x - planeRadius; x <= planeCenter.x + planeRadius; x++) {
+                for (int y = planeCenter.y - planeRadius; y <= planeCenter.y + planeRadius; y++) {
+                    points.Add(new(x, y, planeCenter.z));
+                }
+            }
+            return points;
+        }
+        else if (direction.y == 0 && direction.z == 0) {
+            for (int y = planeCenter.y - planeRadius; y <= planeCenter.y + planeRadius; y++) {
+                for (int z = planeCenter.z - planeRadius; z <= planeCenter.z + planeRadius; z++) {
+                    points.Add(new(planeCenter.x, y, z));
+                }
+            }
+            return points;
+        }
+        else if (direction.x == 0 && direction.z == 0) {
+            for (int x = planeCenter.x - planeRadius; x <= planeCenter.x + planeRadius; x++) {
+                for (int z = planeCenter.z - planeRadius; z <= planeCenter.z + planeRadius; z++) {
+                    points.Add(new(x, planeCenter.y, z));
+                }
+            }
+            return points;
+        }
+
+        // there are 6 edge planes (xy, (-x)y, yz, (-y)z, xz, x(-z))
+        // - 6 more are mirrored
+        else if (direction.z == 0 && ((direction.x > 0 && direction.y > 0) 
+                || (direction.x < 0 && direction.y < 0))) { // up right or down left
+            Vector3Int iterator = new(1, -1, 0);
+            Vector3Int start = planeCenter + new Vector3Int(-planeRadius, planeRadius, 0);
+            Vector3Int pastEnd = planeCenter + new Vector3Int(planeRadius + 1, (-planeRadius) - 1, 0);
+
+            Vector3Int curr = start;
+            while (curr != pastEnd) {
+                for (int z = planeCenter.z - planeRadius; z <= planeCenter.z + planeRadius; z++) {
+                    points.Add(new(curr.x, curr.y, z));
+                }
+                curr += iterator;
+            }
+            return points;
+        }
+        else if (direction.z == 0 && ((direction.x > 0 && direction.y < 0)
+                || (direction.x < 0 && direction.y > 0))) { // down right or up left
+            Vector3Int iterator = new(1, 1, 0);
+            Vector3Int start = planeCenter + new Vector3Int(-planeRadius, -planeRadius, 0);
+            Vector3Int pastEnd = planeCenter + new Vector3Int(planeRadius + 1, planeRadius + 1, 0);
+
+            Vector3Int curr = start;
+            while (curr != pastEnd) {
+                for (int z = planeCenter.z - planeRadius; z <= planeCenter.z + planeRadius; z++) {
+                    points.Add(new(curr.x, curr.y, z));
+                }
+                curr += iterator;
+            }
+            return points;
+        }
+
+        else if (direction.x == 0 && ((direction.y > 0 && direction.z > 0) 
+                || (direction.y < 0 && direction.z < 0))) { // up forward or down back
+            Vector3Int iterator = new(0, 1, -1);
+            Vector3Int start = planeCenter + new Vector3Int(0, -planeRadius, planeRadius);
+            Vector3Int pastEnd = planeCenter + new Vector3Int(0, planeRadius + 1, (-planeRadius) - 1);
+
+            Vector3Int curr = start;
+            while (curr != pastEnd) {
+                for (int x = planeCenter.x - planeRadius; x <= planeCenter.x + planeRadius; x++) {
+                    points.Add(new(x, curr.y, curr.z));
+                }
+                curr += iterator;
+            }
+            return points;
+        }
+        else if (direction.x == 0 && ((direction.y < 0 && direction.z > 0)
+                || (direction.y > 0 && direction.z < 0))) { // down forward or up back
+            Vector3Int iterator = new(0, 1, 1);
+            Vector3Int start = planeCenter + new Vector3Int(0, -planeRadius, -planeRadius);
+            Vector3Int pastEnd = planeCenter + new Vector3Int(0, planeRadius + 1, planeRadius + 1);
+
+            Vector3Int curr = start;
+            while (curr != pastEnd) {
+                for (int x = planeCenter.x - planeRadius; x <= planeCenter.x + planeRadius; x++) {
+                    points.Add(new(x, curr.y, curr.z));
+                }
+                curr += iterator;
+            }
+            return points;
+        }
+
+        else if (direction.y == 0 && ((direction.z > 0 && direction.x > 0) 
+                || (direction.z < 0 && direction.x < 0))) { // forward and right or back and left
+            Vector3Int iterator = new(1, 0, -1); // todo check if needs to be reversed
+            Vector3Int start = planeCenter + new Vector3Int(-planeRadius, 0, planeRadius);
+            Vector3Int pastEnd = planeCenter + new Vector3Int(planeRadius + 1, 0, (-planeRadius) - 1);
+
+            Vector3Int curr = start;
+            while (curr != pastEnd) {
+                for (int y = planeCenter.y - planeRadius; y <= planeCenter.y + planeRadius; y++) {
+                    points.Add(new(curr.x, y, curr.z));
+                }
+                curr += iterator;
+            }
+            return points;
+        }
+        else if (direction.y == 0 && ((direction.z > 0 && direction.x < 0)
+                || (direction.z < 0 && direction.x > 0))) { // forward and left or back and right
+            Vector3Int iterator = new(1, 0, 1);
+            Vector3Int start = planeCenter + new Vector3Int(-planeRadius, 0, -planeRadius);
+            Vector3Int pastEnd = planeCenter + new Vector3Int(planeRadius + 1, 0, planeRadius + 1);
+
+            Vector3Int curr = start;
+            while (curr != pastEnd) {
+                for (int y = planeCenter.y - planeRadius; y <= planeCenter.y + planeRadius; y++) {
+                    points.Add(new(curr.x, y, curr.z));
+                }
+                curr += iterator;
+            }
+            return points;
+        }
+
+        // diagonal corner, not supported
+        else {
+            // there are 4 bottom corner planes (xyz, xy(-z), (-x)y(-z), (-x)yz)
+            // - each has a mirror on the top
+            throw new NotSupportedException("Cannot draw a plane from a corner.");
+        }
+    }
+
     // diagonals are considered to be more than 1 point away
     public static List<Vector3Int> GetPointsInSphereCenteredOn(Vector3Int center, int radius) {
         if (radius < 0) throw new ArgumentException("Must provide nonnegative radius.");

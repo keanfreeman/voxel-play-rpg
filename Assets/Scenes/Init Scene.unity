@@ -1157,6 +1157,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 955022268}
     - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
+      propertyPath: areaEffectPreview
+      value: 
+      objectReference: {fileID: 1702908730}
+    - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
       propertyPath: voxelWorldManager
       value: 
       objectReference: {fileID: 1568004907}
@@ -1992,6 +1996,19 @@ MonoBehaviour:
   promptUIController: {fileID: 539451388}
   timerUIController: {fileID: 134436095}
   genericNonVoxelObjectPrefab: {fileID: 100008, guid: 1df8fdc65931cd340beda593a897f605, type: 3}
+--- !u!114 &1702908730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 157599780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f1cd5c17aec7eb4893a7de11bb19335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  markerPrefab: {fileID: 451341379698883947, guid: 0a2f1fe387ada9349b027e0c6318077d, type: 3}
 --- !u!1 &1785101421
 GameObject:
   m_ObjectHideFlags: 0

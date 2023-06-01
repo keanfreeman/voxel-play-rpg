@@ -29,9 +29,9 @@ public class CombatManager : MonoBehaviour
 
     public event System.Action roundEnded;
     public CombatResources CombatResources { get; private set; } = new();
+    public List<KeyValuePair<int, Traveller>> initiatives { get; private set; }
 
     ICollection<NPC> enemies;
-    List<KeyValuePair<int, Traveller>> initiatives;
     int currInitiative = -1;
 
     private const int TILE_TO_FEET = 5;

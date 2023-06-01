@@ -8,3 +8,7 @@
     padding-top: 0;
     padding-bottom: 0;
 }
+
+#ChoiceInfoBox {
+    background-color: rgb(77, 134, 180);
+}
