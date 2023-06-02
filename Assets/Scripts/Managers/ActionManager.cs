@@ -104,6 +104,12 @@ public class ActionManager : MonoBehaviour
             else if (spell.actionName == "Vicious Mockery") {
                 yield return PerformViciousMockery(performer, spell);
             }
+            else if (spell.actionName == "Cure Wounds") {
+                yield return PerformCureWounds(performer, spell, spellSlots);
+            }
+            else if (spell.actionName == "Healing Word") {
+                yield return PerformHealingWord(performer, spell, spellSlots);
+            }
         }
         else if (actionType == typeof(SpecialActionSO)) {
             SpecialActionSO specialActionSO = (SpecialActionSO)action;
@@ -161,7 +167,6 @@ public class ActionManager : MonoBehaviour
     }
 
     private IEnumerator PerformLongstrider(Traveller performer, SpellSO spell, ResourceStatus spellSlots) {
-        // get a target
         messageManager.DisplayMessage(new Message("Please select an adjacent creature.", isPermanent: true));
         CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer));
         yield return cwd.coroutine;
@@ -182,8 +187,111 @@ public class ActionManager : MonoBehaviour
         }
         Traveller target = (Traveller)entity;
 
-        // apply a status
+        if (!nonVoxelWorld.GetAdjacentTravellers(performer).Contains(target)) {
+            messageManager.DisplayMessage("Must choose an adjacent creature.");
+            yield return null;
+            yield break;
+        }
+
         target.AddStatus(new OngoingEffect(StatusEffect.Longstrider, TimeUtil.HOUR));
+
+        spellSlots.DecrementUses();
+        if (gameStateManager.controlState == ControlState.COMBAT) {
+            combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
+        }
+    }
+
+    private IEnumerator PerformCureWounds(Traveller performer, SpellSO spell, ResourceStatus spellSlots) {
+        messageManager.DisplayMessage(new Message("Please select an adjacent creature.", isPermanent: true));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer));
+        yield return cwd.coroutine;
+
+        messageManager.StopDisplayingPermanentMessages();
+        if (!cwd.HasResult()) {
+            messageManager.DisplayMessage("Cancelled selection.");
+            yield return null;
+            yield break;
+        }
+        Vector3Int targetPosition = cwd.GetResult();
+
+        InstantiatedEntity entity = nonVoxelWorld.GetEntityFromPosition(targetPosition);
+        if (entity == null || !TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(Traveller))) {
+            messageManager.DisplayMessage("Must choose a creature as a target.");
+            yield return null;
+            yield break;
+        }
+        Traveller target = (Traveller)entity;
+
+        if (!nonVoxelWorld.GetAdjacentTravellers(performer).Contains(target)) {
+            messageManager.DisplayMessage("Must choose an adjacent creature.");
+            yield return null;
+            yield break;
+        }
+
+        if (target.GetStats().creatureType == CreatureType.Construct 
+                || target.GetStats().creatureType == CreatureType.Undead) {
+            messageManager.DisplayMessage("Has no effect on constructs/undead.");
+            yield return null;
+            yield break;
+        }
+
+        CoroutineWithData<DiceResult> healRollCoroutine = new(this, visualRollManager.RollGeneric(
+            "Rolling for Cure Wounds", new List<Die> { new(1, 8, 3) }));
+        yield return healRollCoroutine.coroutine;
+        int sum = healRollCoroutine.GetResult().sum;
+        messageManager.DisplayMessage($"Rolled {sum} HP!");
+
+        yield return target.RecoverHP(sum);
+
+        spellSlots.DecrementUses();
+        if (gameStateManager.controlState == ControlState.COMBAT) {
+            combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
+        }
+    }
+
+    private IEnumerator PerformHealingWord(Traveller performer, SpellSO spell, ResourceStatus spellSlots) {
+        messageManager.DisplayMessage(new Message("Please select a creature in range.", isPermanent: true));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer));
+        yield return cwd.coroutine;
+
+        messageManager.StopDisplayingPermanentMessages();
+        if (!cwd.HasResult()) {
+            messageManager.DisplayMessage("Cancelled selection.");
+            yield return null;
+            yield break;
+        }
+        Vector3Int targetPosition = cwd.GetResult();
+
+        InstantiatedEntity entity = nonVoxelWorld.GetEntityFromPosition(targetPosition);
+        if (entity == null || !TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(Traveller))) {
+            messageManager.DisplayMessage("Must choose a creature as a target.");
+            yield return null;
+            yield break;
+        }
+        Traveller target = (Traveller)entity;
+
+        int healingWordRangeInPoints = 60 / 5;
+        Vector3Int closestTravellerPoint = performer.GetPointInEntityClosestTo(targetPosition);
+        int selectedDistance = Coordinates.NumPointsBetween(closestTravellerPoint, targetPosition);
+        if (selectedDistance > healingWordRangeInPoints) {
+            messageManager.DisplayMessage("Selected a position out of range.");
+            yield break;
+        }
+
+        if (target.GetStats().creatureType == CreatureType.Construct
+                || target.GetStats().creatureType == CreatureType.Undead) {
+            messageManager.DisplayMessage("Has no effect on constructs/undead.");
+            yield return null;
+            yield break;
+        }
+
+        CoroutineWithData<DiceResult> healRollCoroutine = new(this, visualRollManager.RollGeneric(
+            "Rolling for Healing Word", new List<Die> { new(1, 4, 3) }));
+        yield return healRollCoroutine.coroutine;
+        int sum = healRollCoroutine.GetResult().sum;
+        messageManager.DisplayMessage($"Rolled {sum} HP!");
+
+        yield return target.RecoverHP(sum);
 
         spellSlots.DecrementUses();
         if (gameStateManager.controlState == ControlState.COMBAT) {

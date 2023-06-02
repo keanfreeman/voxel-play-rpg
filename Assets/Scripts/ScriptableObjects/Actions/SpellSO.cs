@@ -9,7 +9,6 @@ namespace Spells {
     {
         public int spellLevel;
         public SpellSchool spellSchool;
-        public CastingTime castingTime;
         public string range;
         public SpellComponents spellComponents;
         public bool isConcentration;
@@ -32,12 +31,6 @@ namespace Spells {
         Illusion,
         Necromancy,
         Transmutation
-    }
-
-    public enum CastingTime {
-        Action,
-        BonusAction,
-        Reaction
     }
 
     [Serializable]

@@ -14,9 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: Color Spray
   actionType: 0
-  spellLevel: 0
+  spellLevel: 1
   spellSchool: 5
-  castingTime: 0
   range: Self (15 foot cone)
   spellComponents:
     isVerbal: 1

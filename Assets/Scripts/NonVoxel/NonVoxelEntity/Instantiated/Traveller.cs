@@ -172,6 +172,12 @@ namespace Instantiated {
             yield return attackResult;
         }
 
+        public IEnumerator RecoverHP(int healingAmount) {
+            // todo play healing effect and display heal amount
+            CurrHP = Mathf.Min(GetStats().maxHP, CurrHP + healingAmount);
+            yield break;
+        }
+
         public IEnumerator DealDamage(ActionSO damageAction, Damage damage, Traveller target) {
             yield return target.TakeDamage(damage);
 
