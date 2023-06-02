@@ -24,9 +24,11 @@ namespace Instantiated {
         [SerializeField] protected StatusUIController statusUIController;
         private TimerUIController timerUIController;
         private CombatManager combatManager;
+        private EffectManager effectManager;
 
         public event System.Func<Traveller, Damage, IEnumerator> onTakeDamage;
-        public event System.Func<Traveller, Traveller, Advantage, Advantage> onPerformAttack;
+        public event System.Func<Traveller, Traveller, Advantage, Advantage> onAttackRollStart;
+        public event System.Action<Traveller> onAttackRollFinished;
         public event System.Func<Traveller, IEnumerator> onCombatTurnStart;
         public event System.Func<Traveller, IEnumerator> onCombatTurnEnd;
         public event System.Func<Traveller, Advantage, IEnumerator> onAttackHit;
@@ -61,9 +63,11 @@ namespace Instantiated {
             }
         }
 
-        protected void Init(TimerUIController timerUIController, CombatManager combatManager) {
+        protected void Init(TimerUIController timerUIController, CombatManager combatManager,
+                EffectManager effectManager) {
             this.timerUIController = timerUIController;
             this.combatManager = combatManager;
+            this.effectManager = effectManager;
 
             if (GetEntity().currHP < 0) {
                 GetEntity().currHP = GetStats().maxHP;
@@ -151,8 +155,8 @@ namespace Instantiated {
         public IEnumerator PerformAttack(AttackSO attack, Traveller target, 
                 Advantage advantage = Advantage.None) {
             Advantage currAdvantageState = advantage;
-            if (onPerformAttack != null) {
-                foreach (System.Delegate handler in onPerformAttack.GetInvocationList()) {
+            if (onAttackRollStart != null) {
+                foreach (System.Delegate handler in onAttackRollStart.GetInvocationList()) {
                     var handlerCasted = (System.Func<Traveller, Traveller, Advantage, Advantage>)handler;
                     currAdvantageState = handlerCasted.Invoke(this, target, currAdvantageState);
                 }
@@ -163,6 +167,8 @@ namespace Instantiated {
                 target.GetStats().CalculateArmorClass(GetStatusEffects()), currAdvantageState));
             yield return rollAttackCoroutine.coroutine;
             AttackResult attackResult = rollAttackCoroutine.GetResult();
+
+            onAttackRollFinished?.Invoke(this);
             yield return attackResult;
         }
 
@@ -177,8 +183,9 @@ namespace Instantiated {
             }
         }
 
-        // todo - damage icon, indicator or particle effect
+        // todo - particle effect for amount taken
         private IEnumerator TakeDamage(Damage damage) {
+            yield return effectManager.GenerateHitEffect(this);
             GetEntity().currHP -= damage.amount;
 
             if (onTakeDamage != null) {

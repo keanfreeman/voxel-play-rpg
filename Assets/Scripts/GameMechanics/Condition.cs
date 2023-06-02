@@ -93,7 +93,8 @@ namespace GameMechanics {
         Light,
         MageArmor,
         SleepSpell,
-        ColorSpray
+        ColorSpray,
+        ViciousMockery
     }
 
     [Serializable]

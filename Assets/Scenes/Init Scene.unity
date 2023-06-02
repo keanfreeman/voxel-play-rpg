@@ -781,6 +781,7 @@ MonoBehaviour:
   visualRollManager: {fileID: 2076388858}
   timerUIController: {fileID: 134436095}
   combatManager: {fileID: 1613990517}
+  effectManager: {fileID: 234026431}
   mainCharacterID: {fileID: 11400000, guid: 1654ee971551b024bb477b23ff6f8211, type: 2}
   detachedCameraPrefab: {fileID: 1275296119661960477, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
   genericNonVoxelObjectPrefab: {fileID: 100008, guid: 1df8fdc65931cd340beda593a897f605, type: 3}

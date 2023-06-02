@@ -9,6 +9,7 @@ using UnityEngine.UIElements;
 using GameMechanics;
 using NonVoxelEntity;
 using Orders;
+using System;
 
 namespace Instantiated {
     public abstract class TangibleEntity : InstantiatedEntity {
@@ -79,6 +80,15 @@ namespace Instantiated {
 
         public new EntityDefinition.TangibleEntity GetEntity() {
             return (EntityDefinition.TangibleEntity)base.GetEntity();
+        }
+
+        public Vector3Int GetPointInEntityClosestTo(Vector3Int target) {
+            List<Tuple<Vector3Int, float>> pointsSorted = occupiedPositions
+                .Select((Vector3Int position) => new Tuple<Vector3Int, float>(position,
+                    Coordinates.GetDirectLineLength(position, target)))
+                .ToList();
+            pointsSorted.Sort((x, y) => x.Item2.CompareTo(y.Item2));
+            return pointsSorted[0].Item1;
         }
     }
 }

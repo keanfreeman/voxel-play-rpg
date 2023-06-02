@@ -8,6 +8,7 @@ using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static RandomManager;
+using static UnityEngine.GraphicsBuffer;
 
 public class FeatureManager : MonoBehaviour {
     [SerializeField] RandomManager randomManager;
@@ -22,7 +23,7 @@ public class FeatureManager : MonoBehaviour {
         foreach (FeatureSO feature in traveller.GetStats().features) {
             switch (feature.id) {
                 case FeatureID.PackTactics:
-                    traveller.onPerformAttack += TriggerPackTactics;
+                    traveller.onAttackRollStart += TriggerPackTactics;
                     break;
                 case FeatureID.UndeadFortitude:
                     traveller.onTakeDamage += TriggerUndeadFortitude;
@@ -68,7 +69,7 @@ public class FeatureManager : MonoBehaviour {
         }
 
         // features for all creatures
-        traveller.onPerformAttack += CheckAdvantageFromStatus;
+        traveller.onAttackRollStart += CheckAdvantageFromStatus;
         traveller.onAttackHit += CheckCriticalHitFromStatus;
     }
 
@@ -118,7 +119,8 @@ public class FeatureManager : MonoBehaviour {
     // individually
     private Advantage CheckAdvantageFromStatus(Traveller attacker, Traveller target, Advantage startAdvState) {
         Advantage currAdvState = startAdvState;
-        if (attacker.HasCondition(Condition.Blinded)) {
+        if (attacker.HasCondition(Condition.Blinded) || 
+                attacker.GetStatusEffects().ongoingEffects.ContainsKey(StatusEffect.ViciousMockery)) {
             currAdvState = AdvantageCalcs.GetNewAdvantageState(currAdvState, Advantage.Disadvantage);
         }
 
@@ -175,14 +177,29 @@ public class FeatureManager : MonoBehaviour {
         }
     }
 
-    private IEnumerator CheckGhoulClawEnd(Traveller currTurnTraveller) {
-        OngoingEffect ghoulStatusEffect = currTurnTraveller.GetStatus(StatusEffect.GhoulClaw);
+    public IEnumerator EndViciousMockeryTurnEnd(Traveller endTurnTraveller) {
+        EndViciousMockery(endTurnTraveller);
+        yield break;
+    }
+
+    public void EndViciousMockeryAttackPerformed(Traveller attacker) {
+        EndViciousMockery(attacker);
+    }
+
+    private void EndViciousMockery(Traveller statused) {
+        statused.RemoveStatus(StatusEffect.ViciousMockery);
+        statused.onCombatTurnEnd -= EndViciousMockeryTurnEnd;
+        statused.onAttackRollFinished -= EndViciousMockeryAttackPerformed;
+    }
+
+    private IEnumerator CheckGhoulClawEnd(Traveller endTurnTraveller) {
+        OngoingEffect ghoulStatusEffect = endTurnTraveller.GetStatus(StatusEffect.GhoulClaw);
         if (ghoulStatusEffect == null) {
             yield break;
         }
 
         const int DC = 10;
-        int modifier = StatModifiers.GetModifierForStat(currTurnTraveller.GetStats().constitution);
+        int modifier = StatModifiers.GetModifierForStat(endTurnTraveller.GetStats().constitution);
 
         CoroutineWithData<int> savingThrowCoroutine = new(this, visualRollManager.RollSavingThrow(
             "Rolling CON saving throw to end Paralysis from Ghoul Claw", modifier, 10));
@@ -190,8 +207,8 @@ public class FeatureManager : MonoBehaviour {
         int roll = savingThrowCoroutine.GetResult();
 
         if (roll >= DC || ghoulStatusEffect.secondsLeft <= TimeUtil.ONE_TURN) {
-            currTurnTraveller.RemoveStatus(StatusEffect.GhoulClaw);
-            currTurnTraveller.onCombatTurnEnd -= CheckGhoulClawEnd;
+            endTurnTraveller.RemoveStatus(StatusEffect.GhoulClaw);
+            endTurnTraveller.onCombatTurnEnd -= CheckGhoulClawEnd;
         }
     }
 

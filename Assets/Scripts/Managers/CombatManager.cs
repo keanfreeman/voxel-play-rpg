@@ -23,7 +23,6 @@ public class CombatManager : MonoBehaviour
     [SerializeField] DetachedCamera detachedCamera;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
     [SerializeField] Pathfinder pathfinder;
-    [SerializeField] EffectManager effectManager;
     [SerializeField] TimerUIController timerUIController;
     [SerializeField] CombatUI combatUI;
     [SerializeField] MessageManager messageManager;
@@ -208,7 +207,6 @@ public class CombatManager : MonoBehaviour
             Debug.Log($"Traveller rolled {damageRoll} for their damage roll.");
             yield return attacker.DealDamage(attack,
                 new Damage(attack.damageType, damageRoll), target);
-            yield return effectManager.GenerateHitEffect(target);
         }
 
         if (gameStateManager.controlState == ControlState.COMBAT) {

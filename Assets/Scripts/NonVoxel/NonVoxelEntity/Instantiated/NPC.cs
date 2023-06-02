@@ -45,7 +45,8 @@ namespace Instantiated {
                 CameraManager cameraManager, PartyManager partyManager, 
                 GameStateManager gameStateManager, FeatureManager featureManager, 
                 RandomManager randomManager, VisualRollManager visualRollManager, 
-                TimerUIController timerUIController, CombatManager combatManager) {
+                TimerUIController timerUIController, CombatManager combatManager,
+                EffectManager effectManager) {
             this.nonVoxelWorld = nonVoxelWorld;
             this.spriteMovement = spriteMovement;
             this.rng = rng;
@@ -69,7 +70,7 @@ namespace Instantiated {
                 StartCoroutine(MoveCoroutine());
             }
 
-            base.Init(timerUIController, combatManager);
+            base.Init(timerUIController, combatManager, effectManager);
         }
 
         private IEnumerator MoveCoroutine() {

@@ -108,7 +108,7 @@ public class VisualRollManager : MonoBehaviour {
         yield return finalNum;
     }
 
-    public IEnumerator RollDamage(List<Die> damageRolls, bool isCritical) {
+    public IEnumerator RollDamage(List<Die> damageRolls, bool isCritical = false) {
         // for flat damage
         if (damageRolls.Count == 1 && damageRolls[0].numDice == 0) {
             int damage = damageRolls[0].modifier;

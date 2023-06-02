@@ -101,6 +101,9 @@ public class ActionManager : MonoBehaviour
             else if (spell.actionName == "Burning Hands") {
                 yield return PerformBurningHands(performer, spell, spellSlots);
             }
+            else if (spell.actionName == "Vicious Mockery") {
+                yield return PerformViciousMockery(performer, spell);
+            }
         }
         else if (actionType == typeof(SpecialActionSO)) {
             SpecialActionSO specialActionSO = (SpecialActionSO)action;
@@ -202,6 +205,14 @@ public class ActionManager : MonoBehaviour
             yield break;
         }
         Vector3Int targetPosition = cwd.GetResult();
+
+        int sleepRangeInPoints = 90 / 5;
+        Vector3Int closestTravellerPoint = performer.GetPointInEntityClosestTo(targetPosition);
+        int selectedDistance = Coordinates.NumPointsBetween(closestTravellerPoint, targetPosition);
+        if (selectedDistance > sleepRangeInPoints) {
+            messageManager.DisplayMessage("Selected a position out of range.");
+            yield break;
+        }
 
         // get creatures in radius
         List<Vector3Int> pointsInSphere = Coordinates.GetPointsInSphereCenteredOn(targetPosition, 
@@ -380,10 +391,73 @@ public class ActionManager : MonoBehaviour
             yield break;
         }
 
+        if (!nonVoxelWorld.GetAdjacentTravellers(performer).Contains(target)) {
+            messageManager.DisplayMessage("Must choose an adjacent creature.");
+            yield return null;
+            yield break;
+        }
+
         // todo - use time specified in spell
         target.AddStatus(new OngoingEffect(StatusEffect.MageArmor, TimeUtil.HOUR * 8));
 
         spellSlots.DecrementUses();
+        if (gameStateManager.controlState == ControlState.COMBAT) {
+            combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
+        }
+    }
+
+    private IEnumerator PerformViciousMockery(Traveller performer, SpellSO spell) {
+        messageManager.DisplayMessage(new Message("Please select a creature in range.", isPermanent: true));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer));
+        yield return cwd.coroutine;
+
+        messageManager.StopDisplayingPermanentMessages();
+        if (!cwd.HasResult()) {
+            messageManager.DisplayMessage("Cancelled selection.");
+            yield return null;
+            yield break;
+        }
+        Vector3Int targetPosition = cwd.GetResult();
+
+        // todo - do things like range enforcement at a higher level so I don't have to check per-spell.
+        // will need to have range broken out of string, which is difficult
+        int viciousMockeryRangeInPoints = 60 / 5;
+        Vector3Int closestTravellerPoint = performer.GetPointInEntityClosestTo(targetPosition);
+        int selectedDistance = Coordinates.NumPointsBetween(closestTravellerPoint, targetPosition);
+        if (selectedDistance > viciousMockeryRangeInPoints) {
+            messageManager.DisplayMessage("Selected a position out of range.");
+            yield break;
+        }
+
+        InstantiatedEntity entity = nonVoxelWorld.GetEntityFromPosition(targetPosition);
+        if (entity == null || !TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(Traveller))) {
+            messageManager.DisplayMessage("Must choose a creature as a target.");
+            yield return null;
+            yield break;
+        }
+        Traveller target = (Traveller)entity;
+
+        // todo - enforce hearing requirement
+
+        int wisMod = StatModifiers.GetModifierForStat(target.GetStats().wisdom);
+        int dc = performer.GetStats().GetSpellcastingFeature().spellSaveDC;
+        CoroutineWithData<int> wisSaveCoroutine = new(this, visualRollManager.RollSavingThrow(
+                "Rolling saving throw for Vicious Mockery", wisMod, dc));
+        yield return wisSaveCoroutine.coroutine;
+        int rollResult = wisSaveCoroutine.GetResult();
+
+        if (rollResult < dc) {
+            CoroutineWithData<int> damageCoroutine = new(this, visualRollManager
+                .RollDamage(new List<Die> { new(1, 4) }));
+            yield return damageCoroutine.coroutine;
+            int totalDamage = damageCoroutine.GetResult();
+
+            yield return performer.DealDamage(spell, new Damage(DamageType.Psychic, totalDamage), target);
+            target.AddStatus(new OngoingEffect(StatusEffect.ViciousMockery, TimeUtil.MINUTE));
+            target.onCombatTurnEnd += featureManager.EndViciousMockeryTurnEnd;
+            target.onAttackRollFinished += featureManager.EndViciousMockeryAttackPerformed;
+        }
+
         if (gameStateManager.controlState == ControlState.COMBAT) {
             combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
         }
@@ -409,6 +483,12 @@ public class ActionManager : MonoBehaviour
             yield break;
         }
         Traveller target = (Traveller)entity;
+
+        if (!nonVoxelWorld.GetAdjacentTravellers(performer).Contains(target)) {
+            messageManager.DisplayMessage("Must choose an adjacent creature.");
+            yield return null;
+            yield break;
+        }
 
         if (target.GetFaction() != EntityDefinition.Faction.PLAYER) {
             int spellSaveDC = performer.GetStats().GetSpellcastingFeature().spellSaveDC;
