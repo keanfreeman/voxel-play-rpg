@@ -17,6 +17,7 @@ public class FeatureManager : MonoBehaviour {
     [SerializeField] CombatManager combatManager;
     [SerializeField] VisualRollManager visualRollManager;
     [SerializeField] MessageManager messageManager;
+    [SerializeField] PromptUIController promptUIController;
 
     public void SetUpFeatures(Traveller traveller) {
         List<Resource> resourcesToAdd = new();
@@ -35,6 +36,9 @@ public class FeatureManager : MonoBehaviour {
                     resourcesToAdd.Add(feature.providedResources[0]);
                     break;
                 case FeatureID.SpellSlots:
+                    resourcesToAdd.Add(feature.providedResources[0]);
+                    break;
+                case FeatureID.BardicInspiration:
                     resourcesToAdd.Add(feature.providedResources[0]);
                     break;
                 case FeatureID.SneakAttack:
@@ -71,6 +75,23 @@ public class FeatureManager : MonoBehaviour {
         // features for all creatures
         traveller.onAttackRollStart += CheckAdvantageFromStatus;
         traveller.onAttackHit += CheckCriticalHitFromStatus;
+    }
+
+    public IEnumerator CheckBardicInspiration(Traveller attacker) {
+        // for now, only support PCs
+        if (attacker.GetType() != typeof(PlayerCharacter) 
+                || !attacker.HasStatus(StatusEffect.BardicInspiration)) {
+            yield return false;
+            yield break;
+        }
+
+        CoroutineWithData<bool> cwd = new(this, promptUIController.DisplayPrompt(
+            "Bardic Inspiration", "Would you like to use Bardic Inspiration to get a bonus to this roll?",
+            false));
+        yield return cwd.coroutine;
+        bool respondedYes = cwd.GetResult();
+        if (respondedYes) attacker.RemoveStatus(StatusEffect.BardicInspiration);
+        yield return respondedYes;
     }
 
     // attack is unused
@@ -119,8 +140,7 @@ public class FeatureManager : MonoBehaviour {
     // individually
     private Advantage CheckAdvantageFromStatus(Traveller attacker, Traveller target, Advantage startAdvState) {
         Advantage currAdvState = startAdvState;
-        if (attacker.HasCondition(Condition.Blinded) || 
-                attacker.GetStatusEffects().ongoingEffects.ContainsKey(StatusEffect.ViciousMockery)) {
+        if (attacker.HasCondition(Condition.Blinded) || attacker.HasStatus(StatusEffect.ViciousMockery)) {
             currAdvState = AdvantageCalcs.GetNewAdvantageState(currAdvState, Advantage.Disadvantage);
         }
 
@@ -158,7 +178,7 @@ public class FeatureManager : MonoBehaviour {
         int modifier = StatModifiers.GetModifierForStat(target.GetStats().constitution);
 
         CoroutineWithData<int> savingThrowCoroutine = new(this, visualRollManager.RollSavingThrow(
-            "Rolling CON saving throw for Ghoul Claw", modifier, DC));
+            target, "Rolling CON saving throw for Ghoul Claw", modifier, DC));
         yield return savingThrowCoroutine.coroutine;
         int roll = savingThrowCoroutine.GetResult();
 
@@ -202,7 +222,7 @@ public class FeatureManager : MonoBehaviour {
         int modifier = StatModifiers.GetModifierForStat(endTurnTraveller.GetStats().constitution);
 
         CoroutineWithData<int> savingThrowCoroutine = new(this, visualRollManager.RollSavingThrow(
-            "Rolling CON saving throw to end Paralysis from Ghoul Claw", modifier, 10));
+            endTurnTraveller, "Rolling CON saving throw to end Paralysis from Ghoul Claw", modifier, 10));
         yield return savingThrowCoroutine.coroutine;
         int roll = savingThrowCoroutine.GetResult();
 
@@ -262,7 +282,7 @@ public class FeatureManager : MonoBehaviour {
         int modifier = StatModifiers.GetModifierForStat(instance.GetStats().constitution);
 
         CoroutineWithData<int> savingThrowCoroutine = new(this, visualRollManager.RollSavingThrow(
-            "Rolling CON saving throw for Zombie's Undead Fortitude", modifier, difficultyClass));
+            instance, "Rolling CON saving throw for Zombie's Undead Fortitude", modifier, difficultyClass));
         yield return savingThrowCoroutine.coroutine;
         int roll = savingThrowCoroutine.GetResult();
 

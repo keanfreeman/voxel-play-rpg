@@ -25,7 +25,10 @@ namespace GameMechanics {
         SneakAttack,
 
         // wizard
-        SpellSlots
+        SpellSlots,
+
+        // bard
+        BardicInspiration
     }
 
     public enum AttackFeature {

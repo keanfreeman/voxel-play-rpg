@@ -51,6 +51,7 @@ namespace Instantiated {
             set { GetEntity().currHP = value; }
         }
 
+        // todo - break this entirely out of traveller
         public CurrentStatus GetStatusEffects() {
             return GetEntity().statusEffects;
         }
@@ -99,6 +100,10 @@ namespace Instantiated {
             // todo, unify these controls
             GetStatusEffects().Set(ongoingEffect.cause, ongoingEffect);
             statusUIController.SetStatuses(GetStatusEffects());
+        }
+
+        public bool HasStatus(StatusEffect statusEffect) {
+            return GetStatusEffects().ongoingEffects.ContainsKey(statusEffect);
         }
 
         public void RemoveStatus(StatusEffect statusEffect, bool rerender = true) {
@@ -158,12 +163,13 @@ namespace Instantiated {
             if (onAttackRollStart != null) {
                 foreach (System.Delegate handler in onAttackRollStart.GetInvocationList()) {
                     var handlerCasted = (System.Func<Traveller, Traveller, Advantage, Advantage>)handler;
-                    currAdvantageState = handlerCasted.Invoke(this, target, currAdvantageState);
+                    Advantage nextAdvantage = handlerCasted.Invoke(this, target, currAdvantageState);
+                    currAdvantageState = AdvantageCalcs.GetNewAdvantageState(currAdvantageState, nextAdvantage);
                 }
             }
 
             CoroutineWithData<AttackResult> rollAttackCoroutine = new(this, 
-                visualRollManager.RollAttack(attack.attackRoll.modifier,
+                visualRollManager.RollAttack(this, attack.attackRoll.modifier,
                 target.GetStats().CalculateArmorClass(GetStatusEffects()), currAdvantageState));
             yield return rollAttackCoroutine.coroutine;
             AttackResult attackResult = rollAttackCoroutine.GetResult();

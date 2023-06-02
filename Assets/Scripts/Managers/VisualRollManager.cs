@@ -3,12 +3,15 @@ using Instantiated;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static RandomManager;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class VisualRollManager : MonoBehaviour {
     [SerializeField] DiceThrowerManager diceThrowerManager;
     [SerializeField] MessageManager messageManager;
+    [SerializeField] FeatureManager featureManager;
 
     public IEnumerator RollGeneric(string message, List<Die> diceToBeRolled) {
         messageManager.DisplayMessage(new Message(message, true));
@@ -23,7 +26,7 @@ public class VisualRollManager : MonoBehaviour {
         yield return rollResult;
     }
 
-    public IEnumerator RollAttack(int modifier, int targetAC, Advantage advantage) {
+    public IEnumerator RollAttack(Traveller attacker, int modifier, int targetAC, Advantage advantage) {
         string displayText = "Rolling attack roll";
 
         List<Die> diceToBeRolled = new();
@@ -34,12 +37,13 @@ public class VisualRollManager : MonoBehaviour {
             diceToBeRolled.Add(new(2, 20));
             displayText += advantage == Advantage.Advantage ? " with Advantage" : " with Disadvantage";
         }
-        messageManager.DisplayMessage(new Message(displayText, true));
 
+        messageManager.DisplayMessage(new Message(displayText, true));
         CoroutineWithData<DiceResult> coroutineWithData = new(this, 
             diceThrowerManager.RollDice(diceToBeRolled));
         yield return coroutineWithData.coroutine;
         DiceResult rollResult = coroutineWithData.GetResult();
+        messageManager.StopDisplayingPermanentMessages();
 
         int finalNum;
         if (advantage == Advantage.Advantage) {
@@ -54,6 +58,10 @@ public class VisualRollManager : MonoBehaviour {
         bool isCritical = finalNum == 20;
         finalNum += modifier;
 
+        CoroutineWithData<int> bardicInspirationCoroutine = new(this, BardicInspirationBonus(attacker));
+        yield return bardicInspirationCoroutine.coroutine;
+        finalNum += bardicInspirationCoroutine.GetResult();
+
         if (finalNum >= targetAC) {
             if (isCritical) {
                 displayText = "Critical Hit!";
@@ -62,14 +70,14 @@ public class VisualRollManager : MonoBehaviour {
         }
         else displayText = $"{finalNum} Misses!";
 
-        messageManager.StopDisplayingPermanentMessages();
         yield return messageManager.DisplayMessageCoroutine(new Message(displayText));
 
         yield return new AttackResult(finalNum, isCritical, advantage);
     }
 
-    public IEnumerator RollSavingThrow(string displayText, int modifier, int targetDC, 
+    public IEnumerator RollSavingThrow(Traveller saver, string displayText, int modifier, int targetDC, 
             Advantage advantage = Advantage.None) {
+
         List<Die> diceToBeRolled = new();
         if (advantage != Advantage.Advantage && advantage != Advantage.Disadvantage) {
             diceToBeRolled.Add(new(1, 20));
@@ -78,12 +86,13 @@ public class VisualRollManager : MonoBehaviour {
             diceToBeRolled.Add(new(2, 20));
             displayText += advantage == Advantage.Advantage ? " with Advantage" : " with Disadvantage";
         }
-        messageManager.DisplayMessage(new Message(displayText, true));
 
+        messageManager.DisplayMessage(new Message(displayText, true));
         CoroutineWithData<DiceResult> coroutineWithData = new(this,
             diceThrowerManager.RollDice(diceToBeRolled));
         yield return coroutineWithData.coroutine;
         DiceResult rollResult = coroutineWithData.GetResult();
+        messageManager.StopDisplayingPermanentMessages();
 
         int finalNum;
         if (advantage == Advantage.Advantage) {
@@ -97,15 +106,34 @@ public class VisualRollManager : MonoBehaviour {
         }
         finalNum += modifier;
 
+        CoroutineWithData<int> bardicInspirationCoroutine = new(this, BardicInspirationBonus(saver));
+        yield return bardicInspirationCoroutine.coroutine;
+        finalNum += bardicInspirationCoroutine.GetResult();
+
         if (finalNum >= targetDC) {
             displayText = $"{finalNum} Succeeds!";
         }
         else displayText = $"{finalNum} Fails! DC{targetDC}";
 
-        messageManager.StopDisplayingPermanentMessages();
         yield return messageManager.DisplayMessageCoroutine(new Message(displayText));
 
         yield return finalNum;
+    }
+
+    private IEnumerator BardicInspirationBonus(Traveller inspirationUser) {
+        CoroutineWithData<bool> checkUseCoroutine = new(this,
+            featureManager.CheckBardicInspiration(inspirationUser));
+        yield return checkUseCoroutine.coroutine;
+        bool usedBardicInspiration = checkUseCoroutine.GetResult();
+        if (usedBardicInspiration) {
+            CoroutineWithData<DiceResult> rollBardicInspirationCoroutine = new(this,
+                RollGeneric("Rolling for Bardic Inspiration.", new List<Die> { new(1, 6) }));
+            yield return rollBardicInspirationCoroutine.coroutine;
+            yield return rollBardicInspirationCoroutine.GetResult().sum;
+        }
+        else {
+            yield return 0;
+        }
     }
 
     public IEnumerator RollDamage(List<Die> damageRolls, bool isCritical = false) {

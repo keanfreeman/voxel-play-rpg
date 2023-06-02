@@ -94,7 +94,10 @@ namespace GameMechanics {
         MageArmor,
         SleepSpell,
         ColorSpray,
-        ViciousMockery
+        ViciousMockery,
+
+        // Features
+        BardicInspiration
     }
 
     [Serializable]

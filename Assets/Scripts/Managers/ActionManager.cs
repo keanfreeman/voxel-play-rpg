@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using VoxelPlayDemos;
 
@@ -115,7 +116,10 @@ public class ActionManager : MonoBehaviour
             SpecialActionSO specialActionSO = (SpecialActionSO)action;
             // todo - use non-string identifier
             if (specialActionSO.actionName == "Second Wind") {
-                yield return PerformSecondWind(performer);
+                yield return PerformSecondWind(performer, specialActionSO);
+            }
+            if (specialActionSO.actionName == "Bardic Inspiration") {
+                yield return PerformBardicInspiration(performer, specialActionSO);
             }
         }
         else {
@@ -187,9 +191,10 @@ public class ActionManager : MonoBehaviour
         }
         Traveller target = (Traveller)entity;
 
-        if (!nonVoxelWorld.GetAdjacentTravellers(performer).Contains(target)) {
+        int selectedDistance = Coordinates.NumPointsBetween(
+            performer.GetPointInEntityClosestTo(targetPosition), targetPosition);
+        if (selectedDistance > 1) {
             messageManager.DisplayMessage("Must choose an adjacent creature.");
-            yield return null;
             yield break;
         }
 
@@ -222,9 +227,10 @@ public class ActionManager : MonoBehaviour
         }
         Traveller target = (Traveller)entity;
 
-        if (!nonVoxelWorld.GetAdjacentTravellers(performer).Contains(target)) {
+        int selectedDistance = Coordinates.NumPointsBetween(
+            performer.GetPointInEntityClosestTo(targetPosition), targetPosition);
+        if (selectedDistance > 1) {
             messageManager.DisplayMessage("Must choose an adjacent creature.");
-            yield return null;
             yield break;
         }
 
@@ -396,7 +402,7 @@ public class ActionManager : MonoBehaviour
         foreach (Traveller affectedCreature in affectedCreatures) {
             int dexMod = StatModifiers.GetModifierForStat(affectedCreature.GetStats().dexterity);
             CoroutineWithData<int> burningHandsCoroutine = new(this, visualRollManager.RollSavingThrow(
-                "Rolling Dexterity saving throw.", dexMod, saveDC));
+                affectedCreature, "Rolling Dexterity saving throw.", dexMod, saveDC));
             yield return burningHandsCoroutine.coroutine;
             int saveResult = burningHandsCoroutine.GetResult();
 
@@ -499,9 +505,10 @@ public class ActionManager : MonoBehaviour
             yield break;
         }
 
-        if (!nonVoxelWorld.GetAdjacentTravellers(performer).Contains(target)) {
+        int selectedDistance = Coordinates.NumPointsBetween(
+            performer.GetPointInEntityClosestTo(targetPosition), targetPosition);
+        if (selectedDistance > 1) {
             messageManager.DisplayMessage("Must choose an adjacent creature.");
-            yield return null;
             yield break;
         }
 
@@ -550,7 +557,7 @@ public class ActionManager : MonoBehaviour
         int wisMod = StatModifiers.GetModifierForStat(target.GetStats().wisdom);
         int dc = performer.GetStats().GetSpellcastingFeature().spellSaveDC;
         CoroutineWithData<int> wisSaveCoroutine = new(this, visualRollManager.RollSavingThrow(
-                "Rolling saving throw for Vicious Mockery", wisMod, dc));
+                target, "Rolling saving throw for Vicious Mockery", wisMod, dc));
         yield return wisSaveCoroutine.coroutine;
         int rollResult = wisSaveCoroutine.GetResult();
 
@@ -592,16 +599,17 @@ public class ActionManager : MonoBehaviour
         }
         Traveller target = (Traveller)entity;
 
-        if (!nonVoxelWorld.GetAdjacentTravellers(performer).Contains(target)) {
+        int selectedDistance = Coordinates.NumPointsBetween(performer.GetPointInEntityClosestTo(targetPosition), 
+            targetPosition);
+        if (selectedDistance > 1) {
             messageManager.DisplayMessage("Must choose an adjacent creature.");
-            yield return null;
             yield break;
         }
 
         if (target.GetFaction() != EntityDefinition.Faction.PLAYER) {
             int spellSaveDC = performer.GetStats().GetSpellcastingFeature().spellSaveDC;
             CoroutineWithData<int> dexSaveCoroutine = new(this, visualRollManager.RollSavingThrow(
-                "Rolling saving throw for Light", 
+                target, "Rolling saving throw for Light", 
                 StatModifiers.GetModifierForStat(target.GetStats().dexterity), spellSaveDC));
             yield return dexSaveCoroutine.coroutine;
             int result = dexSaveCoroutine.GetResult();
@@ -619,7 +627,7 @@ public class ActionManager : MonoBehaviour
         }
     }
 
-    private IEnumerator PerformSecondWind(Traveller performer) {
+    private IEnumerator PerformSecondWind(Traveller performer, SpecialActionSO specialActionSO) {
         ResourceStatus resourceStatus = performer.GetResources().resourceStatuses
             .GetValueOrDefault(GameMechanics.ResourceID.SecondWind, null);
         if (resourceStatus.remainingUses < 1) {
@@ -638,7 +646,7 @@ public class ActionManager : MonoBehaviour
 
         resourceStatus.DecrementUses();
         if (gameStateManager.controlState == ControlState.COMBAT) {
-            combatManager.CombatResources.ConsumeResource(performer, ActionType.BonusAction);
+            combatManager.CombatResources.ConsumeResource(performer, specialActionSO.actionType);
         }
 
         // todo - scale with fighter level
@@ -654,5 +662,50 @@ public class ActionManager : MonoBehaviour
         messageManager.DisplayMessage($"Recovered {gained} hit points!");
 
         inputManager.UnlockUIControls(combatUI);
+    }
+
+    private IEnumerator PerformBardicInspiration(Traveller performer, SpecialActionSO specialActionSO) {
+        ResourceStatus bardicInspirationResource = performer.GetResources().resourceStatuses
+            .GetValueOrDefault(GameMechanics.ResourceID.BardicInspiration, null);
+        if (bardicInspirationResource.remainingUses < 1) {
+            messageManager.DisplayMessage("Ran out of uses of Bardic Inspiration.");
+            yield break;
+        }
+
+        messageManager.DisplayMessage(new Message("Please select a creature in range.", isPermanent: true));
+        CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer));
+        yield return cwd.coroutine;
+
+        messageManager.StopDisplayingPermanentMessages();
+        if (!cwd.HasResult()) {
+            messageManager.DisplayMessage("Cancelled selection.");
+            yield return null;
+            yield break;
+        }
+        Vector3Int targetPosition = cwd.GetResult();
+
+        InstantiatedEntity entity = nonVoxelWorld.GetEntityFromPosition(targetPosition);
+        if (entity == null || !TypeUtils.IsSameTypeOrIsSubclass(entity, typeof(Traveller))) {
+            messageManager.DisplayMessage("Must choose a creature as a target.");
+            yield return null;
+            yield break;
+        }
+        Traveller target = (Traveller)entity;
+
+        int bardicInspirationRangeInPoints = 60 / 5;
+        Vector3Int closestTravellerPoint = performer.GetPointInEntityClosestTo(targetPosition);
+        int selectedDistance = Coordinates.NumPointsBetween(closestTravellerPoint, targetPosition);
+        if (selectedDistance > bardicInspirationRangeInPoints) {
+            messageManager.DisplayMessage("Selected a position out of range.");
+            yield break;
+        }
+
+        // apply a status
+        target.AddStatus(new OngoingEffect(StatusEffect.BardicInspiration, TimeUtil.MINUTE * 10));
+        performer.GetResources().DeductUses(GameMechanics.ResourceID.BardicInspiration);
+
+        if (gameStateManager.controlState == ControlState.COMBAT) {
+            combatManager.CombatResources.ConsumeResource(performer, specialActionSO.actionType);
+        }
     }
 }

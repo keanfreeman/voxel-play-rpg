@@ -76,6 +76,10 @@ public class GameStateManager : MonoBehaviour
             inputManager.UnlockDetachedControls();
             inputManager.LockUIControls();
         }
+        else if (controlState == ControlState.UI && newState == ControlState.COMBAT) {
+            inputManager.LockUIControls();
+            inputManager.UnlockDetachedControls();
+        }
 
         controlState = newState;
     }

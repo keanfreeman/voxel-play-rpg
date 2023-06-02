@@ -59,6 +59,7 @@ public class BuildShadow : MonoBehaviour
         // display build time cost prompt
         if (buildOption != TopBuildOption.Voxels || drawStart.HasValue) {
             string timeCostString;
+            System.Action followupMethod;
             switch (buildOption) {
                 case TopBuildOption.Voxels:
                     int numVoxels;
@@ -75,29 +76,35 @@ public class BuildShadow : MonoBehaviour
 
                     timeCostString = promptUIController.GetTimeCostStringFromTimes(
                         0, 0, numVoxels * 30, 0);
-                    StartCoroutine(promptUIController.DisplayPrompt(CONSTRUCTION_TIME_COST, 
-                        string.Format(CONSTRUCTION_PROMPT_BODY, timeCostString), BuildVoxels));
+                    followupMethod = BuildVoxels;
                     break;
                 case TopBuildOption.Objects:
                     timeCostString = promptUIController.GetTimeCostStringFromTimes(
                         0, 0, 30, 0);
-                    StartCoroutine(promptUIController.DisplayPrompt(CONSTRUCTION_TIME_COST, 
-                        string.Format(CONSTRUCTION_PROMPT_BODY, timeCostString), BuildObject));
+                    followupMethod = BuildObject;
                     break;
                 case TopBuildOption.Destroy:
                     timeCostString = promptUIController.GetTimeCostStringFromTimes(
                         0, 0, 30, 0);
-                    StartCoroutine(promptUIController.DisplayPrompt(CONSTRUCTION_TIME_COST,
-                        string.Format(CONSTRUCTION_PROMPT_BODY, timeCostString), DestroyVoxel));
+                    followupMethod = DestroyVoxel;
                     break;
                 default:
                     throw new NotImplementedException($"Did not implement prompt for {buildOption}");
             }
+            StartCoroutine(WaitForPromptResponse(timeCostString, followupMethod));
         }
         else {
             drawStart = currVoxel;
             DrawVoxelShadow(currVD, drawStart.Value, drawStart.Value, rotation);
         }
+    }
+
+    private IEnumerator WaitForPromptResponse(string timeCostString, System.Action followupMethod) {
+        CoroutineWithData<bool> cwd = new(this, promptUIController.DisplayPrompt(CONSTRUCTION_TIME_COST,
+                        string.Format(CONSTRUCTION_PROMPT_BODY, timeCostString)));
+        yield return cwd.coroutine;
+        bool respondedYes = cwd.GetResult();
+        if (respondedYes) followupMethod.Invoke();
     }
 
     public void HandleBuildCancel() {

@@ -706,6 +706,7 @@ MonoBehaviour:
   promptUIDocument: {fileID: 539451387}
   gameStateManager: {fileID: 955022268}
   constructionUI: {fileID: 1861321071}
+  combatUI: {fileID: 829311307}
 --- !u!1 &582458976
 GameObject:
   m_ObjectHideFlags: 0
@@ -1415,6 +1416,7 @@ MonoBehaviour:
   combatManager: {fileID: 1613990517}
   visualRollManager: {fileID: 2076388858}
   messageManager: {fileID: 1627379086}
+  promptUIController: {fileID: 539451388}
 --- !u!1 &983819851
 GameObject:
   m_ObjectHideFlags: 0
@@ -1902,7 +1904,6 @@ MonoBehaviour:
   detachedCamera: {fileID: 848129494}
   nonVoxelWorld: {fileID: 1135948956}
   pathfinder: {fileID: 1169761465}
-  effectManager: {fileID: 234026431}
   timerUIController: {fileID: 134436095}
   combatUI: {fileID: 829311307}
   messageManager: {fileID: 1627379086}
@@ -2366,6 +2367,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   diceThrowerManager: {fileID: 1146237439}
   messageManager: {fileID: 1627379086}
+  featureManager: {fileID: 963889380}
 --- !u!1 &2106943937
 GameObject:
   m_ObjectHideFlags: 0

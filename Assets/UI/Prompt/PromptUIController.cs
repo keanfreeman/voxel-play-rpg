@@ -10,6 +10,7 @@ public class PromptUIController : MonoBehaviour
     [SerializeField] UIDocument promptUIDocument;
     [SerializeField] GameStateManager gameStateManager;
     [SerializeField] ConstructionUI constructionUI;
+    [SerializeField] CombatUI combatUI;
 
     VisualElement wholeScreen;
     Label titleLabel;
@@ -17,7 +18,8 @@ public class PromptUIController : MonoBehaviour
     Button yesButton;
     Button noButton;
 
-    Action currYesHandler = null;
+    bool isConstructionUI;
+    bool? isYesSelection = null;
 
     private void Awake() {
         wholeScreen = promptUIDocument.rootVisualElement.Q<VisualElement>("WholeScreen");
@@ -31,17 +33,36 @@ public class PromptUIController : MonoBehaviour
         Hide();
     }
 
-    public IEnumerator DisplayPrompt(string title, string body, Action yesHandler) {
-        constructionUI.SetDisplayState(false);
+    public IEnumerator DisplayPrompt(string title, string body, bool isConstructionUI = true) {
+        this.isConstructionUI = isConstructionUI;
+        if (isConstructionUI) {
+            constructionUI.SetDisplayState(false);
+        }
+        else {
+            combatUI.SetDisplayState(false);
+        }
 
         titleLabel.text = title;
         bodyLabel.text = body;
-        currYesHandler = yesHandler;
 
         yield return gameStateManager.SetControlState(ControlState.UI);
 
         Show();
         yesButton.Focus();
+
+        while (!isYesSelection.HasValue) {
+            yield return null;
+        }
+
+        if (isConstructionUI) {
+            yield return gameStateManager.SetControlState(ControlState.DETACHED);
+        }
+        else {
+            yield return gameStateManager.SetControlState(ControlState.COMBAT);
+        }
+
+        yield return isYesSelection.Value;
+        isYesSelection = null;
     }
 
     public string GetTimeCostStringFromTimes(int days, int hours, int minutes, int seconds) {
@@ -83,17 +104,27 @@ public class PromptUIController : MonoBehaviour
     }
 
     private void OnYesPress() {
-        currYesHandler?.Invoke();
-        currYesHandler = null;
+        isYesSelection = true;
         Hide();
-        StartCoroutine(gameStateManager.SetControlState(ControlState.DETACHED));
-        constructionUI.SetDisplayState(true);
+
+        if (isConstructionUI) {
+            constructionUI.SetDisplayState(true);
+        }
+        else {
+            combatUI.SetDisplayState(true);
+        }
     }
 
     private void OnNoPress() {
+        isYesSelection = false;
         Hide();
-        StartCoroutine(gameStateManager.SetControlState(ControlState.DETACHED));
-        constructionUI.SetDisplayState(true);
+
+        if (isConstructionUI) {
+            constructionUI.SetDisplayState(true);
+        }
+        else {
+            combatUI.SetDisplayState(true);
+        }
     }
 
     private void Hide() {

@@ -24,6 +24,7 @@ namespace GameMechanics {
 
     public enum ResourceID {
         SecondWind,
-        SpellSlots
+        SpellSlots,
+        BardicInspiration
     }
 }
