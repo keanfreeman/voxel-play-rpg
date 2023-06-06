@@ -1,3 +1,4 @@
+using DieNamespace;
 using GameMechanics;
 using NonVoxelEntity;
 using System.Collections;
@@ -10,6 +11,7 @@ public abstract class StatsSO : ScriptableObject
     // Speed in feet per 6 seconds
     public int baseSpeed = 30;
     public int maxHP;
+    public Die hitDice;
     public EntitySize size = EntitySize.MEDIUM;
     public CreatureType creatureType = CreatureType.Humanoid;
 
@@ -33,6 +35,10 @@ public abstract class StatsSO : ScriptableObject
     }
 
     public abstract int CalculateArmorClass(CurrentStatus currentStatus);
+
+    public bool HasFeature(FeatureID featureID) {
+        return features.Where((FeatureSO feature) => feature.id == featureID).Count() > 0;
+    }
 }
 
 public enum CreatureType {

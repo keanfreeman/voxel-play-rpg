@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Saving;
+using Orders;
 
 public class NonVoxelManager : MonoBehaviour
 {
@@ -113,6 +114,8 @@ public class NonVoxelManager : MonoBehaviour
 
                     instantiatedNVObject.Init(nonVoxelWorld, nonVoxelObject, identity);
                     nonVoxelWorld.AddTangibleEntity(nonVoxelObject, instantiatedNVObject);
+
+                    AddBedInteraction(instantiatedNVObject);
                 }
             }
             else {
@@ -157,5 +160,11 @@ public class NonVoxelManager : MonoBehaviour
 
         nonVoxelWorld.AddTangibleEntity(playerInfo, playerInstance);
         return playerInstance;
+    }
+
+    private void AddBedInteraction(Instantiated.TangibleObject instantiatedNVObject) {
+        if (instantiatedNVObject.objectIdentity.name == "Bed") {
+            instantiatedNVObject.SetInteractionOrders(new OrderGroup(new PromptRestOrder()));
+        }
     }
 }

@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseSpeed: 40
   maxHP: 11
+  hitDice:
+    numDice: 2
+    diceSize: 8
+    modifier: 0
   size: 3
   creatureType: 1
   strength: 12

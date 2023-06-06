@@ -26,6 +26,7 @@ namespace GameMechanics {
 
         // wizard
         SpellSlots,
+        ArcaneRecovery,
 
         // bard
         BardicInspiration

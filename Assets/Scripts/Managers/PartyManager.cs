@@ -19,9 +19,11 @@ public class PartyManager : MonoBehaviour, ISaveable
     public PlayerCharacter mainCharacter { get; private set; }
     public List<PlayerCharacter> partyMembers { get; private set; } = new List<PlayerCharacter>();
     public PlayerCharacter currControlledCharacter { get; private set; }
+    public bool usedShortRest { get; set; }
 
     public void PopulateSaveData(SaveData saveData) {
         saveData.currControlledCharacter = currControlledCharacter.GetEntity();
+        saveData.usedShortRest = usedShortRest;
     }
 
     public IEnumerator LoadFromSaveData(SaveData saveData) {
@@ -31,6 +33,7 @@ public class PartyManager : MonoBehaviour, ISaveable
                 SetCurrControlledCharacter(pc);
             }
         }
+        usedShortRest = saveData.usedShortRest;
         yield return null;
     }
 

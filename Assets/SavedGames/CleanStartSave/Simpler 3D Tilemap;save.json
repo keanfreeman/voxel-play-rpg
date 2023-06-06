@@ -67,39 +67,6 @@
           },
           {
             "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
-            "startRotation": 0,
-            "identity": "Construction Tools",
-            "interactOrders": {
-              "$type": "Orders.OrderGroup, Assembly-CSharp",
-              "destroyOnComplete": true,
-              "orders": {
-                "$type": "System.Collections.Generic.List`1[[Orders.Order, Assembly-CSharp]], mscorlib",
-                "$values": [
-                  {
-                    "$type": "Orders.DialogueOrder, Assembly-CSharp",
-                    "storyText": "{\"inkVersion\":20,\"root\":[[\"^It's a set of construction tools. Maybe we'll have time to build soon?\",\"\\n\",[\"done\",{\"#n\":\"g-0\"}],null],\"done\",null],\"listDefs\":{}}",
-                    "speakerName": null,
-                    "joinPartyTargets": null
-                  },
-                  {
-                    "$type": "Orders.DestroyOrder, Assembly-CSharp",
-                    "entityGuid": "a4144d7d-a4ad-49a6-a008-39547731d454"
-                  }
-                ]
-              }
-            },
-            "spawnPosition": {
-              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
-              "x": 858,
-              "y": 37,
-              "z": 351,
-              "magnitude": 927.7575,
-              "sqrMagnitude": 860734
-            },
-            "guid": "a4144d7d-a4ad-49a6-a008-39547731d454"
-          },
-          {
-            "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
             "startRotation": 1,
             "identity": "Lamp",
             "interactOrders": null,
@@ -337,6 +304,51 @@
               "sqrMagnitude": 838146
             },
             "guid": "3c68be4f-7267-40bd-823e-d9b531cbe154"
+          },
+          {
+            "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
+            "startRotation": 3,
+            "identity": "Desk 2",
+            "interactOrders": null,
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 858,
+              "y": 29,
+              "z": 350,
+              "magnitude": 927.0949,
+              "sqrMagnitude": 859505
+            },
+            "guid": "b7157be5-4301-40db-b4e2-934fb0486b3d"
+          },
+          {
+            "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
+            "startRotation": 3,
+            "identity": "Office Chair",
+            "interactOrders": null,
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 857,
+              "y": 29,
+              "z": 351,
+              "magnitude": 926.5479,
+              "sqrMagnitude": 858491
+            },
+            "guid": "3b981889-4e76-4db1-96ac-0ca70beceb27"
+          },
+          {
+            "$type": "EntityDefinition.TangibleObject, Assembly-CSharp",
+            "startRotation": 3,
+            "identity": "Lamp",
+            "interactOrders": null,
+            "spawnPosition": {
+              "$type": "UnityEngine.Vector3Int, UnityEngine.CoreModule",
+              "x": 858,
+              "y": 29,
+              "z": 349,
+              "magnitude": 926.717834,
+              "sqrMagnitude": 858806
+            },
+            "guid": "32ab80b0-9e3e-4132-8c0f-beb64427d365"
           }
         ]
       },

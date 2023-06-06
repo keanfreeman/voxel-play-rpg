@@ -12,14 +12,11 @@ namespace Saving {
         public Dictionary<int, SceneInfo> sceneEntityState;
 
         public PlayerCharacter currControlledCharacter;
+        public bool usedShortRest;
 
         public TimeRemaining timeRemaining;
 
-        public SaveData() { }
-
-        public SaveData(string jsonSave) {
-            LoadFromJson(jsonSave);
-        }
+        public SaveData() {}
 
         public string ToJson() {
             return JsonConvert.SerializeObject(this, 
@@ -28,13 +25,9 @@ namespace Saving {
                     TypeNameHandling = TypeNameHandling.All});
         }
 
-        private void LoadFromJson(string json) {
-            SaveData saveData = JsonConvert.DeserializeObject<SaveData>(json, 
+        public static SaveData CreateFromJson(string json) {
+            return JsonConvert.DeserializeObject<SaveData>(json, 
                 new JsonSerializerSettings{ TypeNameHandling = TypeNameHandling.All });
-            this.currDestination = saveData.currDestination;
-            this.sceneEntityState = saveData.sceneEntityState;
-            this.currControlledCharacter = saveData.currControlledCharacter;
-            this.timeRemaining = saveData.timeRemaining;
         }
     }
 }

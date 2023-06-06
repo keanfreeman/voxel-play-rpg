@@ -41,7 +41,14 @@ public class GameStateManager : MonoBehaviour
     public ControlState controlState { get; private set; } = ControlState.LOADING;
 
     public IEnumerator SetControlState(ControlState newState) {
-        if (newState == ControlState.FOLLOWING_ORDERS) {
+        if (controlState == ControlState.FOLLOWING_ORDERS && newState == ControlState.UI) {
+            inputManager.UnlockUIControls(null);
+        }
+        else if (controlState == ControlState.UI && newState == ControlState.FOLLOWING_ORDERS) {
+            inputManager.LockUIControls();
+        }
+
+        else if (newState == ControlState.FOLLOWING_ORDERS) {
             inputManager.LockPlayerControls();
 
             PlayerCharacter playerMovement = partyManager.currControlledCharacter;
@@ -68,10 +75,12 @@ public class GameStateManager : MonoBehaviour
         else if (controlState == ControlState.LOADING && newState == ControlState.SPRITE_NEUTRAL) {
             inputManager.UnlockPlayerControls();
         }
+
         else if (newState == ControlState.UI) {
             inputManager.LockPlayerControls();
             inputManager.UnlockUIControls(null);
         }
+
         else if (controlState == ControlState.UI && newState == ControlState.DETACHED) {
             inputManager.UnlockDetachedControls();
             inputManager.LockUIControls();
@@ -80,6 +89,7 @@ public class GameStateManager : MonoBehaviour
             inputManager.LockUIControls();
             inputManager.UnlockDetachedControls();
         }
+
 
         controlState = newState;
     }
@@ -157,7 +167,7 @@ public class GameStateManager : MonoBehaviour
             }
         }
         if (interactableEntity == null) {
-            Debug.Log("No interactable object near player.");
+            Debug.Log("No interactable thing near player.");
             return;
         }
 

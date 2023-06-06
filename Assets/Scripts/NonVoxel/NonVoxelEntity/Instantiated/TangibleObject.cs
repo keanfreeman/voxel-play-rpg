@@ -10,8 +10,7 @@ namespace Instantiated {
         [SerializeField] public Transform leafTransform;
 
         public EntityDefinition.TangibleObject objectInfo { get; private set; }
-
-        private ObjectIdentitySO objectIdentity;
+        public ObjectIdentitySO objectIdentity { get; private set; }
 
         public void Init(NonVoxelWorld nonVoxelWorld, EntityDefinition.TangibleObject nonVoxelObject,
                 ObjectIdentitySO objectIdentity) {

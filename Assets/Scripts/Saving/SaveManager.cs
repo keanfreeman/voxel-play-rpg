@@ -39,7 +39,7 @@ namespace Saving {
                 Debug.LogError("Tried to load a nonexistent file.");
                 return;
             }
-            SaveData saveData = new SaveData(json);
+            SaveData saveData = SaveData.CreateFromJson(json);
 
             // destroy all npcs, players, etc, for resetting story stuff
             foreach (SceneInfo sceneInfo in saveData.sceneEntityState.Values) {
@@ -55,6 +55,7 @@ namespace Saving {
 
             saveData.timeRemaining = null;
             saveData.currControlledCharacter = null;
+            saveData.usedShortRest = false;
 
             FileManager.WriteSaveJson(saveData.ToJson());
             Debug.Log("Reset entities");
@@ -67,7 +68,7 @@ namespace Saving {
                 return null;
             }
 
-            return new(json);
+            return SaveData.CreateFromJson(json);
         }
 
         public IEnumerator Load() {
@@ -76,7 +77,7 @@ namespace Saving {
                 Debug.LogError("Tried to load a nonexistent file.");
                 yield break;
             }
-            SaveData saveData = new SaveData(json);
+            SaveData saveData = SaveData.CreateFromJson(json);
 
             yield return gameStateManager.SetControlState(ControlState.LOADING);
 

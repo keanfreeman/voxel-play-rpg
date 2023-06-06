@@ -101,7 +101,7 @@ public class BuildShadow : MonoBehaviour
 
     private IEnumerator WaitForPromptResponse(string timeCostString, System.Action followupMethod) {
         CoroutineWithData<bool> cwd = new(this, promptUIController.DisplayPrompt(CONSTRUCTION_TIME_COST,
-                        string.Format(CONSTRUCTION_PROMPT_BODY, timeCostString)));
+            string.Format(CONSTRUCTION_PROMPT_BODY, timeCostString), ControlState.DETACHED));
         yield return cwd.coroutine;
         bool respondedYes = cwd.GetResult();
         if (respondedYes) followupMethod.Invoke();

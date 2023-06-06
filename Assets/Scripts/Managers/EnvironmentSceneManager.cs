@@ -214,7 +214,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         PlayerCharacter testRogue = new(new Vector3Int(850, -8, 345), rogueGrimesID.name);
         PlayerCharacter testBard = new(new Vector3Int(805, -29, 355), bardDrillID.name);
 
-        NPC fighterCorey = new NPC(new Vector3Int(862, 29, 346), Faction.PLAYER, IdleBehavior.STAND,
+        NPC fighterCorey = new NPC(new Vector3Int(869, 22, 350), Faction.PLAYER, IdleBehavior.STAND,
             friendID.name);
         NPC cat = new NPC(new Vector3Int(858, 33, 350), Faction.PLAYER, IdleBehavior.WANDER, catID.name);
         cat.interactOrders = new OrderGroup(new List<Order> {
@@ -242,9 +242,8 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         });
         NPC ghoulBoss = new(new Vector3Int(798, -29, 353), Faction.ENEMY, IdleBehavior.WANDER, ghoulID.name);
 
-        TangibleObject bed = new TangibleObject(new Vector3Int(857, 33, 348), bedID.name, Direction.EAST);
         TangibleObject lamp = new TangibleObject(new Vector3Int(858, 33, 351), lampID.name, Direction.NORTH);
-        TangibleObject constructionTools = new TangibleObject(new Vector3Int(858, 37, 351),
+        TangibleObject constructionTools = new TangibleObject(new Vector3Int(858, 30, 350),
             constructionToolsID.name, Direction.NORTH);
 
         OrderGroup coreyUndergroundMeetingOrders = new OrderGroup(new List<Order> {
@@ -273,6 +272,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             }))
         }, true);
         OrderGroup coreyIntroOrders = new OrderGroup(new List<Order>{
+            new MoveOrder(new Vector3Int(862, 29, 346), fighterCorey.guid, waitForCompletion: false),
             new DialogueOrder(getAttention, "???"),
             new ExclaimOrder(mainCharacter),
             new MoveOrder(new Vector3Int(859, 37, 347), mainCharacter),
@@ -343,7 +343,6 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     convenienceBG.combatants[0],
                     convenienceBG.combatants[1],
 
-                    bed,
                     lamp,
                     constructionTools,
 

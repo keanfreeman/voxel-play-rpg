@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d97cce2095b5cc4d97109aa3bfcb18d, type: 3}
   m_Name: BardicInspiration
   m_EditorClassIdentifier: 
-  id: 6
+  id: 7
   featureName: Bardic Inspiration
   description: You can inspire others through stirring words or music. To do so,
     you use a bonus action on your turn to choose one creature other than yourself

@@ -44,6 +44,8 @@ public class FeatureManager : MonoBehaviour {
                 case FeatureID.SneakAttack:
                     traveller.onAttackHit += TriggerSneakAttack;
                     break;
+                case FeatureID.ArcaneRecovery:
+                    break;
                 default:
                     throw new System.NotImplementedException($"Did not implement traveller " +
                         $"feature {feature.id}.");
@@ -87,7 +89,7 @@ public class FeatureManager : MonoBehaviour {
 
         CoroutineWithData<bool> cwd = new(this, promptUIController.DisplayPrompt(
             "Bardic Inspiration", "Would you like to use Bardic Inspiration to get a bonus to this roll?",
-            false));
+            ControlState.COMBAT));
         yield return cwd.coroutine;
         bool respondedYes = cwd.GetResult();
         if (respondedYes) attacker.RemoveStatus(StatusEffect.BardicInspiration);

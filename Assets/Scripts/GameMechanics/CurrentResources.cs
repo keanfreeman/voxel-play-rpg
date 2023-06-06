@@ -25,8 +25,20 @@ namespace GameMechanics {
             return resourceStatuses.ContainsKey(resourceID) && resourceStatuses[resourceID].remainingUses > 0;
         }
 
+        public ResourceStatus GetResource(ResourceID resourceID) {
+            return resourceStatuses.GetValueOrDefault(resourceID, null);
+        }
+
         public void DeductUses(ResourceID resourceID) {
             if (resourceStatuses.ContainsKey(resourceID)) resourceStatuses[resourceID].DecrementUses();
+        }
+
+        public void ResetForShortRest() {
+            foreach (ResourceStatus resourceStatus in resourceStatuses.Values) {
+                if (resourceStatus.resourceDefinition.recoversOnShortRest) {
+                    resourceStatus.ResetUses();
+                }
+            }
         }
     }
 
@@ -44,6 +56,12 @@ namespace GameMechanics {
         public ResourceStatus(Resource resourceDefinition) {
             this.resourceDefinition = resourceDefinition;
             this.remainingUses = resourceDefinition.maxUses;
+        }
+
+        public void IncrementUses() {
+            if (remainingUses < resourceDefinition.maxUses) {
+                remainingUses += 1;
+            }
         }
 
         public void DecrementUses() {

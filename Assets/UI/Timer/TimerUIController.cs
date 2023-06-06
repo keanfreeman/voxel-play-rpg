@@ -58,6 +58,10 @@ public class TimerUIController : MonoBehaviour, ISaveable
         timeRemaining = null;
     }
 
+    public bool DeductHours(int hoursToDeduct) {
+        return DeductMinutes(hoursToDeduct * 60);
+    }
+
     public bool DeductMinutes(int minutesToDeduct) {
         return DeductSeconds(minutesToDeduct * 60);
     }

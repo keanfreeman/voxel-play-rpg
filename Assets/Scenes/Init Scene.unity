@@ -637,6 +637,10 @@ MonoBehaviour:
   gameStateManager: {fileID: 955022268}
   dialogueUI: {fileID: 2139012955}
   nonVoxelManager: {fileID: 582458982}
+  promptUIController: {fileID: 539451388}
+  timerUIController: {fileID: 134436095}
+  messageManager: {fileID: 1627379086}
+  visualRollManager: {fileID: 2076388858}
 --- !u!1 &482241924 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1920367320475123673, guid: 0e2c4cd17b179e24fac4d72c6206c8a9, type: 3}

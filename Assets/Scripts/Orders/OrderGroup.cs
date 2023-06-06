@@ -20,5 +20,10 @@ namespace Orders {
             this.orders = orders;
             this.destroyOnComplete = true;
         }
+
+        public OrderGroup(Order order) {
+            this.orders = new List<Order> { order };
+            this.destroyOnComplete = false;
+        }
     }
 }

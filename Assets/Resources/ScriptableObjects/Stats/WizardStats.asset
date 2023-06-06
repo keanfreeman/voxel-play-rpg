@@ -14,7 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseSpeed: 30
   maxHP: 9
+  hitDice:
+    numDice: 1
+    diceSize: 6
+    modifier: 0
   size: 2
+  creatureType: 9
   strength: 9
   dexterity: 14
   constitution: 16
@@ -24,5 +29,6 @@ MonoBehaviour:
   actions: []
   features:
   - {fileID: 11400000, guid: 5712cabc48503ff44966ff1bced1241c, type: 2}
+  - {fileID: 11400000, guid: 195b261b467f6a647a77e8c92c82a873, type: 2}
   level: 1
   armorClass: 12

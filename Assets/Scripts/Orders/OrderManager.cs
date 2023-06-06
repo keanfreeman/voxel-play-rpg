@@ -20,6 +20,10 @@ public class OrderManager : MonoBehaviour
     [SerializeField] GameStateManager gameStateManager;
     [SerializeField] DialogueUI dialogueUI;
     [SerializeField] NonVoxelManager nonVoxelManager;
+    [SerializeField] PromptUIController promptUIController;
+    [SerializeField] TimerUIController timerUIController;
+    [SerializeField] MessageManager messageManager;
+    [SerializeField] VisualRollManager visualRollManager;
 
     private Coroutine currCoroutine = null;
 
@@ -161,6 +165,43 @@ public class OrderManager : MonoBehaviour
             EntityDefinition.EnvChangeDestination dummy = new(0, Vector3Int.zero);
             nonVoxelManager.CreateEntities(new List<EntityDefinition.Entity>() { createEntityOrder.entity },
                 dummy);
+        }
+        else if (type == typeof(PromptRestOrder)) {
+            if (partyManager.usedShortRest) {
+                messageManager.DisplayMessage("Already used your short rest.");
+                yield break;
+            }
+
+            CoroutineWithData<bool> cwd = new(this, promptUIController.DisplayPrompt(
+                "Short Rest", "Would you like to perform a short rest to recover resources? " +
+                "You may only do this once. This will cost 1 hour.",
+                ControlState.FOLLOWING_ORDERS));
+            yield return cwd.coroutine;
+            bool respondedYes = cwd.GetResult();
+            if (!respondedYes) {
+                yield break;
+            }
+
+            partyManager.usedShortRest = true;
+            timerUIController.DeductHours(1);
+            foreach (PlayerCharacter pc in partyManager.partyMembers) {
+                pc.GetResources().ResetForShortRest();
+                if (pc.CurrHP < pc.GetStats().maxHP) {
+                    CoroutineWithData<DiceResult> coroutineWithData = new(this,
+                        visualRollManager.RollGeneric("Rolling hit dice.",
+                        new List<DieNamespace.Die> { pc.GetStats().hitDice }));
+                    yield return coroutineWithData.coroutine;
+                    DiceResult rollResult = coroutineWithData.GetResult();
+                    int hpHeal = rollResult.sum + StatModifiers.GetModifierForStat(pc.GetStats().constitution);
+
+                    yield return pc.RecoverHP(hpHeal);
+                }
+
+                if (pc.GetStats().HasFeature(GameMechanics.FeatureID.ArcaneRecovery)) {
+                    pc.GetResources().GetResource(GameMechanics.ResourceID.SpellSlots).IncrementUses();
+                    messageManager.DisplayMessage("Wizard recovered a spell slot from Arcane Recovery!");
+                }
+            }
         }
         else {
             Debug.LogError($"Found an order type not implemented: {type}");

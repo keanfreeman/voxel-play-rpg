@@ -18,7 +18,7 @@ public class PromptUIController : MonoBehaviour
     Button yesButton;
     Button noButton;
 
-    bool isConstructionUI;
+    ControlState returnControlState;
     bool? isYesSelection = null;
 
     private void Awake() {
@@ -33,14 +33,9 @@ public class PromptUIController : MonoBehaviour
         Hide();
     }
 
-    public IEnumerator DisplayPrompt(string title, string body, bool isConstructionUI = true) {
-        this.isConstructionUI = isConstructionUI;
-        if (isConstructionUI) {
-            constructionUI.SetDisplayState(false);
-        }
-        else {
-            combatUI.SetDisplayState(false);
-        }
+    public IEnumerator DisplayPrompt(string title, string body, ControlState returnControlState) {
+        this.returnControlState = returnControlState;
+        SetDisplayState(returnControlState, false);
 
         titleLabel.text = title;
         bodyLabel.text = body;
@@ -54,12 +49,8 @@ public class PromptUIController : MonoBehaviour
             yield return null;
         }
 
-        if (isConstructionUI) {
-            yield return gameStateManager.SetControlState(ControlState.DETACHED);
-        }
-        else {
-            yield return gameStateManager.SetControlState(ControlState.COMBAT);
-        }
+        yield return gameStateManager.SetControlState(returnControlState);
+        SetDisplayState(returnControlState, true);
 
         yield return isYesSelection.Value;
         isYesSelection = null;
@@ -106,24 +97,22 @@ public class PromptUIController : MonoBehaviour
     private void OnYesPress() {
         isYesSelection = true;
         Hide();
-
-        if (isConstructionUI) {
-            constructionUI.SetDisplayState(true);
-        }
-        else {
-            combatUI.SetDisplayState(true);
-        }
     }
 
     private void OnNoPress() {
         isYesSelection = false;
         Hide();
+    }
 
-        if (isConstructionUI) {
-            constructionUI.SetDisplayState(true);
+    private void SetDisplayState(ControlState returnControlState, bool newState) {
+        if (returnControlState == ControlState.DETACHED) {
+            constructionUI.SetDisplayState(newState);
+        }
+        else if (returnControlState == ControlState.COMBAT) {
+            combatUI.SetDisplayState(newState);
         }
         else {
-            combatUI.SetDisplayState(true);
+            combatUI.SetDisplayState(newState);
         }
     }
 
