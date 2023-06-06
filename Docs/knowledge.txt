@@ -1,3 +1,5 @@
+csc.rsp holds preprocessor directives
+
 eventually, I'll want to switch to an event-based architecture for everything just like I did for combat. 
 this way, I don't need to check for conditions at every single point in code, but can simply state that something 
 is happening and let the rest of the code modify the outcome (e.g. add movement for longstrider when 

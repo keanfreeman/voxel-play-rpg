@@ -1,6 +1,5 @@
-using GameMechanics;
 using Instantiated;
-using MovementDirection;
+using Saving;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,6 +20,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] ConstructionUI constructionUI;
     [SerializeField] UIDocument uiDocument;
     [SerializeField] BuildShadow buildShadow;
+    [SerializeField] SaveManager saveManager;
 
     public PlayerInputActions playerInputActions;
 
@@ -28,6 +28,9 @@ public class InputManager : MonoBehaviour
     
     private void Awake() {
         playerInputActions = new PlayerInputActions();
+
+        playerInputActions.Player.Save.performed += Save_performed;
+        playerInputActions.Player.Load.performed += Load_performed;
 
         playerInputActions.Player.RotateCamera.performed += cameraManager.Rotate90Degrees;
         playerInputActions.Detached.RotateCamera.performed += cameraManager.RotateDetached;
@@ -57,6 +60,14 @@ public class InputManager : MonoBehaviour
 
         playerInputActions.Player.Enable();
         eventSystem.sendNavigationEvents = false;
+    }
+
+    private void Save_performed(InputAction.CallbackContext obj) {
+        saveManager.Save();
+    }
+
+    private void Load_performed(InputAction.CallbackContext obj) {
+        saveManager.Load();
     }
 
     public void SetDetachedToCombat() {

@@ -11,8 +11,6 @@ using Saving;
 using NonVoxel;
 using ResourceID;
 using System.Linq;
-using static UnityEngine.EventSystems.EventTrigger;
-using GameMechanics;
 
 public class EnvironmentSceneManager : MonoBehaviour, ISaveable
 {
@@ -118,7 +116,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         VoxelPlayEnvironment environment = FindObjectOfType<VoxelPlayEnvironment>();
         if (loadedScene.buildIndex == 0) {
             if (saveManager.SaveExists()) {
-                StartCoroutine(saveManager.Load());
+                saveManager.Load();
             }
             else {
                 SceneManager.LoadScene(3);

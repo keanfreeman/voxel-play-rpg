@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using EntityDefinition;
 using Ink.Runtime;
 using NonVoxel;
@@ -16,15 +17,11 @@ namespace Saving {
         [SerializeField] GameStateManager gameStateManager;
         [SerializeField] OrderManager orderManager;
         [SerializeField] TimerUIController timerUIController;
+        [SerializeField] MessageManager messageManager;
+        [SerializeField] InputManager inputManager;
 
         private void Update() {
-            if (Input.GetKeyUp(KeyCode.F5)) {
-                StartCoroutine(Load());
-            }
-            else if (Input.GetKeyUp(KeyCode.F9)) {
-                Save();
-            }
-            else if (Input.GetKeyUp(KeyCode.F11)) {
+            if (Input.GetKeyUp(KeyCode.F11)) {
                 ResetEntities();
             }
         }
@@ -71,15 +68,15 @@ namespace Saving {
             return SaveData.CreateFromJson(json);
         }
 
-        public IEnumerator Load() {
+        public async UniTask Load() {
             string json = FileManager.ReadSaveJson();
             if (json == null) {
                 Debug.LogError("Tried to load a nonexistent file.");
-                yield break;
+                return;
             }
             SaveData saveData = SaveData.CreateFromJson(json);
 
-            yield return gameStateManager.SetControlState(ControlState.LOADING);
+            await gameStateManager.SetControlState(ControlState.LOADING);
 
             // destroy existing information
             cameraManager.DeParentCamera();
@@ -88,21 +85,21 @@ namespace Saving {
             orderManager.ClearData();
 
             // load new information
-            yield return environmentSceneManager.LoadFromSaveData(saveData);
-            yield return partyManager.LoadFromSaveData(saveData);
-            yield return timerUIController.LoadFromSaveData(saveData);
+            await environmentSceneManager.LoadFromSaveData(saveData);
+            await partyManager.LoadFromSaveData(saveData);
+            await timerUIController.LoadFromSaveData(saveData);
 
-            Debug.Log("Loaded");
+            messageManager.DisplayMessage("Loaded.");
         }
 
-        private void Save() {
+        public void Save() {
             SaveData saveData = new();
             environmentSceneManager.PopulateSaveData(saveData);
             partyManager.PopulateSaveData(saveData);
             timerUIController.PopulateSaveData(saveData);
 
             FileManager.WriteSaveJson(saveData.ToJson());
-            Debug.Log("Saved");
+            messageManager.DisplayMessage("Saved.");
         }
     }
 }
