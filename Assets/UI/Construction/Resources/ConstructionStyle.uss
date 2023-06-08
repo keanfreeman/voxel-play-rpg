@@ -1,8 +1,8 @@
-#OptionPicker:focus {
+OptionPicker:focus {
     background-color: rgb(212, 55, 55);
 }
 
-#OptionPicker {
+OptionPicker {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;

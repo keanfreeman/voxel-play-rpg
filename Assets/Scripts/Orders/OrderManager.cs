@@ -99,6 +99,9 @@ public class OrderManager : MonoBehaviour
 
             Traveller traveller = (Traveller)focused;
             yield return cameraManager.MoveCameraToTargetCreature(traveller);
+            if (traveller.GetType() == typeof(PlayerCharacter)) {
+                cameraManager.AttachCameraToPlayer((PlayerCharacter)traveller);
+            }
         }
         else if (type == typeof(DialogueOrder)) {
             DialogueOrder dialogueOrder = (DialogueOrder)order;
@@ -202,6 +205,26 @@ public class OrderManager : MonoBehaviour
                     messageManager.DisplayMessage("Wizard recovered a spell slot from Arcane Recovery!");
                 }
             }
+        }
+        else if (type == typeof(MoveImmediateOrder)) {
+            MoveImmediateOrder moveImmediateOrder = (MoveImmediateOrder)order;
+            List<Traveller> toMove = new();
+            if (moveImmediateOrder.moveOrderType == MoveOrderType.Party) {
+                toMove.AddRange(partyManager.partyMembers);
+            }
+            else {
+                Traveller target = (Traveller)nonVoxelWorld.GetInstanceFromID(
+                    moveImmediateOrder.travellerGuid);
+                toMove.Add(target);
+            }
+
+            Vector3Int currTargetPosition = moveImmediateOrder.destination;
+            foreach (Traveller traveller in toMove) {
+                traveller.MoveOriginImmediately(currTargetPosition);
+                currTargetPosition += Vector3Int.right;
+            }
+
+            // todo - play transition effects
         }
         else {
             Debug.LogError($"Found an order type not implemented: {type}");

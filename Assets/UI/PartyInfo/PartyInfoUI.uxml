@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Construction/Resources/ConstructionStyle.uss?fileID=7433441132597879392&amp;guid=363672be90e163f45a0c3021fcb973d8&amp;type=3#ConstructionStyle" />
+    <Style src="project://database/Assets/UI/CommonStyle.uss?fileID=7433441132597879392&amp;guid=026a39900ed2bf348b8b1fcf8b7c191b&amp;type=3#CommonStyle" />
+    <Style src="project://database/Assets/UI/PartyInfo/Resources/PartyInfoStyle.uss?fileID=7433441132597879392&amp;guid=f7511bccd1b00e448a4f2103f7daa241&amp;type=3#PartyInfoStyle" />
+    <ui:VisualElement name="WholeScreen" class="TextBackground" style="flex-grow: 1;">
+        <ui:VisualElement name="IterateBar" class="TextBackground">
+            <CustomComponents.OptionPicker focusable="true" />
+        </ui:VisualElement>
+        <ui:VisualElement name="InfoBox" style="flex-direction: row;">
+            <ui:VisualElement name="PictureAndStats">
+                <TravellerDisplayerComponent class="TextBackground" />
+                <ui:VisualElement name="StatInformationBox" style="flex-direction: row;">
+                    <ui:Label text="Stats&#10;HP: 5&#10;Level: 1&#10;ASDF: 2" display-tooltip-when-elided="true" name="Stats" style="white-space: normal;" />
+                    <ui:Label text="Resources&#10;" display-tooltip-when-elided="true" name="Resources" style="white-space: normal;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="FeatureBox" style="width: 50%;">
+                <ui:Label text="Features" display-tooltip-when-elided="true" />
+                <ui:Label text="Sneak Attack&#10;Beginning at 1st level, you know how to strike subtly and exploit a foe’s distraction. Once per turn, you can deal an extra 1d6 damage to one creature you hit with an attack if you have advantage on the attack roll. The attack must use a finesse or a ranged weapon. You don’t need advantage on the attack roll if another enemy of the target is within 5 feet of it, that enemy isn’t incapacitated, and you don’t have disadvantage on the attack roll. The amount of the extra damage increases as you gain levels in this class, as shown in the Sneak Attack column of the Rogue table." display-tooltip-when-elided="true" class="MediumText" style="white-space: normal;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

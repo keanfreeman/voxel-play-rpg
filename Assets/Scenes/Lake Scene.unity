@@ -223,9 +223,9 @@ MonoBehaviour:
   fresnelIntensity: 0.2
   fresnelColor: {r: 0.9098039, g: 0.9019608, b: 0.99215686, a: 1}
   enableBevel: 0
-  enableOutline: 0
+  enableOutline: 1
   outlineColor: {r: 1, g: 1, b: 1, a: 0.5}
-  outlineThreshold: 0.49
+  outlineThreshold: 0.1
   enableCurvature: 0
   seeThrough: 1
   seeThroughOrigin: {fileID: 0}

@@ -11,7 +11,7 @@ not on the Instantiated version.
 if something needs to be shared among creatures, there's a good chance it should be an SO
 - this is because it only needs to be created once (e.g. if pack tactics might get reused)
 
-color palette - base blue #3993DD, dark blue #002B66, yellow #DF9F1F, almost white #E6F4F1
+color palette - base blue #3993DD, solid base blue #4D86B4, dark blue #002B66, yellow #DF9F1F, almost white #E6F4F1
 
 there's a bug where if the level's loading and blocks are made transparent (e.g. the player moves),
 those blocks will become empty voxels.

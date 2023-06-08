@@ -2,12 +2,14 @@
     <Style src="project://database/Assets/UI/Dialogue/DialogueStyle.uss?fileID=7433441132597879392&amp;guid=cfd5cb6e5d3e61d48881f50ba0f7d5df&amp;type=3#DialogueStyle" />
     <Style src="project://database/Assets/UI/CommonStyle.uss?fileID=7433441132597879392&amp;guid=026a39900ed2bf348b8b1fcf8b7c191b&amp;type=3#CommonStyle" />
     <ui:VisualElement name="EntireScreen" style="flex-grow: 1; flex-direction: column-reverse;">
-        <ui:VisualElement name="DialogueBox" class="TextBackground" style="align-items: center; justify-content: flex-start; flex-grow: 0.35; margin-bottom: 5px; padding-bottom: 5px; margin-left: 5px; margin-right: 5px; padding-left: 5px; padding-right: 5px; margin-top: 0; padding-top: 0;">
+        <ui:VisualElement name="DialogueBox" class="TextBackground" style="align-items: center; justify-content: flex-start; flex-grow: 0.35; margin-bottom: 5px; margin-left: 5px; margin-right: 5px; padding-left: 5px; padding-right: 5px;">
             <ui:VisualElement name="DialogueGiven" style="align-items: flex-start; flex-grow: 0; flex-direction: row; width: 100%; justify-content: space-between;">
-                <ui:Label text="This is my sentence. This is my sentence. This is my sentence. This is my sentence. &#x9;" display-tooltip-when-elided="true" name="DialogueGivenText" style="flex-grow: 1; flex-shrink: 0; width: 100%; height: 100%; white-space: normal;" />
+                <ui:Label text="This is my sentence. This is my sentence. This is my sentence. This is my sentence. &#x9;" display-tooltip-when-elided="true" name="DialogueGivenText" style="white-space: normal;" />
             </ui:VisualElement>
-            <ui:VisualElement name="Response" style="flex-grow: 0; width: 100%; flex-direction: row; padding-top: 5px;">
+            <ui:VisualElement name="Response" style="width: 100%;">
                 <ui:VisualElement name="DialogueChoiceHolder" style="flex-grow: 1;">
+                    <ui:Button text="Button" display-tooltip-when-elided="true" name="Choice0" class="button" />
+                    <ui:Button text="Button" display-tooltip-when-elided="true" name="Choice0" class="button" />
                     <ui:Button text="Button" display-tooltip-when-elided="true" name="Choice0" class="button" />
                 </ui:VisualElement>
                 <ui:VisualElement name="NextArrowHolder" style="flex-direction: column; align-items: flex-end; justify-content: flex-end; visibility: hidden; display: flex;">

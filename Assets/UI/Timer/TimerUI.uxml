@@ -2,7 +2,7 @@
     <Style src="project://database/Assets/UI/CommonStyle.uss?fileID=7433441132597879392&amp;guid=026a39900ed2bf348b8b1fcf8b7c191b&amp;type=3#CommonStyle" />
     <Style src="project://database/Assets/UI/Timer/TimerStyle.uss?fileID=7433441132597879392&amp;guid=d9995a064a533464092727edf154abc9&amp;type=3#TimerStyle" />
     <ui:VisualElement name="WholeScreen" style="flex-grow: 1; flex-direction: row-reverse; align-items: flex-start;">
-        <ui:VisualElement name="TimerBox" class="TextBackground" style="align-items: center; margin-top: 20px; margin-right: 20px;">
+        <ui:VisualElement name="TimerBox" class="TransparentBackground" style="align-items: center; margin-top: 20px; margin-right: 20px;">
             <ui:Label text="Time Remaining&#x9;" display-tooltip-when-elided="true" name="Title" style="-unity-font-style: bold; font-size: 54px;" />
             <ui:VisualElement style="flex-direction: row; align-items: flex-end;">
                 <ui:VisualElement name="Days" style="align-items: center;">

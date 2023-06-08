@@ -7,6 +7,9 @@ using UnityEngine.UIElements;
 namespace CustomComponents {
     public class OptionPicker : VisualElement
     {
+        [UnityEngine.Scripting.Preserve]
+        public new class UxmlFactory : UxmlFactory<OptionPicker> { }
+
         public Label label { get; private set; }
 
         private const string styleResource = "ConstructionStyle";

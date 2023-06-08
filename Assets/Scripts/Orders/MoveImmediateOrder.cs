@@ -5,18 +5,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Newtonsoft.Json;
 
 namespace Orders {
     [Serializable]
     public class MoveImmediateOrder : Order
     {
         public Vector3Int destination;
-        public EntityDefinition.TangibleEntity entity;
+        public MoveOrderType moveOrderType;
+        public Guid travellerGuid;
 
-        // todo - change to use guids
-        public MoveImmediateOrder(Vector3Int destination, EntityDefinition.TangibleEntity entity) {
+        [JsonConstructor]
+        public MoveImmediateOrder(Vector3Int destination, MoveOrderType moveOrderType, Guid travellerGuid) {
             this.destination = destination;
-            this.entity = entity;
+            this.moveOrderType = moveOrderType;
+            this.travellerGuid = travellerGuid;
         }
+
+        public MoveImmediateOrder(Vector3Int destination, MoveOrderType moveOrderType) {
+            if (moveOrderType != MoveOrderType.Party) {
+                throw new ArgumentException("This constructor is for moving parties.");
+            }
+            this.destination = destination;
+            this.moveOrderType = moveOrderType;
+            travellerGuid = Guid.Empty;
+        }
+    }
+
+    public enum MoveOrderType {
+        Entity,
+        Party
     }
 }

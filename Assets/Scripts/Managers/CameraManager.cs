@@ -85,8 +85,10 @@ public class CameraManager : MonoBehaviour {
     }
 
     public void DeParentCamera() {
+        Vector3 currWorldPosition = mainCameraTarget.transform.position;
         mainCameraTarget.transform.parent = null;
         attachedEntity = null;
+        mainCameraTarget.transform.position = currWorldPosition;
     }
 
     // todo make gradual animation

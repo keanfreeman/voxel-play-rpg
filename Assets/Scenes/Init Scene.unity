@@ -233,6 +233,7 @@ MonoBehaviour:
   orderManager: {fileID: 341726108}
   timerUIController: {fileID: 134436095}
   messageManager: {fileID: 1627379086}
+  inputManager: {fileID: 0}
 --- !u!1 &104703754
 GameObject:
   m_ObjectHideFlags: 0
@@ -554,6 +555,7 @@ MonoBehaviour:
   friendID: {fileID: 11400000, guid: 7ae00259687620b49b3d85a997837cf0, type: 2}
   rogueGrimesID: {fileID: 11400000, guid: 6ea4a234003cbe445853b911a578a4c9, type: 2}
   bardDrillID: {fileID: 11400000, guid: 23c7534ea505cc0489030a837a8c14e2, type: 2}
+  commonerHaulID: {fileID: 11400000, guid: 1042bfc611f7625468daac1213670206, type: 2}
   wolfID: {fileID: 11400000, guid: 84f95ac80ccb2d5438107462b3e2fec6, type: 2}
   catID: {fileID: 11400000, guid: b07ea72c8b8d72549a206784669964aa, type: 2}
   zombieID: {fileID: 11400000, guid: 18f9eca61a5a31247ad9ba9d7f6712af, type: 2}
@@ -570,6 +572,8 @@ MonoBehaviour:
   drillIntroDialogue: {fileID: 4900000, guid: 51517cdf17e875b4a92ea6df83020a19, type: 3}
   grimesIntroDialogue: {fileID: 4900000, guid: 1c76e1459598be74891835a5a77234bb, type: 3}
   drillRecruitDialogue: {fileID: 4900000, guid: 79f7028613a001b4890ba2a01fd795a0, type: 3}
+  haulIntroDialogue: {fileID: 4900000, guid: 805c12883c5bd66499f5384e8410e503, type: 3}
+  haulFinalDialogue: {fileID: 4900000, guid: 0871b83de31911e48a02fca4836a88ed, type: 3}
 --- !u!4 &331112265
 Transform:
   m_ObjectHideFlags: 0

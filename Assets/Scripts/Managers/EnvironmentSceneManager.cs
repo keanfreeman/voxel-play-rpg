@@ -28,6 +28,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     [SerializeField] TravellerIdentitySO friendID;
     [SerializeField] TravellerIdentitySO rogueGrimesID;
     [SerializeField] TravellerIdentitySO bardDrillID;
+    [SerializeField] TravellerIdentitySO commonerHaulID;
     [SerializeField] TravellerIdentitySO wolfID;
     [SerializeField] TravellerIdentitySO catID;
     [SerializeField] TravellerIdentitySO zombieID;
@@ -38,12 +39,15 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     [SerializeField] ObjectIdentitySO constructionToolsID;
     [SerializeField] GameObject sceneExitPrefab;
     [SerializeField] GameObject storyEventCubePrefab;
+
     [SerializeField] TextAsset getAttention;
     [SerializeField] TextAsset friendDialogue;
     [SerializeField] TextAsset catIntroDialogue;
     [SerializeField] TextAsset drillIntroDialogue;
     [SerializeField] TextAsset grimesIntroDialogue;
     [SerializeField] TextAsset drillRecruitDialogue;
+    [SerializeField] TextAsset haulIntroDialogue;
+    [SerializeField] TextAsset haulFinalDialogue;
 
     public EnvChangeDestination currDestination { get; private set; }
         = new EnvChangeDestination(3, new Vector3Int(859, 37, 347));
@@ -212,9 +216,9 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         PlayerCharacter testRogue = new(new Vector3Int(850, -8, 345), rogueGrimesID.name);
         PlayerCharacter testBard = new(new Vector3Int(805, -29, 355), bardDrillID.name);
 
-        NPC fighterCorey = new NPC(new Vector3Int(869, 22, 350), Faction.PLAYER, IdleBehavior.STAND,
+        NPC fighterCorey = new(new Vector3Int(869, 22, 350), Faction.PLAYER, IdleBehavior.STAND,
             friendID.name);
-        NPC cat = new NPC(new Vector3Int(858, 33, 350), Faction.PLAYER, IdleBehavior.WANDER, catID.name);
+        NPC cat = new(new Vector3Int(858, 33, 350), Faction.PLAYER, IdleBehavior.WANDER, catID.name);
         cat.interactOrders = new OrderGroup(new List<Order> {
             new DialogueOrder(catIntroDialogue, new Dictionary<string, Guid>{{catID.name, cat.guid}}),
         });
@@ -222,6 +226,17 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             rogueGrimesID.name);
         NPC bardDrill = new(new Vector3Int(848, -8, 339), Faction.PLAYER, IdleBehavior.STAND,
             bardDrillID.name);
+        NPC commonerHaul = new(new Vector3Int(799, -24, 351), Faction.PLAYER, IdleBehavior.STAND,
+            commonerHaulID.name);
+        commonerHaul.interactOrders = new OrderGroup(new List<Order> {
+            new CameraFocusOrder(commonerHaul),
+            new DialogueOrder(haulIntroDialogue, "Haul"),
+            new CameraFocusOrder(mainCharacter),
+            new MoveImmediateOrder(new Vector3Int(844, -8, 337), MoveOrderType.Party),
+            new MoveImmediateOrder(new Vector3Int(846, -8, 339), MoveOrderType.Entity, commonerHaul.guid),
+            new CameraFocusOrder(commonerHaul),
+            new DialogueOrder(haulFinalDialogue, "Haul")
+        });
 
         BattleGroup convenienceBG = new(new List<NPC> {
             new(new Vector3Int(835, 29, 351), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
@@ -329,6 +344,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     cat,
                     rogueGrimes,
                     bardDrill,
+                    commonerHaul,
 
                     zombieBG1.combatants[0],
                     zombieBG1.combatants[1],

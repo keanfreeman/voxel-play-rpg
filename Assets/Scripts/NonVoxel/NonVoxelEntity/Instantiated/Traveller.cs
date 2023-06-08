@@ -5,6 +5,7 @@ using MovementDirection;
 using NonVoxel;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 using UnityEngine.UIElements;
 using VoxelPlay;
@@ -277,6 +278,13 @@ namespace Instantiated {
             if (partyManager.currControlledCharacter == this) {
                 partyManager.OnLeaderMoved(moveStartPoint);
             }
+        }
+
+        public void MoveOriginImmediately(Vector3Int point) {
+            nonVoxelWorld.RemovePositions(this);
+            MoveOccupiedPositionsTo(point);
+            nonVoxelWorld.SetPositions(this);
+            transform.position = point;
         }
 
         public void SetMoveAnimation(bool state) {
