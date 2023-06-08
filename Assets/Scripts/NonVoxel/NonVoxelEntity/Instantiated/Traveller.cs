@@ -37,8 +37,8 @@ namespace Instantiated {
 
         public SpriteMoveDirection permanentMoveDirection { get; protected set; } = SpriteMoveDirection.NONE;
         public bool isMoving { get; protected set; } = false;
+        public TravellerIdentitySO travellerIdentity { get; protected set; }
 
-        protected TravellerIdentitySO travellerIdentity;
         protected Vector3Int moveStartPoint;
         protected Vector3Int moveEndPoint;
         protected float moveStartTimestamp;

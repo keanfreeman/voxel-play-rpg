@@ -37,6 +37,7 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] PartyManager partyManager;
     [SerializeField] MovementManager movementManager;
     [SerializeField] OrderManager orderManager;
+    [SerializeField] MessageManager messageManager;
 
     public ControlState controlState { get; private set; } = ControlState.LOADING;
 
@@ -167,7 +168,7 @@ public class GameStateManager : MonoBehaviour
             }
         }
         if (interactableEntity == null) {
-            Debug.Log("No interactable thing near player.");
+            messageManager.DisplayMessage("Nothing interactable near the player.");
             return;
         }
 

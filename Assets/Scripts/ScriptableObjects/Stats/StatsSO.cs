@@ -12,7 +12,7 @@ public abstract class StatsSO : ScriptableObject
     public int baseSpeed = 30;
     public int maxHP;
     public Die hitDice;
-    public EntitySize size = EntitySize.MEDIUM;
+    public EntitySize size = EntitySize.Medium;
     public CreatureType creatureType = CreatureType.Humanoid;
 
     // todo - add GetSavingThrowModifier since NPCs may have special one, and PCs have additives too

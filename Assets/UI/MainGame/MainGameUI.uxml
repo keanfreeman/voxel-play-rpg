@@ -2,7 +2,10 @@
     <ui:Template name="CombatUI" src="project://database/Assets/UI/Combat/CombatUI.uxml?fileID=9197481963319205126&amp;guid=4427790308f05e245b38b13353743d4a&amp;type=3#CombatUI" />
     <ui:Template name="DialogueUI" src="project://database/Assets/UI/Dialogue/DialogueUI.uxml?fileID=9197481963319205126&amp;guid=12c4e2d84b3996d4199548bbfc5a2461&amp;type=3#DialogueUI" />
     <ui:Template name="ConstructionUI" src="project://database/Assets/UI/Construction/ConstructionUI.uxml?fileID=9197481963319205126&amp;guid=6e9dca55a53662645a60ba2d5a485bdc&amp;type=3#ConstructionUI" />
-    <ui:Instance template="CombatUI" name="CombatUI" style="height: 100%; width: 100%; display: flex; position: absolute; left: 0; top: 0;" />
-    <ui:Instance template="DialogueUI" name="DialogueUI" style="height: 100%; left: 0; top: 0; position: absolute; display: none; width: 100%; right: auto; bottom: auto;" />
-    <ui:Instance template="ConstructionUI" name="ConstructionUI" style="display: none; position: absolute; left: 0; top: 0; width: 100%; height: 100%;" />
+    <ui:Template name="PartyInfoUI" src="project://database/Assets/UI/PartyInfo/PartyInfoUI.uxml?fileID=9197481963319205126&amp;guid=0ec13b49d1349af46bafad3fea4c76d4&amp;type=3#PartyInfoUI" />
+    <Style src="project://database/Assets/UI/Resources/CommonStyle.uss?fileID=7433441132597879392&amp;guid=026a39900ed2bf348b8b1fcf8b7c191b&amp;type=3#CommonStyle" />
+    <ui:Instance template="CombatUI" name="CombatUI" class="FullScreenDocument" style="height: 100%; width: 100%; display: flex; position: absolute; left: 0; top: 0;" />
+    <ui:Instance template="DialogueUI" name="DialogueUI" class="FullScreenDocument" style="height: 100%; left: 0; top: 0; position: absolute; display: none; width: 100%; right: auto; bottom: auto;" />
+    <ui:Instance template="ConstructionUI" name="ConstructionUI" class="FullScreenDocument" style="display: none;" />
+    <ui:Instance template="PartyInfoUI" name="PartyInfoUI" class="FullScreenDocument" style="display: none;" />
 </ui:UXML>

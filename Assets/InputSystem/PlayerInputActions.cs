@@ -98,6 +98,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Open Stat Menu"",
+                    ""type"": ""Button"",
+                    ""id"": ""3c9d4c89-3e7a-490d-817f-cf4952b22d4b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -329,6 +338,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Load"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fcbb57bf-c2b7-4ab4-9061-ba22008426d0"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Open Stat Menu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1080,6 +1100,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_SwitchCharacter = m_Player.FindAction("Switch Character", throwIfNotFound: true);
         m_Player_Save = m_Player.FindAction("Save", throwIfNotFound: true);
         m_Player_Load = m_Player.FindAction("Load", throwIfNotFound: true);
+        m_Player_OpenStatMenu = m_Player.FindAction("Open Stat Menu", throwIfNotFound: true);
         // Detached
         m_Detached = asset.FindActionMap("Detached", throwIfNotFound: true);
         m_Detached_Move = m_Detached.FindAction("Move", throwIfNotFound: true);
@@ -1169,6 +1190,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SwitchCharacter;
     private readonly InputAction m_Player_Save;
     private readonly InputAction m_Player_Load;
+    private readonly InputAction m_Player_OpenStatMenu;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1181,6 +1203,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @SwitchCharacter => m_Wrapper.m_Player_SwitchCharacter;
         public InputAction @Save => m_Wrapper.m_Player_Save;
         public InputAction @Load => m_Wrapper.m_Player_Load;
+        public InputAction @OpenStatMenu => m_Wrapper.m_Player_OpenStatMenu;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1214,6 +1237,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Load.started += instance.OnLoad;
             @Load.performed += instance.OnLoad;
             @Load.canceled += instance.OnLoad;
+            @OpenStatMenu.started += instance.OnOpenStatMenu;
+            @OpenStatMenu.performed += instance.OnOpenStatMenu;
+            @OpenStatMenu.canceled += instance.OnOpenStatMenu;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1242,6 +1268,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Load.started -= instance.OnLoad;
             @Load.performed -= instance.OnLoad;
             @Load.canceled -= instance.OnLoad;
+            @OpenStatMenu.started -= instance.OnOpenStatMenu;
+            @OpenStatMenu.performed -= instance.OnOpenStatMenu;
+            @OpenStatMenu.canceled -= instance.OnOpenStatMenu;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1495,6 +1524,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnSwitchCharacter(InputAction.CallbackContext context);
         void OnSave(InputAction.CallbackContext context);
         void OnLoad(InputAction.CallbackContext context);
+        void OnOpenStatMenu(InputAction.CallbackContext context);
     }
     public interface IDetachedActions
     {

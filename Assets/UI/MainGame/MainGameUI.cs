@@ -11,12 +11,5 @@ public class MainGameUI : MonoBehaviour
     [SerializeField] CombatUI combatUI;
     [SerializeField] DialogueUI dialogueUI;
     [SerializeField] ConstructionUI constructionUI;
-
-    void Update()
-    {
-        //if (Input.GetKeyUp(KeyCode.K)) {
-        //    uiDocument.rootVisualElement.Q<VisualElement>("CombatUI").style.display = DisplayStyle.None;
-        //    uiDocument.rootVisualElement.Q<VisualElement>("DialogueUI").style.display = DisplayStyle.Flex;
-        //}
-    }
+    [SerializeField] PartyInfoUI partyInfoUI;
 }

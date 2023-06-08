@@ -233,7 +233,7 @@ MonoBehaviour:
   orderManager: {fileID: 341726108}
   timerUIController: {fileID: 134436095}
   messageManager: {fileID: 1627379086}
-  inputManager: {fileID: 0}
+  inputManager: {fileID: 2066669309}
 --- !u!1 &104703754
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,6 +349,54 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 161552250556516067, guid: 874745ef182559848a96ae759b288aca, type: 3}
   m_PrefabInstance: {fileID: 1562076875}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &167248612
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 167248613}
+  - component: {fileID: 167248614}
+  m_Layer: 5
+  m_Name: PartyInfoUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &167248613
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 167248612}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2012925143}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &167248614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 167248612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42a519f1fe8836840a08be0699157782, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiDocument: {fileID: 230091288}
+  inputManager: {fileID: 2066669309}
+  partyManager: {fileID: 683280036}
+  combatUI: {fileID: 829311307}
 --- !u!1 &193780269 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1275296119661960477, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
@@ -405,6 +453,10 @@ PrefabInstance:
       propertyPath: inputManager
       value: 
       objectReference: {fileID: 2066669309}
+    - target: {fileID: 3839151277267300371, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+      propertyPath: partyInfoUI
+      value: 
+      objectReference: {fileID: 167248614}
     - target: {fileID: 3839151277267300372, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -1360,6 +1412,7 @@ MonoBehaviour:
   partyManager: {fileID: 683280036}
   movementManager: {fileID: 104703756}
   orderManager: {fileID: 341726108}
+  messageManager: {fileID: 1627379086}
 --- !u!4 &955022269
 Transform:
   m_ObjectHideFlags: 0
@@ -2221,6 +2274,7 @@ MonoBehaviour:
   uiDocument: {fileID: 230091288}
   buildShadow: {fileID: 1702908728}
   saveManager: {fileID: 96488336}
+  partyInfoUI: {fileID: 167248614}
 --- !u!114 &2066669310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2334,6 +2388,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: ea359e6e-e0d0-467e-b55a-d578684b592a
     m_ActionName: Player/Load[/XInputControllerWindows/select]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3c9d4c89-3e7a-490d-817f-cf4952b22d4b
+    m_ActionName: Player/Open Stat Menu[/XInputControllerWindows/start]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

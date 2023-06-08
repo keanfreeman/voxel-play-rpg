@@ -21,6 +21,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] UIDocument uiDocument;
     [SerializeField] BuildShadow buildShadow;
     [SerializeField] SaveManager saveManager;
+    [SerializeField] PartyInfoUI partyInfoUI;
 
     public PlayerInputActions playerInputActions;
 
@@ -31,6 +32,7 @@ public class InputManager : MonoBehaviour
 
         playerInputActions.Player.Save.performed += Save_performed;
         playerInputActions.Player.Load.performed += Load_performed;
+        playerInputActions.Player.OpenStatMenu.performed += partyInfoUI.StartPartyInfoUI;
 
         playerInputActions.Player.RotateCamera.performed += cameraManager.Rotate90Degrees;
         playerInputActions.Detached.RotateCamera.performed += cameraManager.RotateDetached;

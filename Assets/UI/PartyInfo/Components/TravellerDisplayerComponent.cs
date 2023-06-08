@@ -22,6 +22,10 @@ public class TravellerDisplayerComponent : VisualElement
     }
 
     public TravellerDisplayerComponent(SpriteLibraryAsset spriteLibraryAsset) : this() {
+        SetSprite(spriteLibraryAsset);
+    }
+
+    public void SetSprite(SpriteLibraryAsset spriteLibraryAsset) {
         this.spriteLibraryAsset = spriteLibraryAsset;
     }
 
