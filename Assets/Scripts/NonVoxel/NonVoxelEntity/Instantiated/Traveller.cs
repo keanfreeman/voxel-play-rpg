@@ -23,6 +23,7 @@ namespace Instantiated {
         [SerializeField] protected RandomManager randomManager;
         [SerializeField] protected VisualRollManager visualRollManager;
         [SerializeField] protected StatusUIController statusUIController;
+        [SerializeField] protected HealthBarController healthBarController;
         private TimerUIController timerUIController;
         private CombatManager combatManager;
         private EffectManager effectManager;
@@ -49,7 +50,6 @@ namespace Instantiated {
 
         public int CurrHP {
             get {return GetEntity().currHP;}
-            set { GetEntity().currHP = value; }
         }
 
         // todo - break this entirely out of traveller
@@ -72,7 +72,7 @@ namespace Instantiated {
             this.effectManager = effectManager;
 
             if (GetEntity().currHP < 0) {
-                GetEntity().currHP = GetStats().maxHP;
+                SetHP(GetStats().maxHP);
             }
 
             statusUIController.SetStatuses(GetStatusEffects());
@@ -181,7 +181,7 @@ namespace Instantiated {
 
         public IEnumerator RecoverHP(int healingAmount) {
             // todo play healing effect and display heal amount
-            CurrHP = Mathf.Min(GetStats().maxHP, CurrHP + healingAmount);
+            SetHP(Mathf.Min(GetStats().maxHP, CurrHP + healingAmount));
             yield break;
         }
 
@@ -199,7 +199,7 @@ namespace Instantiated {
         // todo - particle effect for amount taken
         private IEnumerator TakeDamage(Damage damage) {
             yield return effectManager.GenerateHitEffect(this);
-            GetEntity().currHP -= damage.amount;
+            SetHP(GetEntity().currHP - damage.amount);
 
             if (onTakeDamage != null) {
                 foreach (System.Delegate handler in onTakeDamage.GetInvocationList()) {
@@ -222,6 +222,7 @@ namespace Instantiated {
 
         public void SetHP(int newValue) {
             GetEntity().currHP = newValue;
+            healthBarController.SetHealth(GetEntity().currHP, GetStats().maxHP);
         }
 
         public IEnumerator OnCombatTurnStart() {

@@ -127,6 +127,9 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         voxelWorldManager.AssignVPEnvironmentInitEvent(constructionUI.OnEnvInitialized);
         environment.OnInitialized += Environment_OnInitialized;
 
+        environment.cameraMain = cameraManager.GetMainCamera();
+        cameraManager.SetSeeThroughTarget(environment);
+
         environment.Init();
         string vpBase64 = sceneEntityState[currDestination.sceneIndex].vpSaveBase64;
         if (vpBase64 != null) {
@@ -134,8 +137,6 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         }
 
         nonVoxelManager.CreateEntities(sceneEntityState[currDestination.sceneIndex].entities, currDestination);
-        environment.cameraMain = cameraManager.GetMainCamera();
-        cameraManager.SetSeeThroughTarget(environment);
         partyManager.SetCurrControlledCharacter(partyManager.mainCharacter);
     }
 

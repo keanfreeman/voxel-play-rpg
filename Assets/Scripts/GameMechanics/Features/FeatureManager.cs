@@ -285,7 +285,6 @@ public class FeatureManager : MonoBehaviour {
         yield return savingThrowCoroutine.coroutine;
         int roll = savingThrowCoroutine.GetResult();
 
-        // todo - revert
         if (roll >= difficultyClass) {
             instance.SetHP(1);
             // todo - make a message of what happened instead of a random effect
