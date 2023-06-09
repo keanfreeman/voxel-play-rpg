@@ -223,15 +223,6 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             bardDrillID.name);
         NPC commonerHaul = new(new Vector3Int(799, -24, 351), Faction.PLAYER, IdleBehavior.STAND,
             commonerHaulID.name);
-        commonerHaul.interactOrders = new OrderGroup(new List<Order> {
-            new CameraFocusOrder(commonerHaul),
-            new DialogueOrder(haulIntroDialogue, "Haul"),
-            new CameraFocusOrder(mainCharacter),
-            new MoveImmediateOrder(new Vector3Int(844, -8, 337), MoveOrderType.Party),
-            new MoveImmediateOrder(new Vector3Int(846, -8, 339), MoveOrderType.Entity, commonerHaul.guid),
-            new CameraFocusOrder(commonerHaul),
-            new DialogueOrder(haulFinalDialogue, "Haul")
-        });
 
         BattleGroup convenienceBG = new(new List<NPC> {
             new(new Vector3Int(835, 29, 351), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
@@ -251,8 +242,6 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         NPC ghoulBoss = new(new Vector3Int(798, -29, 353), Faction.ENEMY, IdleBehavior.WANDER, ghoulID.name);
 
         TangibleObject lamp = new TangibleObject(new Vector3Int(858, 33, 351), lampID.name, Direction.NORTH);
-        TangibleObject constructionTools = new TangibleObject(new Vector3Int(858, 30, 350),
-            constructionToolsID.name, Direction.NORTH);
 
         OrderGroup coreyUndergroundMeetingOrders = new OrderGroup(new List<Order> {
             new CameraFocusOrder(fighterCorey),
@@ -295,22 +284,27 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             new Vector3Int(855, 36, 350), 1, ResourceIDs.STORY_EVENT_CUBE_STRING,
             coreyIntroOrders
         );
-        constructionTools.interactOrders = new OrderGroup(new List<Order> {
-            new DialogueOrder("It's a set of construction tools. Maybe we'll have time to build soon?"),
-            new DestroyOrder(constructionTools),
-            // todo - play pickup fanfare
-        });
 
         Vector3Int sceneExitTile = new Vector3Int(862, -8, 341);
         SceneExitCube level1Exit = new(sceneExitTile,
             new EnvChangeDestination(1, new Vector3Int(466, 29, -46)),
             ResourceIDs.SCENE_EXIT_STRING);
-        StoryEventCube level1ExitPrevention = new(sceneExitTile - Vector3Int.one,
-            5, ResourceIDs.STORY_EVENT_CUBE_STRING, new OrderGroup(new List<Order> {
-                new DialogueOrder("I'm not sure where this goes. I probably shouldn't leave yet."),
+        StoryEventCube level1ExitPrevention = new(new Vector3Int(860, -10, 339), 6,
+            ResourceIDs.STORY_EVENT_CUBE_STRING, new OrderGroup(new List<Order> {
+                new DialogueOrder("I don't have time for this yet!"),
                 // todo - make target the currcontrolled character, or the entire party.
-                new MoveOrder(sceneExitTile + new Vector3Int(1, 0, -4), mainCharacter)
+                new MoveImmediateOrder(new Vector3Int(861, -8, 334), MoveOrderType.Party)
             }, false));
+        commonerHaul.interactOrders = new OrderGroup(new List<Order> {
+            new CameraFocusOrder(commonerHaul),
+            new DialogueOrder(haulIntroDialogue, "Haul"),
+            new CameraFocusOrder(mainCharacter),
+            new MoveImmediateOrder(new Vector3Int(844, -8, 337), MoveOrderType.Party),
+            new MoveImmediateOrder(new Vector3Int(846, -8, 339), MoveOrderType.Entity, commonerHaul.guid),
+            new CameraFocusOrder(commonerHaul),
+            new DialogueOrder(haulFinalDialogue, "Haul"),
+            new DestroyOrder(level1ExitPrevention)
+        });
 
         Dictionary<int, SceneInfo> defaults = new() {
             {
@@ -324,7 +318,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             {
                 2, new SceneInfo(new List<Entity> {
                     new SceneExitCube(
-                        new Vector3Int(884, 26, 346),
+                        new Vector3Int(884, 26, 345),
                         new EnvChangeDestination(3, new Vector3Int(858, 37, 347)),
                         ResourceIDs.SCENE_EXIT_STRING)
                 }, null)
@@ -353,7 +347,6 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     convenienceBG.combatants[1],
 
                     lamp,
-                    constructionTools,
 
                     introEventCube,
                     level1Exit,

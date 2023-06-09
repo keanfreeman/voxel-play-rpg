@@ -72,6 +72,9 @@ public class OrderManager : MonoBehaviour
         else if (type == typeof(MoveOrder)) {
             MoveOrder moveOrder = (MoveOrder)order;
             InstantiatedEntity mover = nonVoxelWorld.GetInstanceFromID(moveOrder.travellerGuid);
+            if (moveOrder.travellerGuid == Guid.Empty) {
+                mover = partyManager.currControlledCharacter;
+            }
             if (mover == null || !TypeUtils.IsSameTypeOrIsSubclass(mover, typeof(Traveller))) {
                 yield break;
             }

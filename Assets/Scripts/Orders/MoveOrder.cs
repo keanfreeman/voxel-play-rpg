@@ -10,6 +10,7 @@ namespace Orders {
     public class MoveOrder : Order
     {
         public Vector3Int destination;
+        // Guid.Empty signals moving the party
         public Guid travellerGuid;
         public bool waitForCompletion;
 
