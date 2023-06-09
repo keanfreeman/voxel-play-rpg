@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 5
   featureName: Wizard Spellcasting
-  description: Wizard Spellcasting
+  description: Provides the wizard with spellcasting features.
   providedActions:
   - {fileID: 11400000, guid: 7b719a538d9a9454fae30060484161b0, type: 2}
   - {fileID: 11400000, guid: 8d2338f506bc30344991a275af9ff88e, type: 2}

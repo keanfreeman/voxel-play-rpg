@@ -4,11 +4,8 @@ using Instantiated;
 using NonVoxel;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static RandomManager;
-using static UnityEngine.GraphicsBuffer;
 
 public class FeatureManager : MonoBehaviour {
     [SerializeField] RandomManager randomManager;

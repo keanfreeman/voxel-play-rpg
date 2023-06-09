@@ -21,10 +21,12 @@ namespace Saving {
 
         public static string ReadSaveJson() {
             string path = GetSaveDestination();
-            if (File.Exists(GetSaveDestination())) {
-                return File.ReadAllText(path);
+            if (!File.Exists(GetSaveDestination())) {
+                Debug.Log("No save present. Writing one from the base save.");
+                TextAsset textAsset = Resources.Load<TextAsset>("SavedGame/Simpler 3D Tilemap;save");
+                WriteSaveJson(textAsset.text);
             }
-            return null;
+            return File.ReadAllText(path);
         }
 
         public static bool SaveExists() {

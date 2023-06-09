@@ -123,7 +123,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &582458976
+--- !u!1 &1707873288
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,8 +131,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 582458983}
-  - component: {fileID: 582458981}
+  - component: {fileID: 1707873290}
+  - component: {fileID: 1707873289}
   m_Layer: 0
   m_Name: Voxel Play Environment
   m_TagString: Untagged
@@ -140,13 +140,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &582458981
+--- !u!114 &1707873289
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582458976}
+  m_GameObject: {fileID: 1707873288}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bb3935ca6053e4334983d3f7b819d537, type: 3}
@@ -156,16 +156,16 @@ MonoBehaviour:
   originShiftDistanceThreshold: 1000
   fxRoot: {fileID: 0}
   particlePoolSize: 1000
-  voxelDefinitionsCount: 11
+  voxelDefinitionsCount: 34
   enableURP: 0
   debugLevel: 0
-  world: {fileID: 11400000, guid: 7a53e7ce3d5492c45b535f6e1e8e6ffd, type: 2}
+  world: {fileID: 11400000, guid: 8d0496bb3ea1f46558e4eb371a65bdcd, type: 2}
   enableBuildMode: 0
   enableGeneration: 1
   constructorMode: 0
   buildMode: 0
   renderInEditor: 0
-  renderInEditorLowPriority: 1
+  renderInEditorLowPriority: 0
   renderInEditorDetail: 0
   renderInEditorAreaCenter: {x: 0, y: 0, z: 0}
   renderInEditorAreaSize: {x: 512, y: 64, z: 512}
@@ -193,7 +193,7 @@ MonoBehaviour:
   initialWaitTime: 0
   initialWaitText: Loading World...
   loadSavedGame: 1
-  saveFilename: beach
+  saveFilename: coldforestenemies
   globalIllumination: 1
   ambientLight: 0.2
   daylightShadowAtten: 0.65
@@ -216,27 +216,28 @@ MonoBehaviour:
   transparentBling: 1
   useComputeBuffers: 0
   previewTouchUIinEditor: 0
-  prewarmChunksInEditor: 1000
-  enableTinting: 0
+  prewarmChunksInEditor: 5000
+  enableTinting: 1
   enableFresnel: 0
   fresnelExponent: 8
   fresnelIntensity: 0.2
   fresnelColor: {r: 0.9098039, g: 0.9019608, b: 0.99215686, a: 1}
   enableBevel: 0
-  enableOutline: 0
+  enableOutline: 1
   outlineColor: {r: 1, g: 1, b: 1, a: 0.5}
-  outlineThreshold: 0.49
+  outlineThreshold: 0.1
   enableCurvature: 0
   seeThrough: 1
+  seeThroughOrigin: {fileID: 0}
   seeThroughTarget: {fileID: 0}
   seeThroughRadius: 5
-  seeThroughAlpha: 0.25
+  seeThroughAlpha: 0.1
   _seeThroughHeightOffset: 0
-  enableBrightPointLights: 0
+  enableBrightPointLights: 1
   brightPointsMaxDistance: 10000
-  enableURPNativeLights: 0
-  _visibleChunksDistance: 10
-  forceChunkDistance: 3
+  enableURPNativeLights: 1
+  _visibleChunksDistance: 5
+  forceChunkDistance: 5
   unloadFarChunks: 0
   unloadFarNavMesh: 0
   distanceAnchor: {fileID: 0}
@@ -265,7 +266,7 @@ MonoBehaviour:
   fogDistanceAuto: 1
   fogDistance: 300
   fogFallOff: 0.8
-  enableClouds: 1
+  enableClouds: 0
   defaultBuildSound: {fileID: 0}
   defaultPickupSound: {fileID: 0}
   defaultDestructionSound: {fileID: 0}
@@ -273,14 +274,14 @@ MonoBehaviour:
   defaultVoxel: {fileID: 11400000, guid: 764590ab8f7e04785a8ac184f4ff675a, type: 2}
   defaultWaterVoxel: {fileID: 11400000, guid: f196cfea1816a4cb6b8e24bea23c4d60, type: 2}
   enableDetailGenerators: 1
---- !u!4 &582458983
+--- !u!4 &1707873290
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582458976}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_GameObject: {fileID: 1707873288}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

@@ -119,12 +119,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     private void SceneManager_sceneLoaded(Scene loadedScene, LoadSceneMode loadedSceneMode) {
         VoxelPlayEnvironment environment = FindObjectOfType<VoxelPlayEnvironment>();
         if (loadedScene.buildIndex == 0) {
-            if (saveManager.SaveExists()) {
-                saveManager.Load();
-            }
-            else {
-                SceneManager.LoadScene(3);
-            }
+            saveManager.Load();
             return;
         }
 
