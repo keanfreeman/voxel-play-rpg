@@ -46,7 +46,7 @@ namespace Instantiated {
         private float moveFinishedTimestamp;
 
         protected const float TIME_TO_MOVE_A_TILE = 0.2f;
-        private const float ANIMATION_COOLDOWN_TIME = 0.1f;
+        private const float ANIMATION_COOLDOWN_TIME = 0.15f;
 
         public int CurrHP {
             get {return GetEntity().currHP;}
@@ -180,8 +180,12 @@ namespace Instantiated {
         }
 
         public IEnumerator RecoverHP(int healingAmount) {
-            // todo play healing effect and display heal amount
+            if (CurrHP < 1) {
+                RemoveStatus(StatusEffect.KnockedOut);
+                animator.SetBool("isFrozen", false);
+            }
             SetHP(Mathf.Min(GetStats().maxHP, CurrHP + healingAmount));
+            // todo play healing effect and display heal amount
             yield break;
         }
 
@@ -199,7 +203,9 @@ namespace Instantiated {
         // todo - particle effect for amount taken
         private IEnumerator TakeDamage(Damage damage) {
             yield return effectManager.GenerateHitEffect(this);
-            SetHP(GetEntity().currHP - damage.amount);
+            int newHP = GetEntity().currHP - damage.amount;
+            newHP = newHP < 0 ? 0 : newHP;
+            SetHP(newHP);
 
             if (onTakeDamage != null) {
                 foreach (System.Delegate handler in onTakeDamage.GetInvocationList()) {
@@ -210,13 +216,14 @@ namespace Instantiated {
 
             if (CurrHP < 1) {
                 if (GetType() == typeof(PlayerCharacter)) {
-                    // todo - defeat players too
-                    Debug.Log("Player ran out of HP.");
-                    yield break;
+                    AddStatus(new OngoingEffect(StatusEffect.KnockedOut,
+                        new HashSet<Condition> { Condition.Unconscious }, int.MaxValue));
+                    animator.SetBool("isFrozen", true);
                 }
-
-                // to avoid issue of destroying something whose code is running
-                StartCoroutine(combatManager.DestroyCombatant(this));
+                else {
+                    // to avoid issue of destroying something whose code is running
+                    StartCoroutine(combatManager.DestroyCombatant(this));
+                }
             }
         }
 
@@ -244,7 +251,12 @@ namespace Instantiated {
         }
 
         private void AnimateMove() {
-            if (!isMoving && !cameraManager.isRotating && permanentMoveDirection != SpriteMoveDirection.NONE) {
+            if (!isMoving && !cameraManager.isRotating 
+                    && permanentMoveDirection != SpriteMoveDirection.NONE) {
+                if (HasCondition(Condition.Paralyzed) || HasCondition(Condition.Unconscious)) {
+                    return;
+                }
+
                 Vector3Int? direction = GetDestinationFromDirection(permanentMoveDirection);
                 if (direction.HasValue) {
                     MoveOriginToPoint(direction.Value);

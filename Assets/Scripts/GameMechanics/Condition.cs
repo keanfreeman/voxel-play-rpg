@@ -87,6 +87,7 @@ namespace GameMechanics {
     // describes a specific effect, e.g. (a ghoul's claw and everything associated), rather
     // than the condition game mechanic (e.g. paralysis)
     public enum StatusEffect {
+        KnockedOut,
         GhoulClaw,
         // Spells
         Longstrider,
@@ -97,7 +98,7 @@ namespace GameMechanics {
         ViciousMockery,
 
         // Features
-        BardicInspiration
+        BardicInspiration,
     }
 
     [Serializable]

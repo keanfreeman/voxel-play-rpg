@@ -1,5 +1,7 @@
+using Cysharp.Threading.Tasks;
 using DieNamespace;
 using GameMechanics;
+using Instantiated;
 using Nito.Collections;
 using NonVoxel;
 using System;
@@ -30,6 +32,7 @@ public class DetachedCamera : MonoBehaviour
     [SerializeField] ConstructionUI constructionUI;
     [SerializeField] BuildShadow buildShadow;
     [SerializeField] AreaEffectPreview areaEffectPreview;
+    [SerializeField] MessageManager messageManager;
 
     // sprites
     [SerializeField] Sprite grabIcon;
@@ -189,7 +192,17 @@ public class DetachedCamera : MonoBehaviour
         }
         else {
             // todo - stop movement of selected character
+            inputManager.LockPlayerControls();
+            ExecuteCancelMovement();
         }
+    }
+
+    private async UniTask ExecuteCancelMovement() {
+        movementManager.CancelMovement(partyManager.currControlledCharacter);
+        while (partyManager.currControlledCharacter.isMoving) {
+            await UniTask.NextFrame();
+        }
+        inputManager.UnlockDetachedControls();
     }
 
     public void HandleToggleBuildMode(InputAction.CallbackContext obj) {
@@ -228,6 +241,16 @@ public class DetachedCamera : MonoBehaviour
     }
 
     private IEnumerator ExecuteHandleSelect() {
+        PlayerCharacter pc = partyManager.currControlledCharacter;
+        if (movementManager.IsMoving(pc)) {
+            yield return ExecuteCancelMovement().ToCoroutine();
+        }
+        // todo - unify all movement restriction logic (combat, actionmanager, etc)
+        if (pc.HasCondition(Condition.Paralyzed) || pc.HasCondition(Condition.Unconscious)) {
+            messageManager.DisplayMessage("Cannot move");
+            yield break;
+        }
+
         if (nonVoxelWorld.IsPositionOccupied(currVoxel)) {
             // TODO - allow the party member to talk to other party members
             Debug.Log("Not implemented.");

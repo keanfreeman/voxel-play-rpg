@@ -37,6 +37,7 @@ public class Pathfinder : MonoBehaviour
         changedNodes2.Clear();
     }
 
+    // todo - refactor to use unitask
     public IEnumerator FindPath(Traveller traveller, Vector3Int endPosition,
             int maxSearchDepth = MAX_PATH_LENGTH) {
         // when the traveller is large or greater, we need to allow movement onto tiles occupied by itself

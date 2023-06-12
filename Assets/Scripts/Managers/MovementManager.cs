@@ -38,7 +38,7 @@ public class MovementManager : MonoBehaviour
     public IEnumerator MoveEntity(Traveller traveller) {
         Vector3Int? currDestination = null;
         pathVisualizer.DrawPath(creaturePaths[traveller]);
-        while (creaturePaths[traveller] != null && creaturePaths[traveller].Count > 0) {
+        while (creaturePaths.ContainsKey(traveller) && creaturePaths[traveller].Count > 0) {
             if (!currDestination.HasValue) {
                 int lastIndex = creaturePaths[traveller].Count - 1;
                 currDestination = creaturePaths[traveller][lastIndex];
