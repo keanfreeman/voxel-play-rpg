@@ -152,6 +152,16 @@ public class ActionManager : MonoBehaviour
             yield return null;
             yield break;
         }
+
+        Tuple<Vector3Int, Vector3Int> closestPoints = performer.GetNearestPoints(npc);
+        int distance = Coordinates.NumPointsBetween(closestPoints.Item1, closestPoints.Item2);
+        bool isOutOfRange = (attack.longRange / CombatManager.TILE_TO_FEET) < distance;
+        if (isOutOfRange) {
+            messageManager.DisplayMessage($"Target is out of attack's range ({attack.longRange} feet)");
+            yield return null;
+            yield break;
+        }
+
         HashSet<NPC> enemies = npc.teammates;
         yield return combatManager.PerformAttack(performer, attack, npc);
         if (!nonVoxelWorld.npcs.Contains(npc)) {

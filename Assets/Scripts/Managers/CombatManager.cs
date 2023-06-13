@@ -3,6 +3,7 @@ using GameMechanics;
 using Instantiated;
 using Nito.Collections;
 using NonVoxel;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ public class CombatManager : MonoBehaviour
     ICollection<NPC> enemies;
     int currInitiative = -1;
 
-    private const int TILE_TO_FEET = 5;
+    public static int TILE_TO_FEET = 5;
 
     public bool IsInCombat() {
         return initiatives != null;
@@ -144,12 +145,14 @@ public class CombatManager : MonoBehaviour
             ActionSO validAttackAction;
             if (!Coordinates.IsNextTo(currCreature, attackTarget)) {
                 validAttackAction = StatInfo.GetRangedAction(playerInstance.GetStats());
-                if (validAttackAction == null) {
+                Tuple<Vector3Int, Vector3Int> closestPoints = playerInstance.GetNearestPoints(attackTarget);
+                int distance = Coordinates.NumPointsBetween(closestPoints.Item1, closestPoints.Item2);
+                bool isOutOfRange = (((AttackSO)validAttackAction).longRange / TILE_TO_FEET) < distance;
+                if (validAttackAction == null || isOutOfRange) {
                     // try moving towards the enemy, then attacking
                     yield return TryMovePlayer(playerInstance);
                     if (!Coordinates.IsNextTo(currCreature, attackTarget)) {
-                        // couldn't move close enough
-                        Debug.Log("Couldn't get close enough to make a melee attack.");
+                        messageManager.DisplayMessage("Couldn't get close enough to make a melee attack.");
                         yield break;
                     }
                     else {

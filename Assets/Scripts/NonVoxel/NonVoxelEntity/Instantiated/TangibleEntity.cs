@@ -90,5 +90,23 @@ namespace Instantiated {
             pointsSorted.Sort((x, y) => x.Item2.CompareTo(y.Item2));
             return pointsSorted[0].Item1;
         }
+
+        // todo - use a more efficient algorithm if necessary
+        public Tuple<Vector3Int, Vector3Int> GetNearestPoints(TangibleEntity tangibleEntity) {
+            Vector3Int? thisClosestPoint = null;
+            Vector3Int? targetClosestPoint = null;
+            float closestDistance = float.MaxValue;
+            foreach (Vector3Int targetCurrPosition in tangibleEntity.occupiedPositions) {
+                Vector3Int thisCurrPoint = GetPointInEntityClosestTo(targetCurrPosition);
+                float currDistance = Coordinates.GetDirectLineLength(targetCurrPosition, thisCurrPoint);
+                if (currDistance < closestDistance) {
+                    thisClosestPoint = thisCurrPoint;
+                    targetClosestPoint = targetCurrPosition;
+                    closestDistance = currDistance;
+                }
+            }
+
+            return new Tuple<Vector3Int, Vector3Int>(thisClosestPoint.Value, targetClosestPoint.Value);
+        }
     }
 }
