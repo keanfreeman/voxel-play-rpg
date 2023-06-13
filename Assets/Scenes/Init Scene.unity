@@ -1201,6 +1201,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1861321071}
     - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
+      propertyPath: messageManager
+      value: 
+      objectReference: {fileID: 1627379086}
+    - target: {fileID: 744469580675921486, guid: cbe83d3087dc3894c8d094e2c6c0b81a, type: 3}
       propertyPath: pathVisualizer
       value: 
       objectReference: {fileID: 2106943938}
@@ -1912,6 +1916,7 @@ MonoBehaviour:
   timerUIController: {fileID: 134436095}
   combatUI: {fileID: 829311307}
   messageManager: {fileID: 1627379086}
+  voxelWorldManager: {fileID: 1568004907}
 --- !u!4 &1613990518
 Transform:
   m_ObjectHideFlags: 0

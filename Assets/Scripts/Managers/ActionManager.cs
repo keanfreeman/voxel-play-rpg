@@ -162,6 +162,12 @@ public class ActionManager : MonoBehaviour
             yield break;
         }
 
+        if (!combatManager.CreatureHasLineOfSightToCreature(performer, npc)) {
+            messageManager.DisplayMessage($"No line of sight!");
+            yield return null;
+            yield break;
+        }
+
         HashSet<NPC> enemies = npc.teammates;
         yield return combatManager.PerformAttack(performer, attack, npc);
         if (!nonVoxelWorld.npcs.Contains(npc)) {
@@ -291,6 +297,12 @@ public class ActionManager : MonoBehaviour
             yield break;
         }
 
+        if (!combatManager.CreatureHasLineOfSightToCreature(performer, target)) {
+            messageManager.DisplayMessage($"No line of sight!");
+            yield return null;
+            yield break;
+        }
+
         if (target.GetStats().creatureType == CreatureType.Construct
                 || target.GetStats().creatureType == CreatureType.Undead) {
             messageManager.DisplayMessage("Has no effect on constructs/undead.");
@@ -335,6 +347,12 @@ public class ActionManager : MonoBehaviour
             yield break;
         }
 
+        if (!combatManager.CreatureHasLineOfSight(performer, targetPosition)) {
+            messageManager.DisplayMessage($"No line of sight!");
+            yield return null;
+            yield break;
+        }
+
         // get creatures in radius
         List<Vector3Int> pointsInSphere = Coordinates.GetPointsInSphereCenteredOn(targetPosition, 
             radiusInPoints);
@@ -372,6 +390,14 @@ public class ActionManager : MonoBehaviour
         spellSlots.DecrementUses();
         if (gameStateManager.controlState == ControlState.COMBAT) {
             combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
+        }
+
+        List<NPC> affectedEnemies = affectedCreatures
+            .Where((Traveller traveller) => traveller.GetType() == typeof(NPC))
+            .Select((Traveller traveller) => (NPC)traveller)
+            .ToList();
+        if (affectedEnemies.Count > 0) {
+            EnterCombatAfterAttacking(affectedEnemies[0].teammates);
         }
     }
 
@@ -424,6 +450,14 @@ public class ActionManager : MonoBehaviour
         spellSlots.DecrementUses();
         if (gameStateManager.controlState == ControlState.COMBAT) {
             combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
+        }
+
+        List<NPC> affectedEnemies = affectedCreatures
+            .Where((Traveller traveller) => traveller.GetType() == typeof(NPC))
+            .Select((Traveller traveller) => (NPC)traveller)
+            .ToList();
+        if (affectedEnemies.Count > 0) {
+            EnterCombatAfterAttacking(affectedEnemies[0].teammates);
         }
     }
 
@@ -481,6 +515,14 @@ public class ActionManager : MonoBehaviour
         spellSlots.DecrementUses();
         if (gameStateManager.controlState == ControlState.COMBAT) {
             combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
+        }
+
+        List<NPC> affectedEnemies = affectedCreatures
+            .Where((Traveller traveller) => traveller.GetType() == typeof(NPC))
+            .Select((Traveller traveller) => (NPC)traveller)
+            .ToList();
+        if (affectedEnemies.Count > 0) {
+            EnterCombatAfterAttacking(affectedEnemies[0].teammates);
         }
     }
 
@@ -559,6 +601,12 @@ public class ActionManager : MonoBehaviour
         }
         Traveller target = (Traveller)entity;
 
+        if (!combatManager.CreatureHasLineOfSightToCreature(performer, target)) {
+            messageManager.DisplayMessage($"No line of sight!");
+            yield return null;
+            yield break;
+        }
+
         // todo - enforce hearing requirement
 
         int wisMod = StatModifiers.GetModifierForStat(target.GetStats().wisdom);
@@ -582,6 +630,9 @@ public class ActionManager : MonoBehaviour
 
         if (gameStateManager.controlState == ControlState.COMBAT) {
             combatManager.CombatResources.ConsumeResource(performer, spell.actionType);
+        }
+        if (target.GetType() == typeof(NPC)) {
+            EnterCombatAfterAttacking(((NPC)target).teammates);
         }
     }
 

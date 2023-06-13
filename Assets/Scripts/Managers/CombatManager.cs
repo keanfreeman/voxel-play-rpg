@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using VoxelPlay;
 using static RandomManager;
 using static UnityEngine.GraphicsBuffer;
 
@@ -27,6 +28,7 @@ public class CombatManager : MonoBehaviour
     [SerializeField] TimerUIController timerUIController;
     [SerializeField] CombatUI combatUI;
     [SerializeField] MessageManager messageManager;
+    [SerializeField] VoxelWorldManager voxelWorldManager;
 
     public event System.Action roundEnded;
     public CombatResources CombatResources { get; private set; } = new();
@@ -218,6 +220,33 @@ public class CombatManager : MonoBehaviour
                 yield return ExitCombat();
             }
         }
+    }
+
+    public bool CreatureHasLineOfSight(Traveller performer, Vector3Int target) {
+        foreach (Vector3Int performerPosition in performer.occupiedPositions) {
+            // not using vp raycast as it doesn't play well with see-through voxels
+            Vector3Int direction = target - performerPosition;
+            float rayDistance = Coordinates.GetDirectLineLength(performerPosition, target);
+            Vector3d performerPositionAsFloat = performerPosition;
+            performerPositionAsFloat += new Vector3d(0.5, 0.5, 0.5);
+            // collide with everything except creatures
+            int layerMask = ~(1 << 7);
+            if (!Physics.Raycast(performerPositionAsFloat, direction, rayDistance, layerMask)) {
+                // we hit a voxel in that direction
+                // todo - ignore certain voxels (e.g. water)
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool CreatureHasLineOfSightToCreature(Traveller performer, Traveller target) {
+        foreach (Vector3Int targetPosition in target.occupiedPositions) {
+            if (CreatureHasLineOfSight(performer, targetPosition)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private IEnumerator ExitCombat() {
