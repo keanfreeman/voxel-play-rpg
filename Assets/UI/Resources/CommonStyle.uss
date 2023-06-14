@@ -17,6 +17,8 @@ Button:focus {
     border-right-color: rgb(224, 172, 213);
     border-top-color: rgb(224, 172, 213);
     border-bottom-color: rgb(224, 172, 213);
+    background-color: rgb(212, 55, 55);
+    color: rgba(0, 0, 0, 255);
 }
 
 .TransparentBackground {
