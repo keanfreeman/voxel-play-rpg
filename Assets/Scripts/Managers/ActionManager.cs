@@ -54,17 +54,18 @@ public class ActionManager : MonoBehaviour
                 EntityDefinition.Faction oppositeFaction = performer.GetFaction() 
                     == EntityDefinition.Faction.PLAYER ? EntityDefinition.Faction.ENEMY 
                     : EntityDefinition.Faction.PLAYER;
-                if (nonVoxelWorld.GetAdjacentTravellers(performer, oppositeFaction).Count < 1) {
+                List<Traveller> meleeEnemies = nonVoxelWorld.GetAdjacentTravellers(performer, oppositeFaction);
+                if (meleeEnemies.Count < 1) {
                     messageManager.DisplayMessage("No adjacent enemies for melee attack.");
                     yield break;
                 }
             }
 
-            CoroutineWithData<HashSet<NPC>> rangedAttackCoroutine = new(this, 
-                PerformRangedAttack(performer, attack));
-            yield return rangedAttackCoroutine.coroutine;
-            HashSet<NPC> enemies = rangedAttackCoroutine.HasResult()
-                ? rangedAttackCoroutine.GetResult() : new();
+            CoroutineWithData<HashSet<NPC>> selectedAttackCoroutine = new(this, 
+                PerformSelectedAttack(performer, attack));
+            yield return selectedAttackCoroutine.coroutine;
+            HashSet<NPC> enemies = selectedAttackCoroutine.HasResult()
+                ? selectedAttackCoroutine.GetResult() : new();
             if (enemies.Count > 0 && gameStateManager.controlState != ControlState.COMBAT) {
                 EnterCombatAfterAttacking(enemies);
             }
@@ -125,7 +126,7 @@ public class ActionManager : MonoBehaviour
         }
     }
 
-    private IEnumerator PerformRangedAttack(Traveller performer, AttackSO attack) {
+    private IEnumerator PerformSelectedAttack(Traveller performer, AttackSO attack) {
         messageManager.DisplayMessage(new Message(
             "Please select a creature to attack", isPermanent: true));
         CoroutineWithData<Vector3Int> cwd = new(this, detachedCamera.EnterSelectMode(performer));
@@ -155,7 +156,8 @@ public class ActionManager : MonoBehaviour
 
         Tuple<Vector3Int, Vector3Int> closestPoints = performer.GetNearestPoints(npc);
         int distance = Coordinates.NumPointsBetween(closestPoints.Item1, closestPoints.Item2);
-        bool isOutOfRange = (attack.longRange / CombatManager.TILE_TO_FEET) < distance;
+        bool isOutOfRange = attack.isRanged ? (attack.longRange / CombatManager.TILE_TO_FEET) < distance
+            : distance > 1;
         if (isOutOfRange) {
             messageManager.DisplayMessage($"Target is out of attack's range ({attack.longRange} feet)");
             yield return null;
@@ -716,6 +718,7 @@ public class ActionManager : MonoBehaviour
         // todo - display healing effect
         int newHP = Mathf.Min(maxHP, initialHP + result.sum);
         int gained = newHP - initialHP;
+        yield return performer.RecoverHP(gained);
 
         messageManager.DisplayMessage($"Recovered {gained} hit points!");
 

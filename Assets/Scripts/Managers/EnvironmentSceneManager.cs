@@ -22,6 +22,8 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     [SerializeField] ConstructionUI constructionUI;
     [SerializeField] SaveManager saveManager;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
+    [SerializeField] AudioController audioController;
+    [SerializeField] MusicManager musicManager;
 
     [SerializeField] TravellerIdentitySO mainCharacterID;
     [SerializeField] TravellerIdentitySO sidekickID;
@@ -138,6 +140,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
 
         nonVoxelManager.CreateEntities(sceneEntityState[currDestination.sceneIndex].entities, currDestination);
         partyManager.SetCurrControlledCharacter(partyManager.mainCharacter);
+        musicManager.StartMusic();
     }
 
     private void Environment_OnInitialized() {
@@ -352,6 +355,11 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     introEventCube,
                     level1Exit,
                     level1ExitPrevention,
+
+                    new MusicCube(audioController.snowpointTheme.name, 1, new(836, -9, 319),
+                        new(882, 2, 348)),
+                    new MusicCube(audioController.eternaForestTheme.name, 2, new(689, -40, 300),
+                        new(860, -6, 500)),
                 }, null)
             }
         };

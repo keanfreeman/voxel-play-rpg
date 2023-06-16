@@ -25,6 +25,7 @@ public class NonVoxelManager : MonoBehaviour
     [SerializeField] TimerUIController timerUIController;
     [SerializeField] CombatManager combatManager;
     [SerializeField] EffectManager effectManager;
+    [SerializeField] MusicManager musicManager;
 
     [SerializeField] TravellerIdentitySO mainCharacterID;
 
@@ -136,6 +137,12 @@ public class NonVoxelManager : MonoBehaviour
                     Instantiated.SceneExitCube sceneExitComponent = (Instantiated.SceneExitCube)script;
                     sceneExitComponent.Init(environmentSceneManager, inputManager, partyManager,
                         sceneExitCube.destination, sceneExitCube);
+                }
+
+                if (intangibleEntity.GetType() == typeof(MusicCube)) {
+                    MusicCube musicCube = (MusicCube)intangibleEntity;
+                    Instantiated.MusicCube musicComponent = (Instantiated.MusicCube)script;
+                    musicComponent.Init(musicCube, musicManager);
                 }
 
                 nonVoxelWorld.AddIntangibleEntity(intangibleEntity, script);

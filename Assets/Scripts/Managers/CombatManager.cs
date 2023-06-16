@@ -29,6 +29,8 @@ public class CombatManager : MonoBehaviour
     [SerializeField] CombatUI combatUI;
     [SerializeField] MessageManager messageManager;
     [SerializeField] VoxelWorldManager voxelWorldManager;
+    [SerializeField] MusicManager musicManager;
+    [SerializeField] AudioController audioController;
 
     public event System.Action roundEnded;
     public CombatResources CombatResources { get; private set; } = new();
@@ -47,6 +49,11 @@ public class CombatManager : MonoBehaviour
         if (initiatives == null) {
             timerUIController.PauseTimer();
             SetCombatantsAndInitiativeOrder();
+            // todo use random or actual creature identity
+            AudioClip song = enemies.Count == 1 ? audioController.linsTheme
+                : enemies.Count >= 4 ? audioController.linsTheme 
+                : audioController.linsTheme;
+            musicManager.PlayCombatMusic(song);
             StartCoroutine(RunTurn(currInitiative));
         }
     }
@@ -269,6 +276,7 @@ public class CombatManager : MonoBehaviour
 
         yield return gameStateManager.ExitCombat();
         timerUIController.StartTimer();
+        musicManager.EndCombatMusic();
     }
 
     public void HandleDetachedCancel(InputAction.CallbackContext obj) {
