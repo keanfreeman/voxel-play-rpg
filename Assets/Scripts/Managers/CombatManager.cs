@@ -51,8 +51,8 @@ public class CombatManager : MonoBehaviour
             SetCombatantsAndInitiativeOrder();
             // todo use random or actual creature identity
             AudioClip song = enemies.Count == 1 ? audioController.linsTheme
-                : enemies.Count >= 4 ? audioController.linsTheme 
-                : audioController.linsTheme;
+                : enemies.Count >= 4 ? audioController.rachelsTheme 
+                : audioController.sashasTheme;
             musicManager.PlayCombatMusic(song);
             StartCoroutine(RunTurn(currInitiative));
         }

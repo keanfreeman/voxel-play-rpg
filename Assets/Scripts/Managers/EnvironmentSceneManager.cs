@@ -45,9 +45,9 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
     [SerializeField] TextAsset getAttention;
     [SerializeField] TextAsset friendDialogue;
     [SerializeField] TextAsset catIntroDialogue;
-    [SerializeField] TextAsset drillIntroDialogue;
+    [SerializeField] TextAsset drillFirstConversation;
     [SerializeField] TextAsset grimesIntroDialogue;
-    [SerializeField] TextAsset drillRecruitDialogue;
+    [SerializeField] TextAsset coreySpeechDialogue;
     [SerializeField] TextAsset haulIntroDialogue;
     [SerializeField] TextAsset haulFinalDialogue;
 
@@ -221,10 +221,18 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         cat.interactOrders = new OrderGroup(new List<Order> {
             new DialogueOrder(catIntroDialogue, new Dictionary<string, Guid>{{catID.name, cat.guid}}),
         });
-        NPC rogueGrimes = new(new Vector3Int(850, -8, 340), Faction.PLAYER, IdleBehavior.STAND,
+        NPC rogueGrimes = new(new Vector3Int(845, -4, 327), Faction.PLAYER, IdleBehavior.STAND,
             rogueGrimesID.name);
-        NPC bardDrill = new(new Vector3Int(848, -8, 339), Faction.PLAYER, IdleBehavior.STAND,
+        rogueGrimes.interactOrders = new(new List<Order> {
+            new CameraFocusOrder(rogueGrimes),
+            new DialogueOrder(grimesIntroDialogue, "Grimes")
+        }, true);
+        NPC bardDrill = new(new Vector3Int(862, -6, 329), Faction.PLAYER, IdleBehavior.STAND,
             bardDrillID.name);
+        bardDrill.interactOrders = new(new List<Order> {
+            new CameraFocusOrder(bardDrill),
+            new DialogueOrder(drillFirstConversation, "Drill")
+        }, true);
         NPC commonerHaul = new(new Vector3Int(799, -24, 351), Faction.PLAYER, IdleBehavior.STAND,
             commonerHaulID.name);
 
@@ -248,29 +256,20 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
         TangibleObject lamp = new TangibleObject(new Vector3Int(858, 33, 351), lampID.name, Direction.NORTH);
 
         OrderGroup coreyUndergroundMeetingOrders = new OrderGroup(new List<Order> {
+            // todo place them in the arb
+            new ChangeOrdersOrder(rogueGrimes, null),
+            new ChangeOrdersOrder(bardDrill, null),
+            new MoveOrder(new Vector3Int(846, -8, 337), mainCharacter, true),
+            new MoveOrder(new Vector3Int(844, -8, 339), bardDrill, false),
+            new MoveOrder(new Vector3Int(843, -8, 337), rogueGrimes, true),
             new CameraFocusOrder(fighterCorey),
-            new DialogueOrder("People are gathering at the Arboretum. Let's go!", "Corey"),
-            new CameraFocusOrder(mainCharacter),
-            new MoveOrder(new Vector3Int(845, -8, 336), fighterCorey, false),
-            new MoveOrder(new Vector3Int(846, -8, 336), mainCharacter, true),
-            new CameraFocusOrder(bardDrill),
             // todo - music change (e.g. tense, exciting, silly)
             // todo - use input name of player
-            new DialogueOrder("Good, everyone's here. Let me explain the situation.", "Drill"),
             // todo - reaction bubbles above non-combat NPCs in crowd (e.g. I'm scared!)
-            new DialogueOrder(drillIntroDialogue, "Drill"),
-            // todo - have conversation with corey before joining
+            new DialogueOrder(coreySpeechDialogue, "Corey"),
             new JoinPartyOrder(fighterCorey.guid),
-            new ChangeOrdersOrder(rogueGrimes, new OrderGroup(new List<Order> {
-                new CameraFocusOrder(rogueGrimes),
-                new DialogueOrder(grimesIntroDialogue, "Grimes",
-                    new Dictionary<string, Guid>{{rogueGrimesID.name, rogueGrimes.guid}})
-            })),
-            new ChangeOrdersOrder(bardDrill, new OrderGroup(new List<Order> {
-                new CameraFocusOrder(bardDrill),
-                new DialogueOrder(drillRecruitDialogue, "Drill",
-                    new Dictionary<string, Guid>{{bardDrillID.name, bardDrill.guid}})
-            }))
+            new JoinPartyOrder(bardDrill.guid),
+            new JoinPartyOrder(rogueGrimes.guid)
         }, true);
         OrderGroup coreyIntroOrders = new OrderGroup(new List<Order>{
             new MoveOrder(new Vector3Int(862, 29, 346), fighterCorey.guid, waitForCompletion: false),
@@ -279,9 +278,10 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             new MoveOrder(new Vector3Int(859, 37, 347), mainCharacter),
             new CameraFocusOrder(fighterCorey),
             new DialogueOrder(friendDialogue, "Corey"),
+            new MoveOrder(new Vector3Int(846, -8, 339), fighterCorey, false),
             new CameraFocusOrder(mainCharacter),
-            new MoveOrder(new Vector3Int(871, -8, 322), fighterCorey, false),
-            new CreateEntityOrder(new StoryEventCube(new Vector3Int(873, -8, 323), 2,
+            // todo place covering arb
+            new CreateEntityOrder(new StoryEventCube(new Vector3Int(842, -8, 334), 10,
                 ResourceIDs.STORY_EVENT_CUBE_STRING, coreyUndergroundMeetingOrders))
         }, true);
         StoryEventCube introEventCube = new StoryEventCube(
@@ -295,7 +295,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             ResourceIDs.SCENE_EXIT_STRING);
         StoryEventCube level1ExitPrevention = new(new Vector3Int(860, -10, 339), 6,
             ResourceIDs.STORY_EVENT_CUBE_STRING, new OrderGroup(new List<Order> {
-                new DialogueOrder("I don't have time for this yet!"),
+                new DialogueOrder("I don't have time to leave right now!"),
                 // todo - make target the currcontrolled character, or the entire party.
                 new MoveImmediateOrder(new Vector3Int(861, -8, 334), MoveOrderType.Party)
             }, false));
@@ -330,9 +330,9 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             {
                 3, new SceneInfo(new List<Entity> {
                     mainCharacter,
-                    testFighter,
-                    testRogue,
-                    testBard,
+                    //testFighter,
+                    //testRogue,
+                    //testBard,
                     fighterCorey,
                     cat,
                     rogueGrimes,
@@ -347,8 +347,8 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     bloodyEyeBG.combatants[2],
                     bloodyEyeBG.combatants[3],
                     ghoulBoss,
-                    convenienceBG.combatants[0],
-                    convenienceBG.combatants[1],
+                    //convenienceBG.combatants[0],
+                    //convenienceBG.combatants[1],
 
                     lamp,
 
