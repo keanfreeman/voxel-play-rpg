@@ -9,6 +9,7 @@ using System;
 using UnityEngine.InputSystem;
 using Orders;
 using NonVoxel;
+using Cysharp.Threading.Tasks;
 
 public class DialogueUI : UIHandler {
     [SerializeField] UIDocument uiDocument;
@@ -18,7 +19,6 @@ public class DialogueUI : UIHandler {
     private string speakerNameBlock;
     private string currentLine;
     private Story currentStory;
-    private bool inChoice = false;
     private Action callback = null;
 
     // UIDocument
@@ -107,7 +107,7 @@ public class DialogueUI : UIHandler {
         inputManager.LockUIControls();
         SetDisplayState(false);
         speakerNameBlock = null;
-        inChoice = false;
+        choiceHolder.Clear();
         callback?.Invoke();
     }
 
@@ -134,7 +134,6 @@ public class DialogueUI : UIHandler {
                 choiceHolder.Add(CreateButton(choices[i].text, i));
             }
             choiceHolder.Children().First().Focus();
-            inChoice = true;
         }
     }
 
@@ -147,8 +146,6 @@ public class DialogueUI : UIHandler {
     }
 
     private void HandleButtonClick(int choiceIndex) {
-        inChoice = false;
-
         currentStory.ChooseChoiceIndex(choiceIndex);
         choiceHolder.Clear();
         if (currentStory.canContinue) {
@@ -175,11 +172,14 @@ public class DialogueUI : UIHandler {
     public override void HandleNavigate(InputAction.CallbackContext obj) { }
     public override void HandleCancelNavigate(InputAction.CallbackContext obj) { }
     public override void HandleSubmit(InputAction.CallbackContext obj) {
-        if (inChoice) {
-            return;
-        }
+        ExecuteHandleSubmit();
+    }
 
-        if (IsDoneDisplayingText()) {
+    private async UniTask ExecuteHandleSubmit() {
+        if (choiceHolder.childCount > 0) {
+
+        }
+        else if (IsDoneDisplayingText()) {
             if (currentStory.canContinue) {
                 dialogueText.text = speakerNameBlock;
                 currentLine = currentStory.Continue();
@@ -193,6 +193,7 @@ public class DialogueUI : UIHandler {
             // skip dialogue display
             StopAllCoroutines();
             dialogueText.text = speakerNameBlock + currentLine;
+            await UniTask.NextFrame();
             DisplayChoices();
         }
     }
