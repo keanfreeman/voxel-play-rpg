@@ -35,6 +35,23 @@ public class ConstructionUI : UIHandler
     public void OnEnvInitialized() {
         List<VoxelDefinition> voxelDefinitions = voxelWorldManager.GetEnvironment().voxelDefinitions.ToList();
 
+        voxelDefinitions = voxelDefinitions
+            .Where((VoxelDefinition voxelDefinition) => {
+                if (voxelDefinition == null) {
+                    return false;
+                }
+                string name = voxelDefinition.name.ToLower();
+                return voxelDefinition != null
+                    && !name.Contains("reverved")
+                    && !name.Contains("seethrough")
+                    && !name.Contains("lava")
+                    && !name.Contains("water")
+                    && !name.Contains("metallicgrid")
+                    && !name.Contains("cloud")
+                    && !name.Contains("default");
+            })
+            .ToList();
+
         constructionOptions = new ConstructionOptions(voxelDefinitions, 
             nonVoxelManager.objectIdentities.Values.ToList());
         constructionBox.RenderOptions(constructionOptions);

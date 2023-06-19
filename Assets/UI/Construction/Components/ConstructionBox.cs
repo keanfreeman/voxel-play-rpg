@@ -113,7 +113,10 @@ public class ConstructionOptions {
         TopBuildOption buildOption = GetCurrTopBuildOption();
         if (buildOption == TopBuildOption.Voxels) {
             VoxelDefinition vd = GetCurrVoxelDefinition();
-            return vd == null ? "No Voxel Definitions available" : vd.name;
+            string displayName = vd == null ? "No definition here" 
+                : vd.name == "Null" ? "Empty Square" 
+                : vd.name;
+            return displayName;
         }
         else if (buildOption == TopBuildOption.Objects) {
             ObjectIdentitySO objectID = GetCurrObject();
