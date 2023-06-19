@@ -6,6 +6,9 @@ Haul, one of our beloved miners, hasn't been seen since last night. The entrance
 Any questions? -> loop_knot
 
 == loop_knot ==
+* [How did this happen?]
+    We were hanging out late last night and Haul went on a stroll. Not too unusual for her, she's a bit of an insomniac.
+    I'd usually find her passed out on the couch by now, though. -> loop_knot
 * [Are the mines dangerous?]
     They're no walk in the park. I've had enough run-ins with blood-sucking bats and disembodied hands for a lifetime.
     Still, it's nothing Haul couldn't handle. Usually. -> loop_knot
