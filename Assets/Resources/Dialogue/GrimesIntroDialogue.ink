@@ -4,7 +4,7 @@
 Hey there, brainy boy. -> loop_knot
 
 == loop_knot ==
-* [Did you guys get up to anything last night?]
+* [Hey. Did you guys get up to anything last night?]
     We just hung out downstairs and played some Three-Dragon Ante before I turned in. 
     Don't tell anyone this, but I snuck a Tiamat up my sleeve that ended up coming in clutch!
     The look on Drill's face was priceless. -> loop_knot

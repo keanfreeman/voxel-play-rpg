@@ -44,7 +44,7 @@ public class TimerUIController : MonoBehaviour, ISaveable
     public IEnumerator LoadFromSaveData(SaveData saveData) {
         ClearData();
         if (saveData.timeRemaining == null) {
-            SetRemainingTime(new TimeRemaining(0, 10, 0, 0));
+            SetRemainingTime(new TimeRemaining(0, 6, 0, 0));
         }
         else {
             SetRemainingTime(saveData.timeRemaining);

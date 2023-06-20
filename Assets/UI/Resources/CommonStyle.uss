@@ -6,10 +6,10 @@
 Button {
     font-size: 32px;
     background-color: rgb(57, 147, 221);
-    border-left-color: rgb(106, 62, 55);
-    border-right-color: rgb(106, 62, 55);
-    border-top-color: rgb(106, 62, 55);
-    border-bottom-color: rgb(106, 62, 55);
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 1px;
+    margin-bottom: 0;
 }
 
 Button:focus {
