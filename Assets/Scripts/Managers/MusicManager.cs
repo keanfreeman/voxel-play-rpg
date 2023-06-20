@@ -9,12 +9,12 @@ public class MusicManager : MonoBehaviour
 {
     [SerializeField] AudioController audioController;
     [SerializeField] PartyManager partyManager;
+    [SerializeField] GameStateManager gameStateManager;
 
     public Dictionary<string, AudioClip> nameToSong { get; private set; } = new();
     private Dictionary<EntityDefinition.MusicCube,
         HashSet<EntityDefinition.PlayerCharacter>> playersInCubes = new();
     private string defaultSongName;
-    private InterruptedSong interruptedSong;
 
     private void Awake() {
         defaultSongName = audioController.lakeTheme.name;
@@ -34,14 +34,11 @@ public class MusicManager : MonoBehaviour
     }
 
     public void PlayCombatMusic(AudioClip song) {
-        interruptedSong = new(audioController.audioSource.time, audioController.currSong);
         audioController.PlaySong(song);
     }
 
     public void EndCombatMusic() {
-        audioController.PlaySong(interruptedSong.song);
-        audioController.audioSource.time = interruptedSong.songTime;
-        interruptedSong = null;
+        PlayNextSong();
     }
 
     public void OnPlayerEnteredCube(EntityDefinition.MusicCube musicCube,
@@ -68,7 +65,7 @@ public class MusicManager : MonoBehaviour
     }
 
     private void PlayNextSong() {
-        if (interruptedSong != null) {
+        if (gameStateManager.controlState == ControlState.COMBAT) {
             return;
         }
 

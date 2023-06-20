@@ -1299,6 +1299,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioController: {fileID: 1711628198}
   partyManager: {fileID: 683280036}
+  gameStateManager: {fileID: 955022268}
 --- !u!114 &829311307 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3839151275677363832, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
