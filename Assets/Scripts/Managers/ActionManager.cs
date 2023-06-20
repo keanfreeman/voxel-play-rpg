@@ -666,21 +666,27 @@ public class ActionManager : MonoBehaviour
             yield break;
         }
 
-        if (target.GetFaction() != EntityDefinition.Faction.PLAYER) {
-            int spellSaveDC = performer.GetStats().GetSpellcastingFeature().spellSaveDC;
-            CoroutineWithData<int> dexSaveCoroutine = new(this, visualRollManager.RollSavingThrow(
-                target, "Rolling saving throw for Light", 
-                StatModifiers.GetModifierForStat(target.GetStats().dexterity), spellSaveDC));
-            yield return dexSaveCoroutine.coroutine;
-            int result = dexSaveCoroutine.GetResult();
-            if (result < spellSaveDC) {
-                messageManager.DisplayMessage("Enemy saved against Light!");
-                yield break;
-            }
+        // do again to remove
+        if (target.HasStatus(StatusEffect.Light)) {
+            target.RemoveStatus(StatusEffect.Light);
         }
+        else {
+            if (target.GetFaction() != EntityDefinition.Faction.PLAYER) {
+                int spellSaveDC = performer.GetStats().GetSpellcastingFeature().spellSaveDC;
+                CoroutineWithData<int> dexSaveCoroutine = new(this, visualRollManager.RollSavingThrow(
+                    target, "Rolling saving throw for Light", 
+                    StatModifiers.GetModifierForStat(target.GetStats().dexterity), spellSaveDC));
+                yield return dexSaveCoroutine.coroutine;
+                int result = dexSaveCoroutine.GetResult();
+                if (result < spellSaveDC) {
+                    messageManager.DisplayMessage("Enemy saved against Light!");
+                    yield break;
+                }
+            }
 
-        // apply a status
-        target.AddStatus(new OngoingEffect(StatusEffect.Light, TimeUtil.HOUR));
+            // apply a status
+            target.AddStatus(new OngoingEffect(StatusEffect.Light, TimeUtil.HOUR));
+        }
 
         if (gameStateManager.controlState == ControlState.COMBAT) {
             combatManager.CombatResources.ConsumeResource(performer, spell.actionType);

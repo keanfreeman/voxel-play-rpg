@@ -352,6 +352,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: StatusUIQuad
       objectReference: {fileID: 0}
+    - target: {fileID: 188043091457283631, guid: 1b0b5a19a17340e4c9f4260129371259, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 188043092835285019, guid: 1b0b5a19a17340e4c9f4260129371259, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b0b5a19a17340e4c9f4260129371259, type: 3}
 --- !u!4 &8248509807821107298 stripped
