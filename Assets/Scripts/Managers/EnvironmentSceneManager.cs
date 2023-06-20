@@ -252,6 +252,10 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             new(new Vector3Int(823, -27, 345), Faction.ENEMY, IdleBehavior.WANDER, bloodyEyeID.name),
         });
         NPC ghoulBoss = new(new Vector3Int(798, -29, 353), Faction.ENEMY, IdleBehavior.WANDER, ghoulID.name);
+        BattleGroup finalBG = new(new List<NPC> {
+            ghoulBoss,
+            new(new Vector3Int(797, -28, 355), Faction.ENEMY, IdleBehavior.WANDER, zombieID.name),
+        });
 
         TangibleObject lamp = new TangibleObject(new Vector3Int(858, 33, 351), lampID.name, Direction.NORTH);
 
@@ -346,7 +350,8 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
                     bloodyEyeBG.combatants[1],
                     bloodyEyeBG.combatants[2],
                     bloodyEyeBG.combatants[3],
-                    ghoulBoss,
+                    finalBG.combatants[0],
+                    finalBG.combatants[1],
                     //convenienceBG.combatants[0],
                     //convenienceBG.combatants[1],
 

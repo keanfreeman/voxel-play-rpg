@@ -77,7 +77,7 @@ public class CombatManager : MonoBehaviour
         // todo - use events for this rather than checking individual statuses
         if (!npcInstance.HasCondition(Condition.Paralyzed) 
                 && !npcInstance.HasCondition(Condition.Unconscious)) {
-            PlayerCharacter nearestPlayer = partyManager.FindNearestPlayer(currCreature.origin);
+            PlayerCharacter nearestPlayer = partyManager.FindNearestPlayerWithHP(currCreature.origin);
             if (!Coordinates.IsNextTo(npcInstance, nearestPlayer)) {
                 int maxSearchLength = (npcInstance.GetStats().baseSpeed / TILE_TO_FEET) * 5;
 

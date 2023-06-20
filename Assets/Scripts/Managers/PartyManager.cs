@@ -91,14 +91,16 @@ public class PartyManager : MonoBehaviour, ISaveable
     }
 
     // TODO - use actual path to calculate distance
-    public PlayerCharacter FindNearestPlayer(Vector3Int position) {
+    public PlayerCharacter FindNearestPlayerWithHP(Vector3Int position) {
         PlayerCharacter nearest = partyMembers[0];
         float nearestDistance = float.MaxValue;
-        foreach (PlayerCharacter playerMovement in partyMembers) {
-            foreach (Vector3Int playerPosition in playerMovement.occupiedPositions) {
+        foreach (PlayerCharacter pc in partyMembers) {
+            if (pc.CurrHP < 1) continue;
+
+            foreach (Vector3Int playerPosition in pc.occupiedPositions) {
                 float directDistance = (position - playerPosition).magnitude;
                 if (directDistance < nearestDistance) {
-                    nearest = playerMovement;
+                    nearest = pc;
                     nearestDistance = directDistance;
                 }
             }
