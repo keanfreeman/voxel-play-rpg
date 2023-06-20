@@ -259,7 +259,7 @@ public class EnvironmentSceneManager : MonoBehaviour, ISaveable
             // todo place them in the arb
             new ChangeOrdersOrder(rogueGrimes, null),
             new ChangeOrdersOrder(bardDrill, null),
-            new MoveOrder(new Vector3Int(846, -8, 337), mainCharacter, true),
+            new MoveOrder(new Vector3Int(846, -8, 337), Guid.Empty, true),
             new MoveOrder(new Vector3Int(844, -8, 339), bardDrill, false),
             new MoveOrder(new Vector3Int(843, -8, 337), rogueGrimes, true),
             new CameraFocusOrder(fighterCorey),
