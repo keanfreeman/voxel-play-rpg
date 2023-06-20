@@ -148,7 +148,7 @@ public class GameStateManager : MonoBehaviour
             inputManager.SwitchPlayerToDetachedControlState(
                 partyManager.currControlledCharacter.origin);
         }
-        else {
+        else if (controlState != ControlState.COMBAT) {
             controlState = ControlState.SPRITE_NEUTRAL;
             inputManager.SwitchDetachedToPlayerControlState();
             if (detachedCamera.isBuildMode) {
