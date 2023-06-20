@@ -30,7 +30,7 @@ namespace Instantiated {
         private const int NPC_MAX_WANDER_DISTANCE = 2;
 
         private void OnTriggerEnter(Collider other) {
-            if (other.gameObject.tag == "Player" && GetEntity().faction == Faction.ENEMY) {
+            if (!inCombat && other.gameObject.tag == "Player" && GetEntity().faction == Faction.ENEMY) {
                 gameStateManager.EnterCombat(this);
             }
         }
