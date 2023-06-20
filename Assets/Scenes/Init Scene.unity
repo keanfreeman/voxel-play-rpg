@@ -434,6 +434,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1568004907}
     - target: {fileID: 3839151275677363832, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
+      propertyPath: inputManager
+      value: 
+      objectReference: {fileID: 2066669309}
+    - target: {fileID: 3839151275677363832, guid: e0870558d10e22a4ca3a2b325f25c7be, type: 3}
       propertyPath: partyManager
       value: 
       objectReference: {fileID: 683280036}
@@ -770,6 +774,9 @@ MonoBehaviour:
   gameStateManager: {fileID: 955022268}
   constructionUI: {fileID: 1861321071}
   combatUI: {fileID: 829311307}
+  inputManager: {fileID: 2066669309}
+  detachedCamera: {fileID: 848129494}
+  cameraManager: {fileID: 1785101423}
 --- !u!1 &582458976
 GameObject:
   m_ObjectHideFlags: 0
@@ -1520,11 +1527,6 @@ Transform:
   m_Father: {fileID: 1341391871}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &987882798 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 8437904166596131010, guid: 0e2c4cd17b179e24fac4d72c6206c8a9, type: 3}
-  m_PrefabInstance: {fileID: 8437904166241155964}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1135948955
 GameObject:
   m_ObjectHideFlags: 0
@@ -1618,8 +1620,8 @@ MonoBehaviour:
   table: {fileID: 1886765949}
   wall1: {fileID: 1348146008}
   wall2: {fileID: 1947957463}
-  wall3: {fileID: 987882798}
-  wall4: {fileID: 1869212903}
+  wall3: {fileID: 0}
+  wall4: {fileID: 0}
   tableSurface: {fileID: 1291875980}
 --- !u!1 &1169761462
 GameObject:
@@ -2209,11 +2211,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d646ba81180f47b42b895528fb7e12d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!23 &1869212903 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 8437904166596586858, guid: 0e2c4cd17b179e24fac4d72c6206c8a9, type: 3}
-  m_PrefabInstance: {fileID: 8437904166241155964}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1886765949 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8437904166588637692, guid: 0e2c4cd17b179e24fac4d72c6206c8a9, type: 3}

@@ -65,6 +65,7 @@ public class AudioController : MonoBehaviour {
                 nextSong = null;
                 songDetails = songMapping[currSong];
                 audioSource.clip = currSong;
+                audioSource.time = 0;
                 audioSource.Play();
             }
 

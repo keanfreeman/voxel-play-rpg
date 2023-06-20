@@ -1,4 +1,5 @@
 using CustomComponents;
+using Cysharp.Threading.Tasks;
 using Instantiated;
 using Spells;
 using System.Collections;
@@ -14,6 +15,7 @@ public class CombatUI : UIHandler {
     [SerializeField] ActionManager actionManager;
     [SerializeField] PartyManager partyManager;
     [SerializeField] CombatManager combatManager;
+    [SerializeField] InputManager inputManager;
 
     public const string COMBAT_UI_ROOT = "CombatUI";
     public const string COMBAT_BAR = "CombatBar";
@@ -67,9 +69,23 @@ public class CombatUI : UIHandler {
             return;
         }
 
+        inputManager.LockUIControls();
+        StartCoroutine(ExecuteOnButtonSelected(button.currAction));
+    }
+
+    private IEnumerator ExecuteOnButtonSelected(ActionSO actionSO) {
+        bool initiallyCombat = gameStateManager.controlState == ControlState.COMBAT;
+
         PlayerCharacter currPC = gameStateManager.controlState == ControlState.COMBAT
             ? combatManager.GetCurrTurnPlayer() : partyManager.currControlledCharacter;
-        StartCoroutine(actionManager.PerformAction(currPC, button.currAction));
+        yield return actionManager.PerformAction(currPC, actionSO);
+
+        if ((!initiallyCombat && gameStateManager.controlState == ControlState.COMBAT)
+                || (initiallyCombat && gameStateManager.controlState != ControlState.COMBAT)) { }
+        else {
+            inputManager.UnlockUIControls(this);
+            this.SetFocus();
+        }
     }
 
     private void OnButtonLostFocus(ActionChoice button) {

@@ -63,9 +63,11 @@ public class DetachedCamera : MonoBehaviour
     }
 
     // move to player, become visible, etc.
-    public void BecomeActive(Vector3Int startPosition) {
-        transform.position = startPosition;
-        currVoxel = startPosition;
+    public void BecomeActive(Vector3Int? startPosition) {
+        if (startPosition.HasValue) {
+            transform.position = startPosition.Value;
+            currVoxel = startPosition.Value;
+        }
 
         enabled = true;
         gameObject.SetActive(true);
@@ -212,6 +214,8 @@ public class DetachedCamera : MonoBehaviour
     }
 
     public void ToggleBuildMode() {
+        if (gameStateManager.controlState == ControlState.COMBAT) return;
+
         isBuildMode = !isBuildMode;
         combatUI.SetDisplayState(!isBuildMode);
         constructionUI.SetDisplayState(isBuildMode);
@@ -268,8 +272,6 @@ public class DetachedCamera : MonoBehaviour
     public IEnumerator EnterSelectMode(Instantiated.Traveller performer, 
             SelectModeShape selectModeShape = SelectModeShape.None, int radius = -1) {
         voxelSelectionMode = VoxelSelection.Waiting;
-        combatUI.StopFocus();
-        inputManager.LockUIControls();
         inputManager.SwitchPlayerToDetachedControlState(performer.origin);
         inputManager.SetDetachedToNormal();
 
@@ -291,11 +293,13 @@ public class DetachedCamera : MonoBehaviour
         }
 
         voxelSelectionMode = VoxelSelection.NotSelecting;
+        inputManager.LockPlayerControls();
         if (gameStateManager.controlState == ControlState.COMBAT) {
             inputManager.SetDetachedToCombat();
         }
         else {
-            inputManager.SwitchDetachedToPlayerControlState();
+            BecomeInactive();
+            cameraManager.AttachCameraToPlayer(partyManager.currControlledCharacter);
         }
 
         areaEffectPreviewInfo = null;

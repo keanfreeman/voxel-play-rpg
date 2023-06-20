@@ -11,6 +11,9 @@ public class PromptUIController : MonoBehaviour
     [SerializeField] GameStateManager gameStateManager;
     [SerializeField] ConstructionUI constructionUI;
     [SerializeField] CombatUI combatUI;
+    [SerializeField] InputManager inputManager;
+    [SerializeField] DetachedCamera detachedCamera;
+    [SerializeField] CameraManager cameraManager;
 
     VisualElement wholeScreen;
     Label titleLabel;
@@ -51,6 +54,10 @@ public class PromptUIController : MonoBehaviour
 
         yield return gameStateManager.SetControlState(returnControlState);
         SetDisplayState(returnControlState, true);
+        if (returnControlState == ControlState.COMBAT) {
+            // hack to get prompt working
+            inputManager.LockPlayerControls();
+        }
 
         yield return isYesSelection.Value;
         isYesSelection = null;

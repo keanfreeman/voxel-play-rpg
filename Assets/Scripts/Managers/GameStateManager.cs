@@ -136,6 +136,7 @@ public class GameStateManager : MonoBehaviour
         inputManager.LockUIControls();
         if (controlState == ControlState.COMBAT) {
             inputManager.UnlockDetachedControls();
+            detachedCamera.BecomeActive(null);
         }
         else {
             inputManager.UnlockPlayerControls();

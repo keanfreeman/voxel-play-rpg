@@ -71,8 +71,6 @@ public class CombatManager : MonoBehaviour
             yield break;
         }
 
-        inputManager.SwitchDetachedToWatchControlState();
-
         NPC npcInstance = (NPC) currCreature;
         // todo - use events for this rather than checking individual statuses
         if (!npcInstance.HasCondition(Condition.Paralyzed) 
@@ -112,7 +110,6 @@ public class CombatManager : MonoBehaviour
 
         yield return currCreature.OnCombatTurnEnd();
 
-        inputManager.DisableWatchState();
         CombatResources.ResetCombatResources(currCreature);
         IncrementInitiative();
         StartCoroutine(RunTurn(currInitiative));
@@ -259,6 +256,7 @@ public class CombatManager : MonoBehaviour
     private IEnumerator ExitCombat() {
         initiatives = null;
         inputManager.LockPlayerControls();
+        inputManager.LockUIControls();
 
         // move party next to leader
         foreach (PlayerCharacter pc in partyManager.partyMembers) {
@@ -289,6 +287,7 @@ public class CombatManager : MonoBehaviour
             yield break;
         }
 
+        inputManager.LockPlayerControls();
         yield return currCreature.OnCombatTurnEnd();
 
         Debug.Log("Player ended turn.");

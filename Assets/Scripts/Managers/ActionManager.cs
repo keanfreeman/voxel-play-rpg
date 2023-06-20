@@ -23,7 +23,8 @@ public class ActionManager : MonoBehaviour
     [SerializeField] FeatureManager featureManager;
 
     public IEnumerator PerformAction(Traveller performer, ActionSO action) {
-        if (gameStateManager.controlState == ControlState.COMBAT
+        bool initiallyCombat = gameStateManager.controlState == ControlState.COMBAT;
+        if (initiallyCombat
                 && !combatManager.CombatResources.HasResource(performer, action.actionType)) {
             messageManager.DisplayMessage($"Cannot use this resource twice: {action.actionType}");
             yield break;
@@ -708,8 +709,6 @@ public class ActionManager : MonoBehaviour
             yield break;
         }
 
-        inputManager.LockUIControls();
-
         resourceStatus.DecrementUses();
         if (gameStateManager.controlState == ControlState.COMBAT) {
             combatManager.CombatResources.ConsumeResource(performer, specialActionSO.actionType);
@@ -727,8 +726,6 @@ public class ActionManager : MonoBehaviour
         yield return performer.RecoverHP(gained);
 
         messageManager.DisplayMessage($"Recovered {gained} hit points!");
-
-        inputManager.UnlockUIControls(combatUI);
     }
 
     private IEnumerator PerformBardicInspiration(Traveller performer, SpecialActionSO specialActionSO) {

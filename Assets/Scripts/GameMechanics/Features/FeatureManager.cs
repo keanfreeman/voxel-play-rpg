@@ -111,7 +111,10 @@ public class FeatureManager : MonoBehaviour {
                         && target != instantiatedEntity) {
                     Traveller adjacentTraveller = (Traveller)instantiatedEntity;
                     // todo - check that this person is not incapacitated
-                    if (adjacentTraveller.GetFaction() != targetFaction) {
+                    if (adjacentTraveller.GetFaction() != targetFaction 
+                            && !adjacentTraveller.HasCondition(Condition.Unconscious)
+                            && !adjacentTraveller.HasCondition(Condition.Paralyzed)
+                            && !adjacentTraveller.HasCondition(Condition.Incapacitated)) {
                         shouldTriggerSneakAttack = true;
                         break;
                     }

@@ -44,9 +44,6 @@ public class InputManager : MonoBehaviour
         playerInputActions.Detached.Select.performed += detachedCamera.HandleSelect;
         playerInputActions.Detached.Cancel.performed += detachedCamera.HandleCancel;
 
-        playerInputActions.Watch.RotateCamera.performed += cameraManager.RotateDetached;
-        playerInputActions.Watch.RotateCamera.canceled += cameraManager.StopRotatingDetached;
-
         playerInputActions.Player.Interact.performed += gameStateManager.HandleControllerInteract;
 
         playerInputActions.Player.SwitchInputType.performed += gameStateManager.HandleSwitchInputMode;
@@ -162,17 +159,6 @@ public class InputManager : MonoBehaviour
 
         detachedCamera.BecomeInactive();
         cameraManager.AttachCameraToPlayer(partyManager.currControlledCharacter);
-    }
-
-    public void SwitchDetachedToWatchControlState() {
-        playerInputActions.Detached.Disable();
-        detachedCamera.BecomeInactive();
-
-        playerInputActions.Watch.Enable();
-    }
-
-    public void DisableWatchState() {
-        playerInputActions.Watch.Disable();
     }
 
     // DETACHED
