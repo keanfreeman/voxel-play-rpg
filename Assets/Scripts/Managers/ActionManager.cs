@@ -164,7 +164,7 @@ public class ActionManager : MonoBehaviour
             yield break;
         }
 
-        if (!combatManager.CreatureHasLineOfSightToCreature(performer, npc)) {
+        if (attack.isRanged && !combatManager.CreatureHasLineOfSightToCreature(performer, npc)) {
             messageManager.DisplayMessage($"No line of sight!");
             yield return null;
             yield break;
