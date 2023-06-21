@@ -39,7 +39,8 @@ public class InputManager : MonoBehaviour
         playerInputActions.Detached.RotateCamera.canceled += cameraManager.StopRotatingDetached;
 
         playerInputActions.Player.SwitchCharacter.performed += partyManager.SwitchToNextCharacter;
-        playerInputActions.Detached.SwitchCharacter.performed += partyManager.SwitchToNextCharacter;
+        // disabled for now
+        //playerInputActions.Detached.SwitchCharacter.performed += partyManager.SwitchToNextCharacter;
 
         playerInputActions.Detached.Select.performed += detachedCamera.HandleSelect;
         playerInputActions.Detached.Cancel.performed += detachedCamera.HandleCancel;

@@ -172,14 +172,10 @@ public class DialogueUI : UIHandler {
     public override void HandleNavigate(InputAction.CallbackContext obj) { }
     public override void HandleCancelNavigate(InputAction.CallbackContext obj) { }
     public override void HandleSubmit(InputAction.CallbackContext obj) {
-        ExecuteHandleSubmit();
-    }
-
-    private async UniTask ExecuteHandleSubmit() {
         if (choiceHolder.childCount > 0) {
 
         }
-        else if (IsDoneDisplayingText()) {
+        else if (IsDoneDisplayingText() && currentStory.currentChoices.Count == 0) {
             if (currentStory.canContinue) {
                 dialogueText.text = speakerNameBlock;
                 currentLine = currentStory.Continue();
@@ -189,18 +185,18 @@ public class DialogueUI : UIHandler {
                 StopDialogue();
             }
         }
-        else {
-            // skip dialogue display
-            StopAllCoroutines();
-            dialogueText.text = speakerNameBlock + currentLine;
-            await UniTask.NextFrame();
-            DisplayChoices();
-        }
     }
 
     private bool IsDoneDisplayingText() {
         return currentLine.Length + speakerNameBlock.Length == dialogueText.text.Length;
     }
 
-    public override void HandleCancel(InputAction.CallbackContext obj) { }
+    public override void HandleCancel(InputAction.CallbackContext obj) {
+        // skip dialogue display
+        StopAllCoroutines();
+        dialogueText.text = speakerNameBlock + currentLine;
+        if (choiceHolder.childCount == 0) {
+            DisplayChoices();
+        }
+    }
 }

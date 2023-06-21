@@ -1669,6 +1669,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteMovement: {fileID: 934307852}
   nonVoxelWorld: {fileID: 1135948956}
+  messageManager: {fileID: 1627379086}
 --- !u!1 &1194123438 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8437904167266900946, guid: 0e2c4cd17b179e24fac4d72c6206c8a9, type: 3}

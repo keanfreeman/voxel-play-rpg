@@ -24,6 +24,9 @@ namespace Saving {
             if (Input.GetKeyUp(KeyCode.F11)) {
                 ResetEntities();
             }
+            if (Input.GetKeyUp(KeyCode.F12)) {
+                FileManager.Delete(FileManager.GetSaveDestination());
+            }
         }
 
         public bool SaveExists() {

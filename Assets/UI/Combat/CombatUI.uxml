@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Combat/Resources/CombatStyle.uss?fileID=7433441132597879392&amp;guid=092a365b51d080c41ba5be8ca7578c86&amp;type=3#CombatStyle" />
-    <Style src="project://database/Assets/UI/CommonStyle.uss?fileID=7433441132597879392&amp;guid=026a39900ed2bf348b8b1fcf8b7c191b&amp;type=3#CommonStyle" />
+    <Style src="project://database/Assets/UI/Resources/CommonStyle.uss?fileID=7433441132597879392&amp;guid=026a39900ed2bf348b8b1fcf8b7c191b&amp;type=3#CommonStyle" />
     <ui:VisualElement name="EntireScreen" style="flex-grow: 1; flex-direction: column-reverse; width: auto; height: auto; align-items: center;">
         <ui:VisualElement name="CombatUI" class="TextBackground" style="align-items: flex-start; justify-content: flex-end; flex-grow: 0; margin-bottom: 2%; padding-bottom: 5px; margin-left: 0; margin-right: 0; padding-left: 5px; padding-right: 5px; margin-top: 0; padding-top: 5px; flex-direction: column; height: auto; width: 70%;">
             <ui:VisualElement name="CombatBar" style="flex-direction: row; width: 100%; justify-content: space-between;">
@@ -16,8 +16,8 @@
                 <CustomComponents.ActionChoice focusable="true" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="ChoiceInfoBox" class="TextBackground" style="position: relative; width: 50%;">
-            <ui:Label text="Magic Missile" display-tooltip-when-elided="true" name="Title" style="margin-bottom: 5px; border-left-color: rgba(0, 0, 0, 255); border-right-color: rgba(0, 0, 0, 255); border-top-color: rgba(0, 0, 0, 255); border-bottom-color: rgba(0, 0, 0, 255);" />
+        <ui:VisualElement name="ChoiceInfoBox" class="TextBackground" style="position: relative; width: 60%;">
+            <ui:Label text="Magic Missile" display-tooltip-when-elided="true" name="Title" style="margin-bottom: 5px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);" />
             <ui:Label text="Casting Time: 1 action&#10;Range: 120 feet&#10;Components: V, S&#10;Duration: Instantaneous&#10;&#10;You create three glowing darts of magical force. Each dart hits a creature of your choice that you can see within range. A dart deals 1d4 + 1 force damage to its target. The darts all strike simultaneously, and you can direct them to hit one creature or several. &#10;At Higher Levels: When you cast this spell using a spell slot of 2nd level or higher, the spell creates one more dart for each slot level above 1st." display-tooltip-when-elided="true" name="Body" class="MediumText" style="white-space: normal;" />
         </ui:VisualElement>
     </ui:VisualElement>

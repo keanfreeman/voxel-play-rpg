@@ -8,12 +8,12 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Utils;
 using VoxelPlay;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class Pathfinder : MonoBehaviour
 {
     [SerializeField] SpriteMovement spriteMovement;
     [SerializeField] NonVoxelWorld nonVoxelWorld;
+    [SerializeField] MessageManager messageManager;
 
     private const int MAX_PATH_LENGTH = 1000;
     private const float MAX_SEARCH_TIME = 0.1f;
@@ -119,7 +119,7 @@ public class Pathfinder : MonoBehaviour
         Node end2 = new(startPosition);
 
         if (!spriteMovement.IsReachablePosition(end1.origin, traveller, ignoredCreatures)) {
-            Debug.Log("End position isn't reachable.");
+            messageManager.DisplayMessage("End position isn't reachable.");
             yield return result;
             yield break;
         }
@@ -156,7 +156,7 @@ public class Pathfinder : MonoBehaviour
             currNode1 = GetLowestHeuristicScoreUnvisited(frontier1, changedNodes1);
             currNode2 = GetLowestHeuristicScoreUnvisited(frontier2, changedNodes2);
             if (currNode1.score >= float.MaxValue || currNode2.score >= float.MaxValue) {
-                Debug.Log("No possible path.");
+                messageManager.DisplayMessage("No possible path.");
                 yield return result;
                 yield break;
             }

@@ -56,7 +56,9 @@ public class PartyManager : MonoBehaviour, ISaveable
 
     public void SwitchToNextCharacter(InputAction.CallbackContext obj) {
         if (gameStateManager.controlState == ControlState.COMBAT 
-                || gameStateManager.controlState == ControlState.DETACHED) {
+                || gameStateManager.controlState == ControlState.DETACHED
+                // todo - allow switching while moving
+                || currControlledCharacter.isMoving) {
             return;
         }
 

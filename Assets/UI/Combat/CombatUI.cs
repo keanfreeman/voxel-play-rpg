@@ -108,11 +108,16 @@ public class CombatUI : UIHandler {
         }
         else if (button.currAction.GetType() == typeof(SpecialActionSO)) {
             SpecialActionSO specialActionSO = (SpecialActionSO)button.currAction;
-            choiceInfoBody.text = specialActionSO.description;
+            choiceInfoBody.text = $"Action Type: {specialActionSO.actionType}\n{specialActionSO.description}";
         }
         else if (button.currAction.GetType() == typeof(SpellSO)) {
             SpellSO spell = (SpellSO)button.currAction;
-            string bodyText = $"{spell.description}";
+            string bodyText = $"Action Type: {spell.actionType}\n" +
+                $"Spell Level: {spell.spellLevel}\n" +
+                $"School: {spell.spellSchool}\n" +
+                $"Range: {spell.range}\n" +
+                $"Duration: {spell.duration}\n" +
+                $"\n{spell.description}";
             bodyText += spell.providedAttack != null ? $"\n\n{spell.providedAttack.GetDescription()}" : "";
             choiceInfoBody.text = bodyText;
         }

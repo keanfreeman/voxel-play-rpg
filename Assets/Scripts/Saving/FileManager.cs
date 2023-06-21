@@ -37,7 +37,7 @@ namespace Saving {
             File.Delete(path);
         }
 
-        private static string GetSaveDestination() {
+        public static string GetSaveDestination() {
             string path = Application.persistentDataPath + Path.PathSeparator + "save.json";
             return path;
         }
